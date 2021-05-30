@@ -12,7 +12,16 @@
         <li>Page</li>
         <li><a href=""><?= $slug; ?></a></li>
     </ul>
+    <?php //$this->load->view('layout/top_nav'); 
+    ?>
     <!-- END Page Header -->
+
+    <!-- Box -->
+
+    <?php $this->load->view('layout/stat_row');
+    ?>
+    <!-- End -->
+
 
     <!-- Example Block -->
     <div class="block">
