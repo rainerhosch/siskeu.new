@@ -22,6 +22,7 @@ class M_user extends CI_Model
         // code here...
         $this->db->select('id_user, nama_user');
         $this->db->from('users');
+        $this->db->order_by('id_user', 'asc');
         return $this->db->get();
     }
 }

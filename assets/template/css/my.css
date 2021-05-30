@@ -1,0 +1,32 @@
+/*
+ *  Document   : my.css
+ *  Author     : rz.oktan
+ *  Description: The main stylesheet of the template
+ *
+ *  Structure (with shortcodes):
+ *      (#btn) Button Layout
+ *      (#m02hds) HEADER
+ *      (#m03sns) SIDEBAR/NAVIGATION
+ *      (#m04mcs) MAIN CONTENT
+ *      (#m05pgs) PAGES
+ *      (#m06bos) BOOTSTRAP OVERWRITE/EXTEND STYLES
+ *      (#m07hes) HELPERS
+ *      (#m08ths) THEMES
+ *      (#m09res) RESPONSIVE
+ *      (#m10rts) RETINA
+ *      (#m11prs) PRINT
+ */
+
+/*
+=================================================================
+(#btn) Button Layout
+=================================================================
+*/
+
+/* Preloader */
+.btnAdd {
+  margin-bottom: 10px;
+}
+/* .modal {
+  display: block;
+} */

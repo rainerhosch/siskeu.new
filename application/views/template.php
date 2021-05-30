@@ -15,11 +15,13 @@
     <link href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
     <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap-4.1.3.min.css"> -->
+    <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap/5.0.1/bootstrap.min.css"> -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/dataTables.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/themes.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/template/css/my.css">
     <link rel="stylesheet" href="<?= base_url('assets/proui/swal/dist/sweetalert2.min.css') ?>">
     <script src="<?= base_url() ?>assets/proui/js/vendor/modernizr.min.js"></script>
 
