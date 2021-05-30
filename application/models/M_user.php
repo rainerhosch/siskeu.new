@@ -10,9 +10,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_user extends CI_Model
 {
+    // get one user
     public function getUser($param)
     {
         return $this->db->get_where('users', $param);
         // return $this->db->get();
+    }
+    // get data all user
+    public function getAllUser()
+    {
+        // code here...
+        $this->db->select('id_user, nama_user');
+        $this->db->from('users');
+        return $this->db->get();
     }
 }

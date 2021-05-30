@@ -11,9 +11,10 @@ class Manajemen extends CI_Controller
     }
     public function ManajemenMenu()
     {
+        $data['title'] = 'SISKEU NEW';
+        $data['page'] = 'Manajemen Menu';
+        $data['content'] = 'manajemen/menu';
         $data['menumanage'] = $this->menu->getMenu()->result_array();
-        $data['content'] = 'menu/menu_manajemen';
-        $data['title'] = 'Manajemen Menu';
         $this->load->view('template', $data);
     }
     public function getDataMenu()
@@ -30,6 +31,22 @@ class Manajemen extends CI_Controller
     public function ManajemenSubMenu()
     {
         // code here
-        echo 'manajemen submenu';
+        $data['title'] = 'SISKEU NEW';
+        $data['page'] = 'Manajemen SubMenu';
+        $data['content'] = 'manajemen/submenu';
+        $data['datasubmenu'] = $this->menu->getSubMenuAll()->result_array();
+        // var_dump($data['submenumanage']);
+        // die;
+        $this->load->view('template', $data);
+    }
+
+    public function ManajemenUser()
+    {
+        // code here
+        $data['title'] = 'SISKEU NEW';
+        $data['page'] = 'Manajemen User';
+        $data['content'] = 'manajemen/user';
+        $data['datauser'] = $this->user->getAllUser()->result_array();
+        $this->load->view('template', $data);
     }
 }

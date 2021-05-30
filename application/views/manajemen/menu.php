@@ -2,7 +2,7 @@
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
         <li>Page</li>
-        <li><a href=""><?= $title; ?></a></li>
+        <li><a href=""><?= $page; ?></a></li>
     </ul>
 
     <!-- Example Block -->
@@ -33,7 +33,7 @@
                         <td class="text-center"><?= $mn['nama_menu']; ?></td>
                         <td class="text-center"><?= $mn['link_menu']; ?></td>
                         <td class="text-center"><?= $mn['type']; ?></td>
-                        <td class="text-center"><?= $mn['icon']; ?></td>
+                        <td class="text-center"><?= '<i class="' . $mn['icon'] . '"></i>'; ?></td>
                         <td class="text-center">
                             <?php if ($mn['is_active'] == 1) : ?>
                                 <i class="hi hi-ok"></i>

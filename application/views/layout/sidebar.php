@@ -52,7 +52,7 @@
                                             <li>
                                             <?php endif; ?>
                                             <a href="<?= base_url('') . $sm['url']; ?>">
-                                                <i class="fa fa-circle"></i></i>&nbsp;&nbsp;&nbsp;<?= $sm['nama_submenu']; ?></a>
+                                                <i class="<?= $sm['icon'] ?>"></i></i>&nbsp;&nbsp;&nbsp;<?= $sm['nama_submenu']; ?></a>
                                             </li>
                                         <?php endif; ?>
                                     <?php endforeach; ?>

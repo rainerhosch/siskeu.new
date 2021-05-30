@@ -29,6 +29,17 @@ class M_menu extends CI_Model
         return $this->db->get();
     }
 
+    // methode get sub menu
+    public function getSubMenuAll()
+    {
+        // code here...
+        $this->db->select('id_submenu, nama_submenu, url, sm.icon, sm.is_active, m.nama_menu');
+        $this->db->from('submenu sm');
+        $this->db->join('menu m', 'sm.id_menu=m.id_menu');
+        // $this->db->where($where);
+        return $this->db->get();
+    }
+
     public function getUserMenu($where)
     {
         $this->db->distinct();
