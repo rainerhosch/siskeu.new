@@ -60,6 +60,8 @@ $route['transaksi'] = 'user/transaksi';
 $route['manajemen/manajemen-menu'] = 'admin/Manajemen/ManajemenMenu';
 $route['manajemen/manajemen-submenu'] = 'admin/Manajemen/ManajemenSubMenu';
 $route['manajemen/manajemen-user'] = 'admin/Manajemen/ManajemenUser';
+$route['manajemen/edit-user'] = 'admin/Manajemen/EditUser';
+$route['manajemen/hapus-user'] = 'admin/Manajemen/DeleteUser';
 
 // route for admin access datamaster
 $route['masterdata/biaya-kuliah-angkatan'] = 'admin/MasterData/BiayaKuliahAngkatan';
