@@ -9,25 +9,59 @@ class Manajemen extends CI_Controller
         $this->load->model('M_menu', 'menu');
         $this->load->model('M_user', 'user');
     }
+
+    // ===================== Menu Manajemen ==================================
     public function ManajemenMenu()
     {
         $data['title'] = 'SISKEU NEW';
         $data['page'] = 'Manajemen Menu';
         $data['content'] = 'manajemen/menu';
-        $data['menumanage'] = $this->menu->getMenu()->result_array();
+        $where = [
+            'is_active' => 1
+        ];
+        $data['datamenuaktif'] = $this->menu->getMenu($where)->result_array();
+        // kondisi 2
+        $where2 = [
+            'is_active' => 0
+        ];
+        $data['datamenutidakaktif'] = $this->menu->getMenu($where2)->result_array();
+
+        // $data['menumanage'] = $this->menu->getMenu()->result_array();
         $this->load->view('template', $data);
     }
+
+    public function UpdateMenu()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_menu = $this->input->post('id_menu');
+            $is_active = $this->input->post('status');
+            $dataUpdate = [
+                // 'id_menu' => $id_menu,
+                'is_active' => $is_active
+            ];
+            $data = $this->menu->updateMenu($id_menu, $dataUpdate);
+        } else {
+            $data = "Error di edit Menu";
+        }
+        echo json_encode($data);
+    }
+
+
     public function getDataMenu()
     {
         $data['message'] = [
             'status' => true,
             'kode' => 200
         ];
-        $data['menumanage'] = $this->menu->getMenu()->result_array();
+        $where = [
+            'is_active' => 1
+        ];
+        $data['menumanage'] = $this->menu->getMenu($where)->result_array();
         $json = json_encode($data);
     }
 
 
+    // ===================== SubMenu Manajemen ==================================
     public function ManajemenSubMenu()
     {
         // code here
@@ -40,6 +74,8 @@ class Manajemen extends CI_Controller
         $this->load->view('template', $data);
     }
 
+
+    // ===================== User Manajemen ==================================
     public function ManajemenUser()
     {
         // code here

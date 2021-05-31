@@ -58,7 +58,10 @@ $route['transaksi'] = 'user/transaksi';
 
 // for admin access manajemen 
 $route['manajemen/manajemen-menu'] = 'admin/Manajemen/ManajemenMenu';
+$route['manajemen/update-menu'] = 'admin/Manajemen/UpdateMenu';
+// submenu
 $route['manajemen/manajemen-submenu'] = 'admin/Manajemen/ManajemenSubMenu';
+// user
 $route['manajemen/manajemen-user'] = 'admin/Manajemen/ManajemenUser';
 $route['manajemen/edit-user'] = 'admin/Manajemen/EditUser';
 $route['manajemen/hapus-user'] = 'admin/Manajemen/DeleteUser';

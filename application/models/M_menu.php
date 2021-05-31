@@ -11,12 +11,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_menu extends CI_Model
 {
     // methode get menu
-    public function getMenu()
+    public function getMenu($where)
     {
         // code here...
         $this->db->select('*');
         $this->db->from('menu');
+        $this->db->where($where);
         return $this->db->get();
+    }
+
+    // Update Menu
+    public function updateMenu($id_menu, $data)
+    {
+        $this->db->where('id_menu', $id_menu);
+        $this->db->update('menu', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     // methode get sub menu
