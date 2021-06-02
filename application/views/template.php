@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/themes.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/template/bootstrap-toggle/css/bootstrap-toggle.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/template/css/my.css">
     <link rel="stylesheet" href="<?= base_url('assets/proui/swal/dist/sweetalert2.min.css') ?>">
     <script src="<?= base_url() ?>assets/proui/js/vendor/modernizr.min.js"></script>

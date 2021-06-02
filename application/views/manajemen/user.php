@@ -112,18 +112,18 @@
                         </div>
                         <div class="md-form mb-5 row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="password">Password</label>
+                                <label data-error="wrong" data-success="right" for="add_password">Password</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="password" id="password" name="password" class="form-control validate">
+                                <input type="password" id="add_password" name="add_password" class="form-control validate">
                             </div>
                         </div>
                         <div class="md-form row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="role">Role</label>
+                                <label data-error="wrong" data-success="right" for="add_role">Role</label>
                             </div>
                             <div class="col-md-9">
-                                <select id="role" name="role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
+                                <select id="add_role" name="add_role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
                                     <option></option>
                                     <option value="2">Administrator</option>
                                     <option value="3">Admin</option>
@@ -170,19 +170,19 @@
 
                         <div class="md-form mb-5 row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="password">Password</label>
+                                <label data-error="wrong" data-success="right" for="edit_password">Password</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="password" id="password" name="password" class="form-control validate">
+                                <input type="password" id="edit_password" name="edit_password" class="form-control validate">
                             </div>
                         </div>
 
                         <div class="md-form row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="role">Role</label>
+                                <label data-error="wrong" data-success="right" for="edit_role">Role</label>
                             </div>
                             <div class="col-md-9">
-                                <select id="role" name="role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
+                                <select id="edit_role" name="edit_role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
                                     <option></option>
                                     <option value="2">Administrator</option>
                                     <option value="3">Admin</option>

@@ -16,18 +16,24 @@ class Manajemen extends CI_Controller
         $data['title'] = 'SISKEU NEW';
         $data['page'] = 'Manajemen Menu';
         $data['content'] = 'manajemen/menu';
-        $where = [
-            'is_active' => 1
-        ];
-        $data['datamenuaktif'] = $this->menu->getMenu($where)->result_array();
-        // kondisi 2
-        $where2 = [
-            'is_active' => 0
-        ];
-        $data['datamenutidakaktif'] = $this->menu->getMenu($where2)->result_array();
-
-        // $data['menumanage'] = $this->menu->getMenu()->result_array();
+        // $where = [
+        //     'is_active' => 1
+        // ];
+        // $data['datamenuaktif'] = $this->menu->getMenu($where)->result_array();
+        // // kondisi 2
+        // $where2 = [
+        //     'is_active' => 0
+        // ];
+        // $data['datamenutidakaktif'] = $this->menu->getMenu($where2)->result_array();
+        $data['datamenuaktif'] = $this->menu->getMenu()->result_array();
         $this->load->view('template', $data);
+    }
+
+
+    public function getDataMenu()
+    {
+        $response = $this->menu->getMenu()->result_array();
+        echo json_encode($response);
     }
 
     public function UpdateMenu()
@@ -44,20 +50,6 @@ class Manajemen extends CI_Controller
             $data = "Error di edit Menu";
         }
         echo json_encode($data);
-    }
-
-
-    public function getDataMenu()
-    {
-        $data['message'] = [
-            'status' => true,
-            'kode' => 200
-        ];
-        $where = [
-            'is_active' => 1
-        ];
-        $data['menumanage'] = $this->menu->getMenu($where)->result_array();
-        $json = json_encode($data);
     }
 
 
@@ -91,8 +83,8 @@ class Manajemen extends CI_Controller
         // code here
         $nama       = $this->input->post('nama_user');
         $username   = $this->input->post('username');
-        $pass       = $this->input->post('password');
-        $role       = $this->input->post('role');
+        $pass       = $this->input->post('add_password');
+        $role       = $this->input->post('add_role');
         $dataPost   = [
             'nama_user' => $nama,
             'username' => $username,

@@ -11,12 +11,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_menu extends CI_Model
 {
     // methode get menu
-    public function getMenu($where)
+    public function getMenu()
     {
         // code here...
         $this->db->select('*');
         $this->db->from('menu');
-        $this->db->where($where);
+        // $this->db->where($where);
         return $this->db->get();
     }
 
