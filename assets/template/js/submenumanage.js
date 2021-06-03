@@ -15,9 +15,9 @@ $(document).ready(function () {
           html += `<td class="text-center">${value.nama_submenu}</td>`;
           html += `<td class="text-center"><i class="${value.icon}"></i></td>`;
           if (value.is_active == 1) {
-            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_submenu}" type="checkbox" value="${value.id_submenu}" status="${value.is_active}" checked><span></span></label></td>`;
+            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_submenu|${value.id_submenu}" for-cek="submenu" type="checkbox" value="${value.id_submenu}" status="${value.is_active}" checked><span></span></label></td>`;
           } else {
-            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_submenu}" type="checkbox" value="${value.id_submenu}" status="${value.is_active}"><span></span></label></td>`;
+            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_submenu|${value.id_submenu}" for-cek="submenu" type="checkbox" value="${value.id_submenu}" status="${value.is_active}"><span></span></label></td>`;
           }
           html +=
             `<td class="text-center">` +
@@ -30,32 +30,35 @@ $(document).ready(function () {
         $("#submenu_tbody").html(html);
         // Toggle
         $('input[type="checkbox"]').change(function (event) {
-          let id_submenu = $(this).attr("value");
-          let status = $(this).attr("status");
-          if (status == 0) {
-            is_active = 1;
-          } else {
-            is_active = 0;
-          }
-          // =============================================
-          if (id_submenu == "") {
-            alert("Error in id_submenu");
-          } else {
-            $.ajax({
-              type: "post",
-              url: "update-submenu",
-              data: {
-                id_submenu: id_submenu,
-                status: is_active,
-              },
-              dataType: "json",
-              success: function (response) {
-                location.reload();
-              },
-              error: function (e) {
-                error_server();
-              },
-            });
+          // let id = $(this).attr("id");
+          let define = $(this).attr("for-cek");
+          if (define == "submenu") {
+            let id_submenu = $(this).attr("value");
+            let status = $(this).attr("status");
+            if (status == 0) {
+              is_active = 1;
+            } else {
+              is_active = 0;
+            }
+            if (id_submenu == "") {
+              alert("Error in id_submenu");
+            } else {
+              $.ajax({
+                type: "post",
+                url: "update-submenu",
+                data: {
+                  id_submenu: id_submenu,
+                  status: is_active,
+                },
+                dataType: "json",
+                success: function (response) {
+                  location.reload();
+                },
+                error: function (e) {
+                  error_server();
+                },
+              });
+            }
           }
         });
         // End Toggle

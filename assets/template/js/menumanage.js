@@ -15,9 +15,9 @@ $(document).ready(function () {
           html += `<td class="text-center">${value.type}</td>`;
           html += `<td class="text-center"><i class="${value.icon}"></i></td>`;
           if (value.is_active == 1) {
-            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_menu}" type="checkbox" value="${value.id_menu}" status="${value.is_active}" checked><span></span></label></td>`;
+            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_menu|${value.id_menu}" for-cek="toggle_menu" type="checkbox" value="${value.id_menu}" status="${value.is_active}" checked><span></span></label></td>`;
           } else {
-            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_menu}" type="checkbox" value="${value.id_menu}" status="${value.is_active}"><span></span></label></td>`;
+            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_menu|${value.id_menu}" for-cek="toggle_menu" type="checkbox" value="${value.id_menu}" status="${value.is_active}"><span></span></label></td>`;
           }
           html +=
             `<td class="text-center">` +
@@ -30,33 +30,37 @@ $(document).ready(function () {
         $("#menu_tbody").html(html);
         // Toggle
         $('input[type="checkbox"]').change(function (event) {
-          let id_menu = $(this).attr("value");
-          let status = $(this).attr("status");
-          if (status == 0) {
-            is_active = 1;
-          } else {
-            is_active = 0;
+          let cek = $(this).attr("for-cek");
+          if (cek == "toggle_menu") {
+            let id_menu = $(this).attr("value");
+            let status = $(this).attr("status");
+            if (status == 0) {
+              is_active = 1;
+            } else {
+              is_active = 0;
+            }
+            // =============================================
+            if (id_menu == "") {
+              alert("Error in id user");
+            } else {
+              $.ajax({
+                type: "post",
+                url: "update-menu",
+                data: {
+                  id_menu: id_menu,
+                  status: is_active,
+                },
+                dataType: "json",
+                success: function (response) {
+                  location.reload();
+                },
+                error: function (e) {
+                  error_server();
+                },
+              });
+            }
           }
-          // =============================================
-          if (id_menu == "") {
-            alert("Error in id user");
-          } else {
-            $.ajax({
-              type: "post",
-              url: "update-menu",
-              data: {
-                id_menu: id_menu,
-                status: is_active,
-              },
-              dataType: "json",
-              success: function (response) {
-                location.reload();
-              },
-              error: function (e) {
-                error_server();
-              },
-            });
-          }
+          // end cek
         });
         // End Toggle
         // =======================================
