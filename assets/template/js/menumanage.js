@@ -22,7 +22,7 @@ $(document).ready(function () {
           html +=
             `<td class="text-center">` +
             `<a href="#" class="badge badge-warning" id="btn_edit" value="${value.id_menu}"><i class="far fa-edit"></i></a>|` +
-            `<a href="#" class="badge badge-danger" id="btn_hapus" value="${value.id_menu}"><i class="fas fa-trash-alt"></i></a>` +
+            `<a href="#" onclick="document.getElementById('hapusMenu').style.display='block'" class="badge badge-danger btn-hapus" id="btn_hapus_menu" value="${value.id_menu}"><i class="fas fa-trash-alt"></i></a>` +
             `</td>`;
           html += `</tr>`;
           no++;
@@ -59,6 +59,18 @@ $(document).ready(function () {
           }
         });
         // End Toggle
+        // =======================================
+        // hapus menu
+        $("a.btn-hapus").click(function () {
+          let id_menu = $(this).attr("value");
+          // console.log(id_menu);
+          if (id_menu == "") {
+            alert("Error in id menu");
+          } else {
+            $("#hapus_id_menu").val(id_menu);
+          }
+        });
+        // end hapus menu
       }
     },
   });

@@ -37,6 +37,17 @@ class M_menu extends CI_Model
             return FALSE;
         }
     }
+    // Delete Menu
+    public function deleteMenu($data)
+    {
+        $this->db->where($data);
+        $this->db->delete('menu');
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     // methode get sub menu
     public function getSubMenu($where)

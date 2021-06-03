@@ -1,9 +1,39 @@
+<style>
+    /* Modal Content/Box */
+    .modal-content2 {
+        text-align: center;
+        background-color: #fefefe;
+        margin: 5% auto 15% auto;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* Style the horizontal ruler */
+    hr {
+        border: 1px solid #f1f1f1;
+        margin-bottom: 25px;
+    }
+
+    .modal-notify .modal-header {
+        border-radius: 3px 3px 0 0;
+    }
+
+    .modal-notify .modal-content {
+        border-radius: 3px;
+    }
+</style>
 <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
         <li>Page</li>
         <li><a href=""><?= $page; ?></a></li>
     </ul>
+    <?php if ($this->session->flashdata('success')) {
+        echo '<div class="alert alert-success" role="alert">' . $this->session->flashdata('success') . '</div>';
+    } elseif ($this->session->flashdata('error')) {
+        echo '<div class="alert alert-danger" role="alert">' . $this->session->flashdata('error') . '</div>';
+    }
+    ?>
 
     <!-- Block Menu -->
     <div class="row">
@@ -103,5 +133,82 @@
         </div>
     </div>
     <!-- end modal add -->
+
+    <!-- modal edit -->
+    <div class="modal" tabindex="-1" role="dialog" id="editMenu">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url('admin/manajemen'); ?>/UpdateUser" method="post" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" value="" name="edit_id_user" id="edit_id_user">
+                        <input type="hidden" class="form-control" name="edit_username" id="edit_username">
+                        <!-- <input type="text" value="" id="edit_id_user" name="edit_id_user" class="form-control validate"> -->
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="edit_nama">Nama</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="edit_nama" name="edit_nama" class="form-control validate">
+                            </div>
+                        </div>
+
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="edit_password">Password</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="password" id="edit_password" name="edit_password" class="form-control validate">
+                            </div>
+                        </div>
+
+                        <div class="md-form row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="edit_role">Role</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select id="edit_role" name="edit_role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
+                                    <option></option>
+                                    <option value="2">Administrator</option>
+                                    <option value="3">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal edit -->
+
+    <!-- Delete Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="hapusMenu">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-content2">
+                <div class="modal-body">
+                    <form action="<?= base_url('admin/manajemen'); ?>/DeleteMenu" method="post" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" value="" name="hapus_id_menu" id="hapus_id_menu">
+                        <h1>Delete Menu</h1>
+                        <p>Apakah anda yakin, ingin menghapus menu tersebut?</p>
+
+                        <div class="clearfix">
+                            <button type="button" onclick="document.getElementById('hapusMenu').style.display='none'" class="btn btn-warning">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Delete Modal -->
 </div>
 <!-- END Page Content -->

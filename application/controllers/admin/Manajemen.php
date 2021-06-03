@@ -71,6 +71,21 @@ class Manajemen extends CI_Controller
         echo json_encode($data);
     }
 
+    public function DeleteMenu()
+    {
+        $id_menu = $this->input->post('hapus_id_menu');
+        $where = ['id_menu' => $id_menu];
+        $deleted = $this->menu->deleteMenu($where);
+        if (!$deleted) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal hapus menu!');
+            redirect('manajemen/manajemen-menu');
+        } else {
+            $this->session->set_flashdata('success', 'Data berhasil di hapus!');
+            redirect('manajemen/manajemen-menu');
+        }
+    }
+
 
     // ===================== SubMenu Manajemen ==================================
     public function ManajemenSubMenu()
