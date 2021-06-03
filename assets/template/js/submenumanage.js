@@ -1,7 +1,7 @@
 $(document).ready(function () {
   $.ajax({
     type: "GET",
-    url: "get-menu",
+    url: "get-submenu",
     dataType: "json",
     success: function (response) {
       if (response.length !== 0) {
@@ -12,25 +12,25 @@ $(document).ready(function () {
           html += `<tr>`;
           html += `<td class="text-center">${no}</td>`;
           html += `<td class="text-center">${value.nama_menu}</td>`;
-          html += `<td class="text-center">${value.type}</td>`;
+          html += `<td class="text-center">${value.nama_submenu}</td>`;
           html += `<td class="text-center"><i class="${value.icon}"></i></td>`;
           if (value.is_active == 1) {
-            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_menu}" type="checkbox" value="${value.id_menu}" status="${value.is_active}" checked><span></span></label></td>`;
+            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_submenu}" type="checkbox" value="${value.id_submenu}" status="${value.is_active}" checked><span></span></label></td>`;
           } else {
-            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_menu}" type="checkbox" value="${value.id_menu}" status="${value.is_active}"><span></span></label></td>`;
+            html += `<td class="text-center"><label class="switch switch-primary"><input id="toggle_activate${value.id_submenu}" type="checkbox" value="${value.id_submenu}" status="${value.is_active}"><span></span></label></td>`;
           }
           html +=
             `<td class="text-center">` +
-            `<a href="#" class="badge badge-warning" id="btn_edit" value="${value.id_menu}"><i class="far fa-edit"></i></a>|` +
-            `<a href="#" class="badge badge-danger" id="btn_hapus" value="${value.id_menu}"><i class="fas fa-trash-alt"></i></a>` +
+            `<a href="#" class="badge badge-warning" id="btn_edit" value="${value.id_submenu}"><i class="far fa-edit"></i></a>|` +
+            `<a href="#" class="badge badge-danger" id="btn_hapus" value="${value.id_submenu}"><i class="fas fa-trash-alt"></i></a>` +
             `</td>`;
           html += `</tr>`;
           no++;
         });
-        $("#menu_tbody").html(html);
+        $("#submenu_tbody").html(html);
         // Toggle
         $('input[type="checkbox"]').change(function (event) {
-          let id_menu = $(this).attr("value");
+          let id_submenu = $(this).attr("value");
           let status = $(this).attr("status");
           if (status == 0) {
             is_active = 1;
@@ -38,14 +38,14 @@ $(document).ready(function () {
             is_active = 0;
           }
           // =============================================
-          if (id_menu == "") {
-            alert("Error in id user");
+          if (id_submenu == "") {
+            alert("Error in id_submenu");
           } else {
             $.ajax({
               type: "post",
-              url: "update-menu",
+              url: "update-submenu",
               data: {
-                id_menu: id_menu,
+                id_submenu: id_submenu,
                 status: is_active,
               },
               dataType: "json",

@@ -10,14 +10,16 @@
         <div class="block-title">
             <h2>Data SubMenu</h2>
         </div>
+        <button type="button" class="btn btn-primary btnAdd" data-toggle="modal" data-target="#addSubMenu">
+            Add SubMenu
+        </button>
         <!-- Example Content -->
         <table id="menu-datatable" class="table table-vcenter table-condensed table-bordered">
             <thead>
                 <tr>
                     <th class="text-center">No</th>
-                    <th class="text-center">Menu</th>
+                    <th class="text-center">Menu Parent</th>
                     <th class="text-center">Nama SubMenu</th>
-                    <th class="text-center">Url</th>
                     <th class="text-center">Icon</th>
                     <th class="text-center">Status Aktif</th>
                     <th class="text-center">Option</th>
@@ -32,7 +34,6 @@
                         <td class="text-center"><?= $i; ?></td>
                         <td class="text-center"><?= $sm['nama_menu']; ?></td>
                         <td class="text-center"><?= $sm['nama_submenu']; ?></td>
-                        <td class="text-center"><?= $sm['url']; ?></td>
                         <td class="text-center"><?= '<i class="' . $sm['icon'] . '"></i>'; ?></td>
                         <td class="text-center">
                             <?php if ($sm['is_active'] == 1) : ?>

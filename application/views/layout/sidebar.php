@@ -7,17 +7,29 @@
             </a>
             <ul class="sidebar-nav">
                 <?php
-                $where = [
-                    'uam.role_id' => $this->session->userdata('role'),
-                    'm.is_active' => 1
-                ];
-                $this->db->distinct();
-                $this->db->select('m.id_menu, m.nama_menu, m.link_menu, m.type, m.icon, m.is_active');
-                $this->db->from('menu m');
-                $this->db->join('user_access_menu uam', 'm.id_menu=uam.menu_id');
-                $this->db->where($where);
-                $this->db->order_by('m.id_menu', 'asc');
-                $menu = $this->db->get()->result_array();
+                if ($this->session->userdata('role') == 1) {
+                    $where = [
+                        'm.is_active' => 1
+                    ];
+                    $this->db->distinct();
+                    $this->db->select('m.id_menu, m.nama_menu, m.link_menu, m.type, m.icon, m.is_active');
+                    $this->db->from('menu m');
+                    $this->db->where($where);
+                    $this->db->order_by('m.id_menu', 'asc');
+                    $menu = $this->db->get()->result_array();
+                } else {
+                    $where = [
+                        'uam.role_id' => $this->session->userdata('role'),
+                        'm.is_active' => 1
+                    ];
+                    $this->db->distinct();
+                    $this->db->select('m.id_menu, m.nama_menu, m.link_menu, m.type, m.icon, m.is_active');
+                    $this->db->from('menu m');
+                    $this->db->join('user_access_menu uam', 'm.id_menu=uam.menu_id');
+                    $this->db->where($where);
+                    $this->db->order_by('m.id_menu', 'asc');
+                    $menu = $this->db->get()->result_array();
+                }
 
 
                 foreach ($menu as $mn) : ?>

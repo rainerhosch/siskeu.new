@@ -20,6 +20,12 @@ class M_menu extends CI_Model
         return $this->db->get();
     }
 
+    // Add user
+    public function addNewMenu($data)
+    {
+        return $this->db->insert('menu', $data);
+    }
+
     // Update Menu
     public function updateMenu($id_menu, $data)
     {
@@ -51,6 +57,17 @@ class M_menu extends CI_Model
         $this->db->join('menu m', 'sm.id_menu=m.id_menu');
         // $this->db->where($where);
         return $this->db->get();
+    }
+    // Update Sub Menu
+    public function updateSubMenu($id_submenu, $data)
+    {
+        $this->db->where('id_submenu', $id_submenu);
+        $this->db->update('submenu', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     public function getUserMenu($where)
