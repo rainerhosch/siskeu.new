@@ -16,7 +16,7 @@ class M_menu extends CI_Model
         // code here...
         $this->db->select('*');
         $this->db->from('menu');
-        // $this->db->where($where);
+        $this->db->where('editable =', 'YES');
         return $this->db->get();
     }
 
@@ -66,7 +66,7 @@ class M_menu extends CI_Model
         $this->db->select('id_submenu, nama_submenu, url, sm.icon, sm.is_active, m.nama_menu');
         $this->db->from('submenu sm');
         $this->db->join('menu m', 'sm.id_menu=m.id_menu');
-        // $this->db->where($where);
+        $this->db->where('editable =', 'YES');
         return $this->db->get();
     }
     // Update Sub Menu

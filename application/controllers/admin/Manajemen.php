@@ -36,7 +36,8 @@ class Manajemen extends CI_Controller
             'link_menu' => $link,
             'type'      => $type,
             'icon'      => $icon,
-            'is_active' => $is_active
+            'is_active' => $is_active,
+            'editable' => 'YES'
         ];
         $add = $this->menu->addNewMenu($dataPost);
         if (!$add) {
