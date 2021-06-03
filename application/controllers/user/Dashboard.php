@@ -25,7 +25,7 @@ class Dashboard extends CI_Controller
     public function index()
     {
         $data['title'] = 'SiskeuNEW';
-        $data['slug'] = 'Dashboard';
+        $data['page'] = 'Dashboard';
         $data['content'] = 'page_test';
         $this->load->view('template', $data);
         // $this->load->view('app');

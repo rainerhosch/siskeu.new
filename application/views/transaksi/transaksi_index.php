@@ -10,7 +10,7 @@
     </div> -->
     <ul class="breadcrumb breadcrumb-top">
         <li>Page</li>
-        <li><a href=""><?= $slug; ?></a></li>
+        <li><a href=""><?= $page; ?></a></li>
     </ul>
     <!-- END Page Header -->
 

@@ -21,7 +21,7 @@ class Transaksi extends CI_Controller
     public function index()
     {
         $data['title'] = 'SiskeuNEW';
-        $data['slug'] = 'Transaksi';
+        $data['page'] = 'Transaksi';
         $data['content'] = 'transaksi/transaksi_index';
         $this->load->view('template', $data);
     }
