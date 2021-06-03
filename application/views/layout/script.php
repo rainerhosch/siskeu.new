@@ -3,5 +3,6 @@
 <script src="<?= base_url() ?>assets/proui/js/plugins.js"></script>
 <script src="<?= base_url() ?>assets/proui/js/app.js"></script>
 <script src="<?= base_url() ?>assets/proui/js/pages/index.js"></script>
-<script src="<?= base_url() ?>assets/template/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
-<script src="<?= base_url() ?>assets/template/js/my.js"></script>
+<!-- <script src="<?= base_url() ?>assets/template/bootstrap-toggle/js/bootstrap-toggle.min.js"></script> -->
+<script src="<?= base_url() ?>assets/template/js/menumanage.js"></script>
+<script src="<?= base_url() ?>assets/template/js/usermanage.js"></script>

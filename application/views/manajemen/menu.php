@@ -30,37 +30,11 @@
                         </tr>
                     </thead>
                     <tbody id="menu_tbody">
-                        <? php // $i = 1; 
-                        ?>
-                        <?php foreach ($datamenuaktif as $mn) :
-                        ?>
-                            <tr>
-                                <!-- <td class="text-center"><?= $i; ?></td> -->
-                                <td class="text-center"><?= $mn['nama_menu']; ?></td>
-                                <td class="text-center"><?= $mn['type']; ?></td>
-                                <td class="text-center"><?= '<i class="' . $mn['icon'] . '"></i>'; ?></td>
-                                <td class="text-center">
-                                    <?php if ($mn['is_active'] == 1) :  ?>
-                                        <input type="checkbox" checked data-toggle="toggle" data-size="mini" class="toggle-<?= $mn['id_menu']; ?>" id="toggle_activate" value="<?= $mn['id_menu']; ?>" status="<?= $mn['is_active']; ?>">
-                                    <?php else : ?>
-                                        <input type="checkbox" data-toggle="toggle" data-size="mini" class="toggle-<?= $mn['id_menu']; ?>" id="toggle_activate" value="<?= $mn['id_menu']; ?>" status="<?= $mn['is_active']; ?>">
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="badge badge-warning" id="btn_edit" value="<?= $mn['id_menu']; ?>"><i class="far fa-edit"></i></a>|
-                                    <!-- <a href="#" class="badge badge-danger" id="btn_non_aktifkan" value="<?= $mn['id_menu']; ?>" status="<?= $mn['is_active']; ?>">Non Aktifkan</a> -->
-                                    <a href="#" class="badge badge-danger" id="btn_hapus" value="<?= $mn['id_menu']; ?>"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                            <? php // $i++; 
-                            ?>
-                        <?php endforeach; ?>
-
+                        <!-- Load Data by Ajax -->
                     </tbody>
                 </table>
                 <!-- END Example Content -->
             </div>
-            <!-- END Web Server Block -->
         </div>
     </div>
     <!-- END Block Menu -->

@@ -23,7 +23,7 @@
                     <th class="text-center">Option</th>
                 </tr>
             </thead>
-            <tbody id="menu_tbody">
+            <tbody id="submenu_tbody">
                 <?php $i = 1; ?>
                 <?php foreach ($datasubmenu as $sm) :
                     // if($mn['is_active'] != 0):
