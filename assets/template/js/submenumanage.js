@@ -45,7 +45,7 @@ $(document).ready(function () {
             } else {
               $.ajax({
                 type: "post",
-                url: "update-submenu",
+                url: "change-status-submenu",
                 data: {
                   id_submenu: id_submenu,
                   status: is_active,

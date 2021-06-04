@@ -21,7 +21,7 @@ $(document).ready(function () {
           }
           html +=
             `<td class="text-center">` +
-            `<a href="#" class="badge badge-warning" id="btn_edit" value="${value.id_menu}"><i class="far fa-edit"></i></a>|` +
+            `<a href="#" class="badge badge-warning edit-menu" id="btn_edit_menu" value="${value.id_menu}"><i class="far fa-edit"></i></a>|` +
             `<a href="#" onclick="document.getElementById('hapusMenu').style.display='block'" class="badge badge-danger btn-hapus" id="btn_hapus_menu" value="${value.id_menu}"><i class="fas fa-trash-alt"></i></a>` +
             `</td>`;
           html += `</tr>`;
@@ -45,7 +45,7 @@ $(document).ready(function () {
             } else {
               $.ajax({
                 type: "post",
-                url: "update-menu",
+                url: "change-status-menu",
                 data: {
                   id_menu: id_menu,
                   status: is_active,
@@ -67,7 +67,7 @@ $(document).ready(function () {
         // hapus menu
         $("a.btn-hapus").click(function () {
           let id_menu = $(this).attr("value");
-          // console.log(id_menu);
+          console.log(id_menu);
           if (id_menu == "") {
             alert("Error in id menu");
           } else {
@@ -77,5 +77,34 @@ $(document).ready(function () {
         // end hapus menu
       }
     },
+  });
+
+  $(this).on("click", "#btn_edit_menu", function (e) {
+    e.preventDefault();
+    let id_menu = $(this).attr("value");
+    // console.log(id_menu);
+    if (id_menu == "") {
+      alert("Error in id user");
+    } else {
+      $.ajax({
+        type: "post",
+        url: "edit-menu",
+        data: {
+          id_menu: id_menu,
+        },
+        dataType: "json",
+        success: function (response) {
+          // console.log(response);
+          $("#editMenu").modal("show");
+          $("#id_menu_edit").val(response.id_menu);
+          $("#nama_menu_edit").val(response.nama_menu);
+          $("#link_menu_edit").val(response.link_menu);
+          $("#icon_menu_edit").val(response.icon);
+        },
+        error: function (e) {
+          error_server();
+        },
+      });
+    }
   });
 });

@@ -20,6 +20,14 @@ class M_menu extends CI_Model
         return $this->db->get();
     }
 
+    public function getMenuById($where)
+    {
+        $this->db->select('*');
+        $this->db->from('menu');
+        $this->db->where($where);
+        return $this->db->get();
+    }
+
     // Add user
     public function addNewMenu($data)
     {

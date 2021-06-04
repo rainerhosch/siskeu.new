@@ -56,7 +56,46 @@ class Manajemen extends CI_Controller
         echo json_encode($response);
     }
 
+    public function EditMenu()
+    {
+        // code here
+        if ($this->input->is_ajax_request()) {
+            $id_menu = $this->input->post('id_menu');
+            $where = ['id_menu' => $id_menu];
+            $data = $this->menu->getMenuById($where)->row_array();
+        } else {
+            $data = "Error di edit menu";
+        }
+        echo json_encode($data);
+    }
+
     public function UpdateMenu()
+    {
+        // code here
+        $id_menu    = $this->input->post('id_menu_edit');
+        $nama       = $this->input->post('nama_menu_edit');
+        $link       = $this->input->post('link_menu_edit');
+        $icon       = $this->input->post('icon_menu_edit');
+        $type       = $this->input->post('type_menu_edit');
+        $dataUpdate   = [
+            'nama_menu' => $nama,
+            'link_menu' => $link,
+            'type'      => $type,
+            'icon'      => $icon
+        ];
+        $update = $this->menu->updateMenu($id_menu, $dataUpdate);
+        if (!$update) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal edit menu!');
+            redirect('manajemen/manajemen-menu');
+        } else {
+            $this->session->set_flashdata('success', 'Sukses edit menu!');
+            redirect('manajemen/manajemen-menu');
+        }
+    }
+
+
+    public function ChangeStatusMenu()
     {
         if ($this->input->is_ajax_request()) {
             $id_menu = $this->input->post('id_menu');
@@ -107,7 +146,7 @@ class Manajemen extends CI_Controller
         echo json_encode($response);
     }
 
-    public function UpdateSubMenu()
+    public function ChangeStatusSubmenu()
     {
         if ($this->input->is_ajax_request()) {
             $id_submenu = $this->input->post('id_submenu');

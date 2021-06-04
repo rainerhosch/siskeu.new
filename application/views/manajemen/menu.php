@@ -145,37 +145,43 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url('admin/manajemen'); ?>/UpdateUser" method="post" enctype="multipart/form-data">
-                        <input type="hidden" class="form-control" value="" name="edit_id_user" id="edit_id_user">
-                        <input type="hidden" class="form-control" name="edit_username" id="edit_username">
-                        <!-- <input type="text" value="" id="edit_id_user" name="edit_id_user" class="form-control validate"> -->
+                    <form action="<?= base_url('manajemen'); ?>/update-menu" method="post" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" value="" name="id_menu_edit" id="id_menu_edit">
                         <div class="md-form mb-5 row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="edit_nama">Nama</label>
+                                <label data-error="wrong" data-success="right" for="nama_menu_edit">Nama Menu</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" id="edit_nama" name="edit_nama" class="form-control validate">
+                                <input type="text" id="nama_menu_edit" name="nama_menu_edit" class="form-control validate">
                             </div>
                         </div>
 
                         <div class="md-form mb-5 row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="edit_password">Password</label>
+                                <label data-error="wrong" data-success="right" for="link_menu_edit">Link Menu</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="password" id="edit_password" name="edit_password" class="form-control validate">
+                                <input type="text" id="link_menu_edit" name="link_menu_edit" class="form-control validate">
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="icon_menu_edit">Icon</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="icon_menu_edit" name="icon_menu_edit" class="form-control validate">
                             </div>
                         </div>
 
                         <div class="md-form row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="edit_role">Role</label>
+                                <label data-error="wrong" data-success="right" for="type_menu_edit">Type</label>
                             </div>
                             <div class="col-md-9">
-                                <select id="edit_role" name="edit_role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
+                                <select id="type_menu_edit" name="type_menu_edit" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
                                     <option></option>
-                                    <option value="2">Administrator</option>
-                                    <option value="3">Admin</option>
+                                    <option value="dinamis">Dinamis</option>
+                                    <option value="statis">Statis</option>
                                 </select>
                             </div>
                         </div>
