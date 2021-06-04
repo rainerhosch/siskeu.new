@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-6 col-xs-6">
             <div class="pull-left">
-                2020 <span id=""></span> &copy; <a href="#">Sistem Keuangan</a>
+                <?= date('Y'); ?><span id=""></span> &copy; <a href="#">Sistem Keuangan</a>
             </div>
         </div>
         <div class="col-lg-6 col-xs-6">
