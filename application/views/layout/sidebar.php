@@ -34,14 +34,20 @@
 
 
                 foreach ($menu as $mn) : ?>
+                    <?php if ($this->uri->segment(1) == $mn['link_menu']) {
+                        $class = 'active';
+                    } else {
+                        $class = '';
+                    }; ?>
+
                     <?php if ($mn['type'] != 'dinamis') : ?>
-                        <li>
+                        <li class="<?= $class ?>">
                             <a href="<?= base_url('') . $mn['link_menu']; ?>">
                                 <i class="<?= $mn['icon']; ?> sidebar-nav-icon"></i>
                                 <span class="sidebar-nav-mini-hide"><strong><?= $mn['nama_menu'] ?></strong></span></a>
                         </li>
                     <?php else : ?>
-                        <li>
+                        <li class="<?= $class ?>">
                             <a href="javascript:void(0)" class="sidebar-nav-menu">
                                 <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
                                 <i class="<?= $mn['icon']; ?> sidebar-nav-icon"></i>
