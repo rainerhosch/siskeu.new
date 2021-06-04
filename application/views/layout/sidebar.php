@@ -66,16 +66,23 @@
                                 foreach ($submenu as $sm) :
                                     if ($sm['id_menu'] === $mn['id_menu']) :
                                 ?>
-                                        <?php if ($title === $sm['nama_submenu']) : ?>
-                                            <li class="active">
-                                            <?php else : ?>
-                                            <li>
-                                            <?php endif; ?>
+                                        <?php
+                                        //$uri1 = $this->uri->segment(1);
+                                        //$uri2 = $this->uri->segment(2);
+                                        //$suburl = $uri1 . '/' . $uri2;
+                                        //if ($suburl == $sm['url']) : 
+                                        ?>
+                                        <!-- <li class="active"> -->
+                                        <? php // else : 
+                                        ?>
+                                        <li>
+                                            <? php // endif; 
+                                            ?>
                                             <a href="<?= base_url('') . $sm['url']; ?>">
                                                 <i class="<?= $sm['icon'] ?>"></i></i>&nbsp;&nbsp;&nbsp;<?= $sm['nama_submenu']; ?></a>
-                                            </li>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             </ul>
                         </li>
                     <?php endif; ?>
