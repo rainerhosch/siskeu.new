@@ -3,7 +3,7 @@
     <div id="sidebar-scroll">
         <div class="sidebar-content">
             <a href="<?= base_url() ?>" class="sidebar-brand">
-                <i class="gi gi-flash"></i><span class="sidebar-nav-mini-hide"><strong>Siskeu</strong>New</span>
+                <i class="fa fa-xing"></i><span class="sidebar-nav-mini-hide"><strong>Siskeu</strong>New</span>
             </a>
             <ul class="sidebar-nav">
                 <?php
