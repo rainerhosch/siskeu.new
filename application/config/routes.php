@@ -66,7 +66,8 @@ $route['manajemen/update-menu'] = 'admin/Manajemen/UpdateMenu';
 $route['manajemen/manajemen-submenu'] = 'admin/Manajemen/ManajemenSubMenu';
 $route['manajemen/get-submenu'] = 'admin/Manajemen/getDataSubMenu';
 $route['manajemen/change-status-submenu'] = 'admin/Manajemen/ChangeStatusSubmenu';
-$route['manajemen/update-submenu'] = 'admin/Manajemen/UpdateSubMenu';
+$route['manajemen/edit-submenu'] = 'admin/Manajemen/EditSubmenu';
+$route['manajemen/update-submenu'] = 'admin/Manajemen/UpdateSubmenu';
 // user
 $route['manajemen/manajemen-user'] = 'admin/Manajemen/ManajemenUser';
 $route['manajemen/edit-user'] = 'admin/Manajemen/EditUser';

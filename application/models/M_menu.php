@@ -11,12 +11,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_menu extends CI_Model
 {
     // methode get menu
-    public function getMenu()
+    public function getMenu($where)
     {
         // code here...
         $this->db->select('*');
         $this->db->from('menu');
-        $this->db->where('editable =', 'YES');
+        $this->db->where($where);
         return $this->db->get();
     }
 
@@ -28,7 +28,7 @@ class M_menu extends CI_Model
         return $this->db->get();
     }
 
-    // Add user
+    // Add new menu
     public function addNewMenu($data)
     {
         return $this->db->insert('menu', $data);
@@ -57,7 +57,16 @@ class M_menu extends CI_Model
         }
     }
 
-    // methode get sub menu
+    // ==========================Sub Menu============================
+    public function getSubmenuById($where)
+    {
+        $this->db->select('id_submenu, m.id_menu, m.nama_menu, nama_submenu, url, sm.icon, sm.is_active');
+        $this->db->from('submenu sm');
+        $this->db->join('menu m', 'sm.id_menu=m.id_menu');
+        $this->db->where($where);
+        return $this->db->get();
+    }
+
     public function getSubMenu($where)
     {
         // code here...
@@ -77,6 +86,13 @@ class M_menu extends CI_Model
         $this->db->where('editable =', 'YES');
         return $this->db->get();
     }
+
+    // Add Submenu
+    public function addNewSubmenu($data)
+    {
+        return $this->db->insert('submenu', $data);
+    }
+
     // Update Sub Menu
     public function updateSubMenu($id_submenu, $data)
     {
@@ -88,6 +104,20 @@ class M_menu extends CI_Model
             return FALSE;
         }
     }
+
+    // Delete Submenu
+    public function deleteSubmenu($data)
+    {
+        $this->db->where($data);
+        $this->db->delete('submenu');
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    // =================================================
 
     public function getUserMenu($where)
     {

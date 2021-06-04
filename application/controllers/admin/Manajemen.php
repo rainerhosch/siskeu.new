@@ -52,7 +52,10 @@ class Manajemen extends CI_Controller
 
     public function getDataMenu()
     {
-        $response = $this->menu->getMenu()->result_array();
+        $where = [
+            'editable =' => 'YES'
+        ];
+        $response = $this->menu->getMenu($where)->result_array();
         echo json_encode($response);
     }
 
@@ -140,12 +143,33 @@ class Manajemen extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function AddNewSubmenu()
+    {
+        $dataPost   = [
+            'id_menu' => $this->input->post('menu_parent'),
+            'nama_submenu' => $this->input->post('nama_submenu'),
+            'url' => $this->input->post('url_submenu'),
+            'icon'      => $this->input->post('icon_submenu'),
+            'is_active' => 0,
+        ];
+        $add = $this->menu->addNewSubmenu($dataPost);
+        if (!$add) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal menambahkan SubMenu!');
+            redirect('manajemen/manajemen-menu');
+        } else {
+            $this->session->set_flashdata('success', 'SubMenu ' . $this->input->post('nama_submenu') . ', berhasil ditambahkan!');
+            redirect('manajemen/manajemen-menu');
+        }
+    }
+
     public function getDataSubMenu()
     {
         $response = $this->menu->getSubMenuAll()->result_array();
         echo json_encode($response);
     }
 
+    // activate or non activate submenu
     public function ChangeStatusSubmenu()
     {
         if ($this->input->is_ajax_request()) {
@@ -160,6 +184,59 @@ class Manajemen extends CI_Controller
             $data = "Error di edit Menu";
         }
         echo json_encode($data);
+    }
+
+    public function EditSubmenu()
+    {
+        // code here
+        if ($this->input->is_ajax_request()) {
+            $id_submenu = $this->input->post('id_submenu');
+            $where = ['id_submenu' => $id_submenu];
+            $data = $this->menu->getSubmenuById($where)->row_array();
+        } else {
+            $data = "Error di edit menu";
+        }
+        echo json_encode($data);
+    }
+
+    public function UpdateSubmenu()
+    {
+        // code here
+        $id_submenu     = $this->input->post('id_submenu_edit');
+        $nama           = $this->input->post('nama_submenu_edit');
+        $link           = $this->input->post('link_submenu_edit');
+        $icon           = $this->input->post('icon_submenu_edit');
+        $id_menu        = $this->input->post('menu_parent_edit');
+        $dataUpdate   = [
+            'id_menu'       => $id_menu,
+            'nama_submenu'  => $nama,
+            'url'           => $link,
+            'icon'          => $icon
+        ];
+        $update = $this->menu->updateSubmenu($id_submenu, $dataUpdate);
+        if (!$update) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal edit submenu!');
+            redirect('manajemen/manajemen-submenu');
+        } else {
+            $this->session->set_flashdata('success', 'Sukses edit submenu!');
+            redirect('manajemen/manajemen-submenu');
+        }
+    }
+    // delete submenu
+    public function DeleteSubmenu()
+    {
+        $id_submenu = $this->input->post('hapus_id_submenu');
+        $where = ['id_submenu' => $id_submenu];
+        $deleted = $this->menu->deleteSubmenu($where);
+        if (!$deleted) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal hapus submenu!');
+            redirect('manajemen/manajemen-submenu');
+        } else {
+            $this->session->set_flashdata('success', 'Data berhasil di hapus!');
+            redirect('manajemen/manajemen-submenu');
+        }
     }
 
 
