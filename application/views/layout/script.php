@@ -6,3 +6,11 @@
 <script src="<?= base_url() ?>assets/template/js/submenumanage.js"></script>
 <script src="<?= base_url() ?>assets/template/js/menumanage.js"></script>
 <script src="<?= base_url() ?>assets/template/js/usermanage.js"></script>
+<!-- Data Table -->
+
+<!-- <script src="<?= base_url() ?>assets/proui/js/pages/tablesDatatables.js"></script>
+<script>
+    $(function() {
+        TablesDatatables.init();
+    });
+</script> -->
