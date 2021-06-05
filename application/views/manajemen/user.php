@@ -125,7 +125,7 @@
                             <div class="col-md-9">
                                 <select id="add_role" name="add_role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
                                     <option></option>
-                                    <option value="2">Administrator</option>
+                                    <option value="2">Master Admin</option>
                                     <option value="3">Admin</option>
                                 </select>
                             </div>
@@ -182,10 +182,18 @@
                                 <label data-error="wrong" data-success="right" for="edit_role">Role</label>
                             </div>
                             <div class="col-md-9">
-                                <select id="edit_role" name="edit_role" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
+                                <select id="edit_role" name="edit_role" class="select-select2 select2-hidden-accessible" style="width: 100%;">
                                     <option></option>
-                                    <option value="2">Administrator</option>
-                                    <option value="3">Admin</option>
+                                    <?php $user =  $this->user->roleUser()->result_array();
+                                    foreach ($user as $t) :
+                                        if ($t['role'] == 2) {
+                                            $r = 'Master Admin';
+                                        } else {
+                                            $r = 'Admin';
+                                        }
+                                    ?>
+                                        <option class="<?= $t['role']; ?>" value="<?= $t['role']; ?>"><?= $r ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

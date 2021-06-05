@@ -20,6 +20,13 @@ class M_menu extends CI_Model
         return $this->db->get();
     }
 
+    public function typeMenu()
+    {
+        $this->db->distinct();
+        $this->db->select('type');
+        $this->db->from('menu');
+        return $this->db->get();
+    }
     public function getMenuById($where)
     {
         $this->db->select('*');

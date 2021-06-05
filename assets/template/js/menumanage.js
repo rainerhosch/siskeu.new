@@ -100,6 +100,13 @@ $(document).ready(function () {
           $("#nama_menu_edit").val(response.nama_menu);
           $("#link_menu_edit").val(response.link_menu);
           $("#icon_menu_edit").val(response.icon);
+          $("#type_menu_edit option[class='" + response.type + "']").attr(
+            "selected",
+            "selected"
+          );
+          $("#type_menu_edit option[class='" + response.type + "']").trigger(
+            "change"
+          );
         },
         error: function (e) {
           error_server();

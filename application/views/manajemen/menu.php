@@ -36,35 +36,35 @@
     ?>
 
     <!-- Block Menu -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="block">
-                <div class="block-title">
-                    <h2>Menu Aktif</h2>
-                </div>
-                <button type="button" class="btn btn-primary btnAdd" data-toggle="modal" data-target="#addMenu">
-                    Add Menu
-                </button>
-                <!-- Example Content -->
-                <table id="menu-datatable" class="table table-vcenter table-condensed table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="text-center">No</th>
-                            <th class="text-center">Menu</th>
-                            <th class="text-center">Tipe</th>
-                            <th class="text-center">Icon</th>
-                            <th class="text-center">Status Aktif</th>
-                            <th class="text-center">Option</th>
-                        </tr>
-                    </thead>
-                    <tbody id="menu_tbody">
-                        <!-- Load Data by Ajax -->
-                    </tbody>
-                </table>
-                <!-- END Example Content -->
-            </div>
+    <!-- <div class="row">
+        <div class="col-md-6"> -->
+    <div class="block">
+        <div class="block-title">
+            <h2>Menu Aktif</h2>
         </div>
+        <button type="button" class="btn btn-primary btnAdd" data-toggle="modal" data-target="#addMenu">
+            Add Menu
+        </button>
+        <!-- Example Content -->
+        <table id="menu-datatable" class="table table-vcenter table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Menu</th>
+                    <th class="text-center">Tipe</th>
+                    <th class="text-center">Icon</th>
+                    <th class="text-center">Status Aktif</th>
+                    <th class="text-center">Option</th>
+                </tr>
+            </thead>
+            <tbody id="menu_tbody">
+                <!-- Load Data by Ajax -->
+            </tbody>
+        </table>
+        <!-- END Example Content -->
     </div>
+    <!-- </div>
+    </div> -->
     <!-- END Block Menu -->
 
     <!-- modal add -->
@@ -178,10 +178,13 @@
                                 <label data-error="wrong" data-success="right" for="type_menu_edit">Type</label>
                             </div>
                             <div class="col-md-9">
-                                <select id="type_menu_edit" name="type_menu_edit" class="select-select2 select2-hidden-accessible" style="width: 100%;" data-placeholder="Pilih Role User.." tabindex="-1" aria-hidden="true">
+                                <select id="type_menu_edit" name="type_menu_edit" class="select-select2 select2-hidden-accessible" style="width: 100%;">
                                     <option></option>
-                                    <option value="dinamis">Dinamis</option>
-                                    <option value="statis">Statis</option>
+                                    <?php $type =  $this->menu->typeMenu()->result_array();
+                                    foreach ($type as $t) :
+                                    ?>
+                                        <option class="<?= $t['type']; ?>" value="<?= $t['type']; ?>"><?= strtoupper($t['type']); ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

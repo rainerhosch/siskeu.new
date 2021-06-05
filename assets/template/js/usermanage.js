@@ -18,6 +18,13 @@ $(document).ready(function () {
           $("#edit_id_user").val(response.id_user);
           $("#edit_nama").val(response.nama_user);
           $("#edit_username").val(response.username);
+          $("#edit_role option[class='" + response.role + "']").attr(
+            "selected",
+            "selected"
+          );
+          $("#edit_role option[class='" + response.role + "']").trigger(
+            "change"
+          );
           // $('#edit_password').val(response.password);
           // $('#edit_role').val(response.role);
         },
