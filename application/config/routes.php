@@ -54,7 +54,7 @@ $route['default_controller'] = 'auth';
 $route['404_override'] = 'My404';
 $route['translate_uri_dashes'] = FALSE;
 $route['dashboard'] = 'user/dashboard';
-$route['transaksi'] = 'user/transaksi';
+$route['transaksi/(:any)'] = 'user/transaksi/$1';
 
 // for admin access manajemen 
 $route['manajemen/manajemen-menu'] = 'admin/Manajemen/ManajemenMenu';
@@ -62,6 +62,7 @@ $route['manajemen/get-menu'] = 'admin/Manajemen/getDataMenu';
 $route['manajemen/change-status-menu'] = 'admin/Manajemen/ChangeStatusMenu';
 $route['manajemen/edit-menu'] = 'admin/Manajemen/EditMenu';
 $route['manajemen/update-menu'] = 'admin/Manajemen/UpdateMenu';
+// $route['manajemen/(:any)'] = 'admin/Manajemen/$1';
 // submenu
 $route['manajemen/manajemen-submenu'] = 'admin/Manajemen/ManajemenSubMenu';
 $route['manajemen/get-submenu'] = 'admin/Manajemen/getDataSubMenu';

@@ -15,13 +15,13 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+    }
+    public function index()
+    {
         if ($this->session->userdata('username') !== null) {
             // $this->session->set_flashdata('message', "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button> <h4><i class='icon fa fa-warning'></i> Alert!</h4> Harus Login Terlebih Dahulu</div>");
             redirect(base_url('dashboard'));
         }
-    }
-    public function index()
-    {
         // code here...
         $this->form_validation->set_rules('username', 'Username', 'trim|required');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');

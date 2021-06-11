@@ -20,7 +20,13 @@
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/themes.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/template/css/my.css">
     <link rel="stylesheet" href="<?= base_url('assets/proui/swal/dist/sweetalert2.min.css') ?>">
+    <!-- javascript -->
     <script src="<?= base_url() ?>assets/proui/js/vendor/modernizr.min.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/vendor/jquery.min.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/vendor/bootstrap.min.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/plugins.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/app.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/pages/index.js"></script>
 
     <style>
         .containerX {
