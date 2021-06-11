@@ -36,7 +36,7 @@ class Transaksi extends CI_Controller
             $C1 = $dataBiaya['cicilan_semester'] / 3;
             $C2 = $dataBiaya['cicilan_semester'] / 3;
             $C3 = $dataBiaya['cicilan_semester'] / 3;
-            // $dataMhs['tg'] = '1000000';
+            $dataMhs['tg'] = '1000000';
             $dataMhs['ub'] = $dataBiaya['uang_bangunan'];
             $dataMhs['kmhs'] = $dataBiaya['kemahasiswaan'];
             $dataMhs['c1'] = $C1;

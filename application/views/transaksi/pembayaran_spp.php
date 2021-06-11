@@ -135,7 +135,7 @@
                     <tbody id="riwayat_transaksi_tbody">
                         <tr>
                             <td class="text-center">1</td>
-                            <td class="text-center"><a href="#">2021061001</a></td>
+                            <td class="text-center"><a href="#">20210610001</a></td>
                             <td class="text-center">10 Juni 2021</td>
                             <td class="text-center">141351059</td>
                             <td class="text-center">Rizky Ardiansyah</td>
