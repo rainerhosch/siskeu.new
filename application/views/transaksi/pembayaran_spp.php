@@ -29,7 +29,6 @@
                 <div class="block-title">
                     <h2><strong>Data </strong>Mahasiswa</h2>
                 </div>
-                <!-- <form action="<?= base_url('admin/manajemen'); ?>/AddNewMenu" method="post" enctype="multipart/form-data"> -->
                 <div class="md-form mb-5 row">
                     <div class="col-md-3">
                         <label data-error="wrong" data-success="right" for="nidn">NIM</label>
@@ -57,14 +56,12 @@
                         <input type="text" id="jurusan" name="jurusan" class="form-control validate" readonly>
                     </div>
                 </div>
-                <!-- </form> -->
-                <!-- <hr> -->
                 <hr class="my-4">
                 <div class="jumbotron jumbotron-fluid data_kwajiban">
                     <div class="container">
                         <h4><strong>Kewajiban Bayar</strong></h4>
                         <!-- <hr class="my-4"> -->
-                        <form action="<?= base_url('admin/manajemen'); ?>/AddNewSubmenu" method="post" enctype="multipart/form-data">
+                        <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
                             <table id="menu-datatable" class="table table-vcenter table-condensed">
                                 <!-- <thead>
                                     <tr>
@@ -74,36 +71,11 @@
                                     </tr>
                                 </thead> -->
                                 <tbody id="data_kwajiban_tbody">
-                                    <!-- <tr>
-                                        <td><label data-error="wrong" data-success="right" for="tunggakan">Tunggakan</label></td>
-                                        <td class="text-center"><input type="text" id="tunggakan" name="tunggakan" class="form-control validate text-right" value="1.000.000" readonly></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_tunggakan"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label data-error="wrong" data-success="right" for="kmhs">Kemahasiswaan</label></td>
-                                        <td class="text-center"><input type="text" id="kmhs" name="kmhs" class="form-control validate text-right" readonly></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_kmhs"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label data-error="wrong" data-success="right" for="C1">Cicilan Ke-1</label></td>
-                                        <td class="text-center"><input type="text" id="C1" name="C1" class="form-control validate text-right" value="1.350.000" readonly></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C1"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label data-error="wrong" data-success="right" for="C2">Cicilan Ke-2</label></td>
-                                        <td class="text-center"><input type="text" id="C2" name="C2" class="form-control validate text-right" value="1.350.000" readonly></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C2"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label data-error="wrong" data-success="right" for="C3">Cicilan Ke-3</label></td>
-                                        <td class="text-center"><input type="text" id="C3" name="C3" class="form-control validate text-right" value="1.350.000" readonly></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C3"></td>
-                                    </tr> -->
                                 </tbody>
                             </table>
                             <hr class="my-5">
                             <div class="text-right">
-                                <button type="submit" class="btn btn-primary">Proses</button>
+                                <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
                             </div>
                         </form>
                     </div>
@@ -200,42 +172,89 @@
                     // $("#jurusan").val(response.prodi);
                     // $("#jurusan").val(response.prodi);
                     // $("#jurusan").val(response.prodi);
+                    html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
+                    html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nama}">`;
                     if (response.tg != null) {
                         html += `<tr>
                                     <td><label data-error="wrong" data-success="right" for="tunggakan">Tunggakan</label></td>
-                                    <td class="text-center"><input type="text" id="tunggakan" name="tunggakan" class="form-control validate text-right" value="${response.tg}" readonly></td>
+                                    <td class="text-center"><input type="text" id="tunggakan" name="tunggakan" class="form-control validate text-right" value="${response.tg}" disabled></td>
                                     <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_tunggakan"></td>
                                 </tr>`;
                     }
                     if (response.kmhs != null) {
                         html += `<tr>
                                     <td><label data-error="wrong" data-success="right" for="kmhs">Kemahasiswaan</label></td>
-                                    <td class="text-center"><input type="text" id="kmhs" name="kmhs" class="form-control validate text-right" value="${response.kmhs}" readonly></td>
+                                    <td class="text-center"><input type="text" id="kmhs" name="kmhs" class="form-control validate text-right" value="${response.kmhs}" disabled></td>
                                     <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_kmhs"></td>
                                 </tr>`;
                     }
                     if (response.c1 != null) {
                         html += `<tr>
                                     <td><label data-error="wrong" data-success="right" for="C1">Cicilan Ke-1</label></td>
-                                    <td class="text-center"><input type="text" id="C1" name="C1" class="form-control validate text-right" value="${response.c1}" readonly></td>
+                                    <td class="text-center"><input type="text" id="C1" name="C1" class="form-control validate text-right" value="${response.c1}" disabled></td>
                                     <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C1"></td>
                                 </tr>`;
                     }
                     if (response.c2 != null) {
                         html += `<tr>
                                     <td><label data-error="wrong" data-success="right" for="C2">Cicilan Ke-2</label></td>
-                                    <td class="text-center"><input type="text" id="C2" name="C2" class="form-control validate text-right" value="${response.c2}" readonly></td>
+                                    <td class="text-center"><input type="text" id="C2" name="C2" class="form-control validate text-right" value="${response.c2}" disabled></td>
                                     <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C2"></td>
                                 </tr>`;
                     }
                     if (response.c3 != null) {
                         html += `<tr>
                                     <td><label data-error="wrong" data-success="right" for="C3">Cicilan Ke-3</label></td>
-                                    <td class="text-center"><input type="text" id="C3" name="C3" class="form-control validate text-right" value="${response.c3}" readonly></td>
+                                    <td class="text-center"><input type="text" id="C3" name="C3" class="form-control validate text-right" value="${response.c3}" disabled></td>
                                     <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C3"></td>
                                 </tr>`;
                     }
                     $("#data_kwajiban_tbody").html(html);
+                    // ================== fungsi checkbox ==================
+                    $("#checkcox_tunggakan").change(function() {
+                        if (this.checked === true) {
+                            $('#tunggakan').prop('disabled', false);
+                        } else {
+                            $('#tunggakan').prop('disabled', true);
+                        }
+                    });
+                    $("#checkcox_kmhs").change(function() {
+                        if (this.checked === true) {
+                            $('#kmhs').prop('disabled', false);
+                        } else {
+                            $('#kmhs').prop('disabled', true);
+                        }
+                    });
+                    $("#checkcox_C1").change(function() {
+                        if (this.checked === true) {
+                            $('#C1').prop('disabled', false);
+                        } else {
+                            $('#C1').prop('disabled', true);
+                        }
+                    });
+                    $("#checkcox_C2").change(function() {
+                        if (this.checked === true) {
+                            $('#C2').prop('disabled', false);
+                        } else {
+                            $('#C2').prop('disabled', true);
+                        }
+                    });
+                    $("#checkcox_C3").change(function() {
+                        if (this.checked === true) {
+                            $('#C3').prop('disabled', false);
+                        } else {
+                            $('#C3').prop('disabled', true);
+                        }
+                    });
+                    // =============== end checkbox ============
+                    // $('input[type="checkbox"]').click(function() {
+                    //     if ($(this).prop("checked") == true) {
+                    //         $('#btn_proses').prop('disabled', false);
+                    //     } else if ($(this).prop("checked") == false) {
+                    //         $('#btn_proses').prop('disabled', true);
+                    //     }
+                    // });
+
                 },
                 error: function(e) {
                     error_server();

@@ -32,13 +32,25 @@ class Transaksi extends CI_Controller
             $where_tahun = [
                 'angkatan' => $dataRes['mhsdata']['tahun_masuk']
             ];
+            // cek tunggakan
+            $dataCekTG = [
+                'nim' => $nipd
+            ];
+            $dataTG = $this->transaksi->getTunggakanMhs($dataCekTG)->row_array();
+            if ($dataTG != null) {
+                $dataMhs['tg'] = $dataTG['jml_tunggakan'];
+            }
+            // else {
+            //     $dataMhs['tg'] = null;
+            // }
+
+            // cek biaya angkatan
             $dataBiaya = $this->transaksi->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
+            // $dataMhs['ub'] = $dataBiaya['uang_bangunan'];
+            $dataMhs['kmhs'] = $dataBiaya['kemahasiswaan'];
             $C1 = $dataBiaya['cicilan_semester'] / 3;
             $C2 = $dataBiaya['cicilan_semester'] / 3;
             $C3 = $dataBiaya['cicilan_semester'] / 3;
-            $dataMhs['tg'] = '1000000';
-            $dataMhs['ub'] = $dataBiaya['uang_bangunan'];
-            $dataMhs['kmhs'] = $dataBiaya['kemahasiswaan'];
             $dataMhs['c1'] = $C1;
             $dataMhs['c2'] = $C2;
             $dataMhs['c3'] = $C3;
@@ -55,6 +67,23 @@ class Transaksi extends CI_Controller
         $data['page'] = 'Pembayaran Spp';
         $data['content'] = 'transaksi/pembayaran_spp';
         $this->load->view('template', $data);
+    }
+    public function Proses_Bayar_Spp()
+    {
+        $nimMhs = $this->input->post('nim_mhs_bayar');
+        $namaMhs = $this->input->post('nama_mhs_bayar');
+        $bayarTG = $this->input->post('tunggakan');
+        $bayarKMHS = $this->input->post('kmhs');
+        $bayarC1 = $this->input->post('C1');
+        $bayarC2 = $this->input->post('C2');
+        $bayarC3 = $this->input->post('C3');
+        $dataBayar = [
+            'nim' => $nimMhs,
+            'nama' => $namaMhs,
+            'tunggakan' => $bayarTG
+        ];
+        var_dump($dataBayar);
+        die;
     }
 
     public function Pembayaran_Lainnya()

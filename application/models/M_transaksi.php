@@ -34,4 +34,12 @@ class M_transaksi extends CI_Model
         $this->db->where($data);
         return $this->db->get();
     }
+
+    public function getTunggakanMhs($data)
+    {
+        $this->db->select('id, nim, jml_tunggakan, idtahun');
+        $this->db->from('tunggakan');
+        $this->db->where($data);
+        return $this->db->get();
+    }
 }
