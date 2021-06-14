@@ -148,7 +148,7 @@
                 },
                 dataType: "json",
                 success: function(response) {
-                    // console.log(response);
+                    console.log(response);
                     if (response != null) {
                         let html = ``;
                         $('.data_kwajiban').show();

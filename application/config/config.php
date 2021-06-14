@@ -83,6 +83,7 @@ $config['url_suffix'] = '';
 |
 */
 $config['language']    = 'english';
+// $config['language']    = 'indonesia';
 
 /*
 |--------------------------------------------------------------------------

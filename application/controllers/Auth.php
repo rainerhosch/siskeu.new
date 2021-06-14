@@ -15,6 +15,11 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Jakarta');
+        $now = date('Y-m-d H:i:s');
+        $pecah_tgl_waktu = explode(' ', $now);
+        $this->tgl = $this->formattanggal->konversi($pecah_tgl_waktu[0]);
+        $this->time = $pecah_tgl_waktu[1];
     }
     public function index()
     {
@@ -49,7 +54,9 @@ class Auth extends CI_Controller
                 $data = [
                     // 'nama' => $user['nama_user'],
                     'username' => $user['username'],
-                    'role' => $user['role']
+                    'role' => $user['role'],
+                    // 'login_date' =>  $this->tgl,
+                    // 'login_time' => $this->time
                 ];
                 $this->session->set_userdata($data);
                 // if ($user['role'] != 1) {

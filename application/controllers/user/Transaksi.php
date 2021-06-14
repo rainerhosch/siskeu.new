@@ -18,6 +18,8 @@ class Transaksi extends CI_Controller
             $this->session->set_flashdata('message', "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button> <h4><i class='icon fa fa-warning'></i> Alert!</h4> Harus Login Terlebih Dahulu</div>");
             redirect(base_url());
         }
+        date_default_timezone_set('Asia/Jakarta');
+        // $this->date = date('Y-m-d H:i:s');
         $this->smt_aktif = getSemesterAktif();
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_transaksi', 'transaksi');
@@ -49,7 +51,16 @@ class Transaksi extends CI_Controller
                 // var_dump($dataHistoriTx);
                 // die;
                 if ($dataHistoriTx != null) {
-                    // 
+                    // belum fix
+                    $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
+                    $dataMhs['kmhs'] = $dataBiaya['kemahasiswaan'];
+                    $C1 = $dataBiaya['cicilan_semester'] / 3;
+                    $C2 = $dataBiaya['cicilan_semester'] / 3;
+                    $C3 = $dataBiaya['cicilan_semester'] / 3;
+                    $dataMhs['c1'] = $C1;
+                    $dataMhs['c2'] = $C2;
+                    $dataMhs['c3'] = $C3;
+                    echo json_encode($dataMhs);
                 } else {
                     // cek biaya angkatan
                     $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
@@ -61,16 +72,14 @@ class Transaksi extends CI_Controller
                     $dataMhs['c1'] = $C1;
                     $dataMhs['c2'] = $C2;
                     $dataMhs['c3'] = $C3;
-                    $data =  json_encode($dataMhs);
+                    echo json_encode($dataMhs);
                 }
             } else {
-                $data =  json_encode($dataRes['mhsdata']);
+                echo json_encode($dataMhs);
             }
         } else {
-            $data = "Error";
+            echo "Error";
         }
-        // echo json_encode($response);
-        echo $data;
     }
     public function Pembayaran_Spp()
     {
@@ -118,14 +127,89 @@ class Transaksi extends CI_Controller
         }
 
         //=============== cek data transaksi =================
+        // cek histori transaksi
+        $dataCek = [
+            'nim' => $nimMhs,
+            'semester' => $smtAktif
+        ];
+        $dataHistoriTx = $this->transaksi->cekHistori($dataCek)->row_array();
 
-        // $data['DataPembayaran'] = [
-        //     'nim' => $nimMhs,
-        //     'nama' => $namaMhs,
-        //     'tunggakan' => $bayarTG
-        // ];
-        var_dump($bayarUB);
-        die;
+        // ===============================================
+        $dateNow = date('Y-m-d H:i:s');
+        $pecah_tgl_waktu = explode(' ', $dateNow);
+        $tgl = $pecah_tgl_waktu[0];
+        $jam = $pecah_tgl_waktu[1];
+        $pecah_tgl = explode('-', $tgl);
+        $tahunBerjalan = $pecah_tgl[0];
+        $blnBerjalan = $pecah_tgl[1];
+        $tglBerjalan = $pecah_tgl[2];
+
+        if ($dataHistoriTx === null) {
+            $cekTxId = $this->transaksi->cekTxId()->row_array();
+            $ambil_id_tgl = substr($cekTxId['id_transaksi'], 4, -4);
+            $id_date = $tahunBerjalan . $blnBerjalan;
+            //jika belum ada id, di set id dengan format (tahun_tanggal_0001)
+            $mulai_id = $this->createtxid->set(1, 4);
+            if ($cekTxId['id_transaksi'] == 0) {
+                $id_transaksi = $id_date . $mulai_id;
+            }
+            //jika tanggal di id_transaksi tidak sama dengan tanggal skrg, di set id dengan format (tahun_tanggal_0001)
+            else if ($blnBerjalan != $ambil_id_tgl) {
+                $id_transaksi = $id_date . $mulai_id;
+            }
+            //selain itu max(id_transaksi)+1
+            else {
+                $id_transaksi = $cekTxId['id_transaksi'] + 1;
+            }
+
+            $dataInsertTx = [
+                'id_transaksi' => $id_transaksi,
+                'tanggal' => $tgl,
+                'jam' => $jam,
+                'nim' => $nimMhs,
+                'semester' => $smtAktif
+            ];
+
+            $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
+            if (!$insertTx) {
+                // error
+                echo 'error';
+            } else {
+                redirect('transaksi/pembayaran_spp');
+            }
+        } else {
+            $cekTxId = $this->transaksi->cekTxId()->row_array();
+            $ambil_id_tgl = substr($cekTxId['id_transaksi'], 4, -4);
+            $id_date = $tahunBerjalan . $blnBerjalan;
+            //jika belum ada id, di set id dengan format (tahun_tanggal_0001)
+            $mulai_id = $this->createtxid->set(1, 4);
+            if ($cekTxId['id_transaksi'] == 0) {
+                $id_transaksi = $id_date . $mulai_id;
+            }
+            //jika tanggal di id_transaksi tidak sama dengan tanggal skrg, di set id dengan format (tahun_tanggal_0001)
+            else if ($blnBerjalan != $ambil_id_tgl) {
+                $id_transaksi = $id_date . $mulai_id;
+            }
+            //selain itu max(id_transaksi)+1
+            else {
+                $id_transaksi = $cekTxId['id_transaksi'] + 1;
+            }
+
+            $dataInsertTx = [
+                'id_transaksi' => $id_transaksi,
+                'tanggal' => $tgl,
+                'jam' => $jam,
+                'nim' => $nimMhs,
+                'semester' => $smtAktif
+            ];
+            $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
+            if (!$insertTx) {
+                // error
+                echo 'error';
+            } else {
+                redirect('transaksi/pembayaran_spp');
+            }
+        }
     }
 
     public function Pembayaran_Lainnya()

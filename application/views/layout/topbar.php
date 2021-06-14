@@ -7,7 +7,20 @@
         </li>
     </ul>
 
+    <ul class="nav navbar-nav-custom">
+        <li>
+            <?php
+            date_default_timezone_set('Asia/Jakarta');
+            $now = date('Y-m-d H:i:s');
+            $pecah_tgl_waktu = explode(' ', $now);
+            $tanggal = $this->formattanggal->konversi($pecah_tgl_waktu[0]);
+            $jam = $pecah_tgl_waktu[1];
 
+            echo '<a>' . $tanggal . '&nbsp;|&nbsp; Jam ' . $jam . '</a>';
+            ?>
+            <!-- <a id="time"></a> -->
+        </li>
+    </ul>
     <!-- Right Header Navigation -->
     <ul class="nav navbar-nav-custom pull-right">
         <!-- User Dropdown -->
@@ -40,3 +53,14 @@
     </ul>
     <!-- END Right Header Navigation -->
 </header>
+<!-- <script type="text/javascript">
+    var timestamp = '<?= time(); ?>';
+
+    function updateTime() {
+        $('#time').html(Date(timestamp));
+        timestamp++;
+    }
+    $(function() {
+        setInterval(updateTime, 1000);
+    });
+</script> -->
