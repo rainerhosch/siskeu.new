@@ -26,12 +26,26 @@ class Transaksi extends CI_Controller
         $this->load->model('M_tunggakan', 'tunggakan');
     }
 
+    public function GetJenisTransaksi()
+    {
+        if ($this->input->is_ajax_request()) {
+            // $angkatan = $this->input->post('tahun_masuk');
+            $where = 'id_jenis_pembayaran BETWEEN 4 AND 13';
+            $response = $this->masterdata->GetJenisPembayaran($where)->result_array();
+            echo json_encode($response);
+        } else {
+            echo "Error";
+        }
+    }
+
     public function Cari_Mhs()
     {
         if ($this->input->is_ajax_request()) {
             $nim = $this->input->post('nipd');
             $response = $this->masterdata->getMahasiswa($nim);
             $dataRes = json_decode($response, true);
+            $i = 0;
+            $dataKewajiban = [];
             $dataMhs = $dataRes['mhsdata'];
             if ($dataMhs != null) {
                 $jenjang = $dataRes['mhsdata']['jenjang'];
@@ -44,34 +58,86 @@ class Transaksi extends CI_Controller
                 ];
                 $dataTG = $this->tunggakan->getTunggakanMhs($dataCekNim)->row_array();
                 if ($dataTG != null) {
-                    $dataMhs['tg'] = $dataTG['jml_tunggakan'];
+                    $dataKewajiban[] = [
+                        'post_id' => 'bayar_TG',
+                        'label' => 'Tunggakan',
+                        'biaya' => $dataTG['jml_tunggakan']
+                    ];
+                } else {
+                    $dataKewajiban[] = [
+                        'post_id' => 'bayar_TG',
+                        'label' => 'Tunggakan',
+                        'biaya' => 0
+                    ];
                 }
                 // cek histori transaksi
                 $dataHistoriTx = $this->transaksi->cekHistori($dataCekNim)->row_array();
                 // var_dump($dataHistoriTx);
                 // die;
                 if ($dataHistoriTx != null) {
-                    // belum fix
+                    // ada histori transaksi
                     $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
-                    $dataMhs['kmhs'] = $dataBiaya['kemahasiswaan'];
-                    $C1 = $dataBiaya['cicilan_semester'] / 3;
-                    $C2 = $dataBiaya['cicilan_semester'] / 3;
-                    $C3 = $dataBiaya['cicilan_semester'] / 3;
-                    $dataMhs['c1'] = $C1;
-                    $dataMhs['c2'] = $C2;
-                    $dataMhs['c3'] = $C3;
+                    $C1 = [
+                        'post_id' => 'bayar_C1',
+                        'label' => 'Cicilan Ke-1',
+                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                    ];
+                    $C2 = [
+                        'post_id' => 'bayar_C2',
+                        'label' => 'Cicilan Ke-2',
+                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                    ];
+                    $C3 = [
+                        'post_id' => 'bayar_C3',
+                        'label' => 'Cicilan Ke-3',
+                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                    ];
+                    $dataKewajiban[] = $C1;
+                    $dataKewajiban[] = $C2;
+                    $dataKewajiban[] = $C3;
+                    $dataKewajiban[] = [
+                        'post_id' => 'bayar_Kmhs',
+                        'label' => 'Kemahasiswaan',
+                        'biaya' => $dataBiaya['kemahasiswaan']
+                    ];
+
+                    $dataMhs['dataKewajiban'] = $dataKewajiban;
                     echo json_encode($dataMhs);
                 } else {
-                    // cek biaya angkatan
+                    // belum ada histori transaksi
                     $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
-                    $dataMhs['ub'] = $dataBiaya['uang_bangunan'];
-                    $dataMhs['kmhs'] = $dataBiaya['kemahasiswaan'];
-                    $C1 = $dataBiaya['cicilan_semester'] / 3;
-                    $C2 = $dataBiaya['cicilan_semester'] / 3;
-                    $C3 = $dataBiaya['cicilan_semester'] / 3;
-                    $dataMhs['c1'] = $C1;
-                    $dataMhs['c2'] = $C2;
-                    $dataMhs['c3'] = $C3;
+                    $C1 = [
+                        'post_id' => 'bayar_C1',
+                        'label' => 'Cicilan Ke-1',
+                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                    ];
+                    $C2 = [
+                        'post_id' => 'bayar_C2',
+                        'label' => 'Cicilan Ke-2',
+                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                    ];
+                    $C3 = [
+                        'post_id' => 'bayar_C3',
+                        'label' => 'Cicilan Ke-3',
+                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                    ];
+                    $dataKewajiban[] = $C1;
+                    $dataKewajiban[] = $C2;
+                    $dataKewajiban[] = $C3;
+                    $dataKewajiban[] = [
+                        'post_id' => 'bayar_UB',
+                        'label' => 'Pengembangan Kampus',
+                        'biaya' => $dataBiaya['uang_bangunan']
+                    ];
+                    $dataKewajiban[] = [
+                        'post_id' => 'bayar_Kmhs',
+                        'label' => 'Kemahasiswaan',
+                        'biaya' => $dataBiaya['kemahasiswaan']
+                    ];
+                    // echo '<pre>';
+                    // print_r($dataKewajiban);
+                    // echo '</pre>';
+                    $dataMhs['dataKewajiban'] = $dataKewajiban;
                     echo json_encode($dataMhs);
                 }
             } else {
@@ -96,12 +162,15 @@ class Transaksi extends CI_Controller
         $namaMhs = $this->input->post('nama_mhs_bayar');
         $jenjangMhs = $this->input->post('jenjang_mhs_bayar');
         $angkatanMhs = $this->input->post('angkatan_mhs_bayar');
-        $bayarUB = $this->input->post('UB');
-        $bayarTG = $this->input->post('tunggakan');
-        $bayarKMHS = $this->input->post('kmhs');
-        $bayarC1 = $this->input->post('C1');
-        $bayarC2 = $this->input->post('C2');
-        $bayarC3 = $this->input->post('C3');
+        $bayarUB = $this->input->post('bayar_UB');
+        $bayarTG = $this->input->post('bayar_TG');
+        $bayarKMHS = $this->input->post('bayar_Kmhs');
+        $bayarC1 = $this->input->post('bayar_C1');
+        $bayarC2 = $this->input->post('bayar_C2');
+        $bayarC3 = $this->input->post('bayar_C3');
+        // $All = $this->input->post();
+        // var_dump($All);
+        // die;
 
         //=============== cek input tunggakan ===============
         if ($bayarTG != null) {
@@ -175,6 +244,11 @@ class Transaksi extends CI_Controller
                 // error
                 echo 'error';
             } else {
+                $dataInsertDetailTx = [
+                    'id_transaksi' => $id_transaksi,
+                    'id_jenis_pembayaran' => $id_jp,
+                    'jml_bayar' => $jml
+                ];
                 redirect('transaksi/pembayaran_spp');
             }
         } else {

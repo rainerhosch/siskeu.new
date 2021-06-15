@@ -148,7 +148,7 @@
                 },
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     if (response != null) {
                         let html = ``;
                         $('.data_kwajiban').show();
@@ -159,100 +159,24 @@
                         html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nama}">`;
                         html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.jenjang}">`;
                         html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
-                        if (response.ub != null) {
+
+                        $.each(response.dataKewajiban, function(i, value) {
                             html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="UB">Uang Bangunan</label></td>
-                                        <td class="text-center"><input type="text" id="UB" name="UB" class="form-control validate text-right" value="${response.ub}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_UB"></td>
+                                        <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
+                                        <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right" value="${value.biaya}" disabled></td>
+                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
                                     </tr>`;
-                        }
-                        if (response.tg != null) {
-                            html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="tunggakan">Tunggakan</label></td>
-                                        <td class="text-center"><input type="text" id="tunggakan" name="tunggakan" class="form-control validate text-right" value="${response.tg}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_tunggakan"></td>
-                                    </tr>`;
-                        }
-                        if (response.kmhs != null) {
-                            html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="kmhs">Kemahasiswaan</label></td>
-                                        <td class="text-center"><input type="text" id="kmhs" name="kmhs" class="form-control validate text-right" value="${response.kmhs}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_kmhs"></td>
-                                    </tr>`;
-                        }
-                        if (response.c1 != null) {
-                            html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="C1">Cicilan Ke-1</label></td>
-                                        <td class="text-center"><input type="text" id="C1" name="C1" class="form-control validate text-right" value="${response.c1}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C1"></td>
-                                    </tr>`;
-                        }
-                        if (response.c2 != null) {
-                            html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="C2">Cicilan Ke-2</label></td>
-                                        <td class="text-center"><input type="text" id="C2" name="C2" class="form-control validate text-right" value="${response.c2}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C2"></td>
-                                    </tr>`;
-                        }
-                        if (response.c3 != null) {
-                            html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="C3">Cicilan Ke-3</label></td>
-                                        <td class="text-center"><input type="text" id="C3" name="C3" class="form-control validate text-right" value="${response.c3}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_C3"></td>
-                                    </tr>`;
-                        }
+                        });
                         $("#data_kwajiban_tbody").html(html);
-                        // ================== fungsi checkbox ==================
-                        $("#checkcox_UB").change(function() {
-                            if (this.checked === true) {
-                                $('#UB').prop('disabled', false);
-                            } else {
-                                $('#UB').prop('disabled', true);
-                            }
+                        $.each(response.dataKewajiban, function(i, value) {
+                            $("#checkcox_" + i).change(function() {
+                                if (this.checked === true) {
+                                    $('#' + value.post_id).prop('disabled', false);
+                                } else {
+                                    $('#' + value.post_id).prop('disabled', true);
+                                }
+                            });
                         });
-                        $("#checkcox_tunggakan").change(function() {
-                            if (this.checked === true) {
-                                $('#tunggakan').prop('disabled', false);
-                            } else {
-                                $('#tunggakan').prop('disabled', true);
-                            }
-                        });
-                        $("#checkcox_kmhs").change(function() {
-                            if (this.checked === true) {
-                                $('#kmhs').prop('disabled', false);
-                            } else {
-                                $('#kmhs').prop('disabled', true);
-                            }
-                        });
-                        $("#checkcox_C1").change(function() {
-                            if (this.checked === true) {
-                                $('#C1').prop('disabled', false);
-                            } else {
-                                $('#C1').prop('disabled', true);
-                            }
-                        });
-                        $("#checkcox_C2").change(function() {
-                            if (this.checked === true) {
-                                $('#C2').prop('disabled', false);
-                            } else {
-                                $('#C2').prop('disabled', true);
-                            }
-                        });
-                        $("#checkcox_C3").change(function() {
-                            if (this.checked === true) {
-                                $('#C3').prop('disabled', false);
-                            } else {
-                                $('#C3').prop('disabled', true);
-                            }
-                        });
-                        // =============== end checkbox ============
-                        // $('input[type="checkbox"]').click(function() {
-                        //     if ($(this).prop("checked") == true) {
-                        //         $('#btn_proses').prop('disabled', false);
-                        //     } else if ($(this).prop("checked") == false) {
-                        //         $('#btn_proses').prop('disabled', true);
-                        //     }
-                        // });
 
                     } else {
                         alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');

@@ -36,4 +36,14 @@ class M_masterdata extends CI_Model
         $this->db->where($data);
         return $this->db->get();
     }
+
+    // get Master Jenis Transaksi
+    public function GetJenisPembayaran($data)
+    {
+        $this->db->select('id_jenis_pembayaran as id_jp, nm_jenis_pembayaran as nm_jp');
+        $this->db->from('master_jenis_pembayaran');
+        $this->db->where($data);
+        $this->db->order_by('nm_jp', 'asc');
+        return $this->db->get();
+    }
 }

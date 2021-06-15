@@ -19,8 +19,10 @@ class M_transaksi extends CI_Model
     }
     public function cekHistori($data)
     {
-        $this->db->select('*');
-        $this->db->from('transaksi');
+        $this->db->select('t.id_transaksi, td.id_detail_transaksi, t.tanggal, t.jam, t.nim, t.semester, td.id_jenis_pembayaran, mjp.nm_jenis_pembayaran, td.jml_bayar');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        $this->db->join('master_jenis_pembayaran mjp', 'td.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
         $this->db->where($data);
         return $this->db->get();
     }
