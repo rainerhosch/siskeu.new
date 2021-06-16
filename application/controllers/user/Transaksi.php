@@ -139,11 +139,11 @@ class Transaksi extends CI_Controller
                     //     'label' => 'Pengembangan Kampus',
                     //     'biaya' => $dataBiaya['uang_bangunan']
                     // ];
-                    $dataKewajiban[] = [
-                        'post_id' => 'bayar_Kmhs',
-                        'label' => 'Kemahasiswaan',
-                        'biaya' => $dataBiaya['kemahasiswaan']
-                    ];
+                    // $dataKewajiban[] = [
+                    //     'post_id' => 'bayar_Kmhs',
+                    //     'label' => 'Kemahasiswaan',
+                    //     'biaya' => $dataBiaya['kemahasiswaan']
+                    // ];
                     $dataMhs['dataKewajiban'] = $dataKewajiban;
                     echo json_encode($dataMhs);
                 }
