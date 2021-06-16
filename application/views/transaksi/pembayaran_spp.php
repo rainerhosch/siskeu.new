@@ -99,6 +99,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">No</th>
+                            <th class="text-center">Semester</th>
                             <th class="text-center">Nomo Transaksi</th>
                             <th class="text-center">Tgl Transaksi</th>
                             <th class="text-center">NIM</th>
@@ -112,6 +113,7 @@
                     <tbody id="riwayat_transaksi_tbody">
                         <tr>
                             <td class="text-center">1</td>
+                            <td class="text-center">20201</td>
                             <td class="text-center"><a href="#">20210610001</a></td>
                             <td class="text-center">10 Juni 2021</td>
                             <td class="text-center">141351059</td>
@@ -148,7 +150,7 @@
                 },
                 dataType: "json",
                 success: function(response) {
-                    // console.log(response);
+                    console.log(response);
                     if (response != null) {
                         let html = ``;
                         $('.data_kwajiban').show();

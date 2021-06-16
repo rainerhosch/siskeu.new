@@ -13,7 +13,7 @@ class M_tunggakan extends CI_Model
     // ambil data tunggakan
     public function getTunggakanMhs($data)
     {
-        $this->db->select('id_tunggakan, nim, jml_tunggakan, idtahun');
+        $this->db->select('id_tunggakan, nim, jenis_tunggakan, jml_tunggakan, idtahun');
         $this->db->from('tunggakan');
         $this->db->where($data);
         return $this->db->get();
@@ -27,7 +27,7 @@ class M_tunggakan extends CI_Model
     // Update tunggakan
     public function updateTunggakan($id_tunggakan, $data)
     {
-        $this->db->where('id_tunggakan', $id_tunggakan);
+        $this->db->where($id_tunggakan);
         $this->db->update('tunggakan', $data);
         if ($this->db->affected_rows() > 0) {
             return TRUE;
