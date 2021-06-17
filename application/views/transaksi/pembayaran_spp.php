@@ -129,67 +129,68 @@
             </div>
         </div>
     </div>
-</div>
-<!-- END Page Content -->
-<script>
-    $(document).ready(function() {
-        $('#riwayat_transaksi').hide();
-        $('.data_kwajiban').hide();
-        $('#nipd').keypress((e) => {
-            if (e.which === 13) {
-                $("#cari_mhs").click();
-            }
-        })
-        $("#cari_mhs").click(function() {
-            let nipd = $('#nipd').val();
-            $.ajax({
-                type: "POST",
-                url: 'cari_mhs',
-                data: {
-                    nipd: nipd,
-                },
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
-                    if (response != null) {
-                        let html = ``;
-                        $('.data_kwajiban').show();
-                        $('#riwayat_transaksi').show();
-                        $("#nama_mhs").val(response.nama);
-                        $("#jurusan").val(response.prodi);
-                        html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
-                        html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nama}">`;
-                        html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.jenjang}">`;
-                        html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
 
-                        $.each(response.dataKewajiban, function(i, value) {
-                            html += `<tr>
+    <script>
+        $(document).ready(function() {
+            $('#riwayat_transaksi').hide();
+            $('.data_kwajiban').hide();
+            $('#nipd').keypress((e) => {
+                if (e.which === 13) {
+                    $("#cari_mhs").click();
+                }
+            })
+            $("#cari_mhs").click(function() {
+                let nipd = $('#nipd').val();
+                $.ajax({
+                    type: "POST",
+                    url: 'cari_mhs',
+                    data: {
+                        nipd: nipd,
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                        if (response != null) {
+                            let html = ``;
+                            $('.data_kwajiban').show();
+                            $('#riwayat_transaksi').show();
+                            $("#nama_mhs").val(response.nama);
+                            $("#jurusan").val(response.prodi);
+                            html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
+                            html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nama}">`;
+                            html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.jenjang}">`;
+                            html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
+
+                            $.each(response.dataKewajiban, function(i, value) {
+                                html += `<tr>
                                         <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
                                         <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right" value="${value.biaya}" disabled></td>
                                         <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
                                     </tr>`;
-                        });
-                        $("#data_kwajiban_tbody").html(html);
-                        $.each(response.dataKewajiban, function(i, value) {
-                            $("#checkcox_" + i).change(function() {
-                                if (this.checked === true) {
-                                    $('#' + value.post_id).prop('disabled', false);
-                                } else {
-                                    $('#' + value.post_id).prop('disabled', true);
-                                }
                             });
-                        });
+                            $("#data_kwajiban_tbody").html(html);
+                            $.each(response.dataKewajiban, function(i, value) {
+                                $("#checkcox_" + i).change(function() {
+                                    if (this.checked === true) {
+                                        $('#' + value.post_id).prop('disabled', false);
+                                    } else {
+                                        $('#' + value.post_id).prop('disabled', true);
+                                    }
+                                });
+                            });
 
-                    } else {
-                        alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
-                        window.location.reload();
-                    }
+                        } else {
+                            alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
+                            window.location.reload();
+                        }
 
-                },
-                error: function(e) {
-                    error_server();
-                },
-            });
-        })
-    });
-</script>
+                    },
+                    error: function(e) {
+                        error_server();
+                    },
+                });
+            })
+        });
+    </script>
+</div>
+<!-- END Page Content -->
