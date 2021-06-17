@@ -87,11 +87,19 @@ class Transaksi extends CI_Controller
                 $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
                 if ($dataHistoriTx != null) {
                     // ada histori transaksi
-                    $C1 = [
-                        'post_id' => 'bayar_C1',
-                        'label' => 'Cicilan Ke-1',
-                        'biaya' => $dataBiaya['cicilan_semester'] / 3
-                    ];
+                    if ($dataHistoriTx['id_jenis_pembayaran'] == 2) {
+                        $C1 = [
+                            'post_id' => 'bayar_C1',
+                            'label' => 'Cicilan Ke-1',
+                            'biaya' => 0
+                        ];
+                    } else {
+                        $C1 = [
+                            'post_id' => 'bayar_C1',
+                            'label' => 'Cicilan Ke-1',
+                            'biaya' => $dataBiaya['cicilan_semester'] / 3
+                        ];
+                    }
                     $C2 = [
                         'post_id' => 'bayar_C2',
                         'label' => 'Cicilan Ke-2',
@@ -173,24 +181,24 @@ class Transaksi extends CI_Controller
         // =========== Data Pembayaran ========================
         $bayarTG = $this->input->post('bayar_TG');
         // $bayarUB = $this->input->post('bayar_UB');
-        $bayarKMHS = $this->input->post('bayar_Kmhs');
+        // $bayarKMHS = $this->input->post('bayar_Kmhs');
         $bayarC1 = $this->input->post('bayar_C1');
         $bayarC2 = $this->input->post('bayar_C2');
         $bayarC3 = $this->input->post('bayar_C3');
 
-        $All = $this->input->post();
-        var_dump($All);
-        die;
+        // $All = $this->input->post();
+        // var_dump($All);
+        // die;
         $where_tahun = [
             'angkatan' => $angkatanMhs
         ];
         $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
         $biayaCS = $dataBiaya['cicilan_semester'] / 3;
-        $dataBayarC1 = $biayaCS - $bayarC1;
-        $dataBayarC2 = $biayaCS - $bayarC2;
-        $dataBayarC3 = $biayaCS - $bayarC3;
-        $dataBayarKMHS = $dataBiaya['kemahasiswaan'] - $bayarKMHS;
-        // var_dump($dataBayarC1 . '/' . $dataBayarC2 . '/' . $dataBayarC3 . '/' . $dataBayarKMHS);
+        $sisa_BayarC1 = $biayaCS - $bayarC1;
+        $sisa_BayarC2 = $biayaCS - $bayarC2;
+        $sisa_BayarC3 = $biayaCS - $bayarC3;
+        // $sisa_BayarKMHS = $dataBiaya['kemahasiswaan'] - $bayarKMHS;
+        // var_dump($sisa_BayarC1 . '/' . $sisa_BayarC2 . '/' . $sisa_BayarC3);
         // die;
 
         //=============== cek data transaksi =================
@@ -235,23 +243,19 @@ class Transaksi extends CI_Controller
         /*
         * *=============== cek input tunggakan =========================
         */
+        // ambil data tunggakan
+        $whereCekNim = [
+            'nim' => $nimMhs,
+            'jenis_tunggakan' => 1
+        ];
+        $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
+        $where_id = [
+            'id_tunggakan' => $dataTG_CS['id_tunggakan']
+        ];
         if ($bayarTG != null) {
-            // $dataTxDetail['bayar_TG'] = [
-            //     'jenis' => 6,
-            //     'jml_bayar' => $bayarTG
-            // ];
-            // ambil data tunggakan
-            $whereCekNim = [
-                'nim' => $nimMhs,
-                'jenis_tunggakan' => 1
-            ];
-            $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
             // var_dump($dataTG);
             // die;
             $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $bayarTG;
-            $where_id = [
-                'id_tunggakan' => $dataTG_CS['id_tunggakan']
-            ];
             if ($dataTGBaru === 0) {
                 // hapus data tunggakan
                 $tgDeleted = $this->tunggakan->deleteTunggakan($where_id);
@@ -262,6 +266,155 @@ class Transaksi extends CI_Controller
                 ];
                 $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
             }
+
+            $dataTxDetail[] = [
+                'id_transaksi' => $id_transaksi,
+                'id_jenis_pembayaran' => 6,
+                'jml_bayar' => $bayarTG
+            ];
+        }
+
+        if ($dataHistoriTx != null) {
+            // ada data transaksi
+            echo 'ada history TX';
+            die;
+        } else {
+            // tidak ada data transaksi
+            if ($bayarC1 != null) {
+                if ($sisa_BayarC1 != 0) {
+                    // bayar sebagian
+                    if ($dataTG_CS != null) {
+                        // update data tunggakan
+                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $sisa_BayarC1;
+                        // update data tunggakan
+                        $dataUpdate = [
+                            'jml_tunggakan' => $dataTGBaru
+                        ];
+                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        // echo 'data tunggakan lama, rp.' . $dataTG_CS['jml_tunggakan'] . ', data Tunggakan baru Rp.' . $dataTGBaru;
+                        // die;
+                    } else {
+                        // add data tunggakan
+                        $dataAddTG = [
+                            'nim' => $nimMhs,
+                            'jenis_tunggakan' => 1,
+                            'jml_tunggakan' => $sisa_BayarC1,
+                        ];
+                        $this->tunggakan->addNewTunggakan($dataAddTG);
+                        // echo 'add data tunggakan';
+                        // die;
+                    }
+                }
+                // else {
+                //     // bayar full
+                // }
+                $dataTxDetail[] = [
+                    'id_transaksi' => $id_transaksi,
+                    'id_jenis_pembayaran' => 2,
+                    'jml_bayar' => $bayarC1
+                ];
+            }
+
+            /*
+            * C2
+            */
+            if ($bayarC2 != null) {
+                if ($sisa_BayarC2 != 0) {
+                    // bayar sebagian
+                    if ($dataTG_CS != null) {
+                        // update data tunggakan
+                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $sisa_BayarC2;
+                        // update data tunggakan
+                        $dataUpdate = [
+                            'jml_tunggakan' => $dataTGBaru
+                        ];
+                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        // echo 'data tunggakan lama, rp.' . $dataTG_CS['jml_tunggakan'] . ', data Tunggakan baru Rp.' . $dataTGBaru;
+                        // die;
+                    } else {
+                        // add data tunggakan
+                        $dataAddTG = [
+                            'nim' => $nimMhs,
+                            'jenis_tunggakan' => 1,
+                            'jml_tunggakan' => $sisa_BayarC2,
+                        ];
+                        $this->tunggakan->addNewTunggakan($dataAddTG);
+                        // echo 'add data tunggakan';
+                        // die;
+                    }
+                }
+                // else {
+                //     // bayar full
+                // }
+                $dataTxDetail[] = [
+                    'id_transaksi' => $id_transaksi,
+                    'id_jenis_pembayaran' => 3,
+                    'jml_bayar' => $bayarC2
+                ];
+            }
+
+            /*
+            * C3
+            */
+            if ($bayarC3 != null) {
+                if ($sisa_BayarC3 != 0) {
+                    // bayar sebagian
+                    if ($dataTG_CS != null) {
+                        // update data tunggakan
+                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $sisa_BayarC3;
+                        // update data tunggakan
+                        $dataUpdate = [
+                            'jml_tunggakan' => $dataTGBaru
+                        ];
+                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        // echo 'data tunggakan lama, rp.' . $dataTG_CS['jml_tunggakan'] . ', data Tunggakan baru Rp.' . $dataTGBaru;
+                        // die;
+                    } else {
+                        // add data tunggakan
+                        $dataAddTG = [
+                            'nim' => $nimMhs,
+                            'jenis_tunggakan' => 1,
+                            'jml_tunggakan' => $sisa_BayarC3,
+                        ];
+                        $this->tunggakan->addNewTunggakan($dataAddTG);
+                        // echo 'add data tunggakan';
+                        // die;
+                    }
+                }
+                // else {
+                //     // bayar full
+                // }
+                $dataTxDetail[] = [
+                    'id_transaksi' => $id_transaksi,
+                    'id_jenis_pembayaran' => 4,
+                    'jml_bayar' => $bayarC3
+                ];
+            }
+        }
+        $dataInsertTx = [
+            'id_transaksi' => $id_transaksi,
+            'tanggal' => $tgl,
+            'jam' => $jam,
+            'nim' => $nimMhs,
+            'semester' => $smtAktif
+        ];
+        $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
+        if (!$insertTx) {
+            // gagal
+        } else {
+            $inputDetailTx = count($dataTxDetail);
+            for ($i = 0; $i < $inputDetailTx; $i++) {
+                $this->transaksi->addNewDetailTransaksi($dataTxDetail[$i]);
+                // print_r($dataInsertTx);
+            }
+
+            // sukses lalu input detail
+            // foreach ($dataTxDetail as $key => $val) {
+            //     var_dump($val);
+            //     foreach()
+            // }
+            // var_dump($dataTxDetail);
+            // die;
         }
     }
 

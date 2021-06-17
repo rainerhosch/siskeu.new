@@ -34,7 +34,7 @@ class M_transaksi extends CI_Model
     }
 
     // add Detail TX
-    public function addNewTXDetail($data)
+    public function addNewDetailTransaksi($data)
     {
         return $this->db->insert('transaksi_detail', $data);
     }
