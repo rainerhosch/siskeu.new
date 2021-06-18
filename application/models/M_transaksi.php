@@ -27,6 +27,27 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
+    public function cekMaxTransaksi($data)
+    {
+        $this->db->select_max('t.id_transaksi');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        $this->db->where($data);
+        $this->db->where('td.id_jenis_pembayaran >=', 2);
+        $this->db->where('td.id_jenis_pembayaran <=', 4);
+        return $this->db->get();
+    }
+
+    public function cekMaxDetailTransaksi($data)
+    {
+        $query = "SELECT t.id_transaksi, `td`.`id_detail_transaksi`, `t`.`tanggal`, `t`.`jam`, `t`.`nim`, `t`.`semester`, `td`.`id_jenis_pembayaran`, `mjp`.`nm_jenis_pembayaran`, `td`.`jml_bayar` 
+        FROM `transaksi_detail` `td` 
+        JOIN `transaksi` `t` ON `t`.`id_transaksi`=`td`.`id_transaksi` 
+        JOIN `master_jenis_pembayaran` `mjp` ON `td`.`id_jenis_pembayaran`=`mjp`.`id_jenis_pembayaran`
+        WHERE `td`.`id_detail_transaksi` IN (SELECT MAX(id_detail_transaksi)as id_detail_transaksi FROM `transaksi` `t` JOIN `transaksi_detail` `td` ON `t`.`id_transaksi`=`td`.`id_transaksi` WHERE `t`.`id_transaksi` = '$data')";
+        return $this->db->query($query);
+    }
+
     // Add New Tx
     public function addNewTransaksi($data)
     {

@@ -30,35 +30,35 @@
     }
     ?>
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-sm-3">
             <div class="block full">
                 <div class="block-title">
                     <h2><strong>Data </strong>Mahasiswa</h2>
                 </div>
-                <div class="md-form mb-5 row">
-                    <div class="col-md-3">
+                <div class="sm-form mb-5 row">
+                    <div class="col-sm-3">
                         <label data-error="wrong" data-success="right" for="nipd">NIM</label>
                     </div>
-                    <div class="col-md-7">
+                    <div class="col-sm-9">
                         <input type="text" id="nipd" name="nipd" class="form-control validate" placeholder="Cari NIM..">
                     </div>
-                    <div class="col-md-2">
-                        <span id="cari_mhs" class="input-group-btn"><input type="image" src="<?= base_url('assets'); ?>/img/enter.png" width="35" height="35"></span>
+                    <div class="col-sm-2">
+                        <span id="cari_mhs" class="input-group-btn"><input type="image" src="<?= base_url('assets'); ?>/img/enter.png" width="35" height="35" hidden></span>
                     </div>
                 </div>
-                <div class="md-form mb-5 row">
-                    <div class="col-md-3">
+                <div class="sm-form mb-5 row">
+                    <div class="col-sm-3">
                         <label data-error="wrong" data-success="right" for="nama_mhs">Nama</label>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-sm-9">
                         <input type="text" id="nama_mhs" name="nama_mhs" class="form-control validate" readonly>
                     </div>
                 </div>
-                <div class="md-form mb-5 row">
-                    <div class="col-md-3">
+                <div class="sm-form mb-5 row">
+                    <div class="col-sm-3">
                         <label data-error="wrong" data-success="right" for="jurusan">Jurusan</label>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-sm-9">
                         <input type="text" id="jurusan" name="jurusan" class="form-control validate" readonly>
                     </div>
                 </div>
@@ -89,43 +89,32 @@
             </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-sm-9">
             <div class="block full">
                 <div class="block-title">
                     <h2><strong>History</strong> Transaksi</h2>
                 </div>
+                <div class="table-responsive">
+                    <table id="riwayat_transaksi" class="table table-vcenter table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Nomo Transaksi</th>
+                                <th class="text-center">Tgl Transaksi</th>
+                                <th class="text-center">Jam</th>
+                                <th class="text-center">NIM</th>
+                                <th class="text-center">Keterangan Bayar</th>
+                                <th class="text-center">Jumlah Storan</th>
+                                <!-- <th class="text-center">Sisa Tagihan</th>
+                                <th class="text-center">Status</th> -->
+                                <th class="text-center">Semester</th>
+                            </tr>
+                        </thead>
+                        <tbody id="riwayat_transaksi_tbody">
+                        </tbody>
+                    </table>
+                </div>
 
-                <table id="riwayat_transaksi" class="table table-vcenter table-condensed table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="text-center">No</th>
-                            <th class="text-center">Semester</th>
-                            <th class="text-center">Nomo Transaksi</th>
-                            <th class="text-center">Tgl Transaksi</th>
-                            <th class="text-center">NIM</th>
-                            <th class="text-center">Nama Mahasiswa</th>
-                            <th class="text-center">Keterangan Bayar</th>
-                            <th class="text-center">Jumlah Storan</th>
-                            <th class="text-center">Sisa Tagihan</th>
-                            <th class="text-center">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="riwayat_transaksi_tbody">
-                        <tr>
-                            <td class="text-center">1</td>
-                            <td class="text-center">20201</td>
-                            <td class="text-center"><a href="#">20210610001</a></td>
-                            <td class="text-center">10 Juni 2021</td>
-                            <td class="text-center">141351059</td>
-                            <td class="text-center">Rizky Ardiansyah</td>
-                            <td class="text-center">Kemahasiswaan, Cicilan-1, Cicilan-2, Cicilan-3</td>
-                            <td class="text-center">4.200.000</td>
-                            <td class="text-center">0</td>
-                            <td class="text-center">L</td>
-                        </tr>
-
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -152,6 +141,7 @@
                         console.log(response);
                         if (response != null) {
                             let html = ``;
+                            let htmlx = ``;
                             $('.data_kwajiban').show();
                             $('#riwayat_transaksi').show();
                             $("#nama_mhs").val(response.nama);
@@ -178,6 +168,35 @@
                                     }
                                 });
                             });
+                            if (response.dataHistoriTX != null) {
+                                $.each(response.dataHistoriTX, function(i, value) {
+                                    // console.log(value);
+                                    i++;
+                                    htmlx += `<tr>`;
+                                    htmlx += `<td class = "text-center" >${i}</td>`;
+                                    htmlx += `<td class="text-center"><a href="#">${value.id_transaksi}</a></td>`;
+                                    htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
+                                    htmlx += `<td class = "text-center" >${value.jam}</td>`;
+                                    htmlx += `<td class = "text-center" >${value.nim}</td>`;
+                                    htmlx += `<td class = "text-center" >${value.nm_jenis_pembayaran}</td>`;
+                                    htmlx += `<td class = "text-center" >${value.jml_bayar}</td>`;
+                                    htmlx += `<td class = "text-center" >${value.semester}</td>`;
+                                    // htmlx = `< td class = "text-center" >${value.id_transaksi}</td>`;
+                                    // htmlx = `< td class = "text-center" >${value.id_transaksi}</td>`;
+                                    htmlx += `</tr>`;
+                                });
+                            } else {
+                                htmlx += `<tr>`;
+                                htmlx += `<td colspan="12" class="text-center"><br>`;
+                                htmlx += `<div class='col-lg-12'>`;
+                                htmlx += `<div class='alert alert-danger alert-dismissible'>`;
+                                htmlx += `<h4><i class='icon fa fa-warning'></i> Belum Ada Histori Pembayaran!</h4>`;
+                                htmlx += `</div>`;
+                                htmlx += `</div>`;
+                                htmlx += `</td>`;
+                                htmlx += `</tr>`;
+                            }
+                            $("#riwayat_transaksi_tbody").html(htmlx);
 
                         } else {
                             alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
