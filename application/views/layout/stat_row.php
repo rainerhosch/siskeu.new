@@ -1,19 +1,37 @@
 <div class="row">
-    <div class="col-sm-6 col-lg-3">
-        <!-- Widget -->
-        <a href="<?= base_url('transaksi/pembayaran_spp') ?>" class="widget widget-hover-effect1">
-            <div class="widget-simple">
-                <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
-                    <i class="fa fa-file-text"></i>
+    <?php if ($this->session->userdata('role') != 2) : ?>
+        <div class="col-sm-6 col-lg-3">
+            <!-- Widget -->
+            <a href="<?= base_url('transaksi/pembayaran_spp') ?>" class="widget widget-hover-effect1">
+                <div class="widget-simple">
+                    <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <h3 class="widget-content text-right animation-pullDown">
+                        Transaksi <strong>Baru</strong><br>
+                        <small>Pembayaran Manual</small>
+                    </h3>
                 </div>
-                <h3 class="widget-content text-right animation-pullDown">
-                    Transaksi <strong>Baru</strong><br>
-                    <small>Pembayaran Manual</small>
-                </h3>
-            </div>
-        </a>
-        <!-- END Widget -->
-    </div>
+            </a>
+            <!-- END Widget -->
+        </div>
+    <?php else : ?>
+        <div class="col-sm-6 col-lg-3">
+            <!-- Widget -->
+            <a href="#" class="widget widget-hover-effect1">
+                <div class="widget-simple">
+                    <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <h3 class="widget-content text-right animation-pullDown">
+                        Laporan <strong>Transaksi</strong><br>
+                        <small>Pembayaran Manual</small>
+                    </h3>
+                </div>
+            </a>
+            <!-- END Widget -->
+        </div>
+    <?php endif; ?>
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
         <a href="#" class="widget widget-hover-effect1">

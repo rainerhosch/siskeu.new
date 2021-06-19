@@ -57,6 +57,9 @@ $route['dashboard'] = 'user/dashboard';
 $route['transaksi/(:any)'] = 'user/transaksi/$1';
 
 // for admin access manajemen 
+$route['sync-simak'] = 'admin/SyncSimak';
+$route['sync-simak/(:any)'] = 'admin/SyncSimak/$1';
+
 $route['manajemen/manajemen-menu'] = 'admin/Manajemen/ManajemenMenu';
 $route['manajemen/get-menu'] = 'admin/Manajemen/getDataMenu';
 $route['manajemen/change-status-menu'] = 'admin/Manajemen/ChangeStatusMenu';

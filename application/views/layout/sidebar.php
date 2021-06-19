@@ -15,7 +15,7 @@
                     $this->db->select('m.id_menu, m.nama_menu, m.link_menu, m.type, m.icon, m.is_active');
                     $this->db->from('menu m');
                     $this->db->where($where);
-                    $this->db->order_by('m.type', 'desc');
+                    $this->db->order_by('m.id_menu', 'asc');
                     $menu = $this->db->get()->result_array();
                 } else {
                     $where = [

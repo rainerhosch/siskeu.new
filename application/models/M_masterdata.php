@@ -24,6 +24,26 @@ class M_masterdata extends CI_Model
         return $data;
     }
 
+    public function insertDataMhs($data)
+    {
+        return $this->db->insert('mahasiswa', $data);
+    }
+
+    public function getDataMhs()
+    {
+        $this->db->select('*');
+        $this->db->from('mahasiswa');
+        return $this->db->get();
+    }
+
+    // get smester aktif
+    public function getSemesterAktif()
+    {
+        $this->db->select_max('idtahun');
+        $this->db->from('kalender_akademik');
+        return $this->db->get();
+    }
+
     // get data biaya per angkatan
     public function getBiayaAngkatan($data, $jenjang)
     {
