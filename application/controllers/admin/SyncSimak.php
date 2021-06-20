@@ -40,12 +40,27 @@ class SyncSimak extends CI_Controller
         // ===========================================================
         $dataSemesterAktifLokal = $this->masterdata->getSemesterAktif()->row_array();
         $data['semester_aktif_local'] = $dataSemesterAktifLokal['id_smt'];
-        // $data['semester_aktif_local'] = '20201';
         $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
         $countLocalDataMhs = count($LocalDataMhs);
         $data['count_mhs_local'] = $countLocalDataMhs;
+        // $data['count_mhs_local'] = '5911';
         // ===========================================================
         echo json_encode($data);
+    }
+
+    public function CountRowDataMhsLocal()
+    {
+        $dataRes = $this->getMhsFromApiSimak;
+        $dataMhs = $dataRes['mhsdata'];
+        $total = count($dataMhs);
+        // for ($i = 0; $i < $total; $i++) {
+        $result = $this->masterdata->getDataMhs()->result_array();
+        $current = count($result);
+        $hasilPersen = ($current / $total) * 100;
+        // $data['valuenow'] = round($hasilPersen, 2);
+        $data['current'] = $current;
+        echo json_encode($data);
+        // }
     }
     public function SyncDataMhs()
     {
