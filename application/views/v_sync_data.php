@@ -72,7 +72,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-sm-12 text-center">
-                            <button class="btn btn-primary" id="btn_sync_smt_aktif"><i class="fa fa-sync"></i> Sinkron Data</button>
+                            <button class="btn btn-primary" id="btn_sync_smt_aktif"><i class="fa fa-sync" id="icon_sync_smt_aktif"></i> Sinkron Data</button>
                         </div>
                     </div>
                 </div>
@@ -160,11 +160,12 @@
                 url: 'sync-simak/getCountData',
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     $('.mhs_local_label span').text(response.count_mhs_local);
                     $('.mhs_simak_label span').text(response.count_mhs_simak);
                     $('.sm_active_local_label span').text(response.semester_aktif_local);
                     $('.sm_active_simak_label span').text(response.semester_aktif_simak);
+
                     if (response.count_mhs_local != response.count_mhs_simak) {
                         $('.btn#btn_sync_mhs').attr('disabled', false);
                     } else {
@@ -187,9 +188,32 @@
                             }
                         });
                     });
+
+
+
+                    if (response.semester_aktif_local != response.semester_aktif_simak) {
+                        if (response.semester_aktif_local < response.semester_aktif_simak) {
+                            $('.btn#btn_sync_smt_aktif').attr('disabled', false);
+                        }
+                    } else {
+                        $('.btn#btn_sync_smt_aktif').attr('disabled', true);
+                    }
                     $('.btn#btn_sync_smt_aktif').click(function() {
                         // lest code...
-                        console.log('button sync tahun aktif');
+                        $('#icon_sync_smt_aktif').attr('class', 'fa fa-sync fa-spin');
+                        $.ajax({
+                            type: 'POST', //Method type
+                            url: 'sync-simak/SyncTahunAkademik',
+                            dataType: 'json',
+                            success: function(data) {
+                                // console.log(data);
+                                if (data.data == 'success') {
+                                    $('#icon_sync_smt_aktif').attr('class', 'fa fa-sync');
+                                    $('.sm_active_local_label span').text(data.semester_aktif_local_update);
+                                    $('.btn#btn_sync_smt_aktif').prop('disabled', true);
+                                }
+                            }
+                        });
                     });
                 }
             });

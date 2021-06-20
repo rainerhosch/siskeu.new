@@ -33,15 +33,14 @@ class SyncSimak extends CI_Controller
     {
         $smtAktif = $this->smt_aktif['id_smt'];
         $dataRes = $this->getMhsFromApiSimak;
-
-        // $data['mhs_simak'] = $dataRes['mhsdata'];
         $ApiDataMhs =  $dataRes['mhsdata'];
         $counApiDataMhs = count($ApiDataMhs);
         $data['count_mhs_simak'] = $counApiDataMhs;
         $data['semester_aktif_simak'] = $smtAktif;
         // ===========================================================
         $dataSemesterAktifLokal = $this->masterdata->getSemesterAktif()->row_array();
-        $data['semester_aktif_local'] = $dataSemesterAktifLokal['idtahun'];
+        $data['semester_aktif_local'] = $dataSemesterAktifLokal['id_smt'];
+        // $data['semester_aktif_local'] = '20201';
         $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
         $countLocalDataMhs = count($LocalDataMhs);
         $data['count_mhs_local'] = $countLocalDataMhs;
@@ -56,7 +55,6 @@ class SyncSimak extends CI_Controller
         $jml_data = count($dataMhs);
         foreach ($dataMhs as $j => $d) {
             $insert = $this->masterdata->insertDataMhs($d);
-            // loading($j, $jml_data);
         }
         if ($insert) {
             $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
@@ -69,8 +67,35 @@ class SyncSimak extends CI_Controller
             echo json_encode(['data' => 'error']);
         }
     }
-    // public function loading()
-    // {
-    //     echo json_encode(['data' => 'success']);
-    // }
+    public function SyncTahunAkademik()
+    {
+        $smtAktif = $this->smt_aktif;
+        $dataSemesterAktifLokal = $this->masterdata->getSemesterAktif()->row_array();
+        $id_smt = $dataSemesterAktifLokal['id_smt'];
+        $data = [
+            'a_periode_aktif' => 0
+        ];
+        $hapusStatusAktifLocal = $this->masterdata->updateStatusAktif($id_smt, $data);
+        if (!$hapusStatusAktifLocal) {
+            echo json_encode([
+                'data' => 'error',
+                'msg' => 'gagal ubah status aktif'
+            ]);
+        } else {
+            // var_dump($insert);
+            // die;
+            $insert = $this->masterdata->insertDataTahunAkademik($smtAktif);
+            if ($insert) {
+                echo json_encode([
+                    'data' => 'success',
+                    'semester_aktif_local_update' => $smtAktif['id_smt']
+                ]);
+            } else {
+                echo json_encode([
+                    'data' => 'error',
+                    'msg' => 'gagal insert'
+                ]);
+            }
+        }
+    }
 }

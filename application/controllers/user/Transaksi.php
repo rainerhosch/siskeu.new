@@ -41,7 +41,6 @@ class Transaksi extends CI_Controller
     public function Cari_Mhs()
     {
         if ($this->input->is_ajax_request()) {
-
             $smtAktif = $this->smt_aktif['id_smt'];
             $nim = $this->input->post('nipd');
             $response = $this->masterdata->getMahasiswa($nim);

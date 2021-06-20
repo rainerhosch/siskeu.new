@@ -39,9 +39,25 @@ class M_masterdata extends CI_Model
     // get smester aktif
     public function getSemesterAktif()
     {
-        $this->db->select_max('idtahun');
+        $this->db->select_max('id_smt');
         $this->db->from('kalender_akademik');
         return $this->db->get();
+    }
+    // insert data from simak
+    public function insertDataTahunAkademik($data)
+    {
+        return $this->db->insert('kalender_akademik', $data);
+    }
+    // ubah status aktif
+    public function updateStatusAktif($id_smt, $data)
+    {
+        $this->db->where('id_smt', $id_smt);
+        $this->db->update('kalender_akademik', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 
     // get data biaya per angkatan

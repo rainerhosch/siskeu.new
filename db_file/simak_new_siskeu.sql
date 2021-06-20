@@ -1,20 +1,21 @@
 -- phpMyAdmin SQL Dump
--- version 4.2.11
--- http://www.phpmyadmin.net
+-- version 5.1.0
+-- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 19 Jun 2021 pada 14.20
--- Versi Server: 5.6.21
--- PHP Version: 5.6.3
+-- Waktu pembuatan: 20 Jun 2021 pada 05.30
+-- Versi server: 10.4.19-MariaDB
+-- Versi PHP: 8.0.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `simak_new_siskeu`
@@ -26,8 +27,8 @@ SET time_zone = "+00:00";
 -- Struktur dari tabel `biaya_angkatan`
 --
 
-CREATE TABLE IF NOT EXISTS `biaya_angkatan` (
-`id_biaya` int(11) NOT NULL,
+CREATE TABLE `biaya_angkatan` (
+  `id_biaya` int(11) NOT NULL,
   `angkatan` int(11) NOT NULL,
   `PK` int(9) NOT NULL,
   `kmhs` int(9) NOT NULL,
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `biaya_angkatan` (
   `CS_D3` int(9) NOT NULL,
   `ps_S1` int(9) NOT NULL COMMENT 'perpanjang skripsi S1',
   `ps_D3` int(9) NOT NULL COMMENT 'perpanjang TA D3'
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `biaya_angkatan`
@@ -64,11 +65,11 @@ INSERT INTO `biaya_angkatan` (`id_biaya`, `angkatan`, `PK`, `kmhs`, `kmhs_D3`, `
 -- Struktur dari tabel `biaya_tambahan`
 --
 
-CREATE TABLE IF NOT EXISTS `biaya_tambahan` (
-`id_biaya_tambahan` int(11) NOT NULL,
+CREATE TABLE `biaya_tambahan` (
+  `id_biaya_tambahan` int(11) NOT NULL,
   `id_jenis_pembayaran` int(11) NOT NULL,
-  `biaya` int(11) DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+  `biaya` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `biaya_tambahan`
@@ -90,32 +91,35 @@ INSERT INTO `biaya_tambahan` (`id_biaya_tambahan`, `id_jenis_pembayaran`, `biaya
 -- Struktur dari tabel `kalender_akademik`
 --
 
-CREATE TABLE IF NOT EXISTS `kalender_akademik` (
-  `idtahun` int(5) NOT NULL,
+CREATE TABLE `kalender_akademik` (
+  `id_smt` int(5) NOT NULL,
+  `nm_smt` varchar(25) NOT NULL,
+  `smt` tinyint(1) DEFAULT NULL,
+  `a_periode_aktif` tinyint(1) NOT NULL,
   `tgl_mulai` date DEFAULT NULL,
-  `tgl_berakhir` date DEFAULT NULL,
-  `keterangan` text
+  `tgl_selesai` date DEFAULT NULL,
+  `id_thn_ajaran` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `kalender_akademik`
 --
 
-INSERT INTO `kalender_akademik` (`idtahun`, `tgl_mulai`, `tgl_berakhir`, `keterangan`) VALUES
-(20141, '2014-07-01', '2014-12-31', NULL),
-(20142, '2015-01-01', '2015-06-30', NULL),
-(20151, '2015-07-01', '2016-01-31', NULL),
-(20152, '2016-02-01', '2016-07-31', NULL),
-(20161, '2016-08-01', '2017-01-22', NULL),
-(20162, '2017-01-23', '2017-07-16', NULL),
-(20171, '2017-07-17', '2018-01-31', NULL),
-(20172, '2018-02-08', '2018-07-31', NULL),
-(20181, '2018-08-01', '2019-01-30', NULL),
-(20182, '2019-02-01', '2019-07-31', NULL),
-(20191, '2019-08-01', '2020-01-31', NULL),
-(20192, '2020-02-01', '2020-08-10', NULL),
-(20201, '2020-08-11', '2021-02-21', NULL),
-(20202, '2021-02-22', '2021-08-31', NULL);
+INSERT INTO `kalender_akademik` (`id_smt`, `nm_smt`, `smt`, `a_periode_aktif`, `tgl_mulai`, `tgl_selesai`, `id_thn_ajaran`) VALUES
+(20141, '2014/2014 S1', 1, 0, '2014-07-01', '2014-12-31', 2014),
+(20142, '2014/2014 S2', 2, 0, '2015-01-01', '2015-06-30', 2014),
+(20151, '2015/2015 S1', 1, 0, '2015-07-01', '2016-01-31', 2015),
+(20152, '2015/2015 S2', 2, 0, '2016-02-01', '2016-07-31', 2015),
+(20161, '2016/2016 S1', 1, 0, '2016-08-01', '2017-01-22', 2016),
+(20162, '2016/2016 S2', 2, 0, '2017-01-23', '2017-07-16', 2016),
+(20171, '2017/2017 S1', 1, 0, '2017-07-17', '2018-01-31', 2017),
+(20172, '2017/2017 S2', 2, 0, '2018-02-08', '2018-07-31', 2017),
+(20181, '2018/2018 S1', 1, 0, '2018-08-01', '2019-01-30', 2018),
+(20182, '2018/2018 S2', 2, 0, '2019-02-01', '2019-07-31', 2018),
+(20191, '2019/2019 S1', 1, 0, '2019-08-01', '2020-01-31', 2019),
+(20192, '2019/2019 S2', 2, 0, '2020-02-01', '2020-08-10', 2019),
+(20201, '2020/2021 S1', 1, 0, '2020-08-11', '2021-02-21', 2020),
+(20202, '2020/2021 S2', 2, 1, '2021-02-22', '2021-08-31', 2020);
 
 -- --------------------------------------------------------
 
@@ -123,8 +127,8 @@ INSERT INTO `kalender_akademik` (`idtahun`, `tgl_mulai`, `tgl_berakhir`, `ketera
 -- Struktur dari tabel `mahasiswa`
 --
 
-CREATE TABLE IF NOT EXISTS `mahasiswa` (
-`id_pd` int(11) NOT NULL,
+CREATE TABLE `mahasiswa` (
+  `id_pd` int(11) NOT NULL,
   `nipd` int(11) NOT NULL,
   `nm_pd` varchar(100) NOT NULL,
   `id_jur` tinyint(5) DEFAULT NULL,
@@ -132,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `mahasiswa` (
   `id_jenj_didik` int(2) DEFAULT NULL,
   `nm_jenj_didik` varchar(2) DEFAULT NULL,
   `tahun_masuk` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5913 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `mahasiswa`
@@ -182,7 +186,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (41, 91152048, 'AWAN', 2, 'Teknik Industri', 1, 'S1', 2009),
 (42, 91231002, 'AGUS SUTRISNA', NULL, NULL, NULL, NULL, 2009),
 (43, 91251003, 'AGUS PRAYOGA', 1, 'Teknik Mesin', 1, 'S1', 2009),
-(44, 91251010, 'BAKHTIAR RIFA''I', 1, 'Teknik Mesin', 1, 'S1', 2009),
+(44, 91251010, 'BAKHTIAR RIFA\'I', 1, 'Teknik Mesin', 1, 'S1', 2009),
 (45, 91251012, 'DARSONO', 1, 'Teknik Mesin', 1, 'S1', 2009),
 (46, 91251013, 'DEDE HIDAYAT', 1, 'Teknik Mesin', 1, 'S1', 2009),
 (47, 91251018, 'PURWO ADIE.S', 1, 'Teknik Mesin', 1, 'S1', 2009),
@@ -496,7 +500,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (355, 101351038, 'HILMAN SETIAWAN', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (356, 101351039, 'IIK ROPIKOH', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (357, 101351035, 'HENY ERNAWATI', 5, 'Teknik Informatika', 1, 'S1', 2010),
-(358, 101351036, 'HERLINA NURSYA''ADAH', 5, 'Teknik Informatika', 1, 'S1', 2010),
+(358, 101351036, 'HERLINA NURSYA\'ADAH', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (359, 101351040, 'IKHSAN BAYU NUGRAHA', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (360, 101351041, 'IKHSAN SURYA WIBAWA', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (361, 101351042, 'INDAH WULANDARI', 5, 'Teknik Informatika', 1, 'S1', 2010),
@@ -519,7 +523,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (378, 101351060, 'NENDEN VIVY', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (379, 101351061, 'NIA NURNIAWATI', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (380, 101351059, 'NANDANG SOPIAN', 5, 'Teknik Informatika', 1, 'S1', 2010),
-(381, 101351062, 'NI''MAH KHOEROWATI', 5, 'Teknik Informatika', 1, 'S1', 2010),
+(381, 101351062, 'NI\'MAH KHOEROWATI', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (382, 101351063, 'NURUL UMIYATI', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (383, 101351064, 'NURZANAH', 5, 'Teknik Informatika', 1, 'S1', 2010),
 (384, 101351065, 'PRIMA LESTARI WIBAWA', 5, 'Teknik Informatika', 1, 'S1', 2010),
@@ -741,7 +745,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (600, 111351005, 'AJI SUNANDAR', 3, 'Teknik Tekstil', 2, 'D3', 2011),
 (601, 111351006, 'AKBAR RAHADI', 3, 'Teknik Tekstil', 2, 'D3', 2011),
 (602, 111351007, 'ALI IHSAN FAUZI', 3, 'Teknik Tekstil', 2, 'D3', 2011),
-(603, 111351008, 'ALIA MUTA''ALIA', 3, 'Teknik Tekstil', 2, 'D3', 2011),
+(603, 111351008, 'ALIA MUTA\'ALIA', 3, 'Teknik Tekstil', 2, 'D3', 2011),
 (604, 111351009, 'AMAR MUSTOPA', 3, 'Teknik Tekstil', 2, 'D3', 2011),
 (605, 111351010, 'ANDI FAUZAN', 3, 'Teknik Tekstil', 2, 'D3', 2011),
 (606, 111351011, 'ANDRE MUHAMAD MAULIDINA', 3, 'Teknik Tekstil', 2, 'D3', 2011),
@@ -889,7 +893,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (747, 121331010, 'DANI FIRMANSYAH', 4, 'Manajemen Industri', 2, 'D3', 2012),
 (748, 121331011, 'DERRY FERDIAN NOVRIANTO', 4, 'Manajemen Industri', 2, 'D3', 2012),
 (749, 121331012, 'DEVI YUNITA', 4, 'Manajemen Industri', 2, 'D3', 2012),
-(750, 121331014, 'IMA HALIMAH SA''BANIAH', 4, 'Manajemen Industri', 2, 'D3', 2012),
+(750, 121331014, 'IMA HALIMAH SA\'BANIAH', 4, 'Manajemen Industri', 2, 'D3', 2012),
 (751, 121331015, 'IVAN WILLY NANDA', 4, 'Manajemen Industri', 2, 'D3', 2012),
 (752, 121331016, 'IWAN SETIAWAN', 4, 'Manajemen Industri', 2, 'D3', 2012),
 (753, 121331018, 'MAULANA DARUL MUTAQIN', 4, 'Manajemen Industri', 2, 'D3', 2012),
@@ -913,7 +917,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (771, 121251002, 'ADE FIRMANSYAH', 1, 'Teknik Mesin', 1, 'S1', 2012),
 (772, 121251003, 'ADI SAEPUL MUKTI', 1, 'Teknik Mesin', 1, 'S1', 2012),
 (773, 121251004, 'AGI BIANTARA', 1, 'Teknik Mesin', 1, 'S1', 2012),
-(774, 121252005, 'AGUS NURJAMI''AT', 1, 'Teknik Mesin', 1, 'S1', 2012),
+(774, 121252005, 'AGUS NURJAMI\'AT', 1, 'Teknik Mesin', 1, 'S1', 2012),
 (775, 121251006, 'AGUS RIYANTO', 1, 'Teknik Mesin', 1, 'S1', 2012),
 (776, 121251007, 'AHMAD NIZAR FAHRUROZI', 1, 'Teknik Mesin', 1, 'S1', 2012),
 (777, 121251008, 'AHMAD SABTOWI', 1, 'Teknik Mesin', 1, 'S1', 2012),
@@ -1235,7 +1239,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (1093, 121151082, 'IRFAN ANDIYANSYAH', 2, 'Teknik Industri', 1, 'S1', 2012),
 (1094, 121151083, 'YOGI GUSTAMAN', 2, 'Teknik Industri', 1, 'S1', 2012),
 (1095, 121351145, 'WIYANDA IRAWAN', 5, 'Teknik Informatika', 1, 'S1', 2012),
-(1096, 121351146, 'YANSENIUS BATE''E', 5, 'Teknik Informatika', 1, 'S1', 2012),
+(1096, 121351146, 'YANSENIUS BATE\'E', 5, 'Teknik Informatika', 1, 'S1', 2012),
 (1097, 121351147, 'YOYO HARYONO', 5, 'Teknik Informatika', 1, 'S1', 2012),
 (1098, 121351148, 'YUDA ANDIKA RAKHMAN', 5, 'Teknik Informatika', 1, 'S1', 2012),
 (1099, 121351150, 'YURI DWI NOFIANTO', 5, 'Teknik Informatika', 1, 'S1', 2012),
@@ -1559,7 +1563,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (1416, 131131011, 'SONA KOES BRAMIANA', 3, 'Teknik Tekstil', 2, 'D3', 2013),
 (1417, 131131012, 'VANI HIDAYAT', 3, 'Teknik Tekstil', 2, 'D3', 2013),
 (1418, 131131013, 'VIVI SYIFA FAUZIAH', 3, 'Teknik Tekstil', 2, 'D3', 2013),
-(1419, 131151043, 'ABDUL HARIS SA''BAN FEBRIANA', 2, 'Teknik Industri', 1, 'S1', 2013),
+(1419, 131151043, 'ABDUL HARIS SA\'BAN FEBRIANA', 2, 'Teknik Industri', 1, 'S1', 2013),
 (1420, 131151001, 'ABDUL ROHMAN', 2, 'Teknik Industri', 1, 'S1', 2013),
 (1421, 131151044, 'ACEP IRVAN TAUPIK', 2, 'Teknik Industri', 1, 'S1', 2013),
 (1422, 131151045, 'AGA HAETARI', 2, 'Teknik Industri', 1, 'S1', 2013),
@@ -2146,7 +2150,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (2003, 141351108, 'JARWANTO', 5, 'Teknik Informatika', 1, 'S1', 2014),
 (2004, 141351107, 'JAMALUDIN', 5, 'Teknik Informatika', 1, 'S1', 2014),
 (2005, 141351106, 'ITA PURNAMA DEWI', 5, 'Teknik Informatika', 1, 'S1', 2014),
-(2006, 141351105, 'BAGUS IMAM SAFI''I', 5, 'Teknik Informatika', 1, 'S1', 2014),
+(2006, 141351105, 'BAGUS IMAM SAFI\'I', 5, 'Teknik Informatika', 1, 'S1', 2014),
 (2007, 141351104, 'IRA DESTI MULYAWATI', 5, 'Teknik Informatika', 1, 'S1', 2014),
 (2008, 141351103, 'INDANA ZULFAA NAZMU FADHILAH', 5, 'Teknik Informatika', 1, 'S1', 2014),
 (2009, 141351102, 'IMAM MUNTASYIR HUDA', 5, 'Teknik Informatika', 1, 'S1', 2014),
@@ -2317,7 +2321,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (2173, 141251114, 'RYAN MAULANA', 1, 'Teknik Mesin', 1, 'S1', 2014),
 (2174, 141251115, 'RYAN SUKMANA RAMADHAN', 1, 'Teknik Mesin', 1, 'S1', 2014),
 (2175, 141251116, 'SADI MULYADI', 1, 'Teknik Mesin', 1, 'S1', 2014),
-(2176, 141251117, 'SAMSUL MA''ARIF', 1, 'Teknik Mesin', 1, 'S1', 2014),
+(2176, 141251117, 'SAMSUL MA\'ARIF', 1, 'Teknik Mesin', 1, 'S1', 2014),
 (2177, 141251118, 'HARRY SETRA PERMANA', 1, 'Teknik Mesin', 1, 'S1', 2014),
 (2178, 141251119, 'SANUSI', 1, 'Teknik Mesin', 1, 'S1', 2014),
 (2179, 141251120, 'SENDI HARDINATA', 1, 'Teknik Mesin', 1, 'S1', 2014),
@@ -2441,7 +2445,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (2297, 151251074, 'MUHAMAD JARKASIH', 1, 'Teknik Mesin', 1, 'S1', 2015),
 (2298, 151251073, 'MUHAMAD ARIF SAIFULOH', 1, 'Teknik Mesin', 1, 'S1', 2015),
 (2299, 151251071, 'MOGY ANTAMA DIOR', 1, 'Teknik Mesin', 1, 'S1', 2015),
-(2300, 151251072, 'MOHAMAD RIFA''I', 1, 'Teknik Mesin', 1, 'S1', 2015),
+(2300, 151251072, 'MOHAMAD RIFA\'I', 1, 'Teknik Mesin', 1, 'S1', 2015),
 (2301, 151251070, 'MOEHAMMAD FADJAR FADILLAH', 1, 'Teknik Mesin', 1, 'S1', 2015),
 (2302, 151251069, 'MOCHAMAD IRFAN MAULANA', 1, 'Teknik Mesin', 1, 'S1', 2015),
 (2303, 151251068, 'MAMAN NURJAYA', 1, 'Teknik Mesin', 1, 'S1', 2015),
@@ -2554,7 +2558,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (2410, 151351210, 'SELA INDRIYANI', 5, 'Teknik Informatika', 1, 'S1', 2015),
 (2411, 151351211, 'SENO PAMUNGKAS', 5, 'Teknik Informatika', 1, 'S1', 2015),
 (2412, 151351209, 'SECA SEPTIAN BOEKIE', 5, 'Teknik Informatika', 1, 'S1', 2015),
-(2413, 151351208, 'SAYYID BAHRUL ULUM AL''AZIZ', 5, 'Teknik Informatika', 1, 'S1', 2015),
+(2413, 151351208, 'SAYYID BAHRUL ULUM AL\'AZIZ', 5, 'Teknik Informatika', 1, 'S1', 2015),
 (2414, 151351206, 'SARAH KADARWATI ', 5, 'Teknik Informatika', 1, 'S1', 2015),
 (2415, 151351207, 'SATRIYO PUTRO UTOMO', 5, 'Teknik Informatika', 1, 'S1', 2015),
 (2416, 151351205, 'SANTRIA GUSTI ARROHMAN', 5, 'Teknik Informatika', 1, 'S1', 2015),
@@ -2969,7 +2973,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (2824, 151151018, 'ANDITIO PRATAMA', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2825, 151151017, 'ANDIKA MOCHAMAD RAMDAN', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2826, 151151016, 'ANDI SETIAWAN', 2, 'Teknik Industri', 1, 'S1', 2015),
-(2827, 151151015, 'AMAR MA''RUF', 2, 'Teknik Industri', 1, 'S1', 2015),
+(2827, 151151015, 'AMAR MA\'RUF', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2828, 151151014, 'ALIFFIA FADILLA FARAID', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2829, 151151013, 'ALI AHMAD', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2830, 151151012, 'ALEX INDRA WIJAYA', 2, 'Teknik Industri', 1, 'S1', 2015),
@@ -2977,7 +2981,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (2832, 151151010, 'AJAT SUDRAJAT', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2833, 151151009, 'AHMAD FAUZI', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2834, 151151007, 'AEP HERMAWAN', 2, 'Teknik Industri', 1, 'S1', 2015),
-(2835, 151151008, 'AHMAD AZWAR RIFA''I', 2, 'Teknik Industri', 1, 'S1', 2015),
+(2835, 151151008, 'AHMAD AZWAR RIFA\'I', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2836, 151151006, 'ADILA ALFIAN', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2837, 151151005, 'ADI PRIYONO', 2, 'Teknik Industri', 1, 'S1', 2015),
 (2838, 151151004, 'ADI HABIBI PASARIBU', 2, 'Teknik Industri', 1, 'S1', 2015),
@@ -3186,7 +3190,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (3041, 161151123, 'LUKMAN SARIPUDIN', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3042, 161151083, 'FITRI YANI ULFAH', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3043, 161151203, 'TAJUDIN', 2, 'Teknik Industri', 1, 'S1', 2016),
-(3044, 161151132, 'MEGA NUR''AZIZAH', 2, 'Teknik Industri', 1, 'S1', 2016),
+(3044, 161151132, 'MEGA NUR\'AZIZAH', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3045, 161151061, 'DEDE RONDI EFENDI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3046, 161151028, 'ANISA VIONA', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3047, 161151153, 'MUKTI WIDODO', 2, 'Teknik Industri', 1, 'S1', 2016),
@@ -3265,12 +3269,12 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (3120, 161151166, 'PINA APRIANTI BASONI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3121, 161151110, 'INTAN PERMATA WANTI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3122, 161151155, 'NABIL', 2, 'Teknik Industri', 1, 'S1', 2016),
-(3123, 161151173, 'RIAN SAPE''I', 2, 'Teknik Industri', 1, 'S1', 2016),
+(3123, 161151173, 'RIAN SAPE\'I', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3124, 161151038, 'ARIZAL ISNUR RIYALDI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3125, 161151161, 'NURHUDA SIDDIQ ', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3126, 161151109, 'INGGRID KUSUMA DEWI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3127, 161151116, 'JOSSE FRIZAL LUBIS', 2, 'Teknik Industri', 1, 'S1', 2016),
-(3128, 161151129, 'MA''RIFATUN ALVIARANI', 2, 'Teknik Industri', 1, 'S1', 2016),
+(3128, 161151129, 'MA\'RIFATUN ALVIARANI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3129, 161151117, 'JUNITA SARI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3130, 161151072, 'EKA SUCIANA', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3131, 161151113, 'IRMAN SETIANA', 2, 'Teknik Industri', 1, 'S1', 2016),
@@ -3351,7 +3355,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (3206, 161151131, 'MAYA PUSPASARI', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3207, 161151059, 'DEAR PAJUMA', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3208, 161151171, 'RAKA HIRASNA MUKTI', 2, 'Teknik Industri', 1, 'S1', 2016),
-(3209, 161151192, 'SITI ROFI''AH', 2, 'Teknik Industri', 1, 'S1', 2016),
+(3209, 161151192, 'SITI ROFI\'AH', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3210, 161151223, 'YUGO AGUNG PURNOMO', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3211, 161151150, 'MUHAMMAD HAERUDIN RAMADHAN', 2, 'Teknik Industri', 1, 'S1', 2016),
 (3212, 161151060, 'DEBY MUTIASARI', 2, 'Teknik Industri', 1, 'S1', 2016),
@@ -3777,7 +3781,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (3631, 171351060, 'DIDA PURNAMA MULYANA', 5, 'Teknik Informatika', 1, 'S1', 2017),
 (3632, 171351079, 'GALVANIZAR SHAFA', 5, 'Teknik Informatika', 1, 'S1', 2017),
 (3633, 171351147, 'MUHAMMAD ILHAM FATHURAHMAN', 5, 'Teknik Informatika', 1, 'S1', 2017),
-(3634, 171351203, 'SOFI SA''ADAH', 5, 'Teknik Informatika', 1, 'S1', 2017),
+(3634, 171351203, 'SOFI SA\'ADAH', 5, 'Teknik Informatika', 1, 'S1', 2017),
 (3635, 171351034, 'ANISA DAMAYANTI', 5, 'Teknik Informatika', 1, 'S1', 2017),
 (3636, 171351216, 'VELIA MILDIA PUTRI', 5, 'Teknik Informatika', 1, 'S1', 2017),
 (3637, 171351137, 'MUHAMAD RIKY GOZALI', 5, 'Teknik Informatika', 1, 'S1', 2017),
@@ -4054,7 +4058,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (3908, 171151071, 'FAZRI MAULUDIN', 2, 'Teknik Industri', 1, 'S1', 2017),
 (3909, 171151027, 'ARI PUTRI ABDI', 2, 'Teknik Industri', 1, 'S1', 2017),
 (3910, 171151076, 'GHINA MEWITA', 2, 'Teknik Industri', 1, 'S1', 2017),
-(3911, 171151185, 'SYAMSUL MA''RIF', 2, 'Teknik Industri', 1, 'S1', 2017),
+(3911, 171151185, 'SYAMSUL MA\'RIF', 2, 'Teknik Industri', 1, 'S1', 2017),
 (3912, 171151142, 'PAJAR SULAEMAN', 2, 'Teknik Industri', 1, 'S1', 2017),
 (3913, 171151065, 'EXSA SANDIKA', 2, 'Teknik Industri', 1, 'S1', 2017),
 (3914, 171151086, 'IIN KARTINI', 2, 'Teknik Industri', 1, 'S1', 2017),
@@ -4224,7 +4228,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (4077, 171251069, 'M. RIZKY ANUGRAH', 1, 'Teknik Mesin', 1, 'S1', 2017),
 (4078, 171251056, 'ILHAM PUTRA SANDI', 1, 'Teknik Mesin', 1, 'S1', 2017),
 (4079, 171251076, 'MUHAMAD ARDIANSYAH', 1, 'Teknik Mesin', 1, 'S1', 2017),
-(4080, 171251007, 'AMIN RA''IS', 1, 'Teknik Mesin', 1, 'S1', 2017),
+(4080, 171251007, 'AMIN RA\'IS', 1, 'Teknik Mesin', 1, 'S1', 2017),
 (4081, 171251082, 'MUHAMAD YOGI SUPRIANTO', 1, 'Teknik Mesin', 1, 'S1', 2017),
 (4082, 171251037, 'EKI MUHAMAD YUNUS', 1, 'Teknik Mesin', 1, 'S1', 2017),
 (4083, 171251063, 'JONI ROMADHAN', 1, 'Teknik Mesin', 1, 'S1', 2017),
@@ -4418,7 +4422,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (4271, 181351204, 'Sukirman Irawan', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4272, 181351203, 'Siti Zulfah Sulastri', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4273, 181351202, 'Siti Mariyah Ulfah', 5, 'Teknik Informatika', 1, 'S1', 2018),
-(4274, 181351201, 'Siti Ma''Rifah Novianti', 5, 'Teknik Informatika', 1, 'S1', 2018),
+(4274, 181351201, 'Siti Ma\'Rifah Novianti', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4275, 181351200, 'Siti Farhah Jamilah', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4276, 181351199, 'Sigit Budiharto', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4277, 181351198, 'Sendi Akbar Pratama', 5, 'Teknik Informatika', 1, 'S1', 2018),
@@ -4433,7 +4437,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (4286, 181351189, 'Rudiana', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4287, 181351188, 'Rudi Pataleon', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4288, 181351187, 'Rizky Maulana Syarif', 5, 'Teknik Informatika', 1, 'S1', 2018),
-(4289, 181351186, 'Rizal Fakhri Sya''Bana', 5, 'Teknik Informatika', 1, 'S1', 2018),
+(4289, 181351186, 'Rizal Fakhri Sya\'Bana', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4290, 181351185, 'Riyanti Mulya Iswanti', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4291, 181351183, 'Rivan Nur Rahman', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4292, 181351184, 'Riwanti Situmorang', 5, 'Teknik Informatika', 1, 'S1', 2018),
@@ -4491,7 +4495,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (4344, 181351132, 'Muhamad Syahrul', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4345, 181351130, 'Muhamad Luthfi Aulia Nurachman', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4346, 181351129, 'Muhamad Firmansyah', 5, 'Teknik Informatika', 1, 'S1', 2018),
-(4347, 181351128, 'Muhamad Fikry Nur''Alif', 5, 'Teknik Informatika', 1, 'S1', 2018),
+(4347, 181351128, 'Muhamad Fikry Nur\'Alif', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4348, 181351127, 'Muhamad Fikri Padilah', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4349, 181351126, 'Muhamad Faiz Aulia', 5, 'Teknik Informatika', 1, 'S1', 2018),
 (4350, 181351125, 'Muhamad Fadlilyan Dilham', 5, 'Teknik Informatika', 1, 'S1', 2018),
@@ -4817,7 +4821,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (4670, 181151024, 'Andika Marhayu Saputro', 2, 'Teknik Industri', 1, 'S1', 2018),
 (4671, 181151023, 'Ana Maudina', 2, 'Teknik Industri', 1, 'S1', 2018),
 (4672, 181151022, 'Amar Maruf', 2, 'Teknik Industri', 1, 'S1', 2018),
-(4673, 181151021, 'Alvarid Ahmad Riva''i', 2, 'Teknik Industri', 1, 'S1', 2018),
+(4673, 181151021, 'Alvarid Ahmad Riva\'i', 2, 'Teknik Industri', 1, 'S1', 2018),
 (4674, 181151020, 'Alif Latifah', 2, 'Teknik Industri', 1, 'S1', 2018),
 (4675, 181151018, 'Aldri Tanjung', 2, 'Teknik Industri', 1, 'S1', 2018),
 (4676, 181151019, 'Alfen Jundriz', 2, 'Teknik Industri', 1, 'S1', 2018),
@@ -5030,10 +5034,10 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (4882, 191331022, 'RANTI PASARIBU', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4883, 191332001, 'RIENDY NURDIANTO', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4884, 191331023, 'RIEZAL AULIA DIENILHAQ', 4, 'Manajemen Industri', 2, 'D3', 2019),
-(4885, 191331024, 'RINI NUR''AINI OKTAPIANI', 4, 'Manajemen Industri', 2, 'D3', 2019),
+(4885, 191331024, 'RINI NUR\'AINI OKTAPIANI', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4886, 191331025, 'RISDAYANTI', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4887, 191331026, 'RIZKE AYU NUR CAHYAWATI', 4, 'Manajemen Industri', 2, 'D3', 2019),
-(4888, 191332002, 'ROHMAT ISRO'' INSANU', 4, 'Manajemen Industri', 2, 'D3', 2019),
+(4888, 191332002, 'ROHMAT ISRO\' INSANU', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4889, 191331027, 'SOLI GARACIA BR SIPAHUTAR', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4890, 191331028, 'SRI ROCHMAT', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (4891, 191331029, 'TONI KURNIAWAN', 4, 'Manajemen Industri', 2, 'D3', 2019),
@@ -5323,7 +5327,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5175, 191352004, 'KERISMA HERLYSAM', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5176, 191351047, 'KHAEVA HASNA', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5177, 191351048, 'KHOLIK ZAENUDIN ASHAR', 5, 'Teknik Informatika', 1, 'S1', 2019),
-(5178, 191351049, 'KRISMAN JAYA BATE''E', 5, 'Teknik Informatika', 1, 'S1', 2019),
+(5178, 191351049, 'KRISMAN JAYA BATE\'E', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5179, 191351050, 'KUS IRAWAN INDRA SAPUTRA', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5180, 191351051, 'M ANWAR FADHLI', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5181, 191351052, 'M. MAHENDRA FIRMANSYAH', 5, 'Teknik Informatika', 1, 'S1', 2019),
@@ -5362,7 +5366,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5214, 191351085, 'ROBBANI NADWI', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5215, 191351086, 'SAEPUL MILAH', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5216, 191351087, 'SALSABIL', 5, 'Teknik Informatika', 1, 'S1', 2019),
-(5217, 191351088, 'SALWA QUROTUL A''IN FIRDAUS', 5, 'Teknik Informatika', 1, 'S1', 2019),
+(5217, 191351088, 'SALWA QUROTUL A\'IN FIRDAUS', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5218, 191351089, 'SANGGIR DYAH FRITAMA', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5219, 191351090, 'SARAH AFIFAH AZHAR', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5220, 191351091, 'SATRIO WIDIANTO UTOMO', 5, 'Teknik Informatika', 1, 'S1', 2019),
@@ -5449,7 +5453,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5301, 191351170, 'MUHAMAD FIKRI ZAMALUDIN', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5302, 191351171, 'MUHAMAD HASIM ', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5303, 191351172, 'MUHAMAD KABIRUR RIFA', 5, 'Teknik Informatika', 1, 'S1', 2019),
-(5304, 191351173, 'MUHAMAD RIZAL RIVA''I', 5, 'Teknik Informatika', 1, 'S1', 2019),
+(5304, 191351173, 'MUHAMAD RIZAL RIVA\'I', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5305, 191351174, 'MUHAMMAD BAGUS YULIANDRE', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5306, 191351175, 'MUHAMMAD FARIZ HASBY', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5307, 191351176, 'MUHAMMAD NAUFAL HAFIZH', 5, 'Teknik Informatika', 1, 'S1', 2019),
@@ -5633,7 +5637,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5484, 191131014, 'AHMAD LIMAN', 3, 'Teknik Tekstil', 2, 'D3', 2019),
 (5485, 191331037, 'BULAN DWI OKTAVIANA', 4, 'Manajemen Industri', 2, 'D3', 2019),
 (5486, 191251106, 'PRASETYO', 1, 'Teknik Mesin', 1, 'S1', 2019),
-(5487, 191151236, 'SAEPUDIN SAPE''I', 2, 'Teknik Industri', 1, 'S1', 2019),
+(5487, 191151236, 'SAEPUDIN SAPE\'I', 2, 'Teknik Industri', 1, 'S1', 2019),
 (5488, 191151237, 'JEJEN ZAENUDIN', 2, 'Teknik Industri', 1, 'S1', 2019),
 (5489, 191351224, 'SINTA MAGDALENA SITOMORANG', 5, 'Teknik Informatika', 1, 'S1', 2019),
 (5490, 191252005, 'ADE SUMITRO', 1, 'Teknik Mesin', 1, 'S1', 2019),
@@ -5653,7 +5657,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5504, 201351064, 'KANIA DEWI', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5505, 201251046, 'FIRMAN SUKMAYADI', 1, 'Teknik Mesin', 1, 'S1', 2020),
 (5506, 201151088, 'MUHAMAD SALMAN FARIZI ', 2, 'Teknik Industri', 1, 'S1', 2020),
-(5507, 201251030, 'ADHIANSYAH NUR MU''MIN', 1, 'Teknik Mesin', 1, 'S1', 2020),
+(5507, 201251030, 'ADHIANSYAH NUR MU\'MIN', 1, 'Teknik Mesin', 1, 'S1', 2020),
 (5508, 201151069, 'MEI SARI SULASTRI', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5509, 201151109, 'RAHANDI ARDIANSYAH', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5510, 201351094, 'MUTIARA NURDARMAYANI', 5, 'Teknik Informatika', 1, 'S1', 2020),
@@ -5668,7 +5672,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5519, 201331014, 'LEMNA NOORLIPHA IMAN', 4, 'Manajemen Industri', 2, 'D3', 2020),
 (5520, 201351028, 'CINDY NUR ANGGRAENI', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5521, 201151031, 'DEVI HADIANTI', 2, 'Teknik Industri', 1, 'S1', 2020),
-(5522, 201351047, 'FAIZAL RAHMAN NUR''AMIN', 5, 'Teknik Informatika', 1, 'S1', 2020),
+(5522, 201351047, 'FAIZAL RAHMAN NUR\'AMIN', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5523, 201151048, 'GALIH WAHYU RAMADHAN', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5524, 201151136, 'WILDAN RAMDANI', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5525, 201351141, 'ZAIIMA TSABITHA NABHANDININGRAT NASIHIN', 5, 'Teknik Informatika', 1, 'S1', 2020),
@@ -5780,7 +5784,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5631, 201251027, 'RIZKY KURNIAWAN', 1, 'Teknik Mesin', 1, 'S1', 2020),
 (5632, 201151084, 'MUHAMAD NUGRAH NOPIASADI', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5633, 201151130, 'SISCA HUDRIAH', 2, 'Teknik Industri', 1, 'S1', 2020),
-(5634, 201351011, 'ALFIN KABIR RIFA''I', 5, 'Teknik Informatika', 1, 'S1', 2020),
+(5634, 201351011, 'ALFIN KABIR RIFA\'I', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5635, 201351087, 'MUHAMMAD RIZA AIMAR', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5636, 201351015, 'ANDHIKA SYARIF NATAATMAJA', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5637, 201251042, 'DIO RIORDAN', 1, 'Teknik Mesin', 1, 'S1', 2020),
@@ -5805,7 +5809,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5656, 201151081, 'MUHAMAD IHSAN ABDUL AZIZ', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5657, 201351099, 'NAUFAL RIZQULLAH', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5658, 201351106, 'OCTAVIA SARAMITHA PUJADI', 5, 'Teknik Informatika', 1, 'S1', 2020),
-(5659, 201351136, 'YASMIN SITI ROBI''AH', 5, 'Teknik Informatika', 1, 'S1', 2020),
+(5659, 201351136, 'YASMIN SITI ROBI\'AH', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5660, 201351024, 'ARYA NUGRAHA', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5661, 201351088, 'MUHAMMAD RIZKI', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5662, 201151006, 'AMELIA YOLANDA SAFITRI ', 2, 'Teknik Industri', 1, 'S1', 2020),
@@ -5871,7 +5875,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5722, 201151015, 'ARIEL MUHAMMAD DAFFA', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5723, 201351031, 'DEWI CAHYANI', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5724, 201151126, 'SALSA PUTRI FARADINA', 2, 'Teknik Industri', 1, 'S1', 2020),
-(5725, 201151121, 'ROOFI''U MUGHNII AZIZZ', 2, 'Teknik Industri', 1, 'S1', 2020),
+(5725, 201151121, 'ROOFI\'U MUGHNII AZIZZ', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5726, 201151074, 'MOCH.LUTFI RIYADI PRATAMA ', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5727, 201351063, 'JUANDHANI ABIMANYU', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5728, 201251013, 'JAMALUDIN', 1, 'Teknik Mesin', 1, 'S1', 2020),
@@ -5892,7 +5896,7 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 (5743, 201151007, 'ANAS FATULLOH', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5744, 201151063, 'KHARIS GUNAWAN', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5745, 201251012, 'IYAN SUPRIYANTO NUGRAHA', 1, 'Teknik Mesin', 1, 'S1', 2020),
-(5746, 201151083, 'MUHAMAD ILHAM SA''RONI', 2, 'Teknik Industri', 1, 'S1', 2020),
+(5746, 201151083, 'MUHAMAD ILHAM SA\'RONI', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5747, 201351091, 'MUHAMMAD ZILDJIAN LAZUARDI', 5, 'Teknik Informatika', 1, 'S1', 2020),
 (5748, 201151027, 'DENI KURNIAWAN', 2, 'Teknik Industri', 1, 'S1', 2020),
 (5749, 201331016, 'MUHAMAD ANDIKA NURCAHYA', 4, 'Manajemen Industri', 2, 'D3', 2020),
@@ -6066,10 +6070,10 @@ INSERT INTO `mahasiswa` (`id_pd`, `nipd`, `nm_pd`, `id_jur`, `nm_jur`, `id_jenj_
 -- Struktur dari tabel `master_jenis_pembayaran`
 --
 
-CREATE TABLE IF NOT EXISTS `master_jenis_pembayaran` (
-`id_jenis_pembayaran` int(11) NOT NULL,
+CREATE TABLE `master_jenis_pembayaran` (
+  `id_jenis_pembayaran` int(11) NOT NULL,
   `nm_jenis_pembayaran` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `master_jenis_pembayaran`
@@ -6099,15 +6103,15 @@ INSERT INTO `master_jenis_pembayaran` (`id_jenis_pembayaran`, `nm_jenis_pembayar
 -- Struktur dari tabel `menu`
 --
 
-CREATE TABLE IF NOT EXISTS `menu` (
-`id_menu` int(11) NOT NULL,
+CREATE TABLE `menu` (
+  `id_menu` int(11) NOT NULL,
   `nama_menu` varchar(20) NOT NULL,
   `link_menu` text NOT NULL,
   `type` varchar(20) NOT NULL,
   `icon` varchar(128) NOT NULL,
   `is_active` int(1) NOT NULL,
   `editable` enum('N/A','YES','','') NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `menu`
@@ -6126,8 +6130,8 @@ INSERT INTO `menu` (`id_menu`, `nama_menu`, `link_menu`, `type`, `icon`, `is_act
 -- Struktur dari tabel `reg_mhs`
 --
 
-CREATE TABLE IF NOT EXISTS `reg_mhs` (
-`id_reg_mhs` bigint(20) NOT NULL,
+CREATE TABLE `reg_mhs` (
+  `id_reg_mhs` bigint(20) NOT NULL,
   `tahun_ajaran` varchar(6) COLLATE latin1_general_ci NOT NULL,
   `id_jurusan` varchar(20) COLLATE latin1_general_ci NOT NULL,
   `nim` varchar(15) COLLATE latin1_general_ci NOT NULL,
@@ -6141,14 +6145,14 @@ CREATE TABLE IF NOT EXISTS `reg_mhs` (
 -- Struktur dari tabel `submenu`
 --
 
-CREATE TABLE IF NOT EXISTS `submenu` (
-`id_submenu` int(11) NOT NULL,
+CREATE TABLE `submenu` (
+  `id_submenu` int(11) NOT NULL,
   `id_menu` int(11) NOT NULL,
   `nama_submenu` varchar(26) NOT NULL,
   `url` varchar(128) NOT NULL,
   `icon` varchar(128) NOT NULL,
   `is_active` int(1) NOT NULL COMMENT 'untuk status menu'
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `submenu`
@@ -6176,7 +6180,7 @@ INSERT INTO `submenu` (`id_submenu`, `id_menu`, `nama_submenu`, `url`, `icon`, `
 -- Struktur dari tabel `transaksi`
 --
 
-CREATE TABLE IF NOT EXISTS `transaksi` (
+CREATE TABLE `transaksi` (
   `id_transaksi` int(11) NOT NULL,
   `tanggal` date NOT NULL,
   `jam` time NOT NULL,
@@ -6191,8 +6195,8 @@ CREATE TABLE IF NOT EXISTS `transaksi` (
 -- Struktur dari tabel `transaksi_detail`
 --
 
-CREATE TABLE IF NOT EXISTS `transaksi_detail` (
-`id_detail_transaksi` int(11) NOT NULL,
+CREATE TABLE `transaksi_detail` (
+  `id_detail_transaksi` int(11) NOT NULL,
   `id_transaksi` int(11) NOT NULL,
   `id_jenis_pembayaran` int(2) NOT NULL,
   `jml_bayar` int(11) NOT NULL
@@ -6204,14 +6208,14 @@ CREATE TABLE IF NOT EXISTS `transaksi_detail` (
 -- Struktur dari tabel `tunggakan`
 --
 
-CREATE TABLE IF NOT EXISTS `tunggakan` (
-`id_tunggakan` int(11) NOT NULL,
+CREATE TABLE `tunggakan` (
+  `id_tunggakan` int(11) NOT NULL,
   `nim` int(11) DEFAULT NULL,
   `jenis_tunggakan` int(3) DEFAULT NULL,
   `jml_tunggakan` int(9) DEFAULT NULL,
   `idtahun` int(5) DEFAULT NULL,
   `jenjang` varchar(2) COLLATE latin1_general_ci DEFAULT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=687 DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
 --
 -- Dumping data untuk tabel `tunggakan`
@@ -6875,13 +6879,13 @@ INSERT INTO `tunggakan` (`id_tunggakan`, `nim`, `jenis_tunggakan`, `jml_tunggaka
 -- Struktur dari tabel `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-`id_user` int(11) NOT NULL,
+CREATE TABLE `users` (
+  `id_user` int(11) NOT NULL,
   `nama_user` varchar(25) NOT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(50) NOT NULL,
   `role` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `users`
@@ -6898,11 +6902,11 @@ INSERT INTO `users` (`id_user`, `nama_user`, `username`, `password`, `role`) VAL
 -- Struktur dari tabel `user_access_menu`
 --
 
-CREATE TABLE IF NOT EXISTS `user_access_menu` (
-`id` int(11) NOT NULL,
+CREATE TABLE `user_access_menu` (
+  `id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   `menu_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `user_access_menu`
@@ -6924,10 +6928,10 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 -- Struktur dari tabel `user_role`
 --
 
-CREATE TABLE IF NOT EXISTS `user_role` (
-`id_role` int(11) NOT NULL,
+CREATE TABLE `user_role` (
+  `id_role` int(11) NOT NULL,
   `role_type` varchar(128) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data untuk tabel `user_role`
@@ -6943,153 +6947,173 @@ INSERT INTO `user_role` (`id_role`, `role_type`) VALUES
 --
 
 --
--- Indexes for table `biaya_angkatan`
+-- Indeks untuk tabel `biaya_angkatan`
 --
 ALTER TABLE `biaya_angkatan`
- ADD PRIMARY KEY (`id_biaya`);
+  ADD PRIMARY KEY (`id_biaya`);
 
 --
--- Indexes for table `biaya_tambahan`
+-- Indeks untuk tabel `biaya_tambahan`
 --
 ALTER TABLE `biaya_tambahan`
- ADD PRIMARY KEY (`id_biaya_tambahan`);
+  ADD PRIMARY KEY (`id_biaya_tambahan`);
 
 --
--- Indexes for table `kalender_akademik`
+-- Indeks untuk tabel `kalender_akademik`
 --
 ALTER TABLE `kalender_akademik`
- ADD PRIMARY KEY (`idtahun`);
+  ADD PRIMARY KEY (`id_smt`);
 
 --
--- Indexes for table `mahasiswa`
+-- Indeks untuk tabel `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
- ADD PRIMARY KEY (`id_pd`);
+  ADD PRIMARY KEY (`id_pd`);
 
 --
--- Indexes for table `master_jenis_pembayaran`
+-- Indeks untuk tabel `master_jenis_pembayaran`
 --
 ALTER TABLE `master_jenis_pembayaran`
- ADD PRIMARY KEY (`id_jenis_pembayaran`);
+  ADD PRIMARY KEY (`id_jenis_pembayaran`);
 
 --
--- Indexes for table `menu`
+-- Indeks untuk tabel `menu`
 --
 ALTER TABLE `menu`
- ADD PRIMARY KEY (`id_menu`), ADD KEY `id_menu` (`id_menu`);
+  ADD PRIMARY KEY (`id_menu`),
+  ADD KEY `id_menu` (`id_menu`);
 
 --
--- Indexes for table `reg_mhs`
+-- Indeks untuk tabel `reg_mhs`
 --
 ALTER TABLE `reg_mhs`
- ADD PRIMARY KEY (`id_reg_mhs`);
+  ADD PRIMARY KEY (`id_reg_mhs`);
 
 --
--- Indexes for table `submenu`
+-- Indeks untuk tabel `submenu`
 --
 ALTER TABLE `submenu`
- ADD PRIMARY KEY (`id_submenu`), ADD KEY `id_menu` (`id_menu`), ADD KEY `id_submenu` (`id_submenu`);
+  ADD PRIMARY KEY (`id_submenu`),
+  ADD KEY `id_menu` (`id_menu`),
+  ADD KEY `id_submenu` (`id_submenu`);
 
 --
--- Indexes for table `transaksi`
+-- Indeks untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
- ADD PRIMARY KEY (`id_transaksi`), ADD KEY `id_transaksi` (`id_transaksi`);
+  ADD PRIMARY KEY (`id_transaksi`),
+  ADD KEY `id_transaksi` (`id_transaksi`);
 
 --
--- Indexes for table `transaksi_detail`
+-- Indeks untuk tabel `transaksi_detail`
 --
 ALTER TABLE `transaksi_detail`
- ADD PRIMARY KEY (`id_detail_transaksi`), ADD KEY `id_detai_transaksi` (`id_detail_transaksi`), ADD KEY `id_transaksi` (`id_transaksi`);
+  ADD PRIMARY KEY (`id_detail_transaksi`),
+  ADD KEY `id_detai_transaksi` (`id_detail_transaksi`),
+  ADD KEY `id_transaksi` (`id_transaksi`);
 
 --
--- Indexes for table `tunggakan`
+-- Indeks untuk tabel `tunggakan`
 --
 ALTER TABLE `tunggakan`
- ADD PRIMARY KEY (`id_tunggakan`);
+  ADD PRIMARY KEY (`id_tunggakan`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
- ADD PRIMARY KEY (`id_user`), ADD UNIQUE KEY `nama_user` (`nama_user`);
+  ADD PRIMARY KEY (`id_user`),
+  ADD UNIQUE KEY `nama_user` (`nama_user`);
 
 --
--- Indexes for table `user_access_menu`
+-- Indeks untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
- ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_role`
+-- Indeks untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
- ADD PRIMARY KEY (`id_role`);
+  ADD PRIMARY KEY (`id_role`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `biaya_angkatan`
+-- AUTO_INCREMENT untuk tabel `biaya_angkatan`
 --
 ALTER TABLE `biaya_angkatan`
-MODIFY `id_biaya` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id_biaya` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
--- AUTO_INCREMENT for table `biaya_tambahan`
+-- AUTO_INCREMENT untuk tabel `biaya_tambahan`
 --
 ALTER TABLE `biaya_tambahan`
-MODIFY `id_biaya_tambahan` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
+  MODIFY `id_biaya_tambahan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
 --
--- AUTO_INCREMENT for table `mahasiswa`
+-- AUTO_INCREMENT untuk tabel `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
-MODIFY `id_pd` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5913;
+  MODIFY `id_pd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5913;
+
 --
--- AUTO_INCREMENT for table `master_jenis_pembayaran`
+-- AUTO_INCREMENT untuk tabel `master_jenis_pembayaran`
 --
 ALTER TABLE `master_jenis_pembayaran`
-MODIFY `id_jenis_pembayaran` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
+  MODIFY `id_jenis_pembayaran` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
 --
--- AUTO_INCREMENT for table `menu`
+-- AUTO_INCREMENT untuk tabel `menu`
 --
 ALTER TABLE `menu`
-MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1000;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1000;
+
 --
--- AUTO_INCREMENT for table `reg_mhs`
+-- AUTO_INCREMENT untuk tabel `reg_mhs`
 --
 ALTER TABLE `reg_mhs`
-MODIFY `id_reg_mhs` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_reg_mhs` bigint(20) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT for table `submenu`
+-- AUTO_INCREMENT untuk tabel `submenu`
 --
 ALTER TABLE `submenu`
-MODIFY `id_submenu` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+  MODIFY `id_submenu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
 --
--- AUTO_INCREMENT for table `transaksi_detail`
+-- AUTO_INCREMENT untuk tabel `transaksi_detail`
 --
 ALTER TABLE `transaksi_detail`
-MODIFY `id_detail_transaksi` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detail_transaksi` int(11) NOT NULL AUTO_INCREMENT;
+
 --
--- AUTO_INCREMENT for table `tunggakan`
+-- AUTO_INCREMENT untuk tabel `tunggakan`
 --
 ALTER TABLE `tunggakan`
-MODIFY `id_tunggakan` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=687;
+  MODIFY `id_tunggakan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=687;
+
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=12;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
 --
--- AUTO_INCREMENT for table `user_access_menu`
+-- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
 --
--- AUTO_INCREMENT for table `user_role`
+-- AUTO_INCREMENT untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
-MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
