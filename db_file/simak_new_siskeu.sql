@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Jun 2021 pada 05.30
+-- Waktu pembuatan: 20 Jun 2021 pada 15.16
 -- Versi server: 10.4.19-MariaDB
 -- Versi PHP: 8.0.6
 
@@ -6189,6 +6189,14 @@ CREATE TABLE `transaksi` (
   `semester` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data untuk tabel `transaksi`
+--
+
+INSERT INTO `transaksi` (`id_transaksi`, `tanggal`, `jam`, `nim`, `total_bayar`, `semester`) VALUES
+(2021060001, '2021-06-20', '19:56:30', 141351059, 2500000, 20202),
+(2021060002, '2021-06-20', '19:57:59', 141351059, 1550000, 20202);
+
 -- --------------------------------------------------------
 
 --
@@ -6201,6 +6209,16 @@ CREATE TABLE `transaksi_detail` (
   `id_jenis_pembayaran` int(2) NOT NULL,
   `jml_bayar` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `transaksi_detail`
+--
+
+INSERT INTO `transaksi_detail` (`id_detail_transaksi`, `id_transaksi`, `id_jenis_pembayaran`, `jml_bayar`) VALUES
+(15, 2021060001, 2, 1350000),
+(16, 2021060001, 3, 1150000),
+(17, 2021060002, 6, 200000),
+(18, 2021060002, 4, 1350000);
 
 -- --------------------------------------------------------
 
@@ -7087,13 +7105,13 @@ ALTER TABLE `submenu`
 -- AUTO_INCREMENT untuk tabel `transaksi_detail`
 --
 ALTER TABLE `transaksi_detail`
-  MODIFY `id_detail_transaksi` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detail_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT untuk tabel `tunggakan`
 --
 ALTER TABLE `tunggakan`
-  MODIFY `id_tunggakan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=687;
+  MODIFY `id_tunggakan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=695;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
