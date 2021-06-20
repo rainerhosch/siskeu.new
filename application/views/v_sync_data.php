@@ -72,6 +72,10 @@
                     <hr>
                     <div class="row">
                         <div class="col-sm-12 text-center">
+                            <!-- <div class="progress">
+                                <div class="bar"></div>
+                                <div class="percent">0%</div>
+                            </div> -->
                             <button class="btn btn-primary" id="btn_sync_smt_aktif"><i class="fa fa-sync" id="icon_sync_smt_aktif"></i> Sinkron Data</button>
                         </div>
                     </div>

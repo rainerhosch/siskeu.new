@@ -83,7 +83,7 @@
         </div>
 
         <div class="col-sm-9">
-            <div class="row">
+            <div class="row data_historiTX">
                 <div class="col-sm-12">
                     <div class="block full">
                         <div class="block-title">
@@ -146,6 +146,7 @@
         $(document).ready(function() {
             $('#riwayat_transaksi').hide();
             $('.data_kwajiban').hide();
+            // $('.data_historiTX').hide();
             $('#nipd').keypress((e) => {
                 if (e.which === 13) {
                     $("#cari_mhs").click();
@@ -161,7 +162,7 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        // console.log(response);
+                        console.log(response);
                         if (response != null) {
                             if (response.totalKewajiban != 0) {
                                 $('.btn#btn_proses').prop('disabled', false);
@@ -171,6 +172,7 @@
                             let html = ``;
                             let htmlx = ``;
                             $('.data_kwajiban').show();
+                            // $('.data_historiTX').show();
                             $('#riwayat_transaksi').show();
                             $("#nama_mhs").val(response.nm_pd);
                             $("#jurusan").val(response.nm_jur);
