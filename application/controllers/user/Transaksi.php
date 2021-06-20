@@ -41,17 +41,16 @@ class Transaksi extends CI_Controller
     public function Cari_Mhs()
     {
         if ($this->input->is_ajax_request()) {
+            $dataKewajiban = [];
+
             $smtAktif = $this->smt_aktif['id_smt'];
             $nim = $this->input->post('nipd');
-            $response = $this->masterdata->getMahasiswa($nim);
-            $dataRes = json_decode($response, true);
-
-            $dataKewajiban = [];
-            $dataMhs = $dataRes['mhsdata'];
+            $response = $this->masterdata->getMahasiswaByNim(['nipd' => $nim])->row_array();
+            $dataMhs = $response;
             if ($dataMhs != null) {
-                $jenjang = $dataRes['mhsdata']['jenjang'];
+                $jenjang = $dataMhs['nm_jenj_didik'];
                 $where_tahun = [
-                    'angkatan' => $dataRes['mhsdata']['tahun_masuk']
+                    'angkatan' => $dataMhs['tahun_masuk']
                 ];
 
                 // cek tunggakan
@@ -82,19 +81,11 @@ class Transaksi extends CI_Controller
                 // cek histori transaksi
                 $dataHistoriTx = $this->transaksi->cekHistori($dataCekNim)->result_array();
                 $maxHistoriTx = $this->transaksi->cekMaxTransaksi($dataCekNim)->row_array();
-                // echo '<pre>';
-                // print_r($dataHistoriTx);
-                // echo '</pre>';
-                // die;
                 $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
                 $biayaCS = $dataBiaya['cicilan_semester'] / 3;
                 if ($dataHistoriTx != null) {
                     // ada histori transaksi
                     $maxDetailTx = $this->transaksi->cekMaxDetailTransaksi($maxHistoriTx['id_transaksi'])->row_array();
-                    // echo '<pre>';
-                    // var_dump($maxDetailTx);
-                    // echo '</pre>';
-                    // die;
                     if ($maxDetailTx['id_jenis_pembayaran'] == 4) {
                         $C1 = [
                             'post_id' => 'bayar_C1',
@@ -144,10 +135,13 @@ class Transaksi extends CI_Controller
                             'biaya' => $biayaCS
                         ];
                     }
+
                     $dataKewajiban[] = $C1;
                     $dataKewajiban[] = $C2;
                     $dataKewajiban[] = $C3;
 
+                    $countTotal = $dataKewajiban[0]['biaya'] + $dataKewajiban[1]['biaya'] + $dataKewajiban[2]['biaya'] + $dataKewajiban[3]['biaya'];
+                    $dataMhs['totalKewajiban'] = $countTotal;
                     $dataMhs['dataKewajiban'] = $dataKewajiban;
                     $dataMhs['dataHistoriTX'] = $dataHistoriTx;
                     echo json_encode($dataMhs);
@@ -157,31 +151,25 @@ class Transaksi extends CI_Controller
                     $C1 = [
                         'post_id' => 'bayar_C1',
                         'label' => 'Cicilan Ke-1',
-                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                        'biaya' => $biayaCS
                     ];
                     $C2 = [
                         'post_id' => 'bayar_C2',
                         'label' => 'Cicilan Ke-2',
-                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                        'biaya' => $biayaCS
                     ];
                     $C3 = [
                         'post_id' => 'bayar_C3',
                         'label' => 'Cicilan Ke-3',
-                        'biaya' => $dataBiaya['cicilan_semester'] / 3
+                        'biaya' => $biayaCS
                     ];
+
                     $dataKewajiban[] = $C1;
                     $dataKewajiban[] = $C2;
                     $dataKewajiban[] = $C3;
-                    // $dataKewajiban[] = [
-                    //     'post_id' => 'bayar_UB',
-                    //     'label' => 'Pengembangan Kampus',
-                    //     'biaya' => $dataBiaya['uang_bangunan']
-                    // ];
-                    // $dataKewajiban[] = [
-                    //     'post_id' => 'bayar_Kmhs',
-                    //     'label' => 'Kemahasiswaan',
-                    //     'biaya' => $dataBiaya['kemahasiswaan']
-                    // ];
+
+                    $countTotal = $dataKewajiban[0]['biaya'] + $dataKewajiban[1]['biaya'] + $dataKewajiban[2]['biaya'] + $dataKewajiban[3]['biaya'];
+                    $dataMhs['totalKewajiban'] = $countTotal;
                     $dataMhs['dataHistoriTX'] = null;
                     $dataMhs['dataKewajiban'] = $dataKewajiban;
                     echo json_encode($dataMhs);
@@ -333,6 +321,7 @@ class Transaksi extends CI_Controller
                 ];
             }
 
+
             /*
             * C2
             */
@@ -403,7 +392,7 @@ class Transaksi extends CI_Controller
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
-                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $sisa_BayarC1;
+                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] + $sisa_BayarC1;
                         // update data tunggakan
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
@@ -441,7 +430,7 @@ class Transaksi extends CI_Controller
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
-                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $sisa_BayarC2;
+                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] + $sisa_BayarC2;
                         // update data tunggakan
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
@@ -479,7 +468,7 @@ class Transaksi extends CI_Controller
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
-                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $sisa_BayarC3;
+                        $dataTGBaru = $dataTG_CS['jml_tunggakan'] + $sisa_BayarC3;
                         // update data tunggakan
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
@@ -509,8 +498,6 @@ class Transaksi extends CI_Controller
                 ];
             }
         }
-        // var_dump($dataTxDetail);
-        // die;
         $dataInsertTx = [
             'id_transaksi' => $id_transaksi,
             'tanggal' => $tgl,

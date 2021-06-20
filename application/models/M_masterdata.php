@@ -24,9 +24,13 @@ class M_masterdata extends CI_Model
         return $data;
     }
 
-    public function insertDataMhs($data)
+
+    public function getMahasiswaByNim($nim)
     {
-        return $this->db->insert('mahasiswa', $data);
+        $this->db->select('*');
+        $this->db->from('mahasiswa');
+        $this->db->where($nim);
+        return $this->db->get();
     }
 
     public function getDataMhs()
@@ -34,6 +38,12 @@ class M_masterdata extends CI_Model
         $this->db->select('*');
         $this->db->from('mahasiswa');
         return $this->db->get();
+    }
+
+    // insert data mahasiswa
+    public function insertDataMhs($data)
+    {
+        return $this->db->insert('mahasiswa', $data);
     }
 
     // get smester aktif

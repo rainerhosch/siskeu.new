@@ -138,23 +138,28 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         if (response != null) {
+                            if (response.totalKewajiban != 0) {
+                                $('.btn#btn_proses').prop('disabled', false);
+                            } else {
+                                $('.btn#btn_proses').prop('disabled', true);
+                            }
                             let html = ``;
                             let htmlx = ``;
                             $('.data_kwajiban').show();
                             $('#riwayat_transaksi').show();
-                            $("#nama_mhs").val(response.nama);
-                            $("#jurusan").val(response.prodi);
+                            $("#nama_mhs").val(response.nm_pd);
+                            $("#jurusan").val(response.nm_jur);
                             html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
-                            html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nama}">`;
-                            html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.jenjang}">`;
+                            html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
+                            html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
                             html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
 
                             $.each(response.dataKewajiban, function(i, value) {
                                 html += `<tr>
                                         <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
-                                        <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right" value="${value.biaya}" disabled></td>
+                                        <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>
                                         <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
                                     </tr>`;
                             });
