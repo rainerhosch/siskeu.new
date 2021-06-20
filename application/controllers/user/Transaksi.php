@@ -42,6 +42,7 @@ class Transaksi extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             $dataKewajiban = [];
+            $groupDataTx = [];
 
             $smtAktif = $this->smt_aktif['id_smt'];
             $nim = $this->input->post('nipd');
@@ -79,7 +80,12 @@ class Transaksi extends CI_Controller
                     'semester' => $smtAktif
                 ];
                 // cek histori transaksi
-                $dataHistoriTx = $this->transaksi->cekHistori($dataCekNim)->result_array();
+                $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCekNim)->result_array();
+                $countHistoriTx = count($dataHistoriTx);
+                for ($i = 0; $i < $countHistoriTx; $i++) {
+                    $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                    $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                }
                 $maxHistoriTx = $this->transaksi->cekMaxTransaksi($dataCekNim)->row_array();
                 $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
                 $biayaCS = $dataBiaya['cicilan_semester'] / 3;
@@ -144,6 +150,7 @@ class Transaksi extends CI_Controller
                     $dataMhs['totalKewajiban'] = $countTotal;
                     $dataMhs['dataKewajiban'] = $dataKewajiban;
                     $dataMhs['dataHistoriTX'] = $dataHistoriTx;
+                    // $dataMhs['dataHistoriTxDetail'] = $dataHistoriTxDetail;
                     echo json_encode($dataMhs);
                 } else {
                     // belum ada histori transaksi
@@ -170,8 +177,9 @@ class Transaksi extends CI_Controller
 
                     $countTotal = $dataKewajiban[0]['biaya'] + $dataKewajiban[1]['biaya'] + $dataKewajiban[2]['biaya'] + $dataKewajiban[3]['biaya'];
                     $dataMhs['totalKewajiban'] = $countTotal;
-                    $dataMhs['dataHistoriTX'] = null;
                     $dataMhs['dataKewajiban'] = $dataKewajiban;
+                    $dataMhs['dataHistoriTX'] = null;
+                    $dataMhs['dataHistoriTxDetail'] = null;
                     echo json_encode($dataMhs);
                 }
             } else {
@@ -204,7 +212,7 @@ class Transaksi extends CI_Controller
         $bayarC1 = $this->input->post('bayar_C1');
         $bayarC2 = $this->input->post('bayar_C2');
         $bayarC3 = $this->input->post('bayar_C3');
-
+        $totalBayar = $bayarTG + $bayarC1 + $bayarC2 + $bayarC3;
         // $All = $this->input->post();
         // var_dump($All);
         // die;
@@ -226,7 +234,7 @@ class Transaksi extends CI_Controller
             'nim' => $nimMhs,
             'semester' => $smtAktif
         ];
-        $dataHistoriTx = $this->transaksi->cekHistori($dataCek)->row_array();
+        $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCek)->row_array();
 
 
         /*
@@ -503,6 +511,7 @@ class Transaksi extends CI_Controller
             'tanggal' => $tgl,
             'jam' => $jam,
             'nim' => $nimMhs,
+            'total_bayar' => $totalBayar,
             'semester' => $smtAktif
         ];
         $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);

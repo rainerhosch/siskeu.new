@@ -69,13 +69,6 @@
                         <!-- <hr class="my-4"> -->
                         <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
                             <table id="menu-datatable" class="table table-vcenter table-condensed">
-                                <!-- <thead>
-                                    <tr>
-                                        <th class="text-center">Jenis Bayar</th>
-                                        <th class="text-center">IDR</th>
-                                        <th class="text-center">Opsi</th>
-                                    </tr>
-                                </thead> -->
                                 <tbody id="data_kwajiban_tbody">
                                 </tbody>
                             </table>
@@ -90,32 +83,62 @@
         </div>
 
         <div class="col-sm-9">
-            <div class="block full">
-                <div class="block-title">
-                    <h2><strong>History</strong> Transaksi</h2>
-                </div>
-                <div class="table-responsive">
-                    <table id="riwayat_transaksi" class="table table-vcenter table-condensed table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">No</th>
-                                <th class="text-center">Nomo Transaksi</th>
-                                <th class="text-center">Tgl Transaksi</th>
-                                <th class="text-center">Jam</th>
-                                <th class="text-center">NIM</th>
-                                <th class="text-center">Keterangan Bayar</th>
-                                <th class="text-center">Jumlah Storan</th>
-                                <!-- <th class="text-center">Sisa Tagihan</th>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="block full">
+                        <div class="block-title">
+                            <h2><strong>History</strong> Transaksi</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="riwayat_transaksi" class="table table-vcenter table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Nomo Transaksi</th>
+                                        <th class="text-center">Tgl Transaksi</th>
+                                        <th class="text-center">Jam</th>
+                                        <th class="text-center">NIM</th>
+                                        <th class="text-center">Keterangan Bayar</th>
+                                        <th class="text-center">Jumlah Storan</th>
+                                        <!-- <th class="text-center">Sisa Tagihan</th>
                                 <th class="text-center">Status</th> -->
-                                <th class="text-center">Semester</th>
-                            </tr>
-                        </thead>
-                        <tbody id="riwayat_transaksi_tbody">
-                        </tbody>
-                    </table>
+                                        <th class="text-center">Semester</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="riwayat_transaksi_tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
             </div>
+            <!-- <div class="row">
+                <div class="col-sm-12">
+                    <div class="block full">
+                        <div class="block-title">
+                            <h2><strong>Data</strong> Tunggakan</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="riwayat_transaksi" class="table table-vcenter table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Nomo Transaksi</th>
+                                        <th class="text-center">Tgl Transaksi</th>
+                                        <th class="text-center">Jam</th>
+                                        <th class="text-center">NIM</th>
+                                        <th class="text-center">Keterangan Bayar</th>
+                                        <th class="text-center">Jumlah Storan</th>
+                                        <th class="text-center">Semester</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="riwayat_transaksi_tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
         </div>
     </div>
 
@@ -183,11 +206,16 @@
                                     htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
                                     htmlx += `<td class = "text-center" >${value.jam}</td>`;
                                     htmlx += `<td class = "text-center" >${value.nim}</td>`;
-                                    htmlx += `<td class = "text-center" >${value.nm_jenis_pembayaran}</td>`;
-                                    htmlx += `<td class = "text-center" >${value.jml_bayar}</td>`;
+
+                                    htmlx += `<td class = "text-center" >`;
+                                    $.each(value.detail_transaksi, function(k, val) {
+                                        // let jenis = val.nm_jenis_pembayaran;
+                                        // let jml = val.jml_bayar;
+                                        htmlx += `<i style="font-size:1rem;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+                                    });
+                                    htmlx += `</td>`;
+                                    htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
                                     htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                                    // htmlx = `< td class = "text-center" >${value.id_transaksi}</td>`;
-                                    // htmlx = `< td class = "text-center" >${value.id_transaksi}</td>`;
                                     htmlx += `</tr>`;
                                 });
                             } else {
