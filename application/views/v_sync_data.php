@@ -195,46 +195,50 @@
                             type: 'POST', //Method type
                             url: 'sync-simak/SyncDataMhs',
                             dataType: 'json',
-                            beforeSend: function() {
-                                $('.btn#btn_sync_mhs').hide();
-                                $('#progress_sync_mhs').css('display', 'block');
+                            // beforeSend: function() {
+                            //     // $('.btn#btn_sync_mhs').hide();
+                            //     $('#progress_sync_mhs').css('display', 'block');
 
-                                $('#bar_sync_mhs').attr('aria-valuenow', percentage);
-                                // $('<p>' + percentage + '%</p>').appendTo('#bar_sync_mhs');
-                                $('#bar_sync_mhs').css('width', percentage + '%');
+                            //     $('#bar_sync_mhs').attr('aria-valuenow', percentage);
+                            //     // $('<p>' + percentage + '%</p>').appendTo('#bar_sync_mhs');
+                            //     $('#bar_sync_mhs').css('width', percentage + '%');
 
-                                // var percentage = 0;
-                                var timer = setInterval(function() {
-                                    percentage = percentage + 1;
-                                    progress_bar_process_mhs(percentage, timer);
-                                }, 100);
-                            },
+                            //     // var percentage = 0;
+                            //     var timer = setInterval(function() {
+                            //         percentage = percentage + 1;
+                            //         progress_bar_process_mhs(percentage, timer);
+                            //     }, 100);
+                            // },
                             success: function(data) {
                                 // console.log(data);
                                 if (data.data == 'success') {
                                     $('#icon_sync_mhs').attr('class', 'fa fa-sync');
-                                    $('#progress_sync_mhs').css('display', 'none');
-                                    $('.btn#btn_sync_mhs').show();
+                                    // $('#progress_sync_mhs').css('display', 'none');
+                                    // $('.btn#btn_sync_mhs').show();
+                                    $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                                    setTimeout(function() {
+                                        $('#success_message').html('');
+                                    }, 5000);
                                     $('.mhs_local_label span').text(data.count_mhs_local_update);
                                     $('.btn#btn_sync_mhs').prop('disabled', true);
                                 }
                             }
                         });
 
-                        function progress_bar_process_mhs(percentage, timer) {
-                            $('#bar_sync_mhs').attr('aria-valuenow', percentage);
-                            // $('<p>' + percentage + '%</p>').appendTo('#bar_sync_mhs');
-                            $('#bar_sync_mhs').css('width', percentage + '%');
-                            if (percentage > 100) {
-                                clearInterval(timer);
-                                $('#progress_sync_mhs').css('display', 'none');
-                                $('#bar_sync_mhs').css('width', '0%');
-                                $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
-                                    $('#success_message').html('');
-                                }, 5000);
-                            }
-                        }
+                        // function progress_bar_process_mhs(percentage, timer) {
+                        //     $('#bar_sync_mhs').attr('aria-valuenow', percentage);
+                        //     // $('<p>' + percentage + '%</p>').appendTo('#bar_sync_mhs');
+                        //     $('#bar_sync_mhs').css('width', percentage + '%');
+                        //     if (percentage > 100) {
+                        //         clearInterval(timer);
+                        //         $('#progress_sync_mhs').css('display', 'none');
+                        //         $('#bar_sync_mhs').css('width', '0%');
+                        //         $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                        //         setTimeout(function() {
+                        //             $('#success_message').html('');
+                        //         }, 5000);
+                        //     }
+                        // }
                         // $.ajax({
                         //     type: 'POST', //Method type
                         //     url: 'sync-simak/CountRowDataMhsLocal',
@@ -273,6 +277,10 @@
                                 // console.log(data);
                                 if (data.data == 'success') {
                                     $('#icon_sync_smt_aktif').attr('class', 'fa fa-sync');
+                                    $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                                    setTimeout(function() {
+                                        $('#success_message').html('');
+                                    }, 5000);
                                     $('.sm_active_local_label span').text(data.semester_aktif_local_update);
                                     $('.btn#btn_sync_smt_aktif').prop('disabled', true);
                                 }
