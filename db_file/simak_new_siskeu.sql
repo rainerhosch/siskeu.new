@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Jun 2021 pada 15.16
+-- Waktu pembuatan: 21 Jun 2021 pada 05.52
 -- Versi server: 10.4.19-MariaDB
 -- Versi PHP: 8.0.6
 
@@ -6186,16 +6186,18 @@ CREATE TABLE `transaksi` (
   `jam` time NOT NULL,
   `nim` int(11) NOT NULL,
   `total_bayar` int(11) NOT NULL,
-  `semester` int(11) NOT NULL
+  `semester` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status_transaksi` varchar(50) NOT NULL COMMENT 'default set 1 untuk transaksi ofline'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `transaksi`
 --
 
-INSERT INTO `transaksi` (`id_transaksi`, `tanggal`, `jam`, `nim`, `total_bayar`, `semester`) VALUES
-(2021060001, '2021-06-20', '19:56:30', 141351059, 2500000, 20202),
-(2021060002, '2021-06-20', '19:57:59', 141351059, 1550000, 20202);
+INSERT INTO `transaksi` (`id_transaksi`, `tanggal`, `jam`, `nim`, `total_bayar`, `semester`, `user_id`, `status_transaksi`) VALUES
+(2021060001, '2021-06-20', '19:56:30', 141351059, 2500000, 20202, 0, '1'),
+(2021060002, '2021-06-20', '19:57:59', 141351059, 1550000, 20202, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -6219,6 +6221,26 @@ INSERT INTO `transaksi_detail` (`id_detail_transaksi`, `id_transaksi`, `id_jenis
 (16, 2021060001, 3, 1150000),
 (17, 2021060002, 6, 200000),
 (18, 2021060002, 4, 1350000);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `transaksi_status`
+--
+
+CREATE TABLE `transaksi_status` (
+  `kode_status_tx` int(1) NOT NULL,
+  `nm_status_tx` varchar(30) NOT NULL,
+  `icon_status_tx` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `transaksi_status`
+--
+
+INSERT INTO `transaksi_status` (`kode_status_tx`, `nm_status_tx`, `icon_status_tx`) VALUES
+(0, 'MENUNGGU VALIDASI', '<i class=\"fa fa-hourglass-2\"></i>'),
+(1, 'SUKSES', '<i class=\"fa fa-check-circle-o\"></i>');
 
 -- --------------------------------------------------------
 
@@ -7029,6 +7051,12 @@ ALTER TABLE `transaksi_detail`
   ADD PRIMARY KEY (`id_detail_transaksi`),
   ADD KEY `id_detai_transaksi` (`id_detail_transaksi`),
   ADD KEY `id_transaksi` (`id_transaksi`);
+
+--
+-- Indeks untuk tabel `transaksi_status`
+--
+ALTER TABLE `transaksi_status`
+  ADD PRIMARY KEY (`kode_status_tx`);
 
 --
 -- Indeks untuk tabel `tunggakan`
