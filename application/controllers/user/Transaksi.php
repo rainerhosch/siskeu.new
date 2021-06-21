@@ -44,7 +44,8 @@ class Transaksi extends CI_Controller
             $dataKewajiban = [];
             $groupDataTx = [];
 
-            $smtAktif = $this->smt_aktif['id_smt'];
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            $smtAktif = $smtAktifRes['id_smt'];
             $nim = $this->input->post('nipd');
             $response = $this->masterdata->getMahasiswaByNim(['nipd' => $nim])->row_array();
             $dataMhs = $response;
@@ -198,7 +199,8 @@ class Transaksi extends CI_Controller
     }
     public function Proses_Bayar_Spp()
     {
-        $smtAktif = $this->smt_aktif['id_smt'];
+        $smtAktif = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
         $dataTxDetail = [];
         // get post()
         $nimMhs = $this->input->post('nim_mhs_bayar');
@@ -512,7 +514,9 @@ class Transaksi extends CI_Controller
             'jam' => $jam,
             'nim' => $nimMhs,
             'total_bayar' => $totalBayar,
-            'semester' => $smtAktif
+            'semester' => $smtAktif,
+            'user_id' => $this->session->userdata('id_user'),
+            'status_transaksi' => 1
         ];
         $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
         if (!$insertTx) {

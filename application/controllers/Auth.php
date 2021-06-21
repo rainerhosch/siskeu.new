@@ -52,7 +52,7 @@ class Auth extends CI_Controller
             // code here...
             if (md5($password) == $user['password']) {
                 $data = [
-                    // 'nama' => $user['nama_user'],
+                    'id_user' => $user['id_user'],
                     'username' => $user['username'],
                     'role' => $user['role'],
                     // 'login_date' =>  $this->tgl,

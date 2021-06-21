@@ -38,7 +38,7 @@ class SyncSimak extends CI_Controller
         $data['count_mhs_simak'] = $counApiDataMhs;
         $data['semester_aktif_simak'] = $smtAktif;
         // ===========================================================
-        $dataSemesterAktifLokal = $this->masterdata->getSemesterAktif()->row_array();
+        $dataSemesterAktifLokal = $this->masterdata->getMaxKalenderAkademik()->row_array();
         $data['semester_aktif_local'] = $dataSemesterAktifLokal['id_smt'];
         $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
         $countLocalDataMhs = count($LocalDataMhs);
@@ -85,7 +85,7 @@ class SyncSimak extends CI_Controller
     public function SyncTahunAkademik()
     {
         $smtAktif = $this->smt_aktif;
-        $dataSemesterAktifLokal = $this->masterdata->getSemesterAktif()->row_array();
+        $dataSemesterAktifLokal = $this->masterdata->getMaxKalenderAkademik()->row_array();
         $id_smt = $dataSemesterAktifLokal['id_smt'];
         $data = [
             'a_periode_aktif' => 0

@@ -46,8 +46,17 @@ class M_masterdata extends CI_Model
         return $this->db->insert('mahasiswa', $data);
     }
 
-    // get smester aktif
+    // get semester aktif
     public function getSemesterAktif()
+    {
+        $this->db->select('id_smt');
+        $this->db->from('kalender_akademik');
+        $this->db->where(['a_periode_aktif' => 1]);
+        return $this->db->get();
+    }
+
+    // get data max kalender akademik
+    public function getMaxKalenderAkademik()
     {
         $this->db->select_max('id_smt');
         $this->db->from('kalender_akademik');
