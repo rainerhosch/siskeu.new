@@ -4,6 +4,10 @@
         <li>Page</li>
         <li><a href=""><?= $page; ?></a></li>
     </ul>
+    <span id="success_message">
+
+    </span>
+
     <div class="row">
         <div class="col-sm-6 col-lg-3">
             <!-- Widget -->
@@ -225,7 +229,7 @@
                                 clearInterval(timer);
                                 $('#progress_sync_mhs').css('display', 'none');
                                 $('#bar_sync_mhs').css('width', '0%');
-                                $('#success_message').html("<div class='alert alert-success'>Data Saved</div>");
+                                $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
                                 setTimeout(function() {
                                     $('#success_message').html('');
                                 }, 5000);

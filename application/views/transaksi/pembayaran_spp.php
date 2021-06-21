@@ -100,9 +100,9 @@
                                         <th class="text-center">NIM</th>
                                         <th class="text-center">Keterangan Bayar</th>
                                         <th class="text-center">Jumlah Storan</th>
-                                        <!-- <th class="text-center">Sisa Tagihan</th>
-                                <th class="text-center">Status</th> -->
+                                        <!-- <th class="text-center">Sisa Tagihan</th> -->
                                         <th class="text-center">Semester</th>
+                                        <th class="text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="riwayat_transaksi_tbody">
@@ -146,7 +146,6 @@
         $(document).ready(function() {
             $('#riwayat_transaksi').hide();
             $('.data_kwajiban').hide();
-            // $('.data_historiTX').hide();
             $('#nipd').keypress((e) => {
                 if (e.which === 13) {
                     $("#cari_mhs").click();
@@ -162,7 +161,7 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        console.log(response);
+                        // console.log(response);
                         if (response != null) {
                             if (response.totalKewajiban != 0) {
                                 $('.btn#btn_proses').prop('disabled', false);
@@ -172,7 +171,6 @@
                             let html = ``;
                             let htmlx = ``;
                             $('.data_kwajiban').show();
-                            // $('.data_historiTX').show();
                             $('#riwayat_transaksi').show();
                             $("#nama_mhs").val(response.nm_pd);
                             $("#jurusan").val(response.nm_jur);
@@ -211,13 +209,12 @@
 
                                     htmlx += `<td class = "text-center" >`;
                                     $.each(value.detail_transaksi, function(k, val) {
-                                        // let jenis = val.nm_jenis_pembayaran;
-                                        // let jml = val.jml_bayar;
-                                        htmlx += `<i style="font-size:1rem;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+                                        htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
                                     });
                                     htmlx += `</td>`;
                                     htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
                                     htmlx += `<td class = "text-center" >${value.semester}</td>`;
+                                    htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
                                     htmlx += `</tr>`;
                                 });
                             } else {

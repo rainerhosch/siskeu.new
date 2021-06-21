@@ -23,6 +23,7 @@ class M_transaksi extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('transaksi');
+        $this->db->join('transaksi_status', 'transaksi_status.kode_status_tx=transaksi.status_transaksi');
         if ($data != null) {
             $this->db->where($data);
         }
