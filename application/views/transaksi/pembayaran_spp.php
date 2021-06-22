@@ -202,7 +202,7 @@
                                     i++;
                                     htmlx += `<tr>`;
                                     htmlx += `<td class = "text-center" >${i}</td>`;
-                                    htmlx += `<td class="text-center"><a href="#">${value.id_transaksi}</a></td>`;
+                                    htmlx += `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` + value.id_transaksi + `">${value.id_transaksi}</a></td>`;
                                     htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
                                     htmlx += `<td class = "text-center" >${value.jam}</td>`;
                                     htmlx += `<td class = "text-center" >${value.nim}</td>`;

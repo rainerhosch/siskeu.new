@@ -55,6 +55,7 @@ $route['404_override'] = 'My404';
 $route['translate_uri_dashes'] = FALSE;
 $route['dashboard'] = 'user/dashboard';
 $route['transaksi/(:any)'] = 'user/transaksi/$1';
+$route['transaksi/cetak_kwitansi/(:num)'] = 'user/transaksi/cetak_kwitansi/$1';
 
 // for admin access manajemen 
 $route['sync-simak'] = 'admin/SyncSimak';

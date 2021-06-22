@@ -21,6 +21,13 @@ class Transaksi extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         // $this->date = date('Y-m-d H:i:s');
         $this->smt_aktif = getSemesterAktif();
+        $this->load->config('pdf_config');
+        $this->load->library('fpdf');
+        $this->load->library('terbilang');
+        define('FPDF_FONTPATH', $this->config->item('fonts_path'));
+
+
+        $this->load->model('M_cetak_kwitansi', 'cetak');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_tunggakan', 'tunggakan');
@@ -545,5 +552,22 @@ class Transaksi extends CI_Controller
         $data['page'] = 'Pembayaran Lain';
         $data['content'] = 'transaksi/pembayaran_lainnya';
         $this->load->view('template', $data);
+    }
+
+
+
+    /*
+    * Fungsi Cetak
+    */
+    public function Cetak_Kwitansi()
+    {
+        $id_trx = $this->uri->segment('3');
+        $data['dataTx'] = $this->cetak->getDataTransaksi($id_trx)->row_array();
+        // $data['reg_manual'] = 1;
+        $dataDetailTX = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $data['dataTx']['id_transaksi']])->result_array();
+        $data['dataTx']['dataDetailTX'] = $dataDetailTX;
+        var_dump($data);
+        die;
+        $this->load->view('transaksi/cetak_kwitansi', $data);
     }
 }
