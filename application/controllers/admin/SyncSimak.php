@@ -17,6 +17,7 @@ class SyncSimak extends CI_Controller
     {
         parent::__construct();
         $this->load->model('M_masterdata', 'masterdata');
+        $this->load->model('M_api', 'api');
         $this->smt_aktif = getSemesterAktif();
         $this->getMhsFromApiSimak = getDataMahasiswa();
     }
@@ -64,13 +65,26 @@ class SyncSimak extends CI_Controller
     }
     public function SyncDataMhs()
     {
-        // code here..
+        // get data from simak
         $dataRes = $this->getMhsFromApiSimak;
         $dataMhs = $dataRes['mhsdata'];
         $jml_data = count($dataMhs);
-        foreach ($dataMhs as $j => $d) {
+
+        // data lokal
+        $result = $this->masterdata->getDataMhs()->result_array();
+        $current = count($result);
+        if ($current != 0) {
+            // insert all from simak sesuai data update terakhir
+            $res = $this->api->getGetDataTerbaru($current);
+            $dataInsert = $res['mhsdata'];
+        } else {
+            // insert all from simak
+            $dataInsert = $dataMhs;
+        }
+        foreach ($dataInsert as $j => $d) {
             $insert = $this->masterdata->insertDataMhs($d);
         }
+
         if ($insert) {
             $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
             $countLocalDataMhs = count($LocalDataMhs);
@@ -82,6 +96,8 @@ class SyncSimak extends CI_Controller
             echo json_encode(['data' => 'error']);
         }
     }
+
+
     public function SyncTahunAkademik()
     {
         $smtAktif = $this->smt_aktif;

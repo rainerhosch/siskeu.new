@@ -11,18 +11,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_masterdata extends CI_Model
 {
     // get data mahasiswa from simak
-    public function getMahasiswa($nipd)
-    {
-        $url = "https://api.wastu.digital/resources/mahasiswa?token=semogabahagia&nipd=" . $nipd;
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, "$url");
-        curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl_handle, CURLOPT_HEADER, false);
-        $data = curl_exec($curl_handle);
-        curl_close($curl_handle);
-        return $data;
-    }
+    // public function getMahasiswa($nipd)
+    // {
+    //     $url = "https://api.wastu.digital/resources/mahasiswa?token=semogabahagia&nipd=" . $nipd;
+    //     $curl_handle = curl_init();
+    //     curl_setopt($curl_handle, CURLOPT_URL, "$url");
+    //     curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
+    //     curl_setopt($curl_handle, CURLOPT_HEADER, false);
+    //     $data = curl_exec($curl_handle);
+    //     curl_close($curl_handle);
+    //     return $data;
+    // }
 
 
     public function getMahasiswaByNim($nim)
