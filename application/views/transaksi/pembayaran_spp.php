@@ -29,6 +29,8 @@
         echo '<div class="alert alert-danger" role="alert">' . $this->session->flashdata('error') . '</div>';
     }
     ?>
+
+
     <div class="row">
         <div class="col-sm-3">
             <div class="block full">
@@ -40,11 +42,13 @@
                         <label data-error="wrong" data-success="right" for="nipd">NIM</label>
                     </div>
                     <div class="col-sm-9">
+                        <!-- <input type="text" id="nipd" name="nipd" class="form-control validate" placeholder="Cari NIM.."> -->
                         <input type="text" id="nipd" name="nipd" class="form-control validate" placeholder="Cari NIM..">
+                        <span id="notif_search"></span>
                     </div>
-                    <div class="col-sm-2">
+                    <!-- <div class="col-sm-2">
                         <span id="cari_mhs" class="input-group-btn"><input type="image" src="<?= base_url('assets'); ?>/img/enter.png" width="35" height="35" hidden></span>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="sm-form mb-5 row">
                     <div class="col-sm-3">
@@ -146,13 +150,10 @@
         $(document).ready(function() {
             $('#riwayat_transaksi').hide();
             $('.data_kwajiban').hide();
-            $('#nipd').keypress((e) => {
-                if (e.which === 13) {
-                    $("#cari_mhs").click();
-                }
-            })
-            $("#cari_mhs").click(function() {
+            $('#nipd').on('keyup', function() {
+                // your code here 
                 let nipd = $('#nipd').val();
+                // console.log($filter);
                 $.ajax({
                     type: "POST",
                     url: 'cari_mhs',
@@ -161,7 +162,6 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        // console.log(response);
                         if (response != null) {
                             if (response.totalKewajiban != 0) {
                                 $('.btn#btn_proses').prop('disabled', false);
@@ -231,16 +231,123 @@
                             $("#riwayat_transaksi_tbody").html(htmlx);
 
                         } else {
-                            alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
-                            window.location.reload();
+                            // $('#notif_search').html("<div class='alert alert-danger alert-dismissable'>Tidak ada mahsiswa dengan nim : " + nipd + "</div>");
+                            $('#notif_search').html("<code>Tidak ada mahasiswa dengan nim : " + nipd + "</code>");
+                            setTimeout(function() {
+                                $('#notif_search').html('');
+                            }, 2000);
+                            // alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
+                            // window.location.reload();
                         }
+
 
                     },
                     error: function(e) {
                         error_server();
                     },
                 });
-            })
+            });
+
+
+            // $('#nipd').keypress((e) => {
+            //     if (e.which === 13) {
+            //         $("#cari_mhs").click();
+            //     }
+            // })
+
+
+            // $("#cari_mhs").click(function() {
+            //     let nipd = $('#nipd').val();
+            //     $.ajax({
+            //         type: "POST",
+            //         url: 'cari_mhs',
+            //         data: {
+            //             nipd: nipd,
+            //         },
+            //         dataType: "json",
+            //         success: function(response) {
+            //             // console.log(response);
+            //             if (response != null) {
+            //                 if (response.totalKewajiban != 0) {
+            //                     $('.btn#btn_proses').prop('disabled', false);
+            //                 } else {
+            //                     $('.btn#btn_proses').prop('disabled', true);
+            //                 }
+            //                 let html = ``;
+            //                 let htmlx = ``;
+            //                 $('.data_kwajiban').show();
+            //                 $('#riwayat_transaksi').show();
+            //                 $("#nama_mhs").val(response.nm_pd);
+            //                 $("#jurusan").val(response.nm_jur);
+            //                 html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
+            //                 html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
+            //                 html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
+            //                 html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
+
+            //                 $.each(response.dataKewajiban, function(i, value) {
+            //                     html += `<tr>
+            //                             <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
+            //                             <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>
+            //                             <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
+            //                         </tr>`;
+            //                 });
+            //                 $("#data_kwajiban_tbody").html(html);
+            //                 $.each(response.dataKewajiban, function(i, value) {
+            //                     $("#checkcox_" + i).change(function() {
+            //                         if (this.checked === true) {
+            //                             $('#' + value.post_id).prop('disabled', false);
+            //                         } else {
+            //                             $('#' + value.post_id).prop('disabled', true);
+            //                         }
+            //                     });
+            //                 });
+            //                 if (response.dataHistoriTX != null) {
+            //                     $.each(response.dataHistoriTX, function(i, value) {
+            //                         // console.log(value);
+            //                         i++;
+            //                         htmlx += `<tr>`;
+            //                         htmlx += `<td class = "text-center" >${i}</td>`;
+            //                         htmlx += `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` + value.id_transaksi + `">${value.id_transaksi}</a></td>`;
+            //                         htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
+            //                         htmlx += `<td class = "text-center" >${value.jam}</td>`;
+            //                         htmlx += `<td class = "text-center" >${value.nim}</td>`;
+
+            //                         htmlx += `<td class = "text-center" >`;
+            //                         $.each(value.detail_transaksi, function(k, val) {
+            //                             htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+            //                         });
+            //                         htmlx += `</td>`;
+            //                         htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+            //                         htmlx += `<td class = "text-center" >${value.semester}</td>`;
+            //                         htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
+            //                         htmlx += `</tr>`;
+            //                     });
+            //                 } else {
+            //                     htmlx += `<tr>`;
+            //                     htmlx += `<td colspan="12" class="text-center"><br>`;
+            //                     htmlx += `<div class='col-lg-12'>`;
+            //                     htmlx += `<div class='alert alert-danger alert-dismissible'>`;
+            //                     htmlx += `<h4><i class='icon fa fa-warning'></i> Belum Ada Histori Pembayaran!</h4>`;
+            //                     htmlx += `</div>`;
+            //                     htmlx += `</div>`;
+            //                     htmlx += `</td>`;
+            //                     htmlx += `</tr>`;
+            //                 }
+            //                 $("#riwayat_transaksi_tbody").html(htmlx);
+
+            //             } else {
+            //                 alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
+            //                 window.location.reload();
+            //             }
+
+            //         },
+            //         error: function(e) {
+            //             error_server();
+            //         },
+            //     });
+            // })
+
+
         });
     </script>
 </div>
