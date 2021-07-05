@@ -7,7 +7,7 @@
             </a>
             <ul class="sidebar-nav">
                 <?php
-                if ($this->session->userdata('role') == 1) {
+                if ($this->session->userdata('role') == 0) {
                     $where = [
                         'm.is_active' => 1
                     ];

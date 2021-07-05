@@ -156,10 +156,10 @@ class Manajemen extends CI_Controller
         if (!$add) {
             // error
             $this->session->set_flashdata('error', 'Gagal menambahkan SubMenu!');
-            redirect('manajemen/manajemen-menu');
+            redirect('manajemen/manajemen-submenu');
         } else {
             $this->session->set_flashdata('success', 'SubMenu ' . $this->input->post('nama_submenu') . ', berhasil ditambahkan!');
-            redirect('manajemen/manajemen-menu');
+            redirect('manajemen/manajemen-submenu');
         }
     }
 

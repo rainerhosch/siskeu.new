@@ -26,7 +26,7 @@ class Dashboard extends CI_Controller
     {
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Dashboard';
-        $data['content'] = 'page_test';
+        $data['content'] = 'v_dashboard';
         $this->load->view('template', $data);
         // $this->load->view('app');
     }

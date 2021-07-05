@@ -162,7 +162,6 @@
             </a>
         </div>
         <!-- end widget -->
-
     </div>
     <script>
         $(document).ready(function() {
@@ -195,20 +194,6 @@
                             type: 'POST', //Method type
                             url: 'sync-simak/SyncDataMhs',
                             dataType: 'json',
-                            // beforeSend: function() {
-                            //     // $('.btn#btn_sync_mhs').hide();
-                            //     $('#progress_sync_mhs').css('display', 'block');
-
-                            //     $('#bar_sync_mhs').attr('aria-valuenow', percentage);
-                            //     // $('<p>' + percentage + '%</p>').appendTo('#bar_sync_mhs');
-                            //     $('#bar_sync_mhs').css('width', percentage + '%');
-
-                            //     // var percentage = 0;
-                            //     var timer = setInterval(function() {
-                            //         percentage = percentage + 1;
-                            //         progress_bar_process_mhs(percentage, timer);
-                            //     }, 100);
-                            // },
                             success: function(data) {
                                 // console.log(data);
                                 if (data.data == 'success') {
@@ -224,40 +209,7 @@
                                 }
                             }
                         });
-
-                        // function progress_bar_process_mhs(percentage, timer) {
-                        //     $('#bar_sync_mhs').attr('aria-valuenow', percentage);
-                        //     // $('<p>' + percentage + '%</p>').appendTo('#bar_sync_mhs');
-                        //     $('#bar_sync_mhs').css('width', percentage + '%');
-                        //     if (percentage > 100) {
-                        //         clearInterval(timer);
-                        //         $('#progress_sync_mhs').css('display', 'none');
-                        //         $('#bar_sync_mhs').css('width', '0%');
-                        //         $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                        //         setTimeout(function() {
-                        //             $('#success_message').html('');
-                        //         }, 5000);
-                        //     }
-                        // }
-                        // $.ajax({
-                        //     type: 'POST', //Method type
-                        //     url: 'sync-simak/CountRowDataMhsLocal',
-                        // dataType: 'json',
-                        // beforeSend: function() {
-                        //     $('.btn#btn_sync_mhs').attr('disabled', true);
-                        //     $('#progress_sync_mhs').css('display', 'block');
-                        // },
-                        //     success: function(data) {
-                        //         console.log(data);
-                        //         let persen = data.valuenow;
-                        //         $('#bar_sync_mhs').attr('aria-valuenow', persen);
-                        //         $('<p>' + persen + '%</p>').appendTo('#bar_sync_mhs');
-                        //         $('#bar_sync_mhs').css('width', persen + '%');
-                        //     }
-                        // });
                     });
-
-
 
                     if (response.semester_aktif_local != response.semester_aktif_simak) {
                         if (response.semester_aktif_local < response.semester_aktif_simak) {

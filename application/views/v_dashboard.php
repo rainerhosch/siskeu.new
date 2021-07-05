@@ -18,14 +18,13 @@
 
     <!-- Box -->
 
-    <?php $this->load->view('layout/stat_row');
-    ?>
+    <?php $this->load->view('layout/stat_row'); ?>
+    <?php $this->load->view('layout/row_sync_data'); ?>
     <!-- End -->
 
 
     <!-- Example Block -->
-    <div class="block">
-        <!-- Example Title -->
+    <!-- <div class="block">
         <div class="block-title">
             <div class="block-options pull-right">
                 <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default" data-toggle="tooltip" title="Settings"><i class="fa fa-cog"></i></a>
@@ -45,12 +44,8 @@
             </div>
             <h2>Block</h2>
         </div>
-        <!-- END Example Title -->
-
-        <!-- Example Content -->
         <p>...</p>
-        <!-- END Example Content -->
-    </div>
+    </div> -->
     <!-- END Example Block -->
 </div>
 <!-- END Page Content -->

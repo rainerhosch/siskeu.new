@@ -1,4 +1,14 @@
 <style>
+    .modal-header {
+        background-color: #1d2132;
+        border-radius: 0%;
+    }
+
+    .modal-title {
+        font-weight: 900;
+        color: #fff;
+    }
+
     .row {
         margin-bottom: 5px;
     }
@@ -66,24 +76,16 @@
                 </div>
 
                 <hr class="my-4">
-                <div class="text-right" style="margin-bottom: 5px;">
+                <!-- <div class="text-right" style="margin-bottom: 5px;">
                     <button id="add_trx_lain" class="btn-sm btn-success">Tamabah Transaksi</button>
-                </div>
-                <div class="jumbotron jumbotron-fluid form_pembayaran">
-                    <div class="container">
-                        <h4><strong>Form Pembayaran</strong></h4>
-                        <!-- <hr class="my-4"> -->
-                        <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
-                            <table id="menu-datatable" class="table table-vcenter table-condensed">
-                                <tbody id="form_transaksi_lainnya">
-                                </tbody>
-                            </table>
-                            <hr class="my-5">
-                            <div class="text-right">
-                                <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
-                            </div>
-                        </form>
-                    </div>
+                </div> -->
+
+
+                <!-- Button trigger modal -->
+                <div class="text-right" style="margin-bottom: 5px;">
+                    <button type="button" id="add_trx" class="btn btn-primary" data-toggle="modal" data-target="#formPembayaran">
+                        Input Transaksi
+                    </button>
                 </div>
             </div>
         </div>
@@ -120,10 +122,83 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="color: #fff;">&times;</span>
+                    </button>
+                    <h5 class="modal-title" id="formPembayaranTitle">Form Transaksi</h5>
+                </div>
+                <div class="modal-body" id="modal_body">
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-3">
+                                    NIM
+                                </div>
+                                <div class="col-sm-1">
+                                    :
+                                </div>
+                                <div class="col-sm-8">
+                                    <span>141351059</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-3">
+                                    NAMA
+                                </div>
+                                <div class="col-sm-1">
+                                    :
+                                </div>
+                                <div class="col-sm-8">
+                                    <span>Rizky Ardiansyah</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-3">
+                                    Jurusan
+                                </div>
+                                <div class="col-sm-1">
+                                    :
+                                </div>
+                                <div class="col-sm-8">
+                                    <span>Teknik Informatika</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                        </div>
+                        <button type="button" class="btn btn-primary">Simpan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             $('#riwayat_transaksi').hide();
-            $('#add_trx_lain').hide();
+            // $('#add_trx').hide();
             $('.form_pembayaran').hide();
             $('#nipd').on('keyup', function() {
                 // your code here 
@@ -144,7 +219,7 @@
                             }
                             let html = ``;
                             let htmlx = ``;
-                            $('#add_trx_lain').show();
+                            $('#add_trx').show();
                             $('.form_pembayaran').show();
                             $('#riwayat_transaksi').show();
                             $("#nama_mhs").val(response.nm_pd);
@@ -154,19 +229,61 @@
                             html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
                             html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
 
-                            // $.each(response.dataKewajiban, function(i, value) {
-                            //     html += `<tr>
-                            //             <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
-                            //             <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>
-                            //             <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
-                            //         </tr>`;
+                            // $('#add_trx').click(function() {
+                            //     let form = ``;
+                            //     form += `<h4><strong>Form Pembayaran</strong></h4>
+                            //     <!-- <hr class="my-4"> -->
+                            //     <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
+                            //     <table id="table_transaksi_lainnya" class="table table-vcenter table-condensed">
+                            //     <tbody id="form_transaksi_lainnya">
+                            //     </tbody>
+                            //     </table>
+                            //     <hr class="my-5">
+                            //     <div class="text-right">
+                            //     <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
+                            //     </div>
+                            //     </form>`;
+                            //     $(".modal-body").html(html);
                             // });
-                            $('#add_trx_lain').click(function() {
-                                html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
-                                        <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
-                                    </tr>`;
+
+                            $('#add_row').click(function() {
+                                let tds = '<tr>';
+                                size = jQuery('#table_transaksi_lainnya >tbody >tr').length + 1,
+                                    tds += '<td class="text-center">' + size + '</td>';
+                                tds += '<td class="text-center" width="30%">';
+                                $('.select2').select2({});
+
+
+                                tds += '<select name="pilihNamaMhs[]" id="mk' + size + '" style="text-align: center;text-align-last: center;" class="form-control select2 select2Cus">';
+
+                                tds += '</select>';
+                                tds += '</td>';
+                                tds += '<td class="text-center" id="namaMhs' + size + '"></td>';
+                                tds += '<td class="text-center"><input type="checkbox" namex="chmNonHome" name="chm" id="cb-' + size + '" class="form-control cekbox_mhs chmNonHome" value="" ><input type="hidden" name="customNIM"/></td>';
+
+                                tds += '</tr>';
+                                if ($('tbody', this).length > 0) {
+                                    $('tbody', this).append(tds);
+                                } else {
+                                    $(this).append(tds);
+                                }
+
+                                // $.ajax({
+                                //     type: "GET",
+                                //     url: "<?= base_url('dosen/absen/get_mhs_luar_homebase') ?>",
+                                //     data: {
+                                //         'id_matkul': id_matkul,
+                                //         'kode_kelas': kode_kelas,
+                                //         'arrayNim': splitee
+                                //     },
+                                //     dataType: "json",
+                                //     beforeSend: function() {
+                                //         $('#modal-id').modal({
+                                //             backdrop: 'static',
+                                //             keyboard: false
+                                //         });
+                                //     }
+                                // });
                             });
                             $("#form_transaksi_lainnya").html(html);
                             // $.each(response.dataKewajiban, function(i, value) {
