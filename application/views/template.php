@@ -14,7 +14,6 @@
     <link rel="shortcut icon" href="<?= base_url() ?>assets/proui/img/favicon/logo.png">
     <link href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/dataTables.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/themes.css">
@@ -27,6 +26,7 @@
     <script src="<?= base_url() ?>assets/proui/js/plugins.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/app.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/pages/index.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/pages/tablesDatatables.js"></script>
 
     <style>
         .containerX {

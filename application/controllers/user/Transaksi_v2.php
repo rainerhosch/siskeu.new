@@ -33,39 +33,18 @@ class Transaksi extends CI_Controller
         $this->load->model('M_tunggakan', 'tunggakan');
     }
 
-    public function index()
+    public function GetJenisTransaksi()
     {
-        // code here...
-        $data['title'] = 'SiskeuNEW';
-        $data['page'] = 'Transaksi';
-        $data['content'] = 'transaksi/pembayaran';
-        $this->load->view('template', $data);
-    }
-
-    public function getDataTransaksi()
-    {
-        // code here...
-        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
-        $smtAktif = $smtAktifRes['id_smt'];
-        $where = [
-            'semester' => $smtAktif
-        ];
         if ($this->input->is_ajax_request()) {
-            $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->result_array();
-            $countHistoriTx = count($dataHistoriTx);
-            for ($i = 0; $i < $countHistoriTx; $i++) {
-                $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
-                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
-            }
-            $data['data_transaksi'] = $dataHistoriTx;
-            echo json_encode($data);
+            // $angkatan = $this->input->post('tahun_masuk');
+            $where = 'id_jenis_pembayaran BETWEEN 4 AND 13';
+            $response = $this->masterdata->GetJenisPembayaran($where)->result_array();
+            echo json_encode($response);
         } else {
             echo "Error";
         }
     }
 
-
-    // Function Cari Data Mahasiswa
     public function Cari_Mhs()
     {
         if ($this->input->is_ajax_request()) {
@@ -250,7 +229,13 @@ class Transaksi extends CI_Controller
             echo "Error";
         }
     }
-
+    public function Pembayaran_Spp()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Pembayaran Spp';
+        $data['content'] = 'transaksi/pembayaran_spp';
+        $this->load->view('template', $data);
+    }
     public function Proses_Bayar_Spp()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
@@ -483,7 +468,7 @@ class Transaksi extends CI_Controller
             }
         } else {
             // tidak ada data transaksi
-            if ($bayarKMHS != null) {
+            if ($BayarKMHS != null) {
                 if ($sisa_BayarKMHS != 0) {
                     // bayar sebagian
                     $whereCekNim = [
@@ -513,7 +498,7 @@ class Transaksi extends CI_Controller
                 $dataTxDetail[] = [
                     'id_transaksi' => $id_transaksi,
                     'id_jenis_pembayaran' => 5,
-                    'jml_bayar' => $bayarKMHS
+                    'jml_bayar' => $BayarKMHS
                 ];
             } else {
                 $dataAddTG = [
@@ -648,15 +633,47 @@ class Transaksi extends CI_Controller
         $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
         if (!$insertTx) {
             // gagal
-            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Transaksi dengan id #' . $id_transaksi . ', berhasil!</div>');
-            redirect('transaksi', 'refresh');
         } else {
             $inputDetailTx = count($dataTxDetail);
             for ($i = 0; $i < $inputDetailTx; $i++) {
                 $this->transaksi->addNewDetailTransaksi($dataTxDetail[$i]);
+                // print_r($dataInsertTx);
             }
-            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Transaksi dengan id #' . $id_transaksi . ', berhasil!</div>');
-            redirect('transaksi', 'refresh');
+            $this->session->set_flashdata('success', 'Transaksi dengan id #' . $id_transaksi . ', berhasil!');
+            redirect('transaksi/pembayaran_spp');
+
+            // sukses lalu input detail
+            // foreach ($dataTxDetail as $key => $val) {
+            //     var_dump($val);
+            //     foreach()
+            // }
+            // var_dump($dataTxDetail);
+            // die;
         }
+    }
+
+    public function Pembayaran_Lainnya()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Pembayaran Lain';
+        $data['content'] = 'transaksi/pembayaran_lainnya';
+        $this->load->view('template', $data);
+    }
+
+
+
+    /*
+    * Fungsi Cetak
+    */
+    public function Cetak_Kwitansi()
+    {
+        $id_trx = $this->uri->segment('3');
+        $data['dataTx'] = $this->cetak->getDataTransaksi($id_trx)->row_array();
+        // $data['reg_manual'] = 1;
+        $dataDetailTX = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $data['dataTx']['id_transaksi']])->result_array();
+        $data['dataTx']['dataDetailTX'] = $dataDetailTX;
+        var_dump($data);
+        die;
+        $this->load->view('transaksi/cetak_kwitansi', $data);
     }
 }
