@@ -102,8 +102,8 @@
                         <i class="fa fa-file-text-o"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
-                        100 <strong>Transaksi</strong><br>
-                        <small>Transaksi Harian</small>
+                        <?= $jumlah_tx_hari_ini; ?> <strong>Transaksi</strong><br>
+                        <small>Transaksi Hari Ini</small>
                     </h3>
                 </div>
             </a>
@@ -205,6 +205,7 @@
                                     </thead>
                                     <tbody id="riwayat_transaksi_modal">
                                     </tbody>
+                                    <tfoot id="riwayat_transaksi_tfoot"></tfoot>
                                 </table>
                             </div>
                         </div>
@@ -351,7 +352,8 @@
                                         html_3 += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
                                     });
                                     html_3 += `</td>`;
-                                    html_3 += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+                                    // html_3 += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+                                    html_3 += `<td class = "text-center"><i>${value.total_bayar}</i></td>`;
                                     html_3 += `<td class = "text-center" >${value.semester}</td>`;
                                     html_3 += `<td class = "text-center" >${value.icon_status_tx}</td>`;
                                     html_3 += `</tr>`;
@@ -361,13 +363,34 @@
                                 html_3 += `<td colspan="12" class="text-center"><br>`;
                                 html_3 += `<div class='col-lg-12'>`;
                                 html_3 += `<div class='alert alert-danger alert-dismissible'>`;
-                                html_3 += `<h4><i class='icon fa fa-warning'></i> Belum Ada Histori Pembayaran!</h4>`;
+                                html_3 += `<h4><i class='icon fa fa-warning'></i> Belum Ada Histori Pembayaran Pada Semester Ini!</h4>`;
                                 html_3 += `</div>`;
                                 html_3 += `</div>`;
                                 html_3 += `</td>`;
                                 html_3 += `</tr>`;
                             }
+
+                            html_3 += `<tr>`;
+                            html_3 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH STORAN</i></td>`;
+                            html_3 += `<td colspan="6" ><i id="total"></i></td>`;
+                            html_3 += `</tr>`;
+
                             $("#riwayat_transaksi_modal").html(html_3);
+                            $(function() {
+                                $("#total").html(sumColumn(7));
+                            });
+
+                            function sumColumn(index) {
+                                var total = 0;
+                                $("td:nth-child(" + index + ")").each(function() {
+                                    // let dta = $(this).text();
+                                    // console.log(dta.toLocaleString());
+                                    total += parseInt($(this).text(), 10) || 0;
+                                    convTotal = 'Rp.' + total.toLocaleString();
+                                });
+                                return convTotal;
+                            }
+
 
                             // $(function() {
                             //     TablesModalDatatables.init();

@@ -59,7 +59,7 @@ class M_transaksi extends CI_Model
         $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
         $this->db->where($data);
         $this->db->where('td.id_jenis_pembayaran >=', 2);
-        $this->db->where('td.id_jenis_pembayaran <=', 4);
+        $this->db->where('td.id_jenis_pembayaran <=', 5);
         return $this->db->get();
     }
 
@@ -83,5 +83,16 @@ class M_transaksi extends CI_Model
     public function addNewDetailTransaksi($data)
     {
         return $this->db->insert('transaksi_detail', $data);
+    }
+
+
+    // get Data transaksi Hari ini
+    public function getTxDateNow($data)
+    {
+        // code here...
+        $this->db->select();
+        $this->db->from('transaksi');
+        $this->db->where($data);
+        return $this->db->get()->num_rows();
     }
 }
