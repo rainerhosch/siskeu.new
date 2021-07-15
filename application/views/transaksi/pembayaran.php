@@ -1,6 +1,11 @@
 <style>
+    .form_invoice2 {
+        /* background-color: #110d0dcf; */
+        border-radius: 5px;
+    }
+
     .form_invoice {
-        background-color: #bcbcbccf;
+        /* background-color: #bcbcbccf; */
         border-radius: 5px;
     }
 
@@ -43,6 +48,9 @@
     /* .xform {
         margin-left: 5px;
     } */
+    .modal_datatable {
+        font-size: 8px;
+    }
 </style> <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
@@ -69,7 +77,7 @@
             </a>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <a href="#pembayaran-lain" class="widget widget-hover-effect1">
+            <a href="#pembayaran-lain" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaranLain">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
                         <i class="fa fa-dollar"></i>
@@ -144,116 +152,35 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal Pembayaran SPP-->
-    <div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="color: #fff;">&times;</span>
-                    </button>
-                    <h5 class="modal-title" id="formPembayaranTitle">Form Pembayaran SPP</h5>
-                </div>
-                <div class="modal-body" id="modal_body">
-                    <div class="row">
-                        <div class="col-sm-3 form_invoice">
-                            <div class="sm-form mb-5 row" style="margin-top: 5px;">
-                                <div class="col-sm-12">
-                                    <input type="text" id="nipd" name="nipd" class="form-control validate" placeholder="Cari NIM..">
-                                    <span id="notif_search"></span>
-                                </div>
-                            </div>
-                            <div class="sm-form mb-5 row text-left">
-                                <div class="col-sm-12">
-                                    <input type="text" id="nama_mhs" name="nama_mhs" class="form-control validate" readonly>
-                                </div>
-                            </div>
-                            <div class="sm-form mb-5 row text-left">
-                                <div class="col-sm-12">
-                                    <input type="text" id="jurusan" name="jurusan" class="form-control validate" readonly>
-                                </div>
-                            </div>
-                            <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
-                                <br>
-                                <table id="menu-datatable" class="table table-vcenter table-condensed">
-                                    <tbody id="data_kwajiban_tbody">
-                                    </tbody>
-                                </table>
-                                <hr class="my-5">
-                                <div class="text-right" style="margin-bottom: 5px;">
-                                    <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="table-responsive">
-                                <table id="modal_datatable" class="table table-vcenter table-condensed table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">No</th>
-                                            <th class="text-center">Nomo Transaksi</th>
-                                            <th class="text-center">Tgl Transaksi</th>
-                                            <th class="text-center">Jam</th>
-                                            <th class="text-center">NIM</th>
-                                            <th class="text-center">Keterangan Bayar</th>
-                                            <th class="text-center">Jumlah Storan</th>
-                                            <!-- <th class="text-center">Sisa Tagihan</th> -->
-                                            <th class="text-center">Semester</th>
-                                            <th class="text-center">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="riwayat_transaksi_modal">
-                                    </tbody>
-                                    <tfoot id="riwayat_transaksi_tfoot"></tfoot>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer hidden">
-                    <!-- <div class="row">
-                        <div class="col-sm-3">
-                            <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
-                                <br>
-                                <table id="menu-datatable" class="table table-vcenter table-condensed">
-                                    <tbody id="data_kwajiban_tbody">
-                                    </tbody>
-                                </table>
-                                <hr class="my-5">
-                                <div class="text-right">
-                                    <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-sm-6"></div>
-                    </div> -->
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Modal Form -->
+    <?php $this->load->view('transaksi/modal_form_spp'); ?>
+    <?php $this->load->view('transaksi/modal_form_pembayaran_lain'); ?>
     <script>
         $(document).ready(function() {
-            $('#riwayat_transaksi').hide();
-            $('.data_kwajiban').hide();
+            $('.div_btn_row').hide();
+            $("#riwayat_transaksi").hide();
+            $(".data_kwajiban").hide();
             setTimeout(function() {
-                $('#alert_tx').html('');
+                $("#alert_tx").html("");
             }, 2000);
-            // your code here 
+            // your code here
             $.ajax({
                 type: "POST",
-                url: 'transaksi/getDataTransaksi',
+                url: "transaksi/getDataTransaksi",
                 dataType: "json",
                 success: function(response) {
                     // console.log(response);
                     let htmlx = ``;
-                    $('#riwayat_transaksi').show();
+                    $("#riwayat_transaksi").show();
                     if (response.data_transaksi != 0) {
                         $.each(response.data_transaksi, function(i, value) {
                             i++;
                             htmlx += `<tr>`;
                             htmlx += `<td class = "text-center" >${i}</td>`;
-                            htmlx += `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` + value.id_transaksi + `" data-toggle="tooltip" title="Cetak Kwitansi">${value.id_transaksi}</a></td>`;
+                            htmlx +=
+                                `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` +
+                                value.id_transaksi +
+                                `" data-toggle="tooltip" title="Cetak Kwitansi">${value.id_transaksi}</a></td>`;
                             htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
                             htmlx += `<td class = "text-center" >${value.jam}</td>`;
                             htmlx += `<td class = "text-center" >${value.nim}</td>`;
@@ -283,8 +210,6 @@
                     $(function() {
                         TablesDatatables.init();
                     });
-
-
                 },
                 error: function(e) {
                     error_server();
@@ -292,90 +217,163 @@
             });
 
 
-            $('#nipd').on('keyup', function() {
-                let nipd = $('#nipd').val();
-                $.ajax({
-                    type: "POST",
-                    url: 'transaksi/cari_mhs',
-                    data: {
-                        nipd: nipd,
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        if (response != null) {
-                            if (response.totalKewajiban != 0) {
-                                $('.btn#btn_proses').prop('disabled', false);
-                            } else {
-                                $('.btn#btn_proses').prop('disabled', true);
-                            }
-                            let html = ``;
-                            let html_3 = ``;
-                            $('.data_kwajiban').show();
-                            $('#riwayat_transaksi').show();
-                            $("#nama_mhs").val(response.nm_pd);
-                            $("#jurusan").val(response.nm_jur);
-                            html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
-                            html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
-                            html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
-                            html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
+            // pembayaran lain
+            $("#nipd_2").on('keypress', function(e) {
+                if (e.which == 13) {
+                    $('.div_btn_row').show();
+                    // $(".btn#btn_proses_2").prop("disabled", true);
+                    let nipd = $("#nipd_2").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "transaksi/cari_mhs",
+                        data: {
+                            nipd: nipd,
+                        },
+                        serverside: true,
+                        dataType: "json",
+                        success: function(response) {
+                            // console.log(response);
+                            let html_form_2 = '';
+                            let html_tbody_2 = '';
 
-                            $.each(response.dataKewajiban, function(i, value) {
-                                html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>
-                                        <td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? 'disabled' : ''}></td>
-                                    </tr>`;
-                            });
-                            $("#data_kwajiban_tbody").html(html);
-                            $.each(response.dataKewajiban, function(i, value) {
-                                $("#checkcox_" + i).change(function() {
-                                    if (this.checked === true) {
-                                        $('#' + value.post_id).prop('disabled', false);
+                            $("#nama_mhs_2").val(response.nm_pd);
+                            $("#jurusan_2").val(response.nm_jur);
+                            if (response != null) {
+
+                                $("#add_rows").click(function() {
+                                    $("#tabel_pembayaranLain").each(function() {
+                                        $(".btn#delete_rows").prop("disabled", false);
+                                        $(".btn#btn_proses_2").prop("disabled", false);
+                                        let tds = '<tr>';
+                                        size = jQuery('#tabel_pembayaranLain >tbody >tr').length + 1,
+                                            tds += '<td width="60%">';
+                                        // console.log(jml_row);
+                                        $('.select2').select2({});
+                                        tds += '<select name="pilihJenisBayar[]" id="jenis_bayar' + size + '"  data-rowid="' + size + '" style="text-align: center;text-align-last: center;" class="form-control select2 select2Cus">';
+                                        tds += '</select>';
+                                        tds += '</td>';
+                                        // tds += `<td width="40%" class="text-center"><input type="text" id="pembayaran_` + size + `" name="pembayaran_` + size + `" class="form-control validate text-right input_" value="" readonly></td>`;
+                                        tds += `<td width="40%" class="text-center"><input type="text" id="pembayaran_` + size + `" name="" class="form-control validate text-right input_" value=""></td>`;
+                                        tds += '</tr>';
+                                        if ($('tbody', this).length > 0) {
+                                            $('tbody', this).append(tds);
+                                        } else {
+                                            $(this).append(tds);
+                                        }
+                                        $('.select2').select2({});
+                                        let tdr = '';
+                                        tdr += '<option value="x" align="center">-- Pilih Pembayaran --</option>';
+
+                                        $.each(response.jenis_pembayaran, function(i, item) {
+                                            tdr += `<option value="${item.id_jp}">${item.nm_jp}</option>`;
+                                        });
+                                        $('#jenis_bayar' + size).append(tdr);
+                                        // $('#jenis_bayar' + size).on('change', function() {
+                                        //     let jns_bayar = this.value;
+                                        //     console.log(jns_bayar);
+                                        //     console.log(size);
+                                        //     $.ajax({
+                                        //         type: "POST",
+                                        //         url: "transaksi/get_biaya_pembayaran_lain",
+                                        //         data: {
+                                        //             jns_bayar: jns_bayar,
+                                        //         },
+                                        //         serverside: true,
+                                        //         dataType: "json",
+                                        //         success: function(response) {
+                                        //             console.log(response);
+                                        //             $("#pembayaran_" + size).val(response.biaya);
+                                        //         }
+                                        //     });
+                                        // });
+
+                                        $('.select2Cus').on('change', function() {
+                                            let jns_bayar = this.value;
+                                            let rowid = $(this).attr('data-rowid');
+                                            console.log($(this).attr('data-rowid'));
+                                            // console.log(size);
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "transaksi/get_biaya_pembayaran_lain",
+                                                data: {
+                                                    jns_bayar: jns_bayar,
+                                                },
+                                                serverside: true,
+                                                dataType: "json",
+                                                success: function(response) {
+                                                    console.log(response);
+                                                    const jp = response.id_jp;
+                                                    $("#pembayaran_" + rowid).attr('value', response.biaya);
+                                                    $("#pembayaran_" + rowid).attr('name', 'ArrayjenisPembayaran[' + jp + ']');
+                                                }
+                                            });
+                                        });
+                                    });
+                                });
+
+
+                                $('#delete_rows').on("click", function() {
+                                    let jml_trx = size;
+                                    let last = $('#tbody_pembayaran_lain').find('tr:last');
+                                    if (last.is(':first-child')) {
+                                        alert('Harus ada setidaknya satu transaksi');
+                                        $(".btn#delete_rows").prop("disabled", true);
                                     } else {
-                                        $('#' + value.post_id).prop('disabled', true);
+                                        last.remove()
                                     }
                                 });
-                            });
+                            } else {
+                                $("#notif_search2").html("<code>Tidak ada mahasiswa dengan nim : " + nipd + "</code>");
+                                setTimeout(function() {
+                                    $("#notif_search2").html("");
+                                }, 2000);
+                            }
+
+
+                            // vier table history transaksi
                             if (response.dataHistoriTX != null) {
                                 $.each(response.dataHistoriTX, function(i, value) {
                                     // console.log(value);
                                     i++;
-                                    html_3 += `<tr>`;
-                                    html_3 += `<td class = "text-center" >${i}</td>`;
-                                    html_3 += `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` + value.id_transaksi + `">${value.id_transaksi}</a></td>`;
-                                    html_3 += `<td class = "text-center" >${value.tanggal}</td>`;
-                                    html_3 += `<td class = "text-center" >${value.jam}</td>`;
-                                    html_3 += `<td class = "text-center" >${value.nim}</td>`;
+                                    html_tbody_2 += `<tr>`;
+                                    html_tbody_2 += `<td class = "text-center" >${i}</td>`;
+                                    html_tbody_2 +=
+                                        `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` +
+                                        value.id_transaksi +
+                                        `">${value.id_transaksi}</a></td>`;
+                                    html_tbody_2 += `<td class = "text-center" >${value.tanggal}</td>`;
+                                    html_tbody_2 += `<td class = "text-center" >${value.jam}</td>`;
+                                    html_tbody_2 += `<td class = "text-center" >${value.nim}</td>`;
 
-                                    html_3 += `<td class = "text-center" >`;
+                                    html_tbody_2 += `<td class = "text-center" >`;
                                     $.each(value.detail_transaksi, function(k, val) {
-                                        html_3 += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+                                        html_tbody_2 += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
                                     });
-                                    html_3 += `</td>`;
-                                    // html_3 += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
-                                    html_3 += `<td class = "text-center"><i>${value.total_bayar}</i></td>`;
-                                    html_3 += `<td class = "text-center" >${value.semester}</td>`;
-                                    html_3 += `<td class = "text-center" >${value.icon_status_tx}</td>`;
-                                    html_3 += `</tr>`;
+                                    html_tbody_2 += `</td>`;
+                                    // html_tbody_2 += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+                                    html_tbody_2 += `<td class = "text-center"><i>${value.total_bayar}</i></td>`;
+                                    html_tbody_2 += `<td class = "text-center" >${value.semester}</td>`;
+                                    html_tbody_2 += `<td class = "text-center" >${value.icon_status_tx}</td>`;
+                                    html_tbody_2 += `</tr>`;
                                 });
                             } else {
-                                html_3 += `<tr>`;
-                                html_3 += `<td colspan="12" class="text-center"><br>`;
-                                html_3 += `<div class='col-lg-12'>`;
-                                html_3 += `<div class='alert alert-danger alert-dismissible'>`;
-                                html_3 += `<h4><i class='icon fa fa-warning'></i> Belum Ada Histori Pembayaran Pada Semester Ini!</h4>`;
-                                html_3 += `</div>`;
-                                html_3 += `</div>`;
-                                html_3 += `</td>`;
-                                html_3 += `</tr>`;
+                                html_tbody_2 += `<tr>`;
+                                html_tbody_2 += `<td colspan="12" class="text-center"><br>`;
+                                html_tbody_2 += `<div class='col-lg-12'>`;
+                                html_tbody_2 += `<div class='alert alert-danger alert-dismissible'>`;
+                                html_tbody_2 += `<h4><i class='icon fa fa-warning'></i> Belum Ada Histori Pembayaran Pada Semester Ini!</h4>`;
+                                html_tbody_2 += `</div>`;
+                                html_tbody_2 += `</div>`;
+                                html_tbody_2 += `</td>`;
+                                html_tbody_2 += `</tr>`;
                             }
 
-                            html_3 += `<tr>`;
-                            html_3 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH STORAN</i></td>`;
-                            html_3 += `<td colspan="6" ><i id="total"></i></td>`;
-                            html_3 += `</tr>`;
+                            html_tbody_2 += `<tr>`;
+                            html_tbody_2 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTEER INI</i></td>`;
+                            html_tbody_2 += `<td colspan="6" class="text-center"><i id="total"></i></td>`;
+                            html_tbody_2 += `</tr>`;
 
-                            $("#riwayat_transaksi_modal").html(html_3);
+                            $("#riwayat_transaksi_modal_2").html(html_tbody_2);
                             $(function() {
                                 $("#total").html(sumColumn(7));
                             });
@@ -386,34 +384,18 @@
                                     // let dta = $(this).text();
                                     // console.log(dta.toLocaleString());
                                     total += parseInt($(this).text(), 10) || 0;
-                                    convTotal = 'Rp.' + total.toLocaleString();
+                                    convTotal = "Rp." + total.toLocaleString();
                                 });
                                 return convTotal;
                             }
-
-
-                            // $(function() {
-                            //     TablesModalDatatables.init();
-                            // });
-
-                        } else {
-                            // $('#notif_search').html("<div class='alert alert-danger alert-dismissable'>Tidak ada mahsiswa dengan nim : " + nipd + "</div>");
-                            $('#notif_search').html("<code>Tidak ada mahasiswa dengan nim : " + nipd + "</code>");
-                            setTimeout(function() {
-                                $('#notif_search').html('');
-                            }, 2000);
-                            // alert('Data mahasiswa tersebut tidak ditemukan, pastikan NIM sudah benar!');
-                            // window.location.reload();
                         }
-
-
-                    },
-                    error: function(e) {
-                        error_server();
-                    },
-                });
+                    });
+                }
             });
+
         });
     </script>
+
+    <script src="<?= base_url() ?>assets/js/pembayaran_spp.js"></script>
 </div>
 <!-- END Page Content -->

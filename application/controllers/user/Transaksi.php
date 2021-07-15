@@ -83,9 +83,8 @@ class Transaksi extends CI_Controller
             $response = $this->masterdata->getMahasiswaByNim(['nipd' => $nim])->row_array();
             $dataMhs = $response;
 
-            $where = 'id_jenis_pembayaran BETWEEN 8 AND 17';
+            $where = 'id_jenis_pembayaran BETWEEN 8 AND 18';
             $resJnsPembayaran = $this->masterdata->GetJenisPembayaran($where)->result_array();
-
 
             if ($dataMhs != null) {
                 $jenjang = $dataMhs['nm_jenj_didik'];
@@ -364,10 +363,10 @@ class Transaksi extends CI_Controller
                 $tgDeleted = $this->tunggakan->deleteTunggakan($id_TGCS);
             } else {
                 // update data tunggakan
-                $dataUpdate = [
+                $dataUpdateTG = [
                     'jml_tunggakan' => $dataTGBaru
                 ];
-                $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdate);
+                $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdateTG);
             }
             // add transaksi
             $dataTxDetail[] = [
@@ -395,10 +394,10 @@ class Transaksi extends CI_Controller
                 $tgDeleted = $this->tunggakan->deleteTunggakan($id_tgKMHS);
             } else {
                 // update data tunggakan
-                $dataUpdate = [
+                $dataUpdateTGKMHS = [
                     'jml_tunggakan' => $dataTGKMHSBaru
                 ];
-                $tgUpdated = $this->tunggakan->updateTunggakan($id_tgKMHS, $dataUpdate);
+                $tgUpdated = $this->tunggakan->updateTunggakan($id_tgKMHS, $dataUpdateTGKMHS);
             }
             // add transaksi
             $dataTxDetail[] = [
@@ -458,15 +457,16 @@ class Transaksi extends CI_Controller
             // ada data transaksi
             if ($bayarC1 != null) {
                 if ($sisa_BayarC1 != 0) {
+                    $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
                         $dataTGBaru = $dataTG_CS['jml_tunggakan'] + $sisa_BayarC1;
                         // update data tunggakan
-                        $dataUpdate = [
+                        $dataUpdateTG = [
                             'jml_tunggakan' => $dataTGBaru
                         ];
-                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdateTG);
                     } else {
                         // add data tunggakan
                         $dataAddTG = [
@@ -490,6 +490,7 @@ class Transaksi extends CI_Controller
             */
             if ($bayarC2 != null) {
                 if ($sisa_BayarC2 != 0) {
+                    $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
@@ -498,7 +499,7 @@ class Transaksi extends CI_Controller
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
                         ];
-                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdate);
                         // die;
                     } else {
                         // add data tunggakan
@@ -522,6 +523,7 @@ class Transaksi extends CI_Controller
             */
             if ($bayarC3 != null) {
                 if ($sisa_BayarC3 != 0) {
+                    $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
@@ -530,7 +532,7 @@ class Transaksi extends CI_Controller
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
                         ];
-                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdate);
                         // die;
                     } else {
                         // add data tunggakan
@@ -550,6 +552,7 @@ class Transaksi extends CI_Controller
             }
         } else {
             // tidak ada data transaksi
+            $dataTG_KMHS = $this->tunggakan->getTunggakanMhs($CekTGKMHS)->row_array();
             if ($bayarKMHS != null) {
                 if ($sisa_BayarKMHS != 0) {
                     // bayar sebagian
@@ -608,6 +611,7 @@ class Transaksi extends CI_Controller
 
             if ($bayarC1 != null) {
                 if ($sisa_BayarC1 != 0) {
+                    $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
@@ -616,7 +620,7 @@ class Transaksi extends CI_Controller
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
                         ];
-                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdate);
                         // echo 'data tunggakan lama, rp.' . $dataTG_CS['jml_tunggakan'] . ', data Tunggakan baru Rp.' . $dataTGBaru;
                         // die;
                     } else {
@@ -646,6 +650,7 @@ class Transaksi extends CI_Controller
             */
             if ($bayarC2 != null) {
                 if ($sisa_BayarC2 != 0) {
+                    $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
@@ -654,7 +659,7 @@ class Transaksi extends CI_Controller
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
                         ];
-                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdate);
                         // echo 'data tunggakan lama, rp.' . $dataTG_CS['jml_tunggakan'] . ', data Tunggakan baru Rp.' . $dataTGBaru;
                         // die;
                     } else {
@@ -684,6 +689,7 @@ class Transaksi extends CI_Controller
             */
             if ($bayarC3 != null) {
                 if ($sisa_BayarC3 != 0) {
+                    $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
                     // bayar sebagian
                     if ($dataTG_CS != null) {
                         // update data tunggakan
@@ -692,7 +698,7 @@ class Transaksi extends CI_Controller
                         $dataUpdate = [
                             'jml_tunggakan' => $dataTGBaru
                         ];
-                        $tgUpdated = $this->tunggakan->updateTunggakan($where_id, $dataUpdate);
+                        $tgUpdated = $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdate);
                         // echo 'data tunggakan lama, rp.' . $dataTG_CS['jml_tunggakan'] . ', data Tunggakan baru Rp.' . $dataTGBaru;
                         // die;
                     } else {
@@ -747,5 +753,35 @@ class Transaksi extends CI_Controller
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Transaksi dengan id #' . $id_transaksi . ', berhasil!</div>');
             redirect('transaksi', 'refresh');
         }
+    }
+
+    public function get_biaya_pembayaran_lain()
+    {
+        if ($this->input->is_ajax_request()) {
+            $jns_bayar =  $this->input->post('jns_bayar');
+            if ($jns_bayar != null) {
+                $data = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $jns_bayar])->row_array();
+            } else {
+
+                $data = $this->masterdata->getBiayaPembayaranLain()->result_array();
+            }
+        } else {
+            $data = false;
+        }
+        echo json_encode($data);
+    }
+
+    public function proses_bayar_lainnya()
+    {
+        $pembayaran = $this->input->post('ArrayjenisPembayaran');
+        $array = array();
+        foreach ($pembayaran as $k => $v) {
+            $array[$k] = $v;
+        }
+
+        echo '<pre>';
+        echo print_r($array);
+        echo '</pre>';
+        exit();
     }
 }
