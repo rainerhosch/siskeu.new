@@ -78,7 +78,7 @@
                             </table>
                             <hr class="my-5">
                             <div class="text-right">
-                                <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
+                                <button type="submit" id="btn_proses" class="btn btn-primary" disabled>Proses</button>
                             </div>
                         </form>
                     </div>
@@ -162,6 +162,7 @@
                     },
                     dataType: "json",
                     success: function(response) {
+                        console.log(response);
                         if (response != null) {
                             if (response.totalKewajiban != 0) {
                                 $('.btn#btn_proses').prop('disabled', false);

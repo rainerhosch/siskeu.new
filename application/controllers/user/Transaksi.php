@@ -773,15 +773,26 @@ class Transaksi extends CI_Controller
 
     public function proses_bayar_lainnya()
     {
-        $pembayaran = $this->input->post('ArrayjenisPembayaran');
-        $array = array();
-        foreach ($pembayaran as $k => $v) {
-            $array[$k] = $v;
+        $pembayaran = $this->input->post('JenisBayar');
+        $dataBiayaPembayaran = $this->input->post('biayaJenisPembayaran');
+
+        // var_dump($this->input->post());
+        // die;
+        // $array = [];
+        foreach ($pembayaran as $i => $v) {
+            $dataDetailTX = [
+                'id_transaksi' => 1,
+                'id_jenis_pembayaran' => $v,
+                'jml_bayar' => $dataBiayaPembayaran[$v]
+            ];
         }
 
-        echo '<pre>';
-        echo print_r($array);
-        echo '</pre>';
-        exit();
+        // echo '<pre>';
+        // echo print_r($array);
+        // echo '</pre>';
+        // exit();
+
+        var_dump($dataDetailTX);
+        die;
     }
 }
