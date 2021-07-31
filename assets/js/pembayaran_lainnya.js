@@ -23,6 +23,11 @@ $("#nipd_2").on("keypress", function (e) {
               $(".btn#delete_rows").prop("disabled", false);
               $(".btn#btn_proses_2").prop("disabled", false);
               let tds = "<tr>";
+
+              tds += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
+              tds += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
+              tds += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
+              tds += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
               (size = jQuery("#tabel_pembayaranLain >tbody >tr").length + 1),
                 (tds += '<td width="60%">');
               $(".select2").select2({});
@@ -46,15 +51,18 @@ $("#nipd_2").on("keypress", function (e) {
               });
               $("#jenis_bayar" + size).append(tdr);
               $(".select2Cus").on("change", function () {
-                let jns_bayar = this.value;
+                let id_jns_bayar = this.value;
+                let jnj_didik = response.nm_jenj_didik;
+                let thn_masuk = response.tahun_masuk;
                 let rowid = $(this).attr("data-rowid");
-                console.log($(this).attr("data-rowid"));
-                // console.log(size);
+                // console.log($(this).attr("data-rowid"));
                 $.ajax({
                   type: "POST",
                   url: "transaksi/get_biaya_pembayaran_lain",
                   data: {
-                    jns_bayar: jns_bayar,
+                    id_jns_bayar: id_jns_bayar,
+                    jnj_didik: jnj_didik,
+                    thn_masuk: thn_masuk,
                   },
                   serverside: true,
                   dataType: "json",

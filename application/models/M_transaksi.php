@@ -52,8 +52,9 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
-    public function cekMaxTransaksi($data)
+    public function cekBayarSppdanKmhs($data)
     {
+        // $this->db->distinct();
         $this->db->select_max('t.id_transaksi');
         $this->db->from('transaksi t');
         $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');

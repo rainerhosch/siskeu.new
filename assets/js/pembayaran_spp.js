@@ -9,7 +9,7 @@ $("#nipd").on("keypress", function (e) {
       },
       dataType: "json",
       success: function (response) {
-        // console.log(response);
+        console.log(response);
         if (response != null) {
           if (response.totalKewajiban != 0) {
             $(".btn#btn_proses").prop("disabled", false);
