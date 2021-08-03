@@ -92,6 +92,20 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
+    public function getAllBiayaAngkatan($data)
+    {
+        $this->db->select('*');
+        $this->db->from('biaya_angkatan');
+        if ($data != null) {
+            $this->db->where(['id_biaya' => $data]);
+            $res = $this->db->get()->row_array();
+        } else {
+            $this->db->order_by('id_biaya', 'desc');
+            $res = $this->db->get()->result_array();
+        }
+        return $res;
+    }
+
     // get Master Jenis Transaksi
     public function GetJenisPembayaran($data)
     {
@@ -112,5 +126,60 @@ class M_masterdata extends CI_Model
         }
         $this->db->order_by('nm_jp', 'asc');
         return $this->db->get();
+    }
+
+
+    // Add data
+    public function insertData($table, $data)
+    {
+        $this->db->insert($table, $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
+
+    // Update Biaya Spp
+    public function updateBiayaSpp($id, $data)
+    {
+        $this->db->where('id_biaya', $id);
+        $this->db->update('biaya_angkatan', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function updateBiayaLainnya($id, $data)
+    {
+        $this->db->where('id_jenis_pembayaran', $id);
+        $this->db->update('biaya_tambahan', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function updateJenisPembayaran($id, $data)
+    {
+        $this->db->where('id_jenis_pembayaran', $id);
+        $this->db->update('master_jenis_pembayaran', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    // Delete data
+    public function deleteData($table, $data)
+    {
+        $this->db->where($data);
+        $this->db->delete($table);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
