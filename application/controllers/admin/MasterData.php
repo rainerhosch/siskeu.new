@@ -189,4 +189,29 @@ class MasterData extends CI_Controller
             redirect('masterdata/BiayaPembayaranLain');
         }
     }
+
+    public function deleteDataPembayaranLain()
+    {
+        $id             = $this->input->post('hapus_id_biaya');
+        $where          = [
+            'id_jenis_pembayaran' => $id
+        ];
+        $table_jp = 'master_jenis_pembayaran';
+        $table_bt = 'biaya_tambahan';
+        $deleted1 = $this->masterdata->deleteData($table_jp, $where);
+        if (!$deleted1) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal hapus Jenis Pembayaran!');
+            redirect('masterdata/BiayaPembayaranLain');
+        } else {
+            $deleted2 = $this->masterdata->deleteData($table_bt, $where);
+            if (!$deleted2) {
+                $this->session->set_flashdata('error', 'Gagal hapus Biaya!');
+                redirect('masterdata/BiayaPembayaranLain');
+            } else {
+                $this->session->set_flashdata('success', 'Data berhasil di hapus!');
+                redirect('masterdata/BiayaPembayaranLain');
+            }
+        }
+    }
 }

@@ -83,7 +83,7 @@ class Transaksi extends CI_Controller
             $response = $this->masterdata->getMahasiswaByNim(['nipd' => $nim])->row_array();
             $dataMhs = $response;
 
-            $where = 'id_jenis_pembayaran BETWEEN 8 AND 18';
+            $where = 'id_jenis_pembayaran >= 7';
             $resJnsPembayaran = $this->masterdata->GetJenisPembayaran($where)->result_array();
 
             if ($dataMhs != null) {

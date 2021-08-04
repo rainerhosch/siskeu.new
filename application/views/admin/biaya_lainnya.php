@@ -120,7 +120,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content modal-content2">
                 <div class="modal-body">
-                    <form action="<?= base_url('masterdata'); ?>/deleteDataLainnya" method="post" enctype="multipart/form-data">
+                    <form action="<?= base_url('masterdata'); ?>/deleteDataPembayaranLain" method="post" enctype="multipart/form-data">
                         <input type="hidden" class="form-control" value="" name="hapus_id_biaya" id="hapus_id_biaya">
                         <h1>Hapus Data Lainnya</h1>
                         <p>Apakah anda yakin, ingin menghapus data tersebut?</p>
@@ -153,8 +153,8 @@
                         html += `<td class="text-center"><strong>${value.nm_jp}</strong></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.biaya).toLocaleString()}</i></td>`;
                         html += `<td class="text-center">` +
-                            `<a href="#" class="badge badge-warning edit-biaya" id="btn_edit_biaya" value="${value.id_jp}"><i class="far fa-edit"></i></a>` +
-                            // `<a href="#" onclick="document.getElementById('hapusDataLainnya').style.display='block'" class="badge badge-danger btn-hapus" id="btn_hapus_biaya" value="${value.id_jp}"><i class="fas fa-trash-alt"></i></a>` +
+                            `<a href="#" class="badge badge-warning edit-biaya" id="btn_edit_biaya" value="${value.id_jp}"><i class="far fa-edit"></i></a> | ` +
+                            `<a href="#" onclick="document.getElementById('hapusDataLainnya').style.display='block'" class="badge badge-danger btn-hapus" id="btn_hapus_biaya" value="${value.id_jp}"><i class="fas fa-trash-alt"></i></a>` +
                             `</td>`;
                         html += `</tr>`;
                     });
