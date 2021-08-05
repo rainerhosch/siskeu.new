@@ -2,7 +2,7 @@
     <?php if ($this->session->userdata('role') != 2) : ?>
         <div class="col-sm-6 col-lg-3">
             <!-- Widget -->
-            <a href="<?= base_url('transaksi/pembayaran_spp') ?>" class="widget widget-hover-effect1">
+            <a href="<?= base_url('transaksi') ?>" class="widget widget-hover-effect1">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
                         <i class="fa fa-file-text"></i>
