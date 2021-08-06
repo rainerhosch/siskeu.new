@@ -56,13 +56,24 @@ class Transaksi extends CI_Controller
             'semester' => $smtAktif
         ];
         if ($this->input->is_ajax_request()) {
-            $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->result_array();
-            $countHistoriTx = count($dataHistoriTx);
-            for ($i = 0; $i < $countHistoriTx; $i++) {
-                $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
-                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            $input = $this->input->post('data');
+            if ($input === null) {
+                $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->result_array();
+                $countHistoriTx = count($dataHistoriTx);
+                for ($i = 0; $i < $countHistoriTx; $i++) {
+                    $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                    $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                }
+                $data['data_transaksi'] = $dataHistoriTx;
+            } else {
+                $dataHistoriTx = $this->transaksi->getDataTransaksi()->result_array();
+                $countHistoriTx = count($dataHistoriTx);
+                for ($i = 0; $i < $countHistoriTx; $i++) {
+                    $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                    $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                }
+                $data['data_transaksi'] = $dataHistoriTx;
             }
-            $data['data_transaksi'] = $dataHistoriTx;
             echo json_encode($data);
         } else {
             echo "Error";

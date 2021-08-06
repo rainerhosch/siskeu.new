@@ -27,6 +27,7 @@ class M_transaksi extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
+        $this->db->order_by('transaksi.id_transaksi desc');
         return $this->db->get();
     }
 
@@ -49,6 +50,7 @@ class M_transaksi extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
+        $this->db->order_by('t.id_transaksi desc');
         return $this->db->get();
     }
 
@@ -95,5 +97,22 @@ class M_transaksi extends CI_Model
         $this->db->from('transaksi');
         $this->db->where($data);
         return $this->db->get()->num_rows();
+    }
+
+    public function countDataTxDetail($data = null)
+    {
+        /*
+        SELECT count(td.id_detail_transaksi)
+        FROM transaksi t
+        JOIN transaksi_detail td ON t.id_transaksi=td.id_transaksi
+        WHERE t.semester='20181' AND td.id_jenis_pembayaran BETWEEN 2 AND 4
+        */
+        $this->db->select('count(td.id_detail_transaksi) as jml_tx_cs');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
     }
 }
