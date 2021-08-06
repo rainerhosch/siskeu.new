@@ -107,7 +107,7 @@ class M_transaksi extends CI_Model
         JOIN transaksi_detail td ON t.id_transaksi=td.id_transaksi
         WHERE t.semester='20181' AND td.id_jenis_pembayaran BETWEEN 2 AND 4
         */
-        $this->db->select('count(td.id_detail_transaksi) as jml_tx_cs');
+        $this->db->select('count(td.id_detail_transaksi) as jml');
         $this->db->from('transaksi t');
         $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
         if ($data != null) {

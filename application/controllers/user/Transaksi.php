@@ -80,6 +80,23 @@ class Transaksi extends CI_Controller
         }
     }
 
+    public function getDataForRekap()
+    {
+        if ($this->input->is_ajax_request()) {
+
+            $res_cs = $this->transaksi->countDataTxDetail('td.id_jenis_pembayaran BETWEEN 2 AND 4')->row_array();
+            // $res_lain = $this->transaksi->countDataTxDetail('td.id_jenis_pembayaran = 5')->row_array();
+            $dataTx[] = [
+                'tx' => 'Cicilan Semester',
+                'jml' => $res_cs['jml']
+            ];
+            $data['rekap'] = $dataTxcs;
+            echo json_encode($data);
+        } else {
+            echo 'invalid request!';
+        }
+    }
+
 
     // Function Cari Data Mahasiswa
     public function Cari_Mhs()
