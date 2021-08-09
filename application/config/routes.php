@@ -85,3 +85,4 @@ $route['manajemen/hapus-user'] = 'admin/Manajemen/DeleteUser';
 // $route['masterdata/BiayaSpp'] = 'admin/MasterData/BiayaKuliahAngkatan';
 $route['masterdata/(:any)'] = 'admin/MasterData/$1';
 $route['laporan/(:any)'] = 'user/Laporan/$1';
+$route['rekap/(:any)'] = 'user/Rekap/$1';

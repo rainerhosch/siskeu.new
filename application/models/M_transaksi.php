@@ -21,9 +21,10 @@ class M_transaksi extends CI_Model
     // get data transaksi
     public function getDataTransaksi($data = null)
     {
-        $this->db->select('*');
+        $this->db->select('transaksi.*, transaksi_status.icon_status_tx, users.nama_user');
         $this->db->from('transaksi');
         $this->db->join('transaksi_status', 'transaksi_status.kode_status_tx=transaksi.status_transaksi');
+        $this->db->join('users', 'users.id_user=transaksi.user_id');
         if ($data != null) {
             $this->db->where($data);
         }
@@ -113,6 +114,41 @@ class M_transaksi extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
+        return $this->db->get();
+    }
+
+    public function getMonthTX($data = null)
+    {
+        /*
+        * SELECT DISTINCT(SUBSTRING(tanggal, 1, 7)) AS bulan FROM `transaksi`
+        */
+        $this->db->distinct();
+        $this->db->select('SUBSTRING(tanggal, 1, 7) AS bulan_tx');
+        $this->db->from('transaksi');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
+    public function getTxPerMonth($data = null)
+    {
+        /*
+        *    SELECT SUBSTRING(B.tanggal, 1, 7) AS bulan,A.id_jenis_pembayaran AS id_jp, mjp.nm_jenis_pembayaran AS nm_JP,COUNT(A.id_jenis_pembayaran) AS Total_TX
+        *    FROM transaksi_detail A 
+        *    LEFT JOIN transaksi B ON A.id_transaksi = B.id_transaksi
+        *    JOIN master_jenis_pembayaran mjp ON mjp.id_jenis_pembayaran=A.id_jenis_pembayaran
+        *    WHERE SUBSTRING(B.tanggal, 1, 7)='2021-07'
+        *    GROUP BY A.id_jenis_pembayaran
+        */
+        $this->db->select('SUBSTRING(tanggal, 1, 7) AS bulan_tx, td.id_jenis_pembayaran AS id_jp, mjp.nm_jenis_pembayaran AS nm_JP, COUNT(td.id_jenis_pembayaran) AS Total_TX');
+        $this->db->from('transaksi_detail td');
+        $this->db->join('transaksi t', 't.id_transaksi=td.id_transaksi');
+        $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=td.id_jenis_pembayaran');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        $this->db->group_by('td.id_jenis_pembayaran');
         return $this->db->get();
     }
 }

@@ -83,14 +83,15 @@ class Transaksi extends CI_Controller
     public function getDataForRekap()
     {
         if ($this->input->is_ajax_request()) {
-
-            $res_cs = $this->transaksi->countDataTxDetail('td.id_jenis_pembayaran BETWEEN 2 AND 4')->row_array();
-            // $res_lain = $this->transaksi->countDataTxDetail('td.id_jenis_pembayaran = 5')->row_array();
-            $dataTx[] = [
-                'tx' => 'Cicilan Semester',
-                'jml' => $res_cs['jml']
-            ];
-            $data['rekap'] = $dataTxcs;
+            $res_bulan = $this->transaksi->getMonthTX()->result_array();
+            // $data['data_bulan'] = $res_bulan;
+            foreach ($res_bulan as $i => $val) {
+                $kondisi = ['SUBSTRING(t.tanggal, 1, 7)=' => $val['bulan_tx']];
+                $tx_perbulan[] = $this->transaksi->getTxPerMonth($kondisi)->result_array();
+            }
+            $data['tx_perbulan'] = $tx_perbulan;
+            $kondisi = 'id_jenis_pembayaran <> 1 AND id_jenis_pembayaran <> 6 AND id_jenis_pembayaran <> 7 AND id_jenis_pembayaran <> 8';
+            $data['pembayaran'] = $this->masterdata->GetJenisPembayaran($kondisi)->result_array();
             echo json_encode($data);
         } else {
             echo 'invalid request!';

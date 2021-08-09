@@ -141,6 +141,7 @@
                                         <!-- <th class="text-center">Sisa Tagihan</th> -->
                                         <th class="text-center">Semester</th>
                                         <th class="text-center">Status</th>
+                                        <th class="text-center">Admin</th>
                                     </tr>
                                 </thead>
                                 <tbody id="riwayat_transaksi_tbody">
@@ -193,6 +194,7 @@
                             htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
                             htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
+                            htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                             htmlx += `</tr>`;
                         });
                     } else {

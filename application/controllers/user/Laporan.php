@@ -46,6 +46,16 @@ class Laporan extends CI_Controller
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Rekap Data Transaksi';
         $data['content'] = 'laporan/rekap_data_transaksi';
+        $kondisi = 'id_jenis_pembayaran <> 1 AND id_jenis_pembayaran <> 6 AND id_jenis_pembayaran <> 7 AND id_jenis_pembayaran <> 8';
+        $data['field'] = $this->masterdata->GetJenisPembayaran($kondisi)->result_array();
+        $this->load->view('template', $data);
+    }
+
+    public function DataPenerimaanKas()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Penerimaan Kas';
+        $data['content'] = 'laporan/penerimaan_kas_yayasan';
         $this->load->view('template', $data);
     }
 }
