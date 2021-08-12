@@ -154,12 +154,14 @@ class MasterData extends CI_Controller
     {
         // var_dump($this->input->post());
         // die;
-        $id             = $this->input->post('edit_nm_jp');
+        $id             = $this->input->post('edit_id_jp');
         $nm_jp          = $this->input->post('edit_nm_jp');
         $biaya          = $this->input->post('edit_biaya');
         $dataUpdateBiaya = ['biaya' => $biaya];
         $dataUpdateNamaJP = ['nm_jenis_pembayaran' => $nm_jp];
 
+        // var_dump($id);
+        // die;
         $this->masterdata->updateJenisPembayaran($id, $dataUpdateNamaJP);
         $update = $this->masterdata->updateBiayaLainnya($id, $dataUpdateBiaya);
         if (!$update) {
