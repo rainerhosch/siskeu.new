@@ -179,7 +179,7 @@
                             htmlx += `<tr>`;
                             htmlx += `<td class = "text-center" >${i}</td>`;
                             htmlx +=
-                                `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` +
+                                `<td class="text-center"><a target="_blank" rel="noopener noreferrer" href="<?= base_url('transaksi/cetak_kwitansi/') ?>` +
                                 value.id_transaksi +
                                 `" data-toggle="tooltip" title="Cetak Kwitansi">${value.id_transaksi}</a></td>`;
                             htmlx += `<td class = "text-center" >${value.tanggal}</td>`;

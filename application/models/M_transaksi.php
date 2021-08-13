@@ -21,14 +21,15 @@ class M_transaksi extends CI_Model
     // get data transaksi
     public function getDataTransaksi($data = null)
     {
-        $this->db->select('transaksi.*, transaksi_status.icon_status_tx, users.nama_user');
-        $this->db->from('transaksi');
-        $this->db->join('transaksi_status', 'transaksi_status.kode_status_tx=transaksi.status_transaksi');
-        $this->db->join('users', 'users.id_user=transaksi.user_id');
+        $this->db->select('t.*, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, u.nama_user, u.ttd');
+        $this->db->from('transaksi t');
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        $this->db->join('transaksi_status ts', 'ts.kode_status_tx=t.status_transaksi');
+        $this->db->join('users u', 'u.id_user=t.user_id');
         if ($data != null) {
             $this->db->where($data);
         }
-        $this->db->order_by('transaksi.id_transaksi desc');
+        $this->db->order_by('t.id_transaksi desc');
         return $this->db->get();
     }
 

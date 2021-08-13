@@ -23,7 +23,8 @@ class Transaksi extends CI_Controller
         $this->smt_aktif = getSemesterAktif();
         $this->load->config('pdf_config');
         $this->load->library('fpdf');
-        $this->load->library('terbilang');
+        $this->load->library('Terbilang');
+        $this->load->library('FormatTanggal');
         define('FPDF_FONTPATH', $this->config->item('fonts_path'));
 
 
@@ -995,5 +996,57 @@ class Transaksi extends CI_Controller
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Transaksi dengan id #' . $id_transaksi . ', berhasil!</div>');
             redirect('transaksi', 'refresh');
         }
+    }
+
+
+    public function cetak_kwitansi($id_transaksi)
+    {
+        $where = [
+            'id_transaksi' => $id_transaksi
+        ];
+        $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->row_array();
+        $jenjangMhs = $dataHistoriTx['nm_jenj_didik'];
+        $angkatanMhs = '20' . substr($dataHistoriTx['nim'], 0, 2);
+        // var_dump($angkatanMhs);
+        // die;
+        $where_tahun = [
+            'angkatan' => $angkatanMhs
+        ];
+        $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+
+        $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx['id_transaksi']])->result_array();
+        foreach ($resDetailTx as $Dtx) {
+            $dataBiayaLain = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
+        }
+
+        $CekTg = [
+            'nim' => $dataHistoriTx['nim']
+        ];
+        $dataTG = $this->tunggakan->getTunggakanMhs($CekTg)->result_array();
+        $dataHistoriTx['detail_transaksi'] = $resDetailTx;
+        $dataHistoriTx['data_kewajiban'] = $dataBiaya;
+        $dataHistoriTx['data_kewajiban_lain'] = $dataBiayaLain;
+        $dataHistoriTx['data_kewajiban_tg'] = $dataTG;
+        $data['data_transaksi'] = $dataHistoriTx;
+        // var_dump($dataHistoriTx);
+        // die;
+        $this->load->view('transaksi/cetak_kwitansi', $data);
+    }
+
+    public function cetak_ulang_kwitansi()
+    {
+        $where = [
+            'id_transaksi' => $id_transaksi
+        ];
+        $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->result_array();
+        $countHistoriTx = count($dataHistoriTx);
+        for ($i = 0; $i < $countHistoriTx; $i++) {
+            $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+            $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+        }
+        $data['tampil'] = $dataHistoriTx;
+        // var_dump($data);
+        // die;
+        $this->load->view('cetak_kwitansi_ulang', $data);
     }
 }

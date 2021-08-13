@@ -34,7 +34,7 @@ class Terbilang
             return "Sebelas ";
         } else {
             $proses = substr($proses, 1, 1);
-            return satuan($proses) . "Belas ";
+            return $this->satuan($proses) . "Belas ";
         }
     }
 
@@ -46,7 +46,7 @@ class Terbilang
         } else if ($proses == 0) {
             return '';
         } else {
-            return satuan($proses) . "Puluh ";
+            return $this->satuan($proses) . "Puluh ";
         }
     }
 
@@ -58,7 +58,7 @@ class Terbilang
         } else if ($proses == 0) {
             return '';
         } else {
-            return satuan($proses) . "Ratus ";
+            return $this->satuan($proses) . "Ratus ";
         }
     }
 
@@ -70,7 +70,7 @@ class Terbilang
         } else if ($proses == 0) {
             return '';
         } else {
-            return satuan($proses) . "Ribu ";
+            return $this->satuan($proses) . "Ribu ";
         }
     }
 
@@ -80,7 +80,7 @@ class Terbilang
         if ($proses == 0) {
             return '';
         } else {
-            return satuan($proses) . "Juta ";
+            return $this->satuan($proses) . "Juta ";
         }
     }
 
@@ -90,7 +90,7 @@ class Terbilang
         if ($proses == 0) {
             return '';
         } else {
-            return satuan($proses) . "Milyar ";
+            return $this->satuan($proses) . "Milyar ";
         }
     }
 
@@ -100,12 +100,12 @@ class Terbilang
         $rp = trim($rp);
         if (strlen($rp) >= 10) {
             $angka = substr($rp, strlen($rp) - 10, -9);
-            $kata = $kata . milyaran($angka);
+            $kata = $kata . $this->milyaran($angka);
         }
         $tambahan = "";
         if (strlen($rp) >= 9) {
             $angka = substr($rp, strlen($rp) - 9, -8);
-            $kata = $kata . ratusan($angka);
+            $kata = $kata . $this->ratusan($angka);
             if ($angka > 0) {
                 $tambahan = "Juta ";
             }
@@ -116,18 +116,18 @@ class Terbilang
             if (($angka == 1) && ($angka1 > 0)) {
                 $angka = substr($rp, strlen($rp) - 8, -6);
                 //echo " belasan".($angka)." ";
-                $kata = $kata . belasan($angka) . "Juta ";
+                $kata = $kata . $this->belasan($angka) . "Juta ";
             } else {
                 $angka = substr($rp, strlen($rp) - 8, -7);
                 //echo " puluhan".($angka)." ";
-                $kata = $kata . puluhan($angka);
+                $kata = $kata . $this->puluhan($angka);
                 if ($angka > 0) {
                     $tambahan = "Juta ";
                 }
 
                 $angka = substr($rp, strlen($rp) - 7, -6);
                 //echo " ribuan".($angka)." ";
-                $kata = $kata . ribuan($angka);
+                $kata = $kata . $this->ribuan($angka);
                 if ($angka == 0) {
                     $kata = $kata . $tambahan;
                 }
@@ -135,7 +135,7 @@ class Terbilang
         }
         if (strlen($rp) == 7) {
             $angka = substr($rp, strlen($rp) - 7, -6);
-            $kata = $kata . jutaan($angka);
+            $kata = $kata . $this->jutaan($angka);
             if ($angka == 0) {
                 $kata = $kata . $tambahan;
             }
@@ -143,7 +143,7 @@ class Terbilang
         $tambahan = "";
         if (strlen($rp) >= 6) {
             $angka = substr($rp, strlen($rp) - 6, -5);
-            $kata = $kata . ratusan($angka);
+            $kata = $kata . $this->ratusan($angka);
             if ($angka > 0) {
                 $tambahan = "Ribu ";
             }
@@ -154,18 +154,18 @@ class Terbilang
             if (($angka == 1) && ($angka1 > 0)) {
                 $angka = substr($rp, strlen($rp) - 5, -3);
                 //echo " belasan".($angka)." ";
-                $kata = $kata . belasan($angka) . "Ribu ";
+                $kata = $kata . $this->belasan($angka) . "Ribu ";
             } else {
                 $angka = substr($rp, strlen($rp) - 5, -4);
                 //echo " puluhan".($angka)." ";
-                $kata = $kata . puluhan($angka);
+                $kata = $kata . $this->puluhan($angka);
                 if ($angka > 0) {
                     $tambahan = "Ribu ";
                 }
 
                 $angka = substr($rp, strlen($rp) - 4, -3);
                 //echo " ribuan".($angka)." ";
-                $kata = $kata . ribuan($angka);
+                $kata = $kata . $this->ribuan($angka);
                 if ($angka == 0) {
                     $kata = $kata . $tambahan;
                 }
@@ -174,7 +174,7 @@ class Terbilang
         if (strlen($rp) == 4) {
             $angka = substr($rp, strlen($rp) - 4, -3);
             //echo " ribuan".($angka)." ";
-            $kata = $kata . ribuan($angka);
+            $kata = $kata . $this->ribuan($angka);
             if ($angka == 0) {
                 $kata = $kata . $tambahan;
             }
@@ -182,7 +182,7 @@ class Terbilang
         if (strlen($rp) >= 3) {
             $angka = substr($rp, strlen($rp) - 3, -2);
             //echo " ratusan".($angka)." ";
-            $kata = $kata . ratusan($angka);
+            $kata = $kata . $this->ratusan($angka);
         }
         if (strlen($rp) >= 2) {
             $angka = substr($rp, strlen($rp) - 2, -1);
@@ -190,20 +190,20 @@ class Terbilang
             if (($angka == 1) && ($angka1 > 0)) {
                 $angka = substr($rp, strlen($rp) - 2);
                 //echo " belasan".($angka)." ";
-                $kata = $kata . belasan($angka);
+                $kata = $kata . $this->belasan($angka);
             } else {
                 //echo " puluhan".($angka)." ";
-                $kata = $kata . puluhan($angka);
+                $kata = $kata . $this->puluhan($angka);
 
                 $angka = substr($rp, strlen($rp) - 1);
                 //echo " satuan".($angka)." ";
-                $kata = $kata . satuan($angka);
+                $kata = $kata . $this->satuan($angka);
             }
         }
         if (strlen($rp) == 1) {
             $angka = substr($rp, strlen($rp) - 1);
             //echo " satuan".($angka)." ";
-            $kata = "$kata" . satuan($angka);
+            $kata = "$kata" . $this->satuan($angka);
         }
         return $kata;
     }
