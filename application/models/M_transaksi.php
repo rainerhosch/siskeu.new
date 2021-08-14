@@ -18,6 +18,17 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
+    // cek min
+    public function cekMinId($data = null)
+    {
+        $this->db->select('Min(id_transaksi) AS id_transaksi');
+        $this->db->from('transaksi');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
     // get data transaksi
     public function getDataTransaksi($data = null)
     {
@@ -65,6 +76,31 @@ class M_transaksi extends CI_Model
         $this->db->where($data);
         $this->db->where('td.id_jenis_pembayaran >=', 2);
         $this->db->where('td.id_jenis_pembayaran <=', 5);
+        return $this->db->get();
+    }
+
+    public function cekBayarKmhsSmtAktif($data)
+    {
+        // $this->db->distinct();
+        $this->db->select_max('t.id_transaksi');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        $this->db->where($data);
+        $this->db->where('td.id_jenis_pembayaran =', 5);
+        // $this->db->where('td.id_jenis_pembayaran =', 7);
+        return $this->db->get();
+    }
+
+    public function cekBayarCSSmtAktif($data)
+    {
+        // $this->db->distinct();
+        $this->db->select_max('t.id_transaksi');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        $this->db->where($data);
+        $this->db->where('td.id_jenis_pembayaran >=', 2);
+        $this->db->where('td.id_jenis_pembayaran <=', 4);
+        // $this->db->where('td.id_jenis_pembayaran =', 6);
         return $this->db->get();
     }
 

@@ -112,26 +112,30 @@ $FormatTanggal = new FormatTanggal;
 $Terbilang = new Terbilang;
 $data_terbilang = $Terbilang->bilang($data_transaksi['total_bayar']);
 $tglTrx = $FormatTanggal->konversi($data_transaksi['tanggal']);
+
 $id_transaksi = $data_transaksi['id_transaksi'];
-$detailTX = $data_transaksi['detail_transaksi'];
-$data_kewajiban = $data_transaksi['data_kewajiban'];
+$data_kewajiban_cs = $data_transaksi['data_kewajiban_cs'];
+$data_kewajiban_kmhs = $data_transaksi['data_kewajiban_kmhs'];
 $data_kewajiban_lain = $data_transaksi['data_kewajiban_lain'];
-$data_tg = $data_transaksi['data_kewajiban_tg'];
-if ($data_tg == null) {
-    $data_kewajiban_tg = 0;
-} else {
-    foreach ($data_tg as $tg) {
-        if ($tg['jenis_tunggakan'] == 1) {
-            $data_kewajiban_tg['tg_cs'] = $tg['jml_tunggakan'];
-        } else {
-            $data_kewajiban_tg['tg_kmhs'] = $tg['jml_tunggakan'];
-        }
-    }
-}
+
+$detailTX = $data_transaksi['detail_transaksi'];
+// if ($data_tg == null) {
+//     $data_kewajiban_tg = 0;
+// } else {
+//     foreach ($data_tg as $tg) {
+//         if ($tg['jenis_tunggakan'] == 1) {
+//             $data_kewajiban_tg['tg_cs'] = $tg['jml_tunggakan'];
+//         } else {
+//             $data_kewajiban_tg['tg_kmhs'] = $tg['jml_tunggakan'];
+//         }
+//     }
+// }
 // var_dump($data_kewajiban_tg);
 // die;
 
-$total_kewajiban = 0;
+$bayar_kewajiban_cs = 0;
+$bayar_kewajiban_kmhs = 0;
+$bayar_kewajiban_lain = 0;
 
 // data identitas penyetor
 $pdf->Ln(3);
@@ -204,13 +208,15 @@ if ($bayarC3 != null) {
     $total_bayarCS = $bayarC1;
 }
 // $totalKewajiban = array();
-if ($bayarCS == true) {
+if ($data_kewajiban_cs !== null) {
     $pdf->SetFont('Arial', '', 11);
     $pdf->Cell(66, 5, 'Cicilan Smstr : (2020/2021 ' . $cetak_ganjil_genal . ')', 1, 0, 'L');
     $pdf->SetFont('Arial', 'i', 11);
-    $pdf->Cell(24, 5, number_format($data_kewajiban['cicilan_semester'], 0, '', '.'), 1, 0, 'R');
+    $pdf->Cell(24, 5, number_format($data_kewajiban_cs, 0, '', '.'), 1, 0, 'R');
+    // $pdf->Cell(24, 5, number_format($data_kewajiban_cs + $data_kewajiban_cs['kemahasiswaan'], 0, '', '.'), 1, 0, 'R');
     $pdf->Cell(20, 5, number_format($total_bayarCS, 0, '', '.'), 1, 0, 'R');
-    $pdf->Cell(20, 5, number_format($data_kewajiban['cicilan_semester'] - $total_bayarCS, 0, '', '.'), 1, 1, 'R');
+    $pdf->Cell(20, 5, number_format($data_kewajiban_cs - $total_bayarCS, 0, '', '.'), 1, 1, 'R');
+    // $pdf->Cell(20, 5, number_format(($data_kewajiban_cs + $data_kewajiban_cs['kemahasiswaan']) - $total_bayarCS, 0, '', '.'), 1, 1, 'R');
 
     foreach ($detailTX as $j => $dtx) {
         $pdf->SetFont('Arial', 'I', 10);
@@ -230,43 +236,45 @@ if ($bayarCS == true) {
             $pdf->Cell(20, 5, '', 1, 0, 'R');
             $pdf->Cell(20, 5, '', 1, 1, 'R');
         }
+        //  elseif ($bayar['id_jenis_pembayaran'] == 6) {
+        //     $pdf->Cell(66, 5, $bayar['nm_jenis_pembayaran'], 1, 0, 'L');
+        //     $pdf->SetFont('Arial', 'i', 10);
+        //     $pdf->Cell(24, 5, number_format($data_kewajiban_tg[$j]['tg_cs'] + $bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+        //     $pdf->Cell(20, 5, number_format($bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+        //     $pdf->Cell(20, 5, number_format(($data_kewajiban_tg[$j]['tg_cs'] + $bayar['jml_bayar']) - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        //     $total_kewajiban = $total_kewajiban + ($data_kewajiban_tg[$j]['tg_cs'] + $bayar['jml_bayar']);
+        // }
     }
-    $total_kewajiban = $total_kewajiban + $data_kewajiban['cicilan_semester'];
 }
 //============================ end bayar cs ===================================
-foreach ($detailTX as $j => $bayar) {
-    $pdf->SetFont('Arial', '', 10);
-    if ($bayar['id_jenis_pembayaran'] == 5) {
-        $pdf->Cell(66, 5, $bayar['nm_jenis_pembayaran'], 1, 0, 'L');
-        $pdf->SetFont('Arial', 'i', 10);
-        $pdf->Cell(24, 5, number_format($data_kewajiban['kemahasiswaan'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format($bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format($data_kewajiban['kemahasiswaan'] - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
-        $total_kewajiban = $total_kewajiban + $data_kewajiban['kemahasiswaan'];
+if ($data_kewajiban_kmhs !== null) {
+    foreach ($detailTX as $j => $dtx) {
+        $pdf->SetFont('Arial', '', 10);
+        if ($dtx['id_jenis_pembayaran'] == 5) {
+            $pdf->Cell(66, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+            $pdf->SetFont('Arial', 'i', 10);
+            $pdf->Cell(24, 5, number_format($data_kewajiban_kmhs, 0, '', '.'), 1, 0, 'R');
+            $pdf->Cell(20, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+            $pdf->Cell(20, 5, number_format($data_kewajiban_kmhs - $dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        }
+        // if ($bayar['id_jenis_pembayaran'] == 7) {
+        //     $pdf->Cell(66, 5, $bayar['nm_jenis_pembayaran'], 1, 0, 'L');
+        //     $pdf->SetFont('Arial', 'i', 10);
+        //     $pdf->Cell(24, 5, number_format($data_kewajiban_tg[$j]['tg_kmhs'] + $bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+        //     $pdf->Cell(20, 5, number_format($bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+        //     $pdf->Cell(20, 5, number_format(($data_kewajiban_tg[$j]['tg_kmhs'] + $bayar['jml_bayar']) - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        //     $total_kewajiban = $total_kewajiban + ($data_kewajiban_tg[$j]['tg_kmhs'] + $bayar['jml_bayar']);
+        // }
     }
-    if ($bayar['id_jenis_pembayaran'] == 6) {
+}
+if ($data_kewajiban_lain !== null) {
+    foreach ($detailTX as $j => $bayar) {
+        $pdf->SetFont('Arial', 'I', 10);
         $pdf->Cell(66, 5, $bayar['nm_jenis_pembayaran'], 1, 0, 'L');
-        $pdf->SetFont('Arial', 'i', 10);
-        $pdf->Cell(24, 5, number_format($data_kewajiban_tg['tg_cs'] + $bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(24, 5, number_format($data_kewajiban_lain[$j]['biaya'], 0, '', '.'), 1, 0, 'R');
         $pdf->Cell(20, 5, number_format($bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format(($data_kewajiban_tg['tg_cs'] + $bayar['jml_bayar']) - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
-        $total_kewajiban = $total_kewajiban + ($data_kewajiban_tg['tg_cs'] + $bayar['jml_bayar']);
-    }
-    if ($bayar['id_jenis_pembayaran'] == 7) {
-        $pdf->Cell(66, 5, $bayar['nm_jenis_pembayaran'], 1, 0, 'L');
-        $pdf->SetFont('Arial', 'i', 10);
-        $pdf->Cell(24, 5, number_format($data_kewajiban_tg['tg_kmhs'] + $bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format($bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format(($data_kewajiban_tg['tg_kmhs'] + $bayar['jml_bayar']) - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
-        $total_kewajiban = $total_kewajiban + ($data_kewajiban_tg['tg_kmhs'] + $bayar['jml_bayar']);
-    }
-    $pdf->SetFont('Arial', 'I', 10);
-    if ($bayar['id_jenis_pembayaran'] == 14) {
-        $pdf->Cell(66, 5, 'SIDANG AKHIR SKRIPSI', 1, 0, 'L');
-        $pdf->Cell(24, 5, number_format($data_kewajiban_lain['biaya'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format($bayar['jml_bayar'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(20, 5, number_format($data_kewajiban_lain['biaya'] - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
-        $total_kewajiban = $total_kewajiban + $data_kewajiban_lain['biaya'];
+        $pdf->Cell(20, 5, number_format($data_kewajiban_lain[$j]['biaya'] - $bayar['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        $total_kewajiban[] = $data_kewajiban_lain[$j]['biaya'];
     }
 }
 // var_dump($total_kewajiban);
@@ -275,6 +283,19 @@ foreach ($detailTX as $j => $bayar) {
 //===============================================================
 $pdf->SetFont('Arial', 'B', 11);
 $pdf->Cell(66, 5, 'Total', 1, 0, 'R');
+$bayar_kewajiban_lain = [];
+foreach ($detailTX as $j => $bayar) {
+    if ($bayar['id_jenis_pembayaran'] == 2 || $bayar['id_jenis_pembayaran'] == 3 || $bayar['id_jenis_pembayaran'] == 4 || $bayar['id_jenis_pembayaran'] == 6) {
+        $bayar_kewajiban_cs = $data_kewajiban_cs;
+    } elseif ($bayar['id_jenis_pembayaran'] == 5 || $bayar['id_jenis_pembayaran'] == 7) {
+        $bayar_kewajiban_kmhs = $data_kewajiban_kmhs;
+    } else {
+        foreach ($data_kewajiban_lain as $data_kewajiban_lain) {
+            $bayar_kewajiban_lain[] = $data_kewajiban_lain['biaya'];
+        }
+    }
+}
+$total_kewajiban = $bayar_kewajiban_cs + $bayar_kewajiban_kmhs + array_sum($bayar_kewajiban_lain);
 $pdf->Cell(24, 5, number_format($total_kewajiban, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(20, 5, number_format($data_transaksi['total_bayar'], 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(20, 5, number_format($total_kewajiban - $data_transaksi['total_bayar'], 0, '', '.'), 1, 1, 'R');
