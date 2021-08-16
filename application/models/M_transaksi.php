@@ -79,28 +79,15 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
-    public function cekBayarKmhsSmtAktif($data)
+    public function cekBayarSppdanKmhsForCetak($data)
     {
         // $this->db->distinct();
-        $this->db->select_max('t.id_transaksi');
-        $this->db->from('transaksi t');
-        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
-        $this->db->where($data);
-        $this->db->where('td.id_jenis_pembayaran =', 5);
-        // $this->db->where('td.id_jenis_pembayaran =', 7);
-        return $this->db->get();
-    }
-
-    public function cekBayarCSSmtAktif($data)
-    {
-        // $this->db->distinct();
-        $this->db->select_max('t.id_transaksi');
+        $this->db->select_min('t.id_transaksi');
         $this->db->from('transaksi t');
         $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
         $this->db->where($data);
         $this->db->where('td.id_jenis_pembayaran >=', 2);
-        $this->db->where('td.id_jenis_pembayaran <=', 4);
-        // $this->db->where('td.id_jenis_pembayaran =', 6);
+        $this->db->where('td.id_jenis_pembayaran <=', 7);
         return $this->db->get();
     }
 

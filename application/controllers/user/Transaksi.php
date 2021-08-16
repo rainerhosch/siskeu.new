@@ -20,7 +20,7 @@ class Transaksi extends CI_Controller
         }
         date_default_timezone_set('Asia/Jakarta');
         // $this->date = date('Y-m-d H:i:s');
-        $this->smt_aktif = getSemesterAktif();
+        // $this->smt_aktif = getSemesterAktif();
         $this->load->config('pdf_config');
         $this->load->library('fpdf');
         $this->load->library('Terbilang');
@@ -33,6 +33,7 @@ class Transaksi extends CI_Controller
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_tunggakan', 'tunggakan');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
+        $this->load->model('M_user', 'user');
     }
 
     public function index()
@@ -1011,11 +1012,11 @@ class Transaksi extends CI_Controller
         ];
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $jenjangMhs = $dataTx['nm_jenj_didik'];
-        $angkatanMhs = '20' . substr($dataTx['nim'], 0, 2);
+        $dataTx['angkatan_mhs'] = '20' . substr($dataTx['nim'], 0, 2);
         // var_dump($angkatanMhs);
         // die;
         $where_tahun = [
-            'angkatan' => $angkatanMhs
+            'angkatan' => $dataTx['angkatan_mhs']
         ];
         $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
 
@@ -1041,76 +1042,9 @@ class Transaksi extends CI_Controller
                 'semester' => $smtAktif
             ];
 
-            $cekPembayaranCSSmtIni = $this->transaksi->cekBayarCSSmtAktif($dataCek)->row_array();
-
-
-            $cekdataHistoriTx = $this->transaksi->getDataTransaksi($dataCek)->result_array();
-            $cekMinIdTx = $this->transaksi->cekMinId($dataCek)->row_array();
-
-            $CekTgCS = [
-                'nim' => $dataTx['nim'],
-                'jenis_tunggakan' => 6
-            ];
-            $resdataTGCS = $this->tunggakan->getTunggakanMhs($CekTgCS)->row_array();
-            // var_dump($cekMinIdTx['id_transaksi']);
-            // die;
-            $countHistoriTx = count($cekdataHistoriTx);
-            for ($i = 0; $i < $countHistoriTx; $i++) {
-                $resDetailTx2 = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $cekdataHistoriTx[$i]['id_transaksi']])->result_array();
-                $cekdataHistoriTx[$i]['detail_transaksi'] = $resDetailTx2;
-            }
-            $historiBayarCS = [];
-            // $historyBayarTGCS = [];
-            $historiBayarKmhs = [];
-            if ((int)$id_transaksi > (int)$cekMinIdTx['id_transaksi']) {
-                foreach ($cekdataHistoriTx as $datacek) {
-                    foreach ($datacek['detail_transaksi'] as $detaildatacek) {
-                        if ($detaildatacek['id_jenis_pembayaran'] == 2) {
-                            $historiBayarCS[] = (int)$datacek['id_transaksi'];
-                        }
-                        if ($detaildatacek['id_jenis_pembayaran'] == 3) {
-                            $historiBayarCS[] =  (int)$datacek['id_transaksi'];
-                        }
-                        if ($detaildatacek['id_jenis_pembayaran'] == 4) {
-                            $historiBayarCS[] =  (int)$datacek['id_transaksi'];
-                        }
-                        if ($detaildatacek['id_jenis_pembayaran'] == 6) {
-                            $historyBayarTGCS[] =   (int)$detaildatacek['jml_bayar'];
-                        }
-                    }
-                }
-            }
-            foreach ($historiBayarCS as $hisCS) {
-                if ($hisCS != (int)$id_transaksi) {
-                    $dataTx['data_kewajiban_cs'] = $dataTx['data_kewajiban_cs'] - $detaildatacek['jml_bayar'];
-                }
-            }
-            if ($resdataTGCS != null) {
-                if ($cekPembayaranCSSmtIni == null) {
-                    $dataTx['data_kewajiban_cs'] = $dataTx['data_kewajiban_cs'] + $resdataTGCS['jml_tunggakan'];
-                }
-            }
+            // $cekPembayaranCSSmtIni = $this->transaksi->cekBayarCSSmtAktif($dataCek)->row_array();
         } else {
-            $dataCek = [
-                'nim' => $dataTx['nim'],
-                'semester' => $smtAktif
-            ];
-
-            $cekPembayaranCSSmtIni = $this->transaksi->cekBayarCSSmtAktif($dataCek)->row_array();
-            if ($cekPembayaranCSSmtIni['id_transaksi'] !== null) {
-                $CekTgCS = [
-                    'nim' => $dataTx['nim'],
-                    'jenis_tunggakan' => 6
-                ];
-                $resdataTGCS = $this->tunggakan->getTunggakanMhs($CekTgCS)->row_array();
-                if ($resdataTGCS != null) {
-                    $dataTx['data_kewajiban_cs'] = $resdataTGCS['jml_tunggakan'];
-                } else {
-                    $datsaTx['data_kewajiban_cs'] = null;
-                }
-            } else {
-                $dataTx['data_kewajiban_cs'] = $dataBiayaAngkatan['cicilan_semester'];
-            }
+            $dataTx['data_kewajiban_cs'] = null;
         }
 
         if ($bayarKMHS == true) {
@@ -1120,76 +1054,9 @@ class Transaksi extends CI_Controller
                 'nim' => $dataTx['nim'],
                 'semester' => $smtAktif
             ];
-            $cekPembayaranKmhsSmtIni = $this->transaksi->cekBayarKmhsSmtAktif($dataCek)->row_array();
-            $cekdataHistoriTx = $this->transaksi->getDataTransaksi($dataCek)->result_array();
-            $cekMinIdTx = $this->transaksi->cekMinId($dataCek)->row_array();
-
-            $CekTg = [
-                'nim' => $dataTx['nim'],
-                'jenis_tunggakan' => 7
-            ];
-            $resdataTGKmhs = $this->tunggakan->getTunggakanMhs($CekTg)->row_array();
-            $countHistoriTx = count($cekdataHistoriTx);
-            for ($i = 0; $i < $countHistoriTx; $i++) {
-                $resDetailTx3 = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $cekdataHistoriTx[$i]['id_transaksi']])->result_array();
-                $cekdataHistoriTx[$i]['detail_transaksi'] = $resDetailTx3;
-            }
-
-            // var_dump($this->db->last_query());
-            // var_dump($cekdataHistoriTx);
-            // die;
-            $historiBayarKmhs = [];
-            if ((int)$id_transaksi > (int)$cekMinIdTx['id_transaksi']) {
-                foreach ($cekdataHistoriTx as $datacek) {
-                    foreach ($datacek['detail_transaksi'] as $detaildatacekKMHS) {
-                        if ($detaildatacekKMHS['id_jenis_pembayaran'] == 5) {
-                            $historiBayarKmhs[] = (int)$datacek['id_transaksi'];
-                        }
-                        if ($detaildatacekKMHS['id_jenis_pembayaran'] == 7) {
-                            $historiBayarKmhs[] =  (int)$datacek['id_transaksi'];
-                        }
-                    }
-                }
-            }
-            foreach ($historiBayarKmhs as $hisKMHS) {
-                $resDetailKMHS = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $hisKMHS])->result_array();
-                foreach ($resDetailKMHS as $resDetailKMHS) {
-                    if ($resDetailKMHS['id_jenis_pembayaran'] == 5) {
-                        $dataTx['data_kewajiban_kmhs'] = $dataTx['data_kewajiban_kmhs'] - $resDetailKMHS['jml_bayar'];
-                    }
-                    if ($resDetailKMHS['id_jenis_pembayaran'] == 7) {
-                        $dataTx['data_kewajiban_kmhs'] = $dataTx['data_kewajiban_kmhs'] - $resDetailKMHS['jml_bayar'];
-                    }
-                }
-            }
-            if ($resdataTGKmhs != null) {
-                if ($cekPembayaranKmhsSmtIni == null) {
-                    $dataTx['data_kewajiban_kmhs'] = $dataTx['data_kewajiban_kmhs'] + $resdataTGKmhs['jml_tunggakan'];
-                }
-            }
-            if ($dataTx['data_kewajiban_kmhs'] == 0) {
-                $dataTx['data_kewajiban_kmhs'] = null;
-            }
+            // $cekPembayaranKmhsSmtIni = $this->transaksi->cekBayarKmhsSmtAktif($dataCek)->row_array();
         } else {
-            $dataCek = [
-                'nim' => $dataTx['nim'],
-                'semester' => $smtAktif
-            ];
-            $cekPembayaranKmhsSmtIni = $this->transaksi->cekBayarKmhsSmtAktif($dataCek)->row_array();
-            if ($cekPembayaranKmhsSmtIni['id_transaksi'] !== null) {
-                $CekTg = [
-                    'nim' => $dataTx['nim'],
-                    'jenis_tunggakan' => 7
-                ];
-                $resdataTGKmhs = $this->tunggakan->getTunggakanMhs($CekTg)->row_array();
-                if ($resdataTGKmhs != null) {
-                    $dataTx['data_kewajiban_kmhs'] = $resdataTGKmhs['jml_tunggakan'];
-                } else {
-                    $datsaTx['data_kewajiban_kmhs'] = null;
-                }
-            } else {
-                $dataTx['data_kewajiban_kmhs'] = $dataBiayaAngkatan['kemahasiswaan'];
-            }
+            $dataTx['data_kewajiban_kmhs'] = null;
         }
 
         if ($bayarLainnya == true) {
@@ -1199,9 +1066,11 @@ class Transaksi extends CI_Controller
         }
         $dataTx['detail_transaksi'] = $resDetailTx;
         // $dataTx['data_total_kewajiban'] = $dataTx['data_kewajiban_cs'] + $dataTx['data_kewajiban_kmhs'] + $dataTx['data_kewajiban_lain'];
+
+        $dataTx['admin_log'] = $this->user->getUser(['id_user' => $this->session->userdata('id_user')])->row_array();
         $data['data_transaksi'] = $dataTx;
-        var_dump($dataTx);
-        die;
+        // var_dump($dataTx);
+        // die;
         $this->load->view('transaksi/cetak_kwitansi', $data);
     }
 
@@ -1220,5 +1089,167 @@ class Transaksi extends CI_Controller
         // var_dump($data);
         // die;
         $this->load->view('cetak_kwitansi_ulang', $data);
+    }
+
+    public function cetak_kwitansi_test($id_transaksi)
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        $bayarCS = false;
+        $bayarC1 = [];
+        $bayarC2 = [];
+        $bayarC3 = [];
+        $bayarLainnya = false;
+        $bayarKMHS = false;
+        // $dataTx['total_kewajiban'] = [];
+
+        $where = [
+            'id_transaksi' => $id_transaksi
+        ];
+        $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
+        $dataTx['angkatan_mhs'] = '20' . substr($dataTx['nim'], 0, 2);
+        // cek biaya angkatan
+        $where_tahun = [
+            'angkatan' => $dataTx['angkatan_mhs']
+        ];
+        $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $dataTx['nm_jenj_didik'])->row_array();
+
+        // cek jumlah transaksi
+        $dataCek = [
+            'nim' => $dataTx['nim'],
+            'semester' => $smtAktif
+        ];
+        $getAllDataTx = $this->transaksi->getDataTransaksi($dataCek)->result_array();
+        $jmlTx = count($getAllDataTx);
+
+        foreach ($getAllDataTx as $AllTx) {
+            $resDetailTxAll = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $AllTx['id_transaksi']])->result_array();
+            foreach ($resDetailTxAll as $AllDTx) {
+                if ($AllDTx['id_jenis_pembayaran'] == 2) {
+                    $bayarC1[] = $AllDTx['jml_bayar'];
+                }
+                if ($AllDTx['id_jenis_pembayaran'] == 3) {
+                    $bayarC2[] = $AllDTx['jml_bayar'];
+                }
+                if ($AllDTx['id_jenis_pembayaran'] == 4) {
+                    $bayarC3[] = $AllDTx['jml_bayar'];
+                }
+            }
+        }
+        // if ($jmlTx <= 1) {
+        //     // tx pertama
+        //     var_dump('tx 1');
+        //     die;
+        // } else {
+        //     // beberapa tx
+        //     foreach ($resDetailTxAll as $AllDTx) {
+        //         if ($AllDTx['id_jenis_pembayaran'] == 2) {
+        //             $bayarC1[] = $AllDTx['jml_bayar'];
+        //         }
+        //         if ($AllDTx['id_jenis_pembayaran'] == 3) {
+        //             $bayarC2[] = $AllDTx['jml_bayar'];
+        //         }
+        //         if ($AllDTx['id_jenis_pembayaran'] == 3) {
+        //             $bayarC3[] = $AllDTx['jml_bayar'];
+        //         }
+        //     }
+        // }
+        // var_dump($resDetailTxAll);
+        var_dump($bayarC1, $bayarC2, $bayarC3);
+        die;
+
+        // cek jenis pembayaran pada transaksi
+        $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
+        foreach ($resDetailTx as $i => $Dtx) {
+            $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
+            if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4 || $Dtx['id_jenis_pembayaran'] == 6) {
+                $bayarCS = true;
+            }
+            if ($Dtx['id_jenis_pembayaran'] == 5 || $Dtx['id_jenis_pembayaran'] == 7) {
+                $bayarKMHS = true;
+            }
+            if ($resBiayaLain[$i] !== null) {
+                $bayarLainnya = true;
+            }
+        }
+
+        if ($bayarCS == true) {
+
+            $dataTx['data_kewajiban_cs'] = $dataBiayaAngkatan['cicilan_semester'];
+            // cek tunggakan
+            $whereCekNim = [
+                'nim' => $dataTx['nim'],
+                'jenis_tunggakan' => 6
+            ];
+            $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
+            $dataTx['tunggakan_cs'] = $dataTG_CS['jml_tunggakan'];
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 2) {
+                    $jml_bayarCS[] = $Dtx['jml_bayar'];
+                } elseif ($Dtx['id_jenis_pembayaran'] == 3) {
+                    $jml_bayarCS[] = $Dtx['jml_bayar'];
+                } elseif ($Dtx['id_jenis_pembayaran'] == 4) {
+                    $jml_bayarCS[] = $Dtx['jml_bayar'];
+                } elseif ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $jml_bayarTGCS[] = $Dtx['jml_bayar'];
+                } else {
+                    $jml_bayarCS[] = 0;
+                    $jml_bayarTGCS[] = 0;
+                }
+            }
+            $total_bayarTGCS = array_sum($jml_bayarTGCS);
+            $total_bayarCS = array_sum($jml_bayarCS);
+            // var_dump($total_bayarCS);
+            // die;
+
+            // cek history pembayaran
+            $cekHistoriPembayaran = $this->transaksi->cekBayarSppdanKmhsForCetak($dataCek)->row_array();
+            if ((int)$cekHistoriPembayaran['id_transaksi'] < (int)$id_transaksi) {
+                // ada histori
+
+                $dataTx['total_kewajiban'][] = ((int)$dataTx['data_kewajiban_cs'] - (int)$total_bayarTGCS - (int)$total_bayarCS) + (int)$dataTG_CS['jml_tunggakan'];
+                $dataTx['data_kewajiban_cs'] = (int)$dataTx['data_kewajiban_cs'] - (int)$total_bayarTGCS;
+            } else {
+                // pembayaran pertama
+                $dataTx['total_kewajiban'][] = (int)$dataTx['data_kewajiban_cs'];
+            }
+        } else {
+            $dataTx['data_kewajiban_cs'] = null;
+        }
+
+        if ($bayarKMHS == true) {
+
+            $dataTx['data_kewajiban_kmhs'] = $dataBiayaAngkatan['kemahasiswaan'];
+            $dataCek = [
+                'nim' => $dataTx['nim'],
+                'semester' => $smtAktif
+            ];
+            $cekHistoriPembayaran = $this->transaksi->cekBayarSppdanKmhsForCetak($dataCek)->row_array();
+
+            $CekTgKMHS = [
+                'nim' => $dataTx['nim'],
+                'jenis_tunggakan' => 7
+            ];
+            $resdataTGKmhs = $this->tunggakan->getTunggakanMhs($CekTgKMHS)->row_array();
+            $dataTx['total_kewajiban'][] = (int)$dataTx['data_kewajiban_kmhs'];
+        } else {
+            $dataTx['data_kewajiban_kmhs'] = null;
+        }
+
+        if ($bayarLainnya == true) {
+            $dataTx['data_kewajiban_lain'] = $resBiayaLain;
+            foreach ($resBiayaLain as $rBL) {
+                $data_kewajiban_lain[] = $rBL['biaya'];
+            }
+            $dataTx['total_kewajiban'][] = array_sum($data_kewajiban_lain);
+        } else {
+            $dataTx['data_kewajiban_lain'] = null;
+        }
+        $dataTx['detail_transaksi'] = $resDetailTx;
+        // $dataTx['data_total_kewajiban'] = $dataTx['data_kewajiban_cs'] + $dataTx['data_kewajiban_kmhs'] + $dataTx['data_kewajiban_lain'];
+        $data['data_transaksi'] = $dataTx;
+        var_dump($dataTx);
+        die;
+        $this->load->view('transaksi/cetak_kwitansi', $data);
     }
 }
