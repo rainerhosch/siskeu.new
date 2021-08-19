@@ -27,6 +27,7 @@
     <script src="<?= base_url() ?>assets/proui/js/app.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/pages/index.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/pages/tablesDatatables.js"></script>
+    <script src="<?= base_url() ?>assets/proui/swal/dist/sweetalert2.js"></script>
 
     <style>
         .containerX {

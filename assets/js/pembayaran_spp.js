@@ -11,9 +11,7 @@ $("#nipd").on("keypress", function (e) {
       success: function (response) {
         console.log(response);
         if (response != null) {
-          if (response.totalKewajiban != 0) {
-            $(".btn#btn_proses").prop("disabled", false);
-          } else {
+          if ((response.totalKewajiban = 0)) {
             $(".btn#btn_proses").prop("disabled", true);
           }
           let html = ``;
@@ -28,13 +26,13 @@ $("#nipd").on("keypress", function (e) {
           html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
 
           $.each(response.dataKewajiban, function (i, value) {
-            html += `<tr>
-                                        <td><label data-error="wrong" data-success="right" for="${
-                                          value.label
-                                        }">${value.label}</label></td>
-                                        <td class="text-center"><input type="text" id="${
-                                          value.post_id
-                                        }" name="${
+            html += `<tr><td><label data-error="wrong" data-success="right" for="${
+              value.label
+            }">${
+              value.label
+            }</label></td><td class="text-center"><input type="text" id="${
+              value.post_id
+            }" name="${
               value.post_id
             }" class="form-control validate text-right input_${i}" value="${
               value.biaya
@@ -49,11 +47,14 @@ $("#nipd").on("keypress", function (e) {
             $("#checkcox_" + i).change(function () {
               if (this.checked === true) {
                 $("#" + value.post_id).prop("disabled", false);
+                $("#btn_proses").prop("disabled", false);
               } else {
                 $("#" + value.post_id).prop("disabled", true);
+                $("#btn_proses").prop("disabled", true);
               }
             });
           });
+
           if (response.dataHistoriTX != null) {
             $.each(response.dataHistoriTX, function (i, value) {
               // console.log(value);
@@ -126,4 +127,42 @@ $("#nipd").on("keypress", function (e) {
       },
     });
   }
+});
+
+$("#form_pembayaran").submit(function (e) {
+  e.preventDefault();
+  let form = $(this);
+  // let url = form.attr('action');
+  $.ajax({
+    type: "POST",
+    url: "transaksi/proses_bayar_spp", // where you wanna post
+    data: form.serialize(), // serializes form input,
+    success: function (response) {
+      let id_transaksi = response;
+      // let url_cetak = base_url("transaksi/cetak_kwitansi");
+      // console.log(response);
+      Swal.fire({
+        title: "Transaksi Berhasil!",
+        text: `Transaksi ${id_transaksi} telah berhasil di input, apakah ingin mencetak kwitansi?`,
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "##d33",
+        confirmButtonText: "Cetak",
+        cancelButtonText: "Tutup",
+        closeOnConfirm: false,
+        closeOnCancel: false,
+      }).then(function (isConfirm) {
+        if (isConfirm) {
+          // cetak
+          window.open(`transaksi/cetak_kwitansi/${id_transaksi}`, "_blank");
+          window.focus();
+
+          location.reload();
+        } else {
+          // refresh page
+          location.reload();
+        }
+      });
+    },
+  });
 });

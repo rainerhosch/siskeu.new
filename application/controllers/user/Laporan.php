@@ -19,7 +19,7 @@ class Laporan extends CI_Controller
             redirect(base_url());
         }
         date_default_timezone_set('Asia/Jakarta');
-        $this->smt_aktif = getSemesterAktif();
+        // $this->smt_aktif = getSemesterAktif();
         $this->load->config('pdf_config');
         $this->load->library('fpdf');
         $this->load->library('terbilang');

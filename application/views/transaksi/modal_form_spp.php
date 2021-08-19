@@ -27,7 +27,7 @@
                                 <input type="text" id="jurusan" name="jurusan" class="form-control validate" readonly>
                             </div>
                         </div>
-                        <form action="<?= base_url('transaksi'); ?>/proses_bayar_spp" method="post" enctype="multipart/form-data">
+                        <form id="form_pembayaran" enctype="multipart/form-data">
                             <br>
                             <table id="menu-datatable" class="table table-vcenter table-condensed">
                                 <tbody id="data_kwajiban_tbody">
@@ -35,7 +35,7 @@
                             </table>
                             <hr class="my-5">
                             <div class="text-right" style="margin-bottom: 5px;">
-                                <button type="submit" id="btn_proses" class="btn btn-primary">Proses</button>
+                                <button type="submit" id="btn_proses" class="btn btn-primary" disabled>Proses</button>
                             </div>
                         </form>
                     </div>

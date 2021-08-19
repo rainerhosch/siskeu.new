@@ -22,12 +22,17 @@
                                 <input type="text" id="nama_mhs_2" name="nama_mhs_2" class="form-control validate" readonly>
                             </div>
                         </div>
-                        <div class="sm-form mb-5 row text-left">
-                            <div class="col-sm-12">
-                                <input type="text" id="jurusan_2" name="jurusan_2" class="form-control validate" readonly>
+                        <!-- <form action="<?= base_url('transaksi'); ?>/proses_bayar_lainnya" method="post" enctype="multipart/form-data"> -->
+                        <form id="form_pembayaran_lain" enctype="multipart/form-data">
+                            <div class="sm-form mb-5 row text-left">
+                                <div class="col-sm-12">
+                                    <input type="hidden" id="nim_mhs_bayar_hidden" name="nim_mhs_bayar_hidden" class="form-control validate" readonly>
+                                    <input type="hidden" id="nama_mhs_bayar_hidden" name="nama_mhs_bayar_hidden" class="form-control validate" readonly>
+                                    <input type="hidden" id="jenjang_mhs_bayar_hidden" name="jenjang_mhs_bayar_hidden" class="form-control validate" readonly>
+                                    <input type="hidden" id="angkatan_mhs_bayar_hidden" name="angkatan_mhs_bayar_hidden" class="form-control validate" readonly>
+
+                                </div>
                             </div>
-                        </div>
-                        <form action="<?= base_url('transaksi'); ?>/proses_bayar_lainnya" method="post" enctype="multipart/form-data">
                             <br>
                             <table id="tabel_pembayaranLain" class="table table-vcenter table-condensed">
                                 <tbody id="tbody_pembayaran_lain">
