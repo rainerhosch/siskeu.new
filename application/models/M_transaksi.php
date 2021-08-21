@@ -115,6 +115,31 @@ class M_transaksi extends CI_Model
         return $this->db->insert('transaksi_detail', $data);
     }
 
+    // Delete Transaksi
+    public function deleteTransaksi($data)
+    {
+        $this->db->where($data);
+        $this->db->delete('transaksi');
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+
+    // Delete Transaksi Detail
+    public function deleteTransaksiDetail($data)
+    {
+        $this->db->where($data);
+        $this->db->delete('transaksi_detail');
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
 
     // get Data transaksi Hari ini
     public function getTxDateNow($data)

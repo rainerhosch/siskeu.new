@@ -221,79 +221,77 @@ $pdf->Cell(163, 7, '', 0, 0, 'R');
 
 
 // konten bagian samping
-if ($data_transaksi['data_kewajiban_cs'] == null || $data_transaksi['bayar_tg_cs'] == 1 || $dtx['id_jenis_pembayaran'] == 2) {
 
-    $pdf->Line(143, 5, 143, 143);
-    $pdf->Line(143, 5, 207, 5);
-    $pdf->Line(207, 5, 207, 143);
-    $pdf->Line(143, 143, 207, 143);
-    $pdf->SetFont('Arial', 'B', 14);
-    $pdf->RotatedText(147, 120, 'HALAMAN INI SENGAJA DIKOSONGKAN !', 55);
-} else {
-    // foreach ($detailTX as $j => $dtx) {
-    $judul = '';
-    $ket = '';
-    if ($dtx['id_jenis_pembayaran'] == 3) {
-        if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
-            $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UTS';
-            $ket = 'Telah melunasi cicilan-2, bisa mengikuti Ujuan Tengah Semester (UTS)';
-        } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] < 500000) {
-            $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UTS';
-            $ket = 'Telah mendapat persetujuan PK-2 & bisa mengikuti Ujuan Tengah Semester (UTS)';
-        } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] > 500000) {
-            $judul = 'BELUM BISA MENGIKUTI UTS';
-            $ket = 'Belum melunasi cicilan-2 & belum dapat mengikuti UTS';
-        }
-    }
-    if ($dtx['id_jenis_pembayaran'] == 4) {
-        if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
-            $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UAS';
-            $ket = 'Telah melunasi cicilan-3, bisa mengikuti Ujuan Akhir Semester (UAS)';
-        } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] < 500000) {
-            $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UAS';
-            $ket = 'Telah mendapat persetujuan PK-2 & bisa mengikuti Ujuan Akhir Semester (UAS)';
-        } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] > 500000) {
-            $judul = 'BELUM BISA MENGIKUTI UAS';
-            $ket = 'Belum melunasi cicilan-2 & belum dapat mengikuti UAS';
-        }
-    }
-    // layout keterangan bag samping
-    $pdf->Image('assets/image/gunting.png', 139, 4, 12);
-    $pdf->Line(145, 12, 145, 143);
-    $pdf->Line(150, 5, 150, 143);
-    $pdf->Line(150, 5, 207, 5);
-    $pdf->Line(207, 5, 207, 143);
-    $pdf->Line(150, 143, 207, 143);
-    $pdf->SetFont('Arial', 'i', 9);
-    $pdf->RotatedText(148, 121, 'Potong atau gunting kertas disini  !', 90);
-    $pdf->SetFont('Arial', 'B', 12);
-    $pdf->RotatedImage('assets/image/logo2.jpg', 151, 140, 11, 11, 90);
-    // end
-    $pdf->RotatedText(155, 120, $judul, 90);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->RotatedText(160, 128, 'STT. WASTUKANCANA - TAHUN AKADEMIK 2020/2021 GANJIL', 90);
-    $pdf->Line(163, 5, 163, 143);
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->RotatedText(168, 140, 'Yang bertanda tangan di bawah ini menerangkan bahwa :', 90);
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->RotatedText(173, 140, 'Nama/Kode', 90);
-    $pdf->RotatedText(173, 117, ': ' . $data_transaksi['nm_pd'] . ' / ' . $data_transaksi['id_transaksi'], 90);
-    $pdf->RotatedText(178, 140, 'NIM/Jurusan', 90);
-    $pdf->RotatedText(178, 117, ': ' . $data_transaksi['nim'] . ' /' . $data_transaksi['nm_jur'], 90);
-    $pdf->SetFont('Arial', '', 10);
-    $pdf->RotatedText(185, 140, $ket, 90);
-    $pdf->RotatedText(189, 140, 'Tahun Akademik 2020/2021 Ganjil.', 90);
+// if ($data_transaksi['data_kewajiban_cs'] == null || $data_transaksi['bayar_tg_cs'] == 1 || $dtx['id_jenis_pembayaran'] == 2) {
 
-    // date_default_timezone_set('Asia/Jakarta');
-    // $pdf->RotatedText(192, 45, date('d M Y'), 90);
-    $pdf->RotatedText(192, 45, $tglLog, 90);
-    $pdf->SetFont('Arial', 'U', 10);
-    $pdf->RotatedText(205, 45, $data_transaksi['nama_user'], 90);
-    $pdf->RotatedImage('assets/image/ttd/' . $data_transaksi['ttd'], 193, 45, 15, 9, 90);
-}
+$pdf->Line(143, 5, 143, 143);
+$pdf->Line(143, 5, 207, 5);
+$pdf->Line(207, 5, 207, 143);
+$pdf->Line(143, 143, 207, 143);
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->RotatedText(147, 120, 'HALAMAN INI SENGAJA DIKOSONGKAN !', 55);
+// } else {
+//     $judul = '';
+//     $ket = '';
+//     if ($dtx['id_jenis_pembayaran'] == 3) {
+//         if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
+//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UTS';
+//             $ket = 'Telah melunasi cicilan-2, bisa mengikuti Ujuan Tengah Semester (UTS)';
+//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] < 500000) {
+//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UTS';
+//             $ket = 'Telah mendapat persetujuan PK-2 & bisa mengikuti Ujuan Tengah Semester (UTS)';
+//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] > 500000) {
+//             $judul = 'BELUM BISA MENGIKUTI UTS';
+//             $ket = 'Belum melunasi cicilan-2 & belum dapat mengikuti UTS';
+//         }
+//     }
+//     if ($dtx['id_jenis_pembayaran'] == 4) {
+//         if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
+//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UAS';
+//             $ket = 'Telah melunasi cicilan-3, bisa mengikuti Ujuan Akhir Semester (UAS)';
+//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] < 500000) {
+//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UAS';
+//             $ket = 'Telah mendapat persetujuan PK-2 & bisa mengikuti Ujuan Akhir Semester (UAS)';
+//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] > 500000) {
+//             $judul = 'BELUM BISA MENGIKUTI UAS';
+//             $ket = 'Belum melunasi cicilan-2 & belum dapat mengikuti UAS';
+//         }
+//     }
+//     // layout keterangan bag samping
+//     $pdf->Image('assets/image/gunting.png', 139, 4, 12);
+//     $pdf->Line(145, 12, 145, 143);
+//     $pdf->Line(150, 5, 150, 143);
+//     $pdf->Line(150, 5, 207, 5);
+//     $pdf->Line(207, 5, 207, 143);
+//     $pdf->Line(150, 143, 207, 143);
+//     $pdf->SetFont('Arial', 'i', 9);
+//     $pdf->RotatedText(148, 121, 'Potong atau gunting kertas disini  !', 90);
+//     $pdf->SetFont('Arial', 'B', 12);
+//     $pdf->RotatedImage('assets/image/logo2.jpg', 151, 140, 11, 11, 90);
+//     // end
+//     $pdf->RotatedText(155, 120, $judul, 90);
+//     $pdf->SetFont('Arial', 'B', 10);
+//     $pdf->RotatedText(160, 128, 'STT. WASTUKANCANA - TAHUN AKADEMIK 2020/2021 GANJIL', 90);
+//     $pdf->Line(163, 5, 163, 143);
+//     $pdf->SetFont('Arial', '', 10);
+//     $pdf->RotatedText(168, 140, 'Yang bertanda tangan di bawah ini menerangkan bahwa :', 90);
+//     $pdf->SetFont('Arial', 'B', 10);
+//     $pdf->RotatedText(173, 140, 'Nama/Kode', 90);
+//     $pdf->RotatedText(173, 117, ': ' . $data_transaksi['nm_pd'] . ' / ' . $data_transaksi['id_transaksi'], 90);
+//     $pdf->RotatedText(178, 140, 'NIM/Jurusan', 90);
+//     $pdf->RotatedText(178, 117, ': ' . $data_transaksi['nim'] . ' /' . $data_transaksi['nm_jur'], 90);
+//     $pdf->SetFont('Arial', '', 10);
+//     $pdf->RotatedText(185, 140, $ket, 90);
+//     $pdf->RotatedText(189, 140, 'Tahun Akademik 2020/2021 Ganjil.', 90);
+
+//     // date_default_timezone_set('Asia/Jakarta');
+//     // $pdf->RotatedText(192, 45, date('d M Y'), 90);
+//     $pdf->RotatedText(192, 45, $tglLog, 90);
+//     $pdf->SetFont('Arial', 'U', 10);
+//     $pdf->RotatedText(205, 45, $data_transaksi['nama_user'], 90);
+//     $pdf->RotatedImage('assets/image/ttd/' . $data_transaksi['ttd'], 193, 45, 15, 9, 90);
 // }
 
 
 //end kontent samping
-// }
 $pdf->Output();

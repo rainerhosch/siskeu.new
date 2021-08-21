@@ -41,7 +41,7 @@
         $(document).ready(function() {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url() ?>laporan/getDataPenerimaanKasYayasan",
+                url: "<?= base_url() ?>laporan/getDataPenerimaanKasSTT",
                 data: {
                     data: 1
                 },

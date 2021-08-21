@@ -51,6 +51,29 @@
     .modal_datatable {
         font-size: 8px;
     }
+
+    /* Modal Content/Box */
+    .modal-content2 {
+        text-align: center;
+        background-color: #fefefe;
+        margin: 5% auto 15% auto;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    /* Style the horizontal ruler */
+    hr {
+        border: 1px solid #f1f1f1;
+        margin-bottom: 25px;
+    }
+
+    .modal-notify .modal-header {
+        border-radius: 3px 3px 0 0;
+    }
+
+    .modal-notify .modal-content {
+        border-radius: 3px;
+    }
 </style> <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
@@ -142,6 +165,7 @@
                                         <th class="text-center">Semester</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Admin</th>
+                                        <th class="text-center">Tools</th>
                                     </tr>
                                 </thead>
                                 <tbody id="riwayat_transaksi_tbody">
@@ -170,7 +194,7 @@
                 url: "transaksi/getDataTransaksi",
                 dataType: "json",
                 success: function(response) {
-                    // console.log(response);
+                    console.log(response);
                     let htmlx = ``;
                     $("#riwayat_transaksi").show();
                     if (response.data_transaksi != 0) {
@@ -195,6 +219,14 @@
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
                             htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
                             htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
+                            // htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
+                            htmlx += `<td class="text-center">`;
+                            if (value.user_id !== response.user_loged) {
+                                htmlx += `<a href="#" onclick="" class="btn btn-sm btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="" disabled><i class="fas fa-trash-alt"></i></a>`;
+                            } else {
+                                htmlx += `<a href="#"  onclick="deleteTransaksi(${value.id_transaksi})" class="btn btn-sm btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="${value.id_transaksi}"><i class="fas fa-trash-alt"></i></a>`;
+                            }
+                            htmlx += `</td>`;
                             htmlx += `</tr>`;
                         });
                     } else {
@@ -217,7 +249,36 @@
                     error_server();
                 },
             });
+            // end hapus menu
         });
+
+
+
+        function deleteTransaksi(id_transaksi) {
+            // console.log(id_transaksi);
+            Swal.fire({
+                title: "Delete Transaksi",
+                text: `Apakah anda ingin menghapus data transaski ${id_transaksi}?.`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Hapus",
+                cancelButtonText: "Batal",
+                closeOnConfirm: false,
+                closeOnCancel: false,
+            }).then(function(isConfirm) {
+                if (isConfirm) {
+                    // cetak
+                    window.location.replace(`transaksi/hapus_transaksi/${id_transaksi}`);
+                    // window.focus();
+
+                    // location.reload();
+                } else {
+                    // refresh page
+                    location.reload();
+                }
+            });
+        }
     </script>
     <script src="<?= base_url() ?>assets/js/pembayaran_lainnya.js"></script>
     <script src="<?= base_url() ?>assets/js/pembayaran_spp.js"></script>

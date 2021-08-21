@@ -58,6 +58,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['dashboard'] = 'user/dashboard';
 $route['transaksi'] = 'user/transaksi';
 $route['transaksi/(:any)'] = 'user/transaksi/$1';
+$route['transaksi/hapus_transaksi/(:num)'] = 'user/transaksi/hapus_transaksi/$1';
 $route['transaksi/cetak_kwitansi/(:num)'] = 'user/transaksi/cetak_kwitansi/$1';
 $route['transaksi/cetak_ulang_kwitansi/(:num)'] = 'user/transaksi/cetak_ulang_kwitansi/$1';
 

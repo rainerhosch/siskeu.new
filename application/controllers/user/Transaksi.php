@@ -67,6 +67,7 @@ class Transaksi extends CI_Controller
                     $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
                 }
                 $data['data_transaksi'] = $dataHistoriTx;
+                $data['user_loged'] = $this->session->userdata('id_user');
             } else {
                 $dataHistoriTx = $this->transaksi->getDataTransaksi()->result_array();
                 $countHistoriTx = count($dataHistoriTx);
@@ -75,6 +76,7 @@ class Transaksi extends CI_Controller
                     $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
                 }
                 $data['data_transaksi'] = $dataHistoriTx;
+                $data['user_loged'] = $this->session->userdata('id_user');
             }
             echo json_encode($data);
         } else {
@@ -990,6 +992,28 @@ class Transaksi extends CI_Controller
         }
     }
 
+    public function hapus_transaksi($id_transaksi)
+    {
+        // code here...
+        // var_dump($id_transaksi);
+        // die;
+        $where = ['id_transaksi' => $id_transaksi];
+        $deleted = $this->transaksi->deleteTransaksi($where);
+        if (!$deleted) {
+            // error
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal hapus transaksi!</div>');
+            redirect('transaksi');
+        } else {
+            $delete_detailTx = $this->transaksi->deleteTransaksiDetail($where);
+            if (!$delete_detailTx) {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal hapus transaksi detail!</div>');
+                redirect('transaksi');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Transaksi berhasi dihapus!</div>');
+                redirect('transaksi');
+            }
+        }
+    }
 
     public function cetak_kwitansi($id_transaksi)
     {

@@ -11,6 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class Laporan extends CI_Controller
 {
+    private $smt_aktif;
     public function __construct()
     {
         parent::__construct();
@@ -18,8 +19,9 @@ class Laporan extends CI_Controller
             $this->session->set_flashdata('message', "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button> <h4><i class='icon fa fa-warning'></i> Alert!</h4> Harus Login Terlebih Dahulu</div>");
             redirect(base_url());
         }
+        // $token = 'semogabahagia';
+        // $this->smt_aktif = getSemesterAktif($token);
         date_default_timezone_set('Asia/Jakarta');
-        // $this->smt_aktif = getSemesterAktif();
         $this->load->config('pdf_config');
         $this->load->library('fpdf');
         $this->load->library('terbilang');
@@ -29,6 +31,7 @@ class Laporan extends CI_Controller
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_tunggakan', 'tunggakan');
+        $this->load->model('M_laporan', 'laporan');
     }
 
 
@@ -52,12 +55,118 @@ class Laporan extends CI_Controller
         $this->load->view('template', $data);
     }
 
-    public function DataPenerimaanKas()
+    public function PenerimaanKasYayasan()
     {
         $data['title'] = 'SiskeuNEW';
-        $data['page'] = 'Penerimaan Kas';
+        $data['page'] = 'Penerimaan Kas Yayasan';
         $data['content'] = 'laporan/penerimaan_kas_yayasan';
         $this->load->view('template', $data);
+    }
+
+    public function PenerimaanKasSTT()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Penerimaan Kas STT';
+        $data['content'] = 'laporan/penerimaan_kas_stt';
+        $this->load->view('template', $data);
+    }
+
+    public function PenerimaanKasKmhs()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Penerimaan Kas Kemahasiswaan';
+        $data['content'] = 'laporan/penerimaan_kas_kmhs';
+        $this->load->view('template', $data);
+    }
+
+    public function getDataPenerimaanKasYayasan()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        if ($this->input->is_ajax_request()) {
+            // $input = $this->input->post('data');
+            $where = [
+                't.semester' => $smtAktif,
+                'mjp.jenis_kas' => 1
+            ];
+            $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            for ($i = 0; $i < $countHistoriTx; $i++) {
+                $where_DTx = [
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+                    'mjp.jenis_kas' => 1
+                ];
+                $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            }
+            $data['kas_yayasan'] = $dataHistoriTx;
+        } else {
+            $data = 'Invalid Request.';
+        }
+        echo json_encode($data);
+    }
+
+    public function getDataPenerimaanKasKmhs()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        if ($this->input->is_ajax_request()) {
+            // $input = $this->input->post('data');
+            $where = [
+                't.semester' => $smtAktif,
+                'mjp.jenis_kas' => 2,
+                'td.id_jenis_pembayaran >=' => 5,
+                'td.id_jenis_pembayaran <=' => 6
+            ];
+            $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            for ($i = 0; $i < $countHistoriTx; $i++) {
+                $where_DTx = [
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+                    'mjp.jenis_kas' => 2,
+                    'td.id_jenis_pembayaran >=' => 5,
+                    'td.id_jenis_pembayaran <=' => 6
+                ];
+                $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            }
+            $data['kas_yayasan'] = $dataHistoriTx;
+        } else {
+            $data = 'Invalid Request.';
+        }
+        echo json_encode($data);
+    }
+
+
+    public function getDataPenerimaanKasSTT()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        if ($this->input->is_ajax_request()) {
+            // $input = $this->input->post('data');
+            $where = [
+                't.semester' => $smtAktif,
+                'mjp.jenis_kas' => 2,
+                'td.id_jenis_pembayaran >=' => 10,
+                'td.id_jenis_pembayaran <=' => 19
+            ];
+            $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            for ($i = 0; $i < $countHistoriTx; $i++) {
+                $where_DTx = [
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+                    'mjp.jenis_kas' => 2,
+                    'td.id_jenis_pembayaran >=' => 10,
+                    'td.id_jenis_pembayaran <=' => 19
+                ];
+                $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            }
+            $data['kas_yayasan'] = $dataHistoriTx;
+        } else {
+            $data = 'Invalid Request.';
+        }
+        echo json_encode($data);
     }
 
     public function DataTunggakan()
