@@ -102,8 +102,8 @@ $autoload['helper'] = array(
     'file',
     'security',
     'cek_akses',
-    'tahun_ajaran',
-    'get_mhs_simak',
+    // 'tahun_ajaran',
+    'get_data_from_simak',
     'date'
 );
 

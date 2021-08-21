@@ -28,6 +28,7 @@ class Laporan extends CI_Controller
         $this->load->model('M_cetak_kwitansi', 'cetak');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_transaksi', 'transaksi');
+        $this->load->model('M_tunggakan', 'tunggakan');
     }
 
 
@@ -56,6 +57,15 @@ class Laporan extends CI_Controller
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Penerimaan Kas';
         $data['content'] = 'laporan/penerimaan_kas_yayasan';
+        $this->load->view('template', $data);
+    }
+
+    public function DataTunggakan()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Data Tunggakan';
+        $data['content'] = 'laporan/data_tunggakan';
+        $data['tunggakan'] = $this->tunggakan->getAllDataTunggakanMhs()->result_array();
         $this->load->view('template', $data);
     }
 }

@@ -37,10 +37,10 @@
         <a href="#" class="widget widget-hover-effect1">
             <div class="widget-simple">
                 <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
-                    <i class="gi gi-usd"></i>
+                    <i class="gi gi-user"></i>
                 </div>
                 <h3 class="widget-content text-right animation-pullDown">
-                    80%<strong> Mhs Aktif</strong><br>
+                    0%<strong> Mhs Aktif</strong><br>
                     <small>Melunasi Cicilan</small>
                 </h3>
             </div>
@@ -52,11 +52,12 @@
         <a href="#" class="widget widget-hover-effect1">
             <div class="widget-simple">
                 <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
-                    <i class="gi gi-user"></i>
+                    <i class="gi gi-usd"></i>
                 </div>
                 <h3 class="widget-content text-right animation-pullDown">
-                    50 <strong>Mahasiswa</strong>
-                    <small>Tunggakan Semester Ini</small>
+                    <?= $jml_tunggakan; ?> <strong>Mahasiswa</strong>
+                    <small>Jumlah Mahasiswa Mempunyai Tunggakan Semester Ini.</small>
+                    <!-- <small>Jumlah Tunggakan Mahasiswa Semester Ini, Rp.<?= number_format($total_tg); ?></small> -->
                 </h3>
             </div>
         </a>
@@ -70,7 +71,7 @@
                     <i class="gi gi-envelope"></i>
                 </div>
                 <h3 class="widget-content text-right animation-pullDown">
-                    5 <strong>Pesan</strong>
+                    0 <strong>Pesan</strong>
                     <small>Pembayaran Online</small>
                 </h3>
             </div>

@@ -190,4 +190,24 @@ class M_masterdata extends CI_Model
             return FALSE;
         }
     }
+
+    public function getRegMhs($data = null)
+    {
+        $this->db->select('ID_Reg, Tahun, Identitas_ID, Jurusan_ID, NIM, tgl_reg, aktif');
+        $this->db->from('reg_mhs');
+        if ($data !== null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
+    public function getRegUjian($data = null)
+    {
+        $this->db->select('id_reg, tahun, nim, tgl_reg, aktif, keterangan');
+        $this->db->from('reg_ujian');
+        if ($data !== null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
 }

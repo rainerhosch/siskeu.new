@@ -21,12 +21,20 @@ class Dashboard extends CI_Controller
         }
         $this->load->model('M_menu', 'menu');
         $this->load->model('M_user', 'user');
+        $this->load->model('M_tunggakan', 'tunggakan');
     }
     public function index()
     {
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Dashboard';
         $data['content'] = 'v_dashboard';
+        $data['jml_tunggakan'] = $this->tunggakan->getTunggakanMhs()->num_rows();
+        $response = $this->tunggakan->getTunggakanMhs()->result_array();
+        foreach ($response as $tg) {
+            $total_tg[] = $tg['jml_tunggakan'];
+        }
+        $data['total_tg'] = array_sum($total_tg);
+
         $this->load->view('template', $data);
         // $this->load->view('app');
     }

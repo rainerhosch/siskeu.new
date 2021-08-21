@@ -11,11 +11,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_tunggakan extends CI_Model
 {
     // ambil data tunggakan
-    public function getTunggakanMhs($data)
+    public function getTunggakanMhs($data = null)
     {
         $this->db->select('id_tunggakan, nim, jenis_tunggakan, jml_tunggakan, idtahun');
         $this->db->from('tunggakan');
-        $this->db->where($data);
+        if ($data !== null) {
+            $this->db->where($data);
+        }
         return $this->db->get();
     }
 
@@ -46,5 +48,17 @@ class M_tunggakan extends CI_Model
         } else {
             return FALSE;
         }
+    }
+
+    public function getAllDataTunggakanMhs($data = null)
+    {
+        $this->db->select('m.id_pd, m.nipd, m.nm_pd, m.id_jur, m.nm_jur, mjp.nm_jenis_pembayaran, t.jml_tunggakan');
+        $this->db->from('tunggakan t');
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=t.jenis_tunggakan');
+        if ($data !== null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
     }
 }

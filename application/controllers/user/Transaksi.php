@@ -821,18 +821,6 @@ class Transaksi extends CI_Controller
                 $response = $id_transaksi;
             }
             echo json_encode($response);
-            // if (!$insertTx) {
-            //     // gagal
-            //     $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Transaksi dengan id #' . $id_transaksi . ', Gagal di insert!</div>');
-            //     redirect('transaksi', 'refresh');
-            // } else {
-            //     $inputDetailTx = count($dataTxDetail);
-            //     for ($i = 0; $i < $inputDetailTx; $i++) {
-            //         $this->transaksi->addNewDetailTransaksi($dataTxDetail[$i]);
-            //     }
-            //     $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Transaksi dengan id #' . $id_transaksi . ', berhasil!</div>');
-            //     redirect('transaksi', 'refresh');
-            // }
         } else {
             echo "Invalid request!";
         }
@@ -997,25 +985,6 @@ class Transaksi extends CI_Controller
                 $response = $id_transaksi;
             }
             echo json_encode($response);
-
-
-            // if (!$insertTx) {
-            //     // gagal
-            //     $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Transaksi dengan id #' . $id_transaksi . ', Gagal di insert!</div>');
-            //     redirect('transaksi', 'refresh');
-            // } else {
-            //     // insert detail TX
-            //     foreach ($pembayaran as $i => $v) {
-            //         $dataDetailTX = [
-            //             'id_transaksi' => $id_transaksi,
-            //             'id_jenis_pembayaran' => $v,
-            //             'jml_bayar' => $dataBiayaPembayaran[$v]
-            //         ];
-            //         $this->transaksi->addNewDetailTransaksi($dataDetailTX);
-            //     }
-            //     $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Transaksi dengan id #' . $id_transaksi . ', berhasil!</div>');
-            //     redirect('transaksi', 'refresh');
-            // }
         } else {
             echo "Invalid request!";
         }

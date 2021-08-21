@@ -99,18 +99,18 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="col-sm-5">
-                            <h3 class="widget-content text-center animation-pullDown">
-                                Database<strong> Local</strong><br>
-                                <small>Data Mahasiswa</small>
+                            <h3 class="widget-content text-center animation-pullDown reg_mhs_local_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
                             </h3>
                         </div>
                         <div class="col-sm-2">
                             <h2><i class="fa fa-arrow-circle-right"></i></h2>
                         </div>
                         <div class="col-sm-5">
-                            <h3 class="widget-content text-center animation-pullDown">
-                                Database<strong> Simak</strong><br>
-                                <small>Data Mahasiswa</small>
+                            <h3 class="widget-content text-center animation-pullDown reg_mhs_simak_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
                             </h3>
                         </div>
                     </div>
@@ -138,18 +138,18 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="col-sm-5">
-                            <h3 class="widget-content text-center animation-pullDown">
-                                Database<strong> Local</strong><br>
-                                <small>Data Mahasiswa</small>
+                            <h3 class="widget-content text-center animation-pullDown reg_ujian_local_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
                             </h3>
                         </div>
                         <div class="col-sm-2">
                             <h2><i class="fa fa-arrow-circle-right"></i></h2>
                         </div>
                         <div class="col-sm-5">
-                            <h3 class="widget-content text-center animation-pullDown">
-                                Database<strong> Simak</strong><br>
-                                <small>Data Mahasiswa</small>
+                            <h3 class="widget-content text-center animation-pullDown reg_ujian_simak_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
                             </h3>
                         </div>
                     </div>
@@ -172,11 +172,15 @@
             url: 'sync-simak/getCountData',
             dataType: "json",
             success: function(response) {
-                // console.log(response);
+                console.log(response);
                 $('.mhs_local_label span').text(response.count_mhs_local);
                 $('.mhs_simak_label span').text(response.count_mhs_simak);
                 $('.sm_active_local_label span').text(response.semester_aktif_local);
                 $('.sm_active_simak_label span').text(response.semester_aktif_simak);
+                $('.reg_mhs_local_label span').text(response.reg_mhs_local);
+                $('.reg_mhs_simak_label span').text(response.reg_mhs_simak);
+                $('.reg_ujian_local_label span').text(response.reg_ujian_local);
+                $('.reg_ujian_simak_label span').text(response.reg_ujian_simak);
                 // console.log($('.mhs_simak_label span').text());
                 if ($('.mhs_local_label span').text() != $('.mhs_simak_label span').text()) {
                     if ($('.mhs_local_label span').text() < $('.mhs_simak_label span').text()) {
@@ -237,6 +241,63 @@
                                 }, 5000);
                                 $('.sm_active_local_label span').text(data.semester_aktif_local_update);
                                 $('.btn#btn_sync_smt_aktif').prop('disabled', true);
+                            }
+                        }
+                    });
+                });
+
+                if ($('.reg_mhs_local_label span').text() != $('.reg_mhs_simak_label span').text()) {
+                    if ($('.reg_mhs_local_label span').text() < $('.reg_mhs_simak_label span').text()) {
+                        $('.btn#btn_sync_reg_mhs').attr('disabled', false);
+                    }
+                } else {
+                    $('.btn#btn_sync_reg_mhs').attr('disabled', true);
+                }
+                $('.btn#btn_sync_reg_mhs').click(function() {
+                    $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync fa-spin');
+                    $.ajax({
+                        type: 'POST', //Method type
+                        url: 'sync-simak/SyncRegMhs',
+                        dataType: 'json',
+                        success: function(response) {
+                            // console.log(response);
+                            if (response.status == 200) {
+                                $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync');
+                                $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                                setTimeout(function() {
+                                    $('#success_message').html('');
+                                }, 5000);
+                                $('.reg_mhs_local_label span').text(response.data);
+                                $('.btn#btn_sync_reg_mhs').prop('disabled', true);
+                            }
+                        }
+                    });
+                });
+
+                // ====================== Reg Ujian ===========================
+                if ($('.reg_ujian_local_label span').text() != $('.reg_ujian_simak_label span').text()) {
+                    if ($('.reg_ujian_local_label span').text() < $('.reg_ujian_simak_label span').text()) {
+                        $('.btn#btn_sync_reg_ujian').attr('disabled', false);
+                    }
+                } else {
+                    $('.btn#btn_sync_reg_ujian').attr('disabled', true);
+                }
+                $('.btn#btn_sync_reg_ujian').click(function() {
+                    $('#icon_sync_reg_ujian').attr('class', 'fa fa-sync fa-spin');
+                    $.ajax({
+                        type: 'POST', //Method type
+                        url: 'sync-simak/SyncRegUjian',
+                        dataType: 'json',
+                        success: function(response) {
+                            // console.log(response);
+                            if (response.status == 200) {
+                                $('#icon_sync_reg_ujian').attr('class', 'fa fa-sync');
+                                $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                                setTimeout(function() {
+                                    $('#success_message').html('');
+                                }, 5000);
+                                $('.reg_ujian_local_label span').text(response.data);
+                                $('.btn#btn_sync_reg_ujian').prop('disabled', true);
                             }
                         }
                     });
