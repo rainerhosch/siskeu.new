@@ -40,7 +40,7 @@
                             </table>
                             <hr class="my-5">
                             <div class="col-sm-9 text-left">
-                                <button type="button" id="add_rows" class="btn btn-success text-left div_btn_row"><i class="gi gi-plus"></i></button>
+                                <button type="button" id="add_rows" class="btn btn-success text-left div_btn_row" disabled><i class="gi gi-plus"></i></button>
                                 <button type="button" id="delete_rows" class="btn btn-danger div_btn_row" disabled><i class="hi hi-minus"></i></button>
                             </div>
                             <div class="col-sm-3 text-right" style="margin-bottom: 5px;">

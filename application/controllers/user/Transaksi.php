@@ -70,6 +70,8 @@ class Transaksi extends CI_Controller
                 $data['user_loged'] = $this->session->userdata('id_user');
             } else {
                 $dataHistoriTx = $this->transaksi->getDataTransaksi()->result_array();
+                // var_dump($this->db->last_query());
+                // die;
                 $countHistoriTx = count($dataHistoriTx);
                 for ($i = 0; $i < $countHistoriTx; $i++) {
                     $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
@@ -194,6 +196,9 @@ class Transaksi extends CI_Controller
                 }
                 $cekBayarSppdanKmhs = $this->transaksi->cekBayarSppdanKmhs($dataCekNim)->row_array();
                 $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjang)->row_array();
+                $dataPotonganBiaya = $this->masterdata->getPotonganBiayaSpp()->row_array();
+                // var_dump($dataPotonganBiaya);
+                // die;
                 $biayaCS = $dataBiaya['cicilan_semester'] / 3;
                 if ($cekBayarSppdanKmhs != null) {
                     // ada histori transaksi
@@ -228,7 +233,7 @@ class Transaksi extends CI_Controller
                         $C3 = [
                             'post_id' => 'bayar_C3',
                             'label' => 'Cicilan Ke-3',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C3']
                         ];
                     } else if ($maxDetailTx['id_jenis_pembayaran'] == 2) {
                         $C1 = [
@@ -239,29 +244,29 @@ class Transaksi extends CI_Controller
                         $C2 = [
                             'post_id' => 'bayar_C2',
                             'label' => 'Cicilan Ke-2',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C2']
                         ];
                         $C3 = [
                             'post_id' => 'bayar_C3',
                             'label' => 'Cicilan Ke-3',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C3']
                         ];
                     } else if ($maxDetailTx['id_jenis_pembayaran'] == 5) {
 
                         $C1 = [
                             'post_id' => 'bayar_C1',
                             'label' => 'Cicilan Ke-1',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C1']
                         ];
                         $C2 = [
                             'post_id' => 'bayar_C2',
                             'label' => 'Cicilan Ke-2',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C2']
                         ];
                         $C3 = [
                             'post_id' => 'bayar_C3',
                             'label' => 'Cicilan Ke-3',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C3']
                         ];
                     } else {
                         $kmhs = [
@@ -274,17 +279,17 @@ class Transaksi extends CI_Controller
                         $C1 = [
                             'post_id' => 'bayar_C1',
                             'label' => 'Cicilan Ke-1',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C1']
                         ];
                         $C2 = [
                             'post_id' => 'bayar_C2',
                             'label' => 'Cicilan Ke-2',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C2']
                         ];
                         $C3 = [
                             'post_id' => 'bayar_C3',
                             'label' => 'Cicilan Ke-3',
-                            'biaya' => $biayaCS
+                            'biaya' => $biayaCS - $dataPotonganBiaya['potongan_C3']
                         ];
                     }
 
@@ -393,6 +398,12 @@ class Transaksi extends CI_Controller
             $bayarC1 = $this->input->post('bayar_C1');
             $bayarC2 = $this->input->post('bayar_C2');
             $bayarC3 = $this->input->post('bayar_C3');
+
+            $potonganC1;
+            $potonganC2;
+            $potonganC3;
+            $potonganTG = 0;
+            $potonganTG_KMHS = 0;
             $totalBayar = $bayarTG + $bayarTG_KMHS + $bayarC1 + $bayarC2 + $bayarC3 + $bayarKMHS;
             // $All = $this->input->post();
             // var_dump($All);
@@ -477,7 +488,8 @@ class Transaksi extends CI_Controller
                 $dataTxDetail[] = [
                     'id_transaksi' => $id_transaksi,
                     'id_jenis_pembayaran' => 6,
-                    'jml_bayar' => $bayarTG
+                    'jml_bayar' => $bayarTG,
+                    'potongan' => $potonganTG
                 ];
             }
 
@@ -508,7 +520,8 @@ class Transaksi extends CI_Controller
                 $dataTxDetail[] = [
                     'id_transaksi' => $id_transaksi,
                     'id_jenis_pembayaran' => 7,
-                    'jml_bayar' => $bayarTG_KMHS
+                    'jml_bayar' => $bayarTG_KMHS,
+                    'potongan' => $potonganTG_KMHS
                 ];
             }
             // insert reg_mhs dan reg_ujian
@@ -518,7 +531,8 @@ class Transaksi extends CI_Controller
                 'Jurusan_ID' => '',
                 'NIM' => $nimMhs,
                 'tgl_reg' => $tgl,
-                'aktif' => 1
+                'aktif' => 2,
+                'keterangan' => 'from siskeu_new'
             ];
             $dataAktifUTS = [
                 'tahun' => $smtAktif,
@@ -532,31 +546,31 @@ class Transaksi extends CI_Controller
                 'nim' => $nimMhs,
                 'tgl_reg' => $tgl,
                 'aktif' => 2,
-                'keterangan' => ''
+                'keterangan' => 'from siskeu_new'
             ];
 
             // ===============================  Fungsi aktifasi perwalian dan ujian ==============
-            // if ($sisa_BayarC1 < 500000 && $sisa_BayarC2 < 500000 && $sisa_BayarC3 < 500000) {
-            //     // Aktifasi Perwalian, UTS, UAS
-            //     $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
-            //     $this->aktivasi->aktivasi_ujian($dataAktifUTS);
-            //     $this->aktivasi->aktivasi_ujian($dataAktifUAS);
-            // } else if ($sisa_BayarC1 < 500000 && $sisa_BayarC2 < 500000) {
-            //     // Aktifasi Perwalian, UTS
-            //     $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
-            //     $this->aktivasi->aktivasi_ujian($dataAktifUTS);
-            // } else if ($sisa_BayarC1 < 500000) {
-            //     // Aktifasi Perwalian
-            //     $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
-            // } else {
-            //     if ($sisa_BayarC2 < 500000) {
-            //         // Aktifasi UTS
-            //         $this->aktivasi->aktivasi_ujian($dataAktifUTS);
-            //     } else if ($sisa_BayarC3 < 500000) {
-            //         // Aktifasi UAS
-            //         $this->aktivasi->aktivasi_ujian($dataAktifUAS);
-            //     }
-            // }
+            if ($sisa_BayarC1 < 500000 && $sisa_BayarC2 < 500000 && $sisa_BayarC3 < 500000) {
+                // Aktifasi Perwalian, UTS, UAS
+                $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+                $this->aktivasi->aktivasi_ujian($dataAktifUTS);
+                $this->aktivasi->aktivasi_ujian($dataAktifUAS);
+            } else if ($sisa_BayarC1 < 500000 && $sisa_BayarC2 < 500000) {
+                // Aktifasi Perwalian, UTS
+                $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+                $this->aktivasi->aktivasi_ujian($dataAktifUTS);
+            } else if ($sisa_BayarC1 < 500000) {
+                // Aktifasi Perwalian
+                $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+            } else {
+                if ($sisa_BayarC2 < 500000) {
+                    // Aktifasi UTS
+                    $this->aktivasi->aktivasi_ujian($dataAktifUTS);
+                } else if ($sisa_BayarC3 < 500000) {
+                    // Aktifasi UAS
+                    $this->aktivasi->aktivasi_ujian($dataAktifUAS);
+                }
+            }
 
 
             if ($cekBayarSppdanKmhs['id_transaksi'] != null) {
@@ -586,7 +600,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 2,
-                        'jml_bayar' => $bayarC1
+                        'jml_bayar' => $bayarC1,
+                        'potongan' => $potonganC1
                     ];
                 }
 
@@ -619,7 +634,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 3,
-                        'jml_bayar' => $bayarC2
+                        'jml_bayar' => $bayarC2,
+                        'potongan' => $potonganC2
                     ];
                 }
 
@@ -651,7 +667,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 4,
-                        'jml_bayar' => $bayarC3
+                        'jml_bayar' => $bayarC3,
+                        'potongan' => $potonganC3
                     ];
                 }
             } else {
@@ -681,7 +698,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 5,
-                        'jml_bayar' => $bayarKMHS
+                        'jml_bayar' => $bayarKMHS,
+                        'potongan' => $potonganKMHS
                     ];
                 } else {
                     if ($dataTG_KMHS != null) {
@@ -727,7 +745,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 2,
-                        'jml_bayar' => $bayarC1
+                        'jml_bayar' => $bayarC1,
+                        'potongan' => $potonganC1
                     ];
                 }
 
@@ -759,7 +778,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 3,
-                        'jml_bayar' => $bayarC2
+                        'jml_bayar' => $bayarC2,
+                        'potongan' => $potonganC2
                     ];
                 }
 
@@ -793,7 +813,8 @@ class Transaksi extends CI_Controller
                     $dataTxDetail[] = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => 4,
-                        'jml_bayar' => $bayarC3
+                        'jml_bayar' => $bayarC3,
+                        'potongan' => $potonganC3
                     ];
                 }
             }
@@ -980,7 +1001,8 @@ class Transaksi extends CI_Controller
                     $dataDetailTX = [
                         'id_transaksi' => $id_transaksi,
                         'id_jenis_pembayaran' => $v,
-                        'jml_bayar' => $dataBiayaPembayaran[$v]
+                        'jml_bayar' => $dataBiayaPembayaran[$v],
+                        'potongan' => $potongan
                     ];
                     $this->transaksi->addNewDetailTransaksi($dataDetailTX);
                 }

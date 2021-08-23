@@ -1,10 +1,10 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 // get data mahasiswa from simak
-function getDataMahasiswa($token, $data = null)
+function getDataMahasiswa($token, $param = null)
 {
-    if ($data !== null) {
-        $url = "https://api.wastu.digital/resources/MahasiswaForSiskeu?token=" . $token . '&' . $data;
+    if ($param != null) {
+        $url = "https://api.wastu.digital/resources/MahasiswaForSiskeu?token=" . $token . '&' . $param;
     } else {
         $url = "https://api.wastu.digital/resources/MahasiswaForSiskeu?token=" . $token;
     }
@@ -19,10 +19,10 @@ function getDataMahasiswa($token, $data = null)
     return $data;
 }
 
-function getSemesterAktif($token, $data = null)
+function getSemesterAktif($token, $param = null)
 {
-    if ($data !== null) {
-        $url = "https://api.wastu.digital/resources/TahunAkademikAktif?token=" . $token . '&' . $data;
+    if ($param != null) {
+        $url = "https://api.wastu.digital/resources/TahunAkademikAktif?token=" . $token . '&' . $param;
     } else {
         $url = "https://api.wastu.digital/resources/TahunAkademikAktif?token=" . $token;
     }
@@ -39,10 +39,10 @@ function getSemesterAktif($token, $data = null)
     }
 }
 
-function getRegMhs($token, $data = null)
+function getRegMhs($token, $param = null)
 {
-    if ($data !== null) {
-        $url = "https://api.wastu.digital/resources/RegMhs?token=" . $token . '&' . $data;
+    if ($param != null) {
+        $url = "https://api.wastu.digital/resources/RegMhs?token=" . $token . '&' . $param;
     } else {
         $url = "https://api.wastu.digital/resources/RegMhs?token=" . $token;
     }
@@ -57,10 +57,10 @@ function getRegMhs($token, $data = null)
     return $data;
 }
 
-function getRegUjian($token, $data = null)
+function getRegUjian($token, $param = null)
 {
-    if ($data !== null) {
-        $url = "https://api.wastu.digital/resources/RegUjian?token=" . $token . '&' . $data;
+    if ($param != null) {
+        $url = "https://api.wastu.digital/resources/RegUjian?token=" . $token . '&' . $param;
     } else {
         $url = "https://api.wastu.digital/resources/RegUjian?token=" . $token;
     }

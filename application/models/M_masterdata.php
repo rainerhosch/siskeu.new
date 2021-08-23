@@ -56,10 +56,13 @@ class M_masterdata extends CI_Model
     }
 
     // get data max kalender akademik
-    public function getMaxKalenderAkademik()
+    public function getMaxKalenderAkademik($data = null)
     {
         $this->db->select_max('id_smt');
         $this->db->from('kalender_akademik');
+        if ($data != null) {
+            $this->db->where($data);
+        }
         return $this->db->get();
     }
     // insert data from simak
@@ -85,7 +88,7 @@ class M_masterdata extends CI_Model
         if ($jenjang === 'S1') {
             $this->db->select('angkatan, PK as uang_bangunan, kmhs as kemahasiswaan, CS as cicilan_semester');
         } else {
-            $this->db->select('angkatan, PK as uang_bangunan, kmhs_D3 as kemahasiswaan, CS_D3 as cicilan_semester');
+            $this->db->select('angkatan, PK as uang_bangunan, kmhs as kemahasiswaan, CS_D3 as cicilan_semester');
         }
         $this->db->from('biaya_angkatan');
         $this->db->where($data);
@@ -104,6 +107,16 @@ class M_masterdata extends CI_Model
             $res = $this->db->get()->result_array();
         }
         return $res;
+    }
+
+    public function getPotonganBiayaSpp($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('biaya_angkatan_potongan');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
     }
 
     // get Master Jenis Transaksi
@@ -126,7 +139,7 @@ class M_masterdata extends CI_Model
 
     public function getBiayaPembayaranLain($data = null)
     {
-        $this->db->select('mjp.id_jenis_pembayaran as id_jp, mjp.nm_jenis_pembayaran as nm_jp, bt.biaya');
+        $this->db->select('mjp.id_jenis_pembayaran as id_jp, mjp.nm_jenis_pembayaran as nm_jp, bt.biaya, bt.potongan_biaya');
         $this->db->from('master_jenis_pembayaran mjp');
         $this->db->join('biaya_tambahan bt', 'bt.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
         if ($data != null) {
@@ -150,6 +163,17 @@ class M_masterdata extends CI_Model
     {
         $this->db->where('id_biaya', $id);
         $this->db->update('biaya_angkatan', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function updatePotonganBiayaCS($id, $data)
+    {
+        $this->db->where('id_potongan', $id);
+        $this->db->update('biaya_angkatan_potongan', $data);
         if ($this->db->affected_rows() > 0) {
             return TRUE;
         } else {

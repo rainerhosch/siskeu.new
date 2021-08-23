@@ -26,21 +26,14 @@ $("#nipd").on("keypress", function (e) {
           html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
 
           $.each(response.dataKewajiban, function (i, value) {
-            html += `<tr><td><label data-error="wrong" data-success="right" for="${
-              value.label
-            }">${
-              value.label
-            }</label></td><td class="text-center"><input type="text" id="${
-              value.post_id
-            }" name="${
-              value.post_id
-            }" class="form-control validate text-right input_${i}" value="${
-              value.biaya
-            }" disabled></td>
-                                        <td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${
+            html += `<tr>`;
+            html += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
+            html += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
+            // html += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
+            html += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${
               value.biaya == 0 ? "disabled" : ""
-            }></td>
-                                    </tr>`;
+            }></td>`;
+            html += `</tr>`;
           });
           $("#data_kwajiban_tbody").html(html);
           $.each(response.dataKewajiban, function (i, value) {

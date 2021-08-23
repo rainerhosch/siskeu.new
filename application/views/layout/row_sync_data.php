@@ -110,7 +110,7 @@
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown reg_mhs_simak_label">
                                 <strong><span></span></strong> Data<br>
-                                <small>Data Lokal</small>
+                                <small>Data Simak</small>
                             </h3>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown reg_ujian_simak_label">
                                 <strong><span></span></strong> Data<br>
-                                <small>Data Lokal</small>
+                                <small>Data Simak</small>
                             </h3>
                         </div>
                     </div>
@@ -260,7 +260,7 @@
                         url: 'sync-simak/SyncRegMhs',
                         dataType: 'json',
                         success: function(response) {
-                            // console.log(response);
+                            console.log(response);
                             if (response.status == 200) {
                                 $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync');
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");

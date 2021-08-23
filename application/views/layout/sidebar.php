@@ -73,10 +73,10 @@
                                         //if ($suburl == $sm['url']) : 
                                         ?>
                                         <!-- <li class="active"> -->
-                                        <? php // else : 
+                                        <?php // else : 
                                         ?>
                                         <li>
-                                            <? php // endif; 
+                                            <?php // endif; 
                                             ?>
                                             <a href="<?= base_url('') . $sm['url']; ?>">
                                                 <i class="<?= $sm['icon'] ?>"></i></i>&nbsp;&nbsp;&nbsp;<?= $sm['nama_submenu']; ?></a>

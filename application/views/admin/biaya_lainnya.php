@@ -24,6 +24,7 @@
                     <th class="text-center">No</th>
                     <th class="text-center">Nama Pembayaran</th>
                     <th class="text-center">Biaya</th>
+                    <th class="text-center">Potongan</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -104,6 +105,14 @@
                                 <input type="text" id="edit_biaya" name="edit_biaya" class="form-control validate">
                             </div>
                         </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-5">
+                                <label data-error="wrong" data-success="right" for="edit_potongan_biaya">Potongan</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" id="edit_potongan_biaya" name="edit_potongan_biaya" class="form-control validate">
+                            </div>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -152,6 +161,7 @@
                         html += `<td class="text-center">${i}</td>`;
                         html += `<td class="text-center"><strong>${value.nm_jp}</strong></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.biaya).toLocaleString()}</i></td>`;
+                        html += `<td class="text-center"><i>Rp.${parseInt(value.potongan_biaya).toLocaleString()}</i></td>`;
                         html += `<td class="text-center">` +
                             `<a href="#" class="badge badge-warning edit-biaya" id="btn_edit_biaya" value="${value.id_jp}"><i class="far fa-edit"></i></a> | ` +
                             `<a href="#" onclick="document.getElementById('hapusDataLainnya').style.display='block'" class="badge badge-danger btn-hapus" id="btn_hapus_biaya" value="${value.id_jp}"><i class="fas fa-trash-alt"></i></a>` +
@@ -195,6 +205,7 @@
                             $("#edit_id_jp").val(response.id_jp);
                             $("#edit_nm_jp").val(response.nm_jp);
                             $("#edit_biaya").val(response.biaya);
+                            $("#edit_potongan_biaya").val(response.potongan_biaya);
                         }
                     });
                 }

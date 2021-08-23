@@ -48,6 +48,19 @@ class MasterData extends CI_Controller
         echo json_encode($data);
     }
 
+    public function GetPotonganBiayaSPP()
+    {
+        if ($this->input->is_ajax_request()) {
+            $where = [
+                'id_potongan' => $this->input->post('id_potongan')
+            ];
+            $data = $this->masterdata->getPotonganBiayaSpp($where)->row_array();
+        } else {
+            $data = "Invalid Request";
+        }
+        echo json_encode($data);
+    }
+
     public function GetAllBiayaLainnya()
     {
         if ($this->input->is_ajax_request()) {
@@ -72,16 +85,16 @@ class MasterData extends CI_Controller
         $CS             = $this->input->post('biaya_CS');
         $CS_D3          = $this->input->post('biaya_CS_D3');
         $kmhs           = $this->input->post('biaya_kmhs');
-        $kmhs_D3        = $this->input->post('biaya_kmhs_D3');
+        // $kmhs_D3        = $this->input->post('biaya_kmhs_D3');
 
         $table = 'biaya_angkatan';
         $dataInsert   = [
             'angkatan'  => $tahun_angkatan,
             'PK'        => $PK,
             'kmhs'      => $kmhs,
-            'kmhs_D3'   => $kmhs_D3,
             'CS'        => $CS,
-            'CS_D3'     => $CS_D3
+            'CS_D3'     => $CS_D3,
+            // 'potongan_CS' => 0
         ];
         $insert = $this->masterdata->insertData($table, $dataInsert);
         if (!$insert) {
@@ -130,14 +143,14 @@ class MasterData extends CI_Controller
         $CS             = $this->input->post('edit_biaya_CS');
         $CS_D3          = $this->input->post('edit_biaya_CS_D3');
         $kmhs           = $this->input->post('edit_biaya_kmhs');
-        $kmhs_D3        = $this->input->post('edit_biaya_kmhs_D3');
+        // $potongan_CS    = $this->input->post('edit_biaya_potongan_cs');
         $dataUpdate   = [
-            'angkatan'  => $tahun_angkatan,
-            'PK'        => $PK,
-            'kmhs'      => $kmhs,
-            'kmhs_D3'   => $kmhs_D3,
-            'CS'        => $CS,
-            'CS_D3'     => $CS_D3
+            'angkatan'      => $tahun_angkatan,
+            'PK'            => $PK,
+            'kmhs'          => $kmhs,
+            'CS'            => $CS,
+            'CS_D3'         => $CS_D3
+            // 'potongan_CS'   => $potongan_CS
         ];
         $update = $this->masterdata->updateBiayaSpp($id, $dataUpdate);
         if (!$update) {
@@ -150,6 +163,25 @@ class MasterData extends CI_Controller
         }
     }
 
+    public function UpdatePotonganBiayaCS()
+    {
+        $id = 1;
+        $dataUpdate   = [
+            'potongan_C1'   => $this->input->post('edit_pot_c1'),
+            'potongan_C2'   => $this->input->post('edit_pot_c2'),
+            'potongan_C3'   => $this->input->post('edit_pot_c3')
+        ];
+        $update = $this->masterdata->updatePotonganBiayaCS($id, $dataUpdate);
+        if (!$update) {
+            // error
+            $this->session->set_flashdata('error', 'Gagal edit data!');
+            redirect('masterdata/BiayaSpp');
+        } else {
+            $this->session->set_flashdata('success', 'Sukses edit data!');
+            redirect('masterdata/BiayaSpp');
+        }
+    }
+
     public function UpdateBiayaLainnya()
     {
         // var_dump($this->input->post());
@@ -157,7 +189,11 @@ class MasterData extends CI_Controller
         $id             = $this->input->post('edit_id_jp');
         $nm_jp          = $this->input->post('edit_nm_jp');
         $biaya          = $this->input->post('edit_biaya');
-        $dataUpdateBiaya = ['biaya' => $biaya];
+        $potongan       = $this->input->post('edit_potongan_biaya');
+        $dataUpdateBiaya = [
+            'biaya' => $biaya,
+            'potongan_biaya' => $potongan
+        ];
         $dataUpdateNamaJP = ['nm_jenis_pembayaran' => $nm_jp];
 
         // var_dump($id);
