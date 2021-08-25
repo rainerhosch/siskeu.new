@@ -129,7 +129,7 @@ $("#add_rows").click(function () {
       serverside: true,
       dataType: "json",
       success: function (response) {
-        console.log(size);
+        // console.log(response);
         $.each(response.jenis_pembayaran, function (i, item) {
           tdr += `<option value="${item.id_jp}">${item.nm_jp}</option>`;
         });
@@ -140,6 +140,7 @@ $("#add_rows").click(function () {
 
     $(".select2Cus").on("change", function () {
       let id_jns_bayar = this.value;
+      let nim_mhs = $("#nim_mhs_bayar_hidden").val();
       let jnj_didik = $("#jenjang_mhs_bayar_hidden").val();
       let thn_masuk = $("#angkatan_mhs_bayar_hidden").val();
       let rowid = $(this).attr("data-rowid");
@@ -148,6 +149,7 @@ $("#add_rows").click(function () {
         type: "POST",
         url: "transaksi/get_biaya_pembayaran_lain",
         data: {
+          nim_mhs: nim_mhs,
           id_jns_bayar: id_jns_bayar,
           jnj_didik: jnj_didik,
           thn_masuk: thn_masuk,
@@ -155,8 +157,9 @@ $("#add_rows").click(function () {
         serverside: true,
         dataType: "json",
         success: function (response) {
+          console.log(response);
           const jp = response.id_jp;
-          const kewajiban = response.biaya - response.potongan_biaya;
+          const kewajiban = response.biaya;
           // console.log(kewajiban);
           $("#pembayaran_" + rowid).attr("value", kewajiban);
           $("#pembayaran_" + rowid).attr("name", `biayaJenisPembayaran[${jp}]`);

@@ -11,6 +11,18 @@ $("#nipd").on("keypress", function (e) {
       success: function (response) {
         console.log(response);
         if (response != null) {
+          // if (response.riwayat_potongan_trx > 0) {
+          //   $(".alert#alert_potongan").attr("hidden", false);
+          //   $(".alert#alert_potongan")
+          //     .addClass("alert-warning")
+          //     .removeClass("alert-success");
+          //   let paragraph = document.getElementById("text_info_potongan");
+          //   paragraph.textContent = `Mahasiswa ini sudah mendapatkan potongan pembayaran Rp.${response.riwayat_potongan_trx}, pada semester ini.`;
+          // } else {
+          //   $(".alert#alert_potongan").attr("hidden", false);
+          //   let paragraph = document.getElementById("text_info_potongan");
+          //   paragraph.textContent = `Mahasiswa ini belum mendapatkan potongan pembayaran, pada semester ini.`;
+          // }
           if ((response.totalKewajiban = 0)) {
             $(".btn#btn_proses").prop("disabled", true);
           }
@@ -29,7 +41,6 @@ $("#nipd").on("keypress", function (e) {
             html += `<tr>`;
             html += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
             html += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
-            // html += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
             html += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${
               value.biaya == 0 ? "disabled" : ""
             }></td>`;
@@ -38,12 +49,16 @@ $("#nipd").on("keypress", function (e) {
           $("#data_kwajiban_tbody").html(html);
           $.each(response.dataKewajiban, function (i, value) {
             $("#checkcox_" + i).change(function () {
+              var numberOfChecked = $("input:checkbox:checked").length;
+              if (numberOfChecked <= 0) {
+                $("#btn_proses").prop("disabled", true);
+              } else {
+                $("#btn_proses").prop("disabled", false);
+              }
               if (this.checked === true) {
                 $("#" + value.post_id).prop("disabled", false);
-                $("#btn_proses").prop("disabled", false);
               } else {
                 $("#" + value.post_id).prop("disabled", true);
-                $("#btn_proses").prop("disabled", true);
               }
             });
           });

@@ -161,7 +161,7 @@
                                         <th class="text-center">NIM</th>
                                         <th class="text-center">Keterangan Bayar</th>
                                         <th class="text-center">Jumlah Storan</th>
-                                        <!-- <th class="text-center">Sisa Tagihan</th> -->
+                                        <!-- <th class="text-center">Sisa Bayar</th> -->
                                         <th class="text-center">Semester</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Admin</th>
@@ -216,6 +216,11 @@
                             });
                             htmlx += `</td>`;
                             htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+                            // htmlx += `<td class = "text-center" >`;
+                            // $.each(value.detail_transaksi, function(k, val) {
+                            //     htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.sisa_bayar).toLocaleString()}</i><br>`;
+                            // });
+                            // htmlx += `</td>`;
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
                             htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
                             htmlx += `<td class = "text-center" >${value.nama_user}</td>`;

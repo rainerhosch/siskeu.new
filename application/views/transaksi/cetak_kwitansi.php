@@ -143,39 +143,84 @@ $pdf->Cell(70, 4, ': ' .  $data_transaksi['nm_jur'], 0, 1, 'L');
 // rincian pembayaran
 $pdf->Ln(2);
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(100, 5, 'Keterangan Pembayaran', 1, 0, 'C');
-$pdf->Cell(30, 5, 'Jml Bayar', 1, 1, 'C');
+$pdf->Cell(65, 5, 'Keterangan Pembayaran', 1, 0, 'C');
+$pdf->Cell(26, 5, 'Kewajiban', 1, 0, 'C');
+$pdf->Cell(22, 5, 'Jml Bayar', 1, 0, 'C');
+$pdf->Cell(22, 5, 'Sisa Bayar', 1, 1, 'C');
+
+$total_kewajiban = 0;
+$total_bayar_trx = 0;
+
 if ($data_transaksi['data_kewajiban_cs'] != null || $data_transaksi['data_kewajiban_kmhs'] !== null) {
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->Cell(100, 5, 'Cicilan Semester : (2020/2021 ' . $cetak_ganjil_genal . ')', 1, 0, 'L');
-    $pdf->SetFont('Arial', 'i', 11);
-    // $pdf->Cell(30, 5, number_format($data_transaksi['total_bayar'], 0, '', '.'), 1, 1, 'R');
-    $pdf->Cell(30, 5, '', 1, 1, 'R');
+    foreach ($detailTX as $j => $dtx) {
+        if ($dtx['id_jenis_pembayaran'] == 5 || $dtx['id_jenis_pembayaran'] == 7) {
+            $pdf->SetFont('Arial', 'I', 10);
+            $pdf->Cell(65, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+            $pdf->SetFont('Arial', 'i', 10);
+            $pdf->Cell(26, 5, number_format($dtx['kewajiban_Bayar'], 0, '', '.'), 1, 0, 'R');
+            $pdf->Cell(22, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+            $pdf->Cell(22, 5, number_format($dtx['kewajiban_Bayar'] - $dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+            $total_bayar_trx = $total_bayar_trx + $dtx['jml_bayar'];
+            $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
+        }
+    }
+    $pdf->SetFont('Arial', 'B', 10);
+    $pdf->Cell(65, 5, 'Cicilan Semester : (2020/2021 ' . $cetak_ganjil_genal . ')', 1, 0, 'L');
+    foreach ($detailTX as $j => $dtx) {
+        if ($dtx['id_jenis_pembayaran'] == 2) {
+            $jml_bayarCSTX[] = $dtx['jml_bayar'];
+        }
+        if ($dtx['id_jenis_pembayaran'] == 3) {
+            $jml_bayarCSTX[] = $dtx['jml_bayar'];
+        }
+        if ($dtx['id_jenis_pembayaran'] == 4) {
+            $jml_bayarCSTX[] = $dtx['jml_bayar'];
+        }
+    }
+    // var_dump($jml_bayarCSTX);
+    // die;
+    $total_bayar_cs_tx = array_sum($jml_bayarCSTX);
+    $total_bayar_trx = $total_bayar_trx + $total_bayar_cs_tx;
+    $total_kewajiban = $total_kewajiban + $data_transaksi['data_kewajiban_cs'];
+
+    $pdf->Cell(26, 5, number_format($data_transaksi['data_kewajiban_cs'], 0, '', '.'), 1, 0, 'R');
+    $pdf->Cell(22, 5,  number_format($total_bayar_cs_tx, 0, '', '.'), 1, 0, 'R');
+    $pdf->Cell(22, 5, number_format($data_transaksi['data_kewajiban_cs'] - $total_bayar_cs_tx, 0, '', '.'), 1, 1, 'R');
 
     foreach ($detailTX as $j => $dtx) {
-        $pdf->SetFont('Arial', 'I', 10);
-        if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
-            $pdf->Cell(100, 5, '#' . $dtx['nm_jenis_pembayaran'] . ' (Lunas) ', 1, 0, 'L');
-        } elseif ($data_transaksi['data_kewajiban_kmhs'] - $dtx['jml_bayar'] == 0) {
-            $pdf->Cell(100, 5, '#' . $dtx['nm_jenis_pembayaran'] . '  (Lunas) ', 1, 0, 'L');
-        } else {
-            $pdf->Cell(100, 5, '#' . $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+        if ($dtx['id_jenis_pembayaran'] == 2 || $dtx['id_jenis_pembayaran'] == 3 || $dtx['id_jenis_pembayaran'] == 4) {
+            $pdf->SetFont('Arial', 'I', 10);
+            $pdf->Cell(65, 5, '#' . $dtx['nm_jenis_pembayaran'] . ' @Bayar Rp. ' . number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'L');
+            $pdf->Cell(26, 5, '', 1, 0, 'R');
+            $pdf->Cell(22, 5, '', 1, 0, 'R');
+            $pdf->Cell(22, 5, '', 1, 1, 'R');
         }
-        $pdf->Cell(30, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
     }
 } else {
     foreach ($detailTX as $j => $dtx) {
         $pdf->SetFont('Arial', 'I', 10);
-        $pdf->Cell(100, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+        $pdf->Cell(65, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
         $pdf->SetFont('Arial', 'i', 10);
-        $pdf->Cell(30, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        $pdf->Cell(26, 5, number_format($dtx['kewajiban_Bayar'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(22, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(22, 5, number_format($dtx['kewajiban_Bayar'] - $dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        $total_bayar_trx = $total_bayar_trx + $dtx['jml_bayar'];
+        $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
     }
 }
 
 //===============================================================
 $pdf->SetFont('Arial', 'B', 11);
-$pdf->Cell(100, 5, 'Total', 1, 0, 'R');
-$pdf->Cell(30, 5, number_format($data_transaksi['total_bayar'], 0, '', '.'), 1, 1, 'R');
+$pdf->Cell(65, 5, 'Total', 1, 0, 'R');
+// foreach ($detailTX as $j => $dtx) {
+//     $kewajiban_Bayar[] = $dtx['kewajiban_Bayar'];
+//     $jml_bayar[] = $dtx['jml_bayar'];
+// }
+// $total_kewajiban = array_sum($kewajiban_Bayar);
+// $totol_bayar = array_sum($jml_bayar);
+$pdf->Cell(26, 5, number_format($total_kewajiban, 0, '', '.'), 1, 0, 'R');
+$pdf->Cell(22, 5, number_format($total_bayar_trx, 0, '', '.'), 1, 0, 'R');
+$pdf->Cell(22, 5, number_format($total_kewajiban - $total_bayar_trx, 0, '', '.'), 1, 1, 'R');
 
 
 // footer

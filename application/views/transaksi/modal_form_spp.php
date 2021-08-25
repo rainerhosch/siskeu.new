@@ -61,6 +61,10 @@
                                 <tfoot id="riwayat_transaksi_tfoot"></tfoot>
                             </table>
                         </div>
+
+                        <div class="alert alert-success" id="alert_potongan" hidden>
+                            <p id="text_info_potongan"></p>
+                        </div>
                     </div>
                 </div>
             </div>

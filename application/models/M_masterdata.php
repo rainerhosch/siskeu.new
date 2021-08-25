@@ -137,11 +137,22 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
+    public function GetAllJenisPembayaran($data = null)
+    {
+        $this->db->select('id_jenis_pembayaran as id_jp, nm_jenis_pembayaran as nm_jp');
+        $this->db->from('master_jenis_pembayaran');
+        if ($data !== null) {
+            $this->db->where($data);
+        }
+        $this->db->order_by('nm_jp', 'asc');
+        return $this->db->get();
+    }
+
     public function getBiayaPembayaranLain($data = null)
     {
         $this->db->select('mjp.id_jenis_pembayaran as id_jp, mjp.nm_jenis_pembayaran as nm_jp, bt.biaya, bt.potongan_biaya');
-        $this->db->from('master_jenis_pembayaran mjp');
-        $this->db->join('biaya_tambahan bt', 'bt.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
+        $this->db->from('biaya_tambahan bt');
+        $this->db->join('master_jenis_pembayaran mjp', 'bt.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
         if ($data != null) {
             $this->db->where($data);
         }

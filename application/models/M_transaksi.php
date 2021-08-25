@@ -46,6 +46,28 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
+    public function getDataTransaksiSebelumnya($data = null)
+    {
+        $this->db->select('
+        t.id_transaksi,
+        td.id_detail_transaksi,
+        t.tanggal, t.jam,
+        t.nim, t.semester,
+        td.id_jenis_pembayaran,
+        mjp.nm_jenis_pembayaran,
+        td.jml_bayar,
+        td.potongan
+        ');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        $this->db->join('master_jenis_pembayaran mjp', 'td.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
+
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
     // get data transaksi detail
     public function getDataTxDetail($data = null)
     {
@@ -56,7 +78,8 @@ class M_transaksi extends CI_Model
         t.nim, t.semester,
         td.id_jenis_pembayaran,
         mjp.nm_jenis_pembayaran,
-        td.jml_bayar
+        td.jml_bayar,
+        td.potongan
         ');
         // $this->db->from('transaksi_detail');
         $this->db->from('transaksi t');
@@ -95,7 +118,7 @@ class M_transaksi extends CI_Model
 
     public function cekMaxDetailTransaksi($data)
     {
-        $query = "SELECT `t`.`id_transaksi`, `td`.`id_detail_transaksi`, `t`.`tanggal`, `t`.`jam`, `t`.`nim`, `t`.`semester`, `td`.`id_jenis_pembayaran`, `mjp`.`nm_jenis_pembayaran`, `td`.`jml_bayar` 
+        $query = "SELECT `t`.`id_transaksi`, `td`.`id_detail_transaksi`, `t`.`tanggal`, `t`.`jam`, `t`.`nim`, `t`.`semester`, `td`.`id_jenis_pembayaran`, `mjp`.`nm_jenis_pembayaran`, `td`.`jml_bayar`, `td`.`potongan`
         FROM `transaksi_detail` `td` 
         JOIN `transaksi` `t` ON `t`.`id_transaksi`=`td`.`id_transaksi` 
         JOIN `master_jenis_pembayaran` `mjp` ON `td`.`id_jenis_pembayaran`=`mjp`.`id_jenis_pembayaran`
