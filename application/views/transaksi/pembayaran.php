@@ -177,6 +177,72 @@
             </div>
         </div>
     </div>
+    <!-- modal edit -->
+    <div class="modal" tabindex="-1" role="dialog" id="editTrx">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Transaksi</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- <form action="<?= base_url('manajemen'); ?>/update-menu" method="post" enctype="multipart/form-data"> -->
+                    <form action="#" method="post" enctype="multipart/form-data">
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="id_trx">ID TRANSAKSI</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="id_trx" name="id_trx" class="form-control validate" readonly>
+                            </div>
+                        </div>
+
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nim_trx">NIM</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nim_trx" name="nim_trx" class="form-control validate" readonly>
+                            </div>
+                        </div>
+
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="mhs_trx">NAMA MAHASISWA</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="mhs_trx" name="mhs_trx" class="form-control validate" readonly>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="md-form mb-5 row text-center">
+                            <strong>Detail Transaksi</strong>
+                        </div>
+                        <br>
+
+                        <table class="table table-vcenter table-condensed">
+                            <tbody id="tabel_form_edit_trx">
+                            </tbody>
+                        </table>
+                        <br>
+                        <div class="md-form row text-right" style="margin-right: 2px;">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    </form>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <!-- end modal edit -->
+
     <!-- Modal Form -->
     <?php $this->load->view('transaksi/modal_form_spp'); ?>
     <?php $this->load->view('transaksi/modal_form_pembayaran_lain'); ?>
@@ -192,6 +258,9 @@
             $.ajax({
                 type: "POST",
                 url: "transaksi/getDataTransaksi",
+                data: {
+                    data: 1
+                },
                 dataType: "json",
                 success: function(response) {
                     console.log(response);
@@ -227,9 +296,11 @@
                             // htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                             htmlx += `<td class="text-center">`;
                             if (value.user_id !== response.user_loged) {
-                                htmlx += `<a href="#" onclick="" class="btn btn-sm btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="" disabled><i class="fas fa-trash-alt"></i></a>`;
+                                // htmlx += `<a href="#" onclick="" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="" disabled>Edit</a> | `;
+                                htmlx += `<a href="#" onclick="" class="btn btn-xs btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="" disabled>Hapus</a>`;
                             } else {
-                                htmlx += `<a href="#"  onclick="deleteTransaksi(${value.id_transaksi})" class="btn btn-sm btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="${value.id_transaksi}"><i class="fas fa-trash-alt"></i></a>`;
+                                // htmlx += `<a href="#"  onclick="editTransaksi(${value.id_transaksi})" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="${value.id_transaksi}">Edit</a> | `;
+                                htmlx += `<a href="#"  onclick="deleteTransaksi(${value.id_transaksi})" class="btn btn-xs btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="${value.id_transaksi}">Hapus</a>`;
                             }
                             htmlx += `</td>`;
                             htmlx += `</tr>`;
@@ -257,7 +328,54 @@
             // end hapus menu
         });
 
+        function editTransaksi(id_transaksi) {
+            $.ajax({
+                type: "POST",
+                url: "transaksi/getDataTransaksi",
+                data: {
+                    data: id_transaksi
+                },
+                dataType: "json",
+                success: function(response) {
+                    $("#editTrx").modal("show");
+                    let htmlz = ``;
+                    $.each(response.data_transaksi, function(i, val) {
+                        let id_trx = val.id_transaksi;
+                        let nim = val.nim;
+                        let nm_pd = val.nm_pd;
+                        $.each(val.detail_transaksi, function(k, detailTx) {
+                            htmlz += `<tr>`;
+                            htmlz += `<td><label data-error="wrong" data-success="right" for="${detailTx.nm_jenis_pembayaran}">${detailTx.nm_jenis_pembayaran}</label></td>`;
+                            htmlz += `<td class="text-center"><input type="text" id="input_${detailTx.id_detail_transaksi}" name="${detailTx.id_detail_transaksi}" class="form-control validate text-right input_${k}" value="${detailTx.jml_bayar}"></td>`;
+                            htmlz + `</tr>`;
+                        });
 
+                        htmlz += `<tr>`;
+                        htmlz += `<td><label data-error="wrong" data-success="right" for="${val.id_transaksi}">Total Bayar</label></td>`;
+                        htmlz += `<td class="text-center"><input type="text" id="total_${val.id_transaksi}" name="${val.id_transaksi}" class="form-control validate text-right input_${i}" value="${val.total_bayar}" readonly></td>`;
+                        htmlz + `</tr>`;
+                        $('#id_trx').val(id_trx);
+                        $('#mhs_trx').val(nm_pd);
+                        $('#nim_trx').val(nim);
+
+                    });
+                    $("#tabel_form_edit_trx").html(htmlz);
+
+                    let data = 0;
+                    $.each(response.data_transaksi, function(i, val) {
+                        $.each(val.detail_transaksi, function(k, detailTx) {
+                            $('#input_' + detailTx.id_detail_transaksi).on('input', function() {
+                                data += $('#input_' + detailTx.id_detail_transaksi).val();
+                                $('#total_' + detailTx.id_detail_transaksi).val(data);
+                            });
+                        });
+                    });
+
+                    console.log(response);
+
+                }
+            });
+        }
 
         function deleteTransaksi(id_transaksi) {
             // console.log(id_transaksi);

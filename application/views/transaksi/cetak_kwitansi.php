@@ -153,7 +153,7 @@ $total_bayar_trx = 0;
 
 if ($data_transaksi['data_kewajiban_cs'] != null || $data_transaksi['data_kewajiban_kmhs'] !== null) {
     foreach ($detailTX as $j => $dtx) {
-        if ($dtx['id_jenis_pembayaran'] == 5 || $dtx['id_jenis_pembayaran'] == 7) {
+        if ($dtx['id_jenis_pembayaran'] == 5 || $dtx['id_jenis_pembayaran'] == 7 || $dtx['id_jenis_pembayaran'] == 6) {
             $pdf->SetFont('Arial', 'I', 10);
             $pdf->Cell(65, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
             $pdf->SetFont('Arial', 'i', 10);

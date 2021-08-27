@@ -101,9 +101,6 @@
             $.ajax({
                 type: "POST",
                 url: "<?= base_url() ?>transaksi/getDataTransaksi",
-                data: {
-                    data: 1
-                },
                 dataType: "json",
                 success: function(response) {
                     console.log(response);

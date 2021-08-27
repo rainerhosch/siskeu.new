@@ -30,6 +30,9 @@
                         <form id="form_pembayaran" enctype="multipart/form-data">
                             <br>
                             <table id="menu-datatable" class="table table-vcenter table-condensed">
+
+                                <tbody id="data_kwajiban_tbody2">
+                                </tbody>
                                 <tbody id="data_kwajiban_tbody">
                                 </tbody>
                             </table>

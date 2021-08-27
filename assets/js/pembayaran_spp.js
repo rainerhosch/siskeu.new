@@ -9,68 +9,95 @@ $("#nipd").on("keypress", function (e) {
       },
       dataType: "json",
       success: function (response) {
-        console.log(response);
+        // console.log(response);
         if (response != null) {
-          // if (response.riwayat_potongan_trx > 0) {
-          //   $(".alert#alert_potongan").attr("hidden", false);
-          //   $(".alert#alert_potongan")
-          //     .addClass("alert-warning")
-          //     .removeClass("alert-success");
-          //   let paragraph = document.getElementById("text_info_potongan");
-          //   paragraph.textContent = `Mahasiswa ini sudah mendapatkan potongan pembayaran Rp.${response.riwayat_potongan_trx}, pada semester ini.`;
-          // } else {
-          //   $(".alert#alert_potongan").attr("hidden", false);
-          //   let paragraph = document.getElementById("text_info_potongan");
-          //   paragraph.textContent = `Mahasiswa ini belum mendapatkan potongan pembayaran, pada semester ini.`;
-          // }
           if ((response.totalKewajiban = 0)) {
             $(".btn#btn_proses").prop("disabled", true);
           }
           let html = ``;
           let html_3 = ``;
-          $(".data_kwajiban").show();
-          $("#riwayat_transaksi").show();
           $("#nama_mhs").val(response.nm_pd);
           $("#jurusan").val(response.nm_jur);
-          html += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
-          html += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
-          html += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
-          html += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
 
-          $.each(response.dataKewajiban, function (i, value) {
-            html += `<tr>`;
-            html += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
-            html += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
-            html += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${
-              value.biaya == 0 ? "disabled" : ""
-            }></td>`;
-            html += `</tr>`;
-          });
-          $("#data_kwajiban_tbody").html(html);
-          $.each(response.dataKewajiban, function (i, value) {
-            $("#checkcox_" + i).change(function () {
-              var numberOfChecked = $("input:checkbox:checked").length;
-              if (numberOfChecked <= 0) {
-                $("#btn_proses").prop("disabled", true);
-              } else {
-                $("#btn_proses").prop("disabled", false);
-              }
-              if (this.checked === true) {
-                $("#" + value.post_id).prop("disabled", false);
-              } else {
-                $("#" + value.post_id).prop("disabled", true);
-              }
-            });
+          html += `<tr>`;
+          html += `<td class="text-center">`;
+          html += `<input class="form-check-input" type="radio" name="smt" id="smt_1" value="${response.thn_smt}1"><br>`;
+          html += `<label class="form-check-label" for="smt_1"> ( ${response.thn_smt}1 )</label>`;
+          html += `</td>`;
+          html += `<td class="text-center">`;
+          html += `<input class="form-check-input" type="radio" name="smt" id="smt_2" value="${response.thn_smt}2"><br>`;
+          html += `<label class="form-check-label" for="smt_2"> ( ${response.thn_smt}2 )</label>`;
+          html += `</td>`;
+          html += `</tr>`;
+          $("#data_kwajiban_tbody2").html(html);
+
+          $("input[type='radio']").click(function () {
+            let smt = $("input[name='smt']:checked").val();
+            let nipd = $("#nipd").val();
+            if (smt) {
+              // alert("Your are a - " + smt);
+
+              $.ajax({
+                type: "POST",
+                url: "transaksi/Cek_Pembayaran_SPP",
+                data: {
+                  smt: smt,
+                  nipd: nipd,
+                },
+                dataType: "json",
+                success: function (response) {
+                  console.log(response);
+
+                  if ((response.totalKewajiban = 0)) {
+                    $(".btn#btn_proses").prop("disabled", true);
+                  }
+                  let htmlx = ``;
+                  $(".data_kwajiban").show();
+                  $("#riwayat_transaksi").show();
+                  $("#nama_mhs").val(response.nm_pd);
+                  $("#jurusan").val(response.nm_jur);
+                  htmlx += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
+                  htmlx += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
+                  htmlx += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
+                  htmlx += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
+                  $.each(response.dataKewajibanSmt, function (i, value) {
+                    htmlx += `<tr>`;
+                    htmlx += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
+                    htmlx += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
+                    htmlx += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${
+                      value.biaya == 0 ? "disabled" : ""
+                    }></td>`;
+                    htmlx += `</tr>`;
+                  });
+                  $("#data_kwajiban_tbody").html(htmlx);
+                  $.each(response.dataKewajibanSmt, function (i, value) {
+                    $("#checkcox_" + i).change(function () {
+                      var numberOfChecked = $("input:checkbox:checked").length;
+                      if (numberOfChecked <= 0) {
+                        $("#btn_proses").prop("disabled", true);
+                      } else {
+                        $("#btn_proses").prop("disabled", false);
+                      }
+                      if (this.checked === true) {
+                        $("#" + value.post_id).prop("disabled", false);
+                      } else {
+                        $("#" + value.post_id).prop("disabled", true);
+                      }
+                    });
+                  });
+                },
+              });
+            }
           });
 
-          if (response.dataHistoriTX != null) {
+          if (response.dataHistoriTX != 0) {
             $.each(response.dataHistoriTX, function (i, value) {
               // console.log(value);
               i++;
               html_3 += `<tr>`;
               html_3 += `<td class = "text-center" >${i}</td>`;
               html_3 +=
-                `<td class="text-center"><a href="<?= base_url('transaksi/cetak_kwitansi/') ?>` +
+                `<td class="text-center"><a target="_blank" href="transaksi/cetak_ulang_kwitansi/` +
                 value.id_transaksi +
                 `">${value.id_transaksi}</a></td>`;
               html_3 += `<td class = "text-center" >${value.tanggal}</td>`;
