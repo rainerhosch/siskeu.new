@@ -38,6 +38,7 @@ $("#nipd_2").on("keypress", function (e) {
         if (response.dataHistoriTX != null) {
           $.each(response.dataHistoriTX, function (i, value) {
             i++;
+            let total_bayarTrx = 0;
             html_tbody_2 += `<tr>`;
             html_tbody_2 += `<td class = "text-center" >${i}</td>`;
             html_tbody_2 +=
@@ -55,9 +56,12 @@ $("#nipd_2").on("keypress", function (e) {
               }</i> : <i style="font-size:1rem;">Rp.${parseInt(
                 val.jml_bayar
               ).toLocaleString()}</i><br>`;
+              total_bayarTrx += parseInt(val.jml_bayar);
             });
             html_tbody_2 += `</td>`;
-            html_tbody_2 += `<td class = "text-center"><i>${value.total_bayar}</i></td>`;
+            html_tbody_2 += `<td class = "text-center">Rp.${parseInt(
+              total_bayarTrx
+            ).toLocaleString()}</td>`;
             html_tbody_2 += `<td class = "text-center" >${value.semester}</td>`;
             html_tbody_2 += `<td class = "text-center" >${value.icon_status_tx}</td>`;
             html_tbody_2 += `</tr>`;
@@ -74,24 +78,19 @@ $("#nipd_2").on("keypress", function (e) {
           html_tbody_2 += `</tr>`;
         }
 
+        let total_bayar = 0;
+        $.each(response.dataHistoriTX, function (i, value) {
+          i++;
+          $.each(value.detail_transaksi, function (k, val) {
+            total_bayar += parseInt(val.jml_bayar);
+          });
+        });
         html_tbody_2 += `<tr>`;
-        html_tbody_2 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTEER INI</i></td>`;
-        html_tbody_2 += `<td colspan="6" class="text-center"><i id="total"></i></td>`;
+        html_tbody_2 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTER INI</i></td>`;
+        html_tbody_2 += `<td colspan="6" class="text-center"><i id="total">Rp.${total_bayar.toLocaleString()}</i></td>`;
         html_tbody_2 += `</tr>`;
 
         $("#riwayat_transaksi_modal_2").html(html_tbody_2);
-        $(function () {
-          $("#total").html(sumColumn(7));
-        });
-
-        function sumColumn(index) {
-          var total = 0;
-          $("td:nth-child(" + index + ")").each(function () {
-            total += parseInt($(this).text(), 10) || 0;
-            convTotal = "Rp." + total.toLocaleString();
-          });
-          return convTotal;
-        }
       },
     });
   }

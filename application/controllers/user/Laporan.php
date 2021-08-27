@@ -60,6 +60,47 @@ class Laporan extends CI_Controller
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Penerimaan Kas Yayasan';
         $data['content'] = 'laporan/penerimaan_kas_yayasan';
+        $datenow = date("Y-m-d");
+        $bnlOfYear = SUBSTR($datenow, 0, 7);
+        // where '2009-01-01' <= datecolumn and datecolumn < '2009-02-01'
+
+
+        $where = [
+            'SUBSTR(t.tanggal, 1, 7)=' => $bnlOfYear,
+            'mjp.jenis_kas' => 1
+        ];
+        $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+        $countHistoriTx = count($dataHistoriTx);
+        for ($i = 0; $i < $countHistoriTx; $i++) {
+
+            $where_DTx = [
+                't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+                'mjp.jenis_kas' => 1
+            ];
+            $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+            $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+        }
+
+
+
+
+        $total_kas_bln = 0;
+        foreach ($dataHistoriTx as $val) {
+            foreach ($val['detail_transaksi'] as $dtx) {
+                $total_kas_bln = $total_kas_bln + $dtx['jml_bayar'];
+            }
+        }
+        $data['total_uang_masuk_bulan_ini'] = $total_kas_bln;
+
+
+        date_default_timezone_set('Asia/Jakarta');
+        $now = date('Y-m-d');
+        $pecah_tgl_waktu = explode(' ', $now);
+        $tanggal = $this->formattanggal->konversi($pecah_tgl_waktu[0]);
+        $pecah_konversi = explode(' ', $tanggal);
+        $bln_transaksi = $pecah_konversi[1] . ' ' . $pecah_konversi[2];
+        $data['bln_transaksi'] = $bln_transaksi;
+
         $this->load->view('template', $data);
     }
 
@@ -86,7 +127,7 @@ class Laporan extends CI_Controller
         if ($this->input->is_ajax_request()) {
             // $input = $this->input->post('data');
             $where = [
-                't.semester' => $smtAktif,
+                // 't.semester' => $smtAktif,
                 'mjp.jenis_kas' => 1
             ];
             $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();

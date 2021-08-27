@@ -46,7 +46,7 @@ $("#nipd").on("keypress", function (e) {
                 },
                 dataType: "json",
                 success: function (response) {
-                  console.log(response);
+                  // console.log(response);
 
                   if ((response.totalKewajiban = 0)) {
                     $(".btn#btn_proses").prop("disabled", true);
@@ -94,6 +94,7 @@ $("#nipd").on("keypress", function (e) {
             $.each(response.dataHistoriTX, function (i, value) {
               // console.log(value);
               i++;
+              let total_bayarTrx = 0;
               html_3 += `<tr>`;
               html_3 += `<td class = "text-center" >${i}</td>`;
               html_3 +=
@@ -111,9 +112,12 @@ $("#nipd").on("keypress", function (e) {
                 }</i> : <i style="font-size:1rem;">Rp.${parseInt(
                   val.jml_bayar
                 ).toLocaleString()}</i><br>`;
+                total_bayarTrx += parseInt(val.jml_bayar);
               });
               html_3 += `</td>`;
-              html_3 += `<td class = "text-center"><i>${value.total_bayar}</i></td>`;
+              html_3 += `<td class = "text-center">Rp.${parseInt(
+                total_bayarTrx
+              ).toLocaleString()}</td>`;
               html_3 += `<td class = "text-center" >${value.semester}</td>`;
               html_3 += `<td class = "text-center" >${value.icon_status_tx}</td>`;
               html_3 += `</tr>`;
@@ -130,24 +134,19 @@ $("#nipd").on("keypress", function (e) {
             html_3 += `</tr>`;
           }
 
+          let total_bayar = 0;
+          $.each(response.dataHistoriTX, function (i, value) {
+            i++;
+            $.each(value.detail_transaksi, function (k, val) {
+              total_bayar += parseInt(val.jml_bayar);
+            });
+          });
           html_3 += `<tr>`;
-          html_3 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTEER INI</i></td>`;
-          html_3 += `<td colspan="6" class="text-center"><i id="total"></i></td>`;
+          html_3 += `<td colspan="6" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTER INI</i></td>`;
+          html_3 += `<td colspan="6" class="text-center"><i id="total">Rp.${total_bayar.toLocaleString()}</i></td>`;
           html_3 += `</tr>`;
 
           $("#riwayat_transaksi_modal").html(html_3);
-          $(function () {
-            $("#total").html(sumColumn(7));
-          });
-
-          function sumColumn(index) {
-            var total = 0;
-            $("td:nth-child(" + index + ")").each(function () {
-              total += parseInt($(this).text(), 10) || 0;
-              convTotal = "Rp." + total.toLocaleString();
-            });
-            return convTotal;
-          }
         } else {
           $("#notif_search").html(
             "<code>Tidak ada mahasiswa dengan nim : " + nipd + "</code>"

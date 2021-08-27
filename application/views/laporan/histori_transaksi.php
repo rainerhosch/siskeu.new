@@ -108,6 +108,7 @@
                     if (response.data_transaksi != 0) {
                         $.each(response.data_transaksi, function(i, value) {
                             i++;
+                            let total_bayarTrx = 0;
                             htmlx += `<tr>`;
                             htmlx += `<td class = "text-center" >${i}</td>`;
                             htmlx +=
@@ -121,9 +122,10 @@
                             htmlx += `<td class = "text-center" >`;
                             $.each(value.detail_transaksi, function(k, val) {
                                 htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+                                total_bayarTrx += parseInt(val.jml_bayar);
                             });
                             htmlx += `</td>`;
-                            htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+                            htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
                             htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
                             htmlx += `<td class = "text-center" >${value.nama_user}</td>`;

@@ -33,7 +33,7 @@ class M_transaksi extends CI_Model
     public function getDataTransaksi($data = null)
     {
         // $this->db->select('t.id_transaksi, t.tanggal, t.id_transaksi, t.jam, t.semester, t.nim, t.total_bayar, t.user_id, t.status_transaksi, t.transaksi_ke, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, ka.nm_smt, ka.smt, u.nama_user, u.ttd');
-        $this->db->select('t.id_transaksi, t.tanggal, t.id_transaksi, t.jam, t.semester, t.nim, t.total_bayar, t.user_id, t.status_transaksi, t.transaksi_ke, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, u.nama_user, u.ttd');
+        $this->db->select('t.id_transaksi, t.tanggal, t.id_transaksi, t.jam, t.semester, t.nim, t.user_id, t.status_transaksi, t.transaksi_ke, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, u.nama_user, u.ttd');
         $this->db->from('transaksi t');
         $this->db->join('mahasiswa m', 'm.nipd=t.nim');
         $this->db->join('transaksi_status ts', 'ts.kode_status_tx=t.status_transaksi');

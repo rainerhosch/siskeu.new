@@ -159,6 +159,7 @@
                                         <th class="text-center">Tgl Transaksi</th>
                                         <th class="text-center">Jam</th>
                                         <th class="text-center">NIM</th>
+                                        <th class="text-center">Nama</th>
                                         <th class="text-center">Keterangan Bayar</th>
                                         <th class="text-center">Jumlah Storan</th>
                                         <!-- <th class="text-center">Sisa Bayar</th> -->
@@ -269,6 +270,8 @@
                     if (response.data_transaksi != 0) {
                         $.each(response.data_transaksi, function(i, value) {
                             i++;
+
+                            var total_bayarTrx = 0;
                             htmlx += `<tr>`;
                             htmlx += `<td class = "text-center" >${i}</td>`;
                             htmlx +=
@@ -278,13 +281,15 @@
                             htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
                             htmlx += `<td class = "text-center" >${value.jam}</td>`;
                             htmlx += `<td class = "text-center" >${value.nim}</td>`;
+                            htmlx += `<td class = "text-center" >${value.nm_pd}</td>`;
 
                             htmlx += `<td class = "text-center" >`;
                             $.each(value.detail_transaksi, function(k, val) {
                                 htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+                                total_bayarTrx += parseInt(val.jml_bayar);
                             });
                             htmlx += `</td>`;
-                            htmlx += `<td class = "text-center"><i>Rp.${parseInt(value.total_bayar).toLocaleString()}</i></td>`;
+                            htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
                             // htmlx += `<td class = "text-center" >`;
                             // $.each(value.detail_transaksi, function(k, val) {
                             //     htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.sisa_bayar).toLocaleString()}</i><br>`;

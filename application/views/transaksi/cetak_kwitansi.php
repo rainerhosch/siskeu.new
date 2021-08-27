@@ -110,7 +110,6 @@ $admin_log = $data_transaksi['admin_log'];
 $tahun_akademik = substr($data_transaksi['nm_smt'], 0, 9);
 $FormatTanggal = new FormatTanggal;
 $Terbilang = new Terbilang;
-$data_terbilang = $Terbilang->bilang($data_transaksi['total_bayar']);
 $tglTrx = $FormatTanggal->konversi($data_transaksi['tanggal']);
 $tglLog = $FormatTanggal->konversi($admin_log['tanggal_log']);
 // data identitas penyetor
@@ -222,7 +221,6 @@ $pdf->Cell(26, 5, number_format($total_kewajiban, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(22, 5, number_format($total_bayar_trx, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(22, 5, number_format($total_kewajiban - $total_bayar_trx, 0, '', '.'), 1, 1, 'R');
 
-
 // footer
 $pdf->SetY(-200);
 $pdf->SetFont('Arial', 'UB', 9);
@@ -237,12 +235,15 @@ $pdf->SetFont('Arial', '', 9);
 $pdf->Cell(75, 5, '', 0, 1, 'R');
 
 //terbilang
+$data_terbilang = $Terbilang->bilang($total_bayar_trx);
 $pdf->SetFont('Arial', 'I', 9);
 $pdf->Cell(20, 5, 'TERBILANG BAYAR :', 0, 0, 'L');
 $pdf->Cell(180, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
 
-$pdf->SetFont('Arial', 'I', 8);
+$pdf->SetFont('Arial', 'I', 9);
 $pdf->Cell(70, 19, $data_terbilang . 'Rupiah ', 1, 0, 'L');
+
+$pdf->SetFont('Arial', 'I', 8);
 $pdf->Cell(31, 7, 'Staf Keuangan', 0, 0, 'C');
 $pdf->Cell(5, 5, '', 0, 0, 'R');
 $pdf->Cell(30, 7, 'Penyetor', 0, 1, 'C');
