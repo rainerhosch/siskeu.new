@@ -70,11 +70,11 @@
                                         <th class="text-center">No</th>
                                         <th class="text-center">Tgl Transaksi</th>
                                         <th class="text-center">Nim</th>
-                                        <th class="text-center">Uraian Penerimaan</th>
+                                        <th class="text-center">Rincian</th>
                                         <th class="text-center">Total</th>
                                         <!-- <th class="text-center">Sisa Tagihan</th> -->
                                         <th class="text-center">Semester</th>
-                                        <!-- <th class="text-center">Status</th> -->
+                                        <th class="text-center">Keterangan</th>
                                         <th class="text-center">Admin</th>
                                     </tr>
                                 </thead>
@@ -119,7 +119,7 @@
                             const total = sum;
                             htmlx += `</td><td class = "text-center"><i>Rp.${parseInt(total).toLocaleString()}</i></td>`;
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                            // htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
+                            htmlx += `<td class = "text-center" >${value.uang_masuk}</td>`;
                             htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                             htmlx += `</tr>`;
                         });

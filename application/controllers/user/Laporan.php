@@ -66,6 +66,7 @@ class Laporan extends CI_Controller
 
 
         $where = [
+            't.uang_masuk' => 1,
             'SUBSTR(t.tanggal, 1, 7)=' => $bnlOfYear,
             'mjp.jenis_kas' => 1
         ];
@@ -127,7 +128,7 @@ class Laporan extends CI_Controller
         if ($this->input->is_ajax_request()) {
             // $input = $this->input->post('data');
             $where = [
-                // 't.semester' => $smtAktif,
+                // 't.uang_masuk' => 1,
                 'mjp.jenis_kas' => 1
             ];
             $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
@@ -138,6 +139,13 @@ class Laporan extends CI_Controller
                     'mjp.jenis_kas' => 1
                 ];
                 $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+                if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
+                    $keterangan = '';
+                } else {
+                    $keterangan = 'Potongan Subsidi SPP';
+                }
+                $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
+
                 $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
             }
             $data['kas_yayasan'] = $dataHistoriTx;

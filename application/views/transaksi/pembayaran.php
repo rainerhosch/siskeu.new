@@ -160,8 +160,8 @@
                                         <th class="text-center">Jam</th>
                                         <th class="text-center">NIM</th>
                                         <th class="text-center">Nama</th>
-                                        <th class="text-center">Keterangan Bayar</th>
-                                        <th class="text-center">Jumlah Storan</th>
+                                        <th class="text-center">Rincian Transaksi</th>
+                                        <th class="text-center">Jumlah</th>
                                         <!-- <th class="text-center">Sisa Bayar</th> -->
                                         <th class="text-center">Semester</th>
                                         <th class="text-center">Status</th>
@@ -296,7 +296,11 @@
                             // });
                             // htmlx += `</td>`;
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                            htmlx += `<td class = "text-center" >${value.icon_status_tx}</td>`;
+                            if (total_bayarTrx < value.kewajiban_Semester_ini) {
+                                htmlx += `<td class = "text-center" >BL</td>`;
+                            } else {
+                                htmlx += `<td class = "text-center" >L</td>`;
+                            }
                             htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                             // htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                             htmlx += `<td class="text-center">`;

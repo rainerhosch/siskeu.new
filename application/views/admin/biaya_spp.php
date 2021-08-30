@@ -24,16 +24,17 @@
         <button type="button" class="btn btn-primary btnAdd" data-toggle="modal" data-target="#addData">
             Tambah Biaya Baru
         </button>
-        <button type="button" class="btn btn-danger btnEditPotongan" data-toggle="modal" data-target="#addEditPotongan">
+        <!-- <button type="button" class="btn btn-danger btnEditPotongan" data-toggle="modal" data-target="#addEditPotongan">
             Potongan Biaya
-        </button>
+        </button> -->
         <!-- Example Content -->
         <table id="example-datatable" class="table table-vcenter table-condensed table-bordered mb-5">
             <thead>
                 <tr>
                     <th class="text-center">No</th>
                     <th class="text-center">Angkatan</th>
-                    <th class="text-center">Biaya Bangunan</th>
+                    <th class="text-center">Biaya Bangunan S1</th>
+                    <th class="text-center">Biaya Bangunan D3</th>
                     <th class="text-center">Biaya Kemahasiswaan</th>
                     <th class="text-center">Biaya Semester S1</th>
                     <th class="text-center">Biaya Semester D3</th>
@@ -71,6 +72,14 @@
                             </div>
                             <div class="col-md-7">
                                 <input type="text" id="biaya_bangunan" name="biaya_bangunan" class="form-control validate">
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-5">
+                                <label data-error="wrong" data-success="right" for="biaya_bangunan_D3">Uang Bangunan D3</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" id="biaya_bangunan_D3" name="biaya_bangunan_D3" class="form-control validate">
                             </div>
                         </div>
                         <div class="md-form row">
@@ -145,6 +154,14 @@
                             </div>
                             <div class="col-md-7">
                                 <input type="text" id="edit_biaya_bangunan" name="edit_biaya_bangunan" class="form-control validate">
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-5">
+                                <label data-error="wrong" data-success="right" for="edit_biaya_bangunan_D3">Uang Bangunan D3</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" id="edit_biaya_bangunan_D3" name="edit_biaya_bangunan_D3" class="form-control validate">
                             </div>
                         </div>
                         <div class="md-form row">
@@ -266,6 +283,7 @@
                         html += `<td class="text-center">${i}</td>`;
                         html += `<td class="text-center"><strong>${value.angkatan}</strong></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.PK).toLocaleString()}</i></td>`;
+                        html += `<td class="text-center"><i>Rp.${parseInt(value.PK_D3).toLocaleString()}</i></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.kmhs).toLocaleString()}</i></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.CS).toLocaleString()}</i></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.CS_D3).toLocaleString()}</i></td>`;
@@ -317,6 +335,7 @@
                             $("#id_biaya").val(response.id_biaya);
                             $("#edit_tahun_angkatan").val(response.angkatan);
                             $("#edit_biaya_bangunan").val(response.PK);
+                            $("#edit_biaya_bangunan_D3").val(response.PK_D3);
                             $("#edit_biaya_CS").val(response.CS);
                             $("#edit_biaya_CS_D3").val(response.CS_D3);
                             $("#edit_biaya_kmhs").val(response.kmhs);

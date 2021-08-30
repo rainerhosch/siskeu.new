@@ -82,6 +82,7 @@ class MasterData extends CI_Controller
     {
         $tahun_angkatan = $this->input->post('tahun_angkatan');
         $PK             = $this->input->post('biaya_bangunan');
+        $PK_D3          = $this->input->post('biaya_bangunan_D3');
         $CS             = $this->input->post('biaya_CS');
         $CS_D3          = $this->input->post('biaya_CS_D3');
         $kmhs           = $this->input->post('biaya_kmhs');
@@ -91,6 +92,7 @@ class MasterData extends CI_Controller
         $dataInsert   = [
             'angkatan'  => $tahun_angkatan,
             'PK'        => $PK,
+            'PK_D3'     => $PK_D3,
             'kmhs'      => $kmhs,
             'CS'        => $CS,
             'CS_D3'     => $CS_D3,
@@ -140,6 +142,7 @@ class MasterData extends CI_Controller
         $id             = $this->input->post('id_biaya');
         $tahun_angkatan = $this->input->post('edit_tahun_angkatan');
         $PK             = $this->input->post('edit_biaya_bangunan');
+        $PK_D3          = $this->input->post('edit_biaya_bangunan_D3');
         $CS             = $this->input->post('edit_biaya_CS');
         $CS_D3          = $this->input->post('edit_biaya_CS_D3');
         $kmhs           = $this->input->post('edit_biaya_kmhs');
@@ -147,6 +150,7 @@ class MasterData extends CI_Controller
         $dataUpdate   = [
             'angkatan'      => $tahun_angkatan,
             'PK'            => $PK,
+            'PK_D3'         => $PK_D3,
             'kmhs'          => $kmhs,
             'CS'            => $CS,
             'CS_D3'         => $CS_D3
@@ -221,10 +225,10 @@ class MasterData extends CI_Controller
         if (!$deleted) {
             // error
             $this->session->set_flashdata('error', 'Gagal hapus data!');
-            redirect('masterdata/BiayaPembayaranLain');
+            redirect('masterdata/BiayaSPP');
         } else {
             $this->session->set_flashdata('success', 'Data berhasil di hapus!');
-            redirect('masterdata/BiayaPembayaranLain');
+            redirect('masterdata/BiayaSPP');
         }
     }
 

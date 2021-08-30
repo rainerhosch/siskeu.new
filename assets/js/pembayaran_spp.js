@@ -69,6 +69,11 @@ $("#nipd").on("keypress", function (e) {
                     }></td>`;
                     htmlx += `</tr>`;
                   });
+                  htmlx += `<tr>`;
+                  htmlx += `<td><label data-error="wrong" data-success="right" for="uang_masuk">Potongan SPP</label></td>`;
+                  htmlx += `<td class="text-center"><input type="hidden" id="uang_masuk" name="uang_masuk" class="form-control validate text-right uang_masuk" value="1" readonly></td>`;
+                  htmlx += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="check_uang_masuk"></td>`;
+                  htmlx += `</tr>`;
                   $("#data_kwajiban_tbody").html(htmlx);
                   $.each(response.dataKewajibanSmt, function (i, value) {
                     $("#checkcox_" + i).change(function () {
@@ -85,6 +90,14 @@ $("#nipd").on("keypress", function (e) {
                       }
                     });
                   });
+
+                  $("#check_uang_masuk").change(function () {
+                    if (this.checked === true) {
+                      $("#uang_masuk").val(0);
+                    } else {
+                      $("#uang_masuk").val(1);
+                    }
+                  });
                 },
               });
             }
@@ -92,7 +105,6 @@ $("#nipd").on("keypress", function (e) {
 
           if (response.dataHistoriTX != 0) {
             $.each(response.dataHistoriTX, function (i, value) {
-              // console.log(value);
               i++;
               let total_bayarTrx = 0;
               html_3 += `<tr>`;
@@ -136,6 +148,7 @@ $("#nipd").on("keypress", function (e) {
 
           let total_bayar = 0;
           $.each(response.dataHistoriTX, function (i, value) {
+            // console.log(response);
             i++;
             $.each(value.detail_transaksi, function (k, val) {
               total_bayar += parseInt(val.jml_bayar);
@@ -172,31 +185,33 @@ $("#form_pembayaran").submit(function (e) {
     url: "transaksi/proses_bayar_spp", // where you wanna post
     data: form.serialize(), // serializes form input,
     success: function (response) {
-      let id_transaksi = response;
-      // let url_cetak = base_url("transaksi/cetak_kwitansi");
-      // console.log(response);
-      Swal.fire({
-        title: "Transaksi Berhasil!",
-        text: `Transaksi ${id_transaksi} telah berhasil di input, apakah ingin mencetak kwitansi?`,
-        icon: "info",
-        showCancelButton: true,
-        confirmButtonColor: "##d33",
-        confirmButtonText: "Cetak",
-        cancelButtonText: "Tutup",
-        closeOnConfirm: false,
-        closeOnCancel: false,
-      }).then(function (isConfirm) {
-        if (isConfirm) {
-          // cetak
-          window.open(`transaksi/cetak_kwitansi/${id_transaksi}`, "_blank");
-          window.focus();
+      if (response != 0) {
+        let id_transaksi = response;
+        Swal.fire({
+          title: "Transaksi Berhasil!",
+          text: `Transaksi ${id_transaksi} telah berhasil di input, apakah ingin mencetak kwitansi?`,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "##d33",
+          confirmButtonText: "Cetak",
+          cancelButtonText: "Tutup",
+          closeOnConfirm: false,
+          closeOnCancel: false,
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            // cetak
+            window.open(`transaksi/cetak_kwitansi/${id_transaksi}`, "_blank");
+            window.focus();
 
-          location.reload();
-        } else {
-          // refresh page
-          location.reload();
-        }
-      });
+            location.reload();
+          } else {
+            // refresh page
+            location.reload();
+          }
+        });
+      } else {
+        window.location.replace(`transaksi/session_msg`);
+      }
     },
   });
 });

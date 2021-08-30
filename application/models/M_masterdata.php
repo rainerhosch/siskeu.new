@@ -88,7 +88,7 @@ class M_masterdata extends CI_Model
         if ($jenjang === 'S1') {
             $this->db->select('angkatan, PK as uang_bangunan, kmhs as kemahasiswaan, CS as cicilan_semester');
         } else {
-            $this->db->select('angkatan, PK as uang_bangunan, kmhs as kemahasiswaan, CS_D3 as cicilan_semester');
+            $this->db->select('angkatan, PK_D3 as uang_bangunan, kmhs as kemahasiswaan, CS_D3 as cicilan_semester');
         }
         $this->db->from('biaya_angkatan');
         $this->db->where($data);
