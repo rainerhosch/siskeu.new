@@ -9,6 +9,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *  Date Created          : 06/08/2021
  *  Quots of the code     : 'rapihkan lah code mu, seperti halnya kau menata kehidupan'
  */
+
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Writer\Word2007;
+use \PhpOffice\PhpSpreadsheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Laporan extends CI_Controller
 {
     private $smt_aktif;
