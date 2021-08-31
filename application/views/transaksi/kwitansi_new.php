@@ -171,26 +171,17 @@ if ($data_transaksi['bayar_cs'] != 0 || $data_transaksi['bayar_kmhs'] !== 0 || $
             $total_bayar_trx = $total_bayar_trx + $dtx['jml_bayar'];
             $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
         }
+    }
 
-        // if ($data_transaksi['kewajiban']['kmhs'] != null) {
-        //     $pdf->SetFont('Courier', 'IB', 10);
-        //     $pdf->Cell(81, 5, 'Kemahasiswaan', 1, 0, 'L');
-        //     $pdf->SetFont('Courier', 'IB', 10);
-        //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'], 0, '', '.'), 1, 0, 'R');
-        //     $pdf->Cell(40, 5, number_format($data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 0, 'R');
-        //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'] - $data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 1, 'R');
-        //     $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['kmhs'];
-        // }
-
-        // if ($data_transaksi['kewajiban']['tg_kmhs'] != null) {
-        //     $pdf->SetFont('Courier', 'IB', 10);
-        //     $pdf->Cell(81, 5, 'Kemahasiswaan Semester Lalu', 1, 0, 'L');
-        //     $pdf->SetFont('Courier', 'IB', 10);
-        //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'], 0, '', '.'), 1, 0, 'R');
-        //     $pdf->Cell(40, 5, number_format($data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 0, 'R');
-        //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'] - $data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 1, 'R');
-        //     $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['tg_kmhs'];
-        // }
+    if ($data_transaksi['kewajiban']['kmhs'] > 0 && $data_transaksi['bayar_kmhs'] == 0) {
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(81, 5, 'Kemahasiswaan', 1, 0, 'L');
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'] - $data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 1, 'R');
+        $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_kmhs'];
+        $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['kmhs'];
     }
     $pdf->SetFont('Courier', 'B', 10);
     $pdf->Cell(81, 5, 'Cicilan Semester : (' . $tahun_akademik . ' ' . $cetak_ganjil_genal . ')', 1, 0, 'L');

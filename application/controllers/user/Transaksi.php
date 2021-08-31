@@ -1027,12 +1027,12 @@ class Transaksi extends CI_Controller
         $where = [
             'id_transaksi' => $id_transaksi,
         ];
+        // ambil data tunggakan KMHS
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
         $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
         $dataTx['smt'] = $smt_bayar;
-
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
         $countDetailTX = count($resDetailTx);
@@ -1070,9 +1070,6 @@ class Transaksi extends CI_Controller
 
         ];
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
-        // var_dump($this->db->last_query());
-        // die;
-
         $kewajibanCS = $dataBiayaAngkatan['cicilan_semester'];
         $kewajibanPerpanjangSemester = $kewajibanCS / 2;
         $kewajibanC1 = $biayaCS;
@@ -1178,6 +1175,11 @@ class Transaksi extends CI_Controller
             $dataTx['kewajiban']['kmhs'] = $kewajibanKMHS;
             $dataTx['bayar_kmhs'] = 1;
         } else {
+            foreach ($dataTxSebelumnya as $a => $val) {
+                if ($val['id_jenis_pembayaran'] == 5) {
+                    $kewajibanKMHS = $kewajibanKMHS - $val['jml_bayar'];
+                }
+            }
             $dataTx['kewajiban']['kmhs'] = $kewajibanKMHS;
             $dataTx['bayar_kmhs'] = 0;
         }
@@ -1232,11 +1234,6 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanLain[$x];
                 }
             }
-            // $resDetailTx[$x]['kewajiban_C2'] = $kewajibanC2;
-            // $resDetailTx[$x]['kewajiban_C3'] = $kewajibanC3;
-            // $resDetailTx[$x]['kewajiban_TGCS'] = $kewajibanTGCS;
-            // $resDetailTx[$x]['kewajiban_KMHS'] = (int)$kewajibanKMHS;
-            // $resDetailTx[$x]['kewajiban_TGKMHS'] = (int)$kewajibanTGKMHS;
         }
 
         $dataTx['detail_transaksi'] = $resDetailTx;
@@ -1253,7 +1250,6 @@ class Transaksi extends CI_Controller
 
     public function cetak_ulang_kwitansi($id_transaksi)
     {
-
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $smtAktif = $smtAktifRes['id_smt'];
         $bayarCS = false;
@@ -1264,12 +1260,12 @@ class Transaksi extends CI_Controller
         $where = [
             'id_transaksi' => $id_transaksi,
         ];
+        // ambil data tunggakan KMHS
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
         $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
         $dataTx['smt'] = $smt_bayar;
-
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
         $countDetailTX = count($resDetailTx);
@@ -1307,9 +1303,6 @@ class Transaksi extends CI_Controller
 
         ];
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
-        // var_dump($this->db->last_query());
-        // die;
-
         $kewajibanCS = $dataBiayaAngkatan['cicilan_semester'];
         $kewajibanPerpanjangSemester = $kewajibanCS / 2;
         $kewajibanC1 = $biayaCS;
@@ -1415,6 +1408,11 @@ class Transaksi extends CI_Controller
             $dataTx['kewajiban']['kmhs'] = $kewajibanKMHS;
             $dataTx['bayar_kmhs'] = 1;
         } else {
+            foreach ($dataTxSebelumnya as $a => $val) {
+                if ($val['id_jenis_pembayaran'] == 5) {
+                    $kewajibanKMHS = $kewajibanKMHS - $val['jml_bayar'];
+                }
+            }
             $dataTx['kewajiban']['kmhs'] = $kewajibanKMHS;
             $dataTx['bayar_kmhs'] = 0;
         }
@@ -1469,11 +1467,6 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanLain[$x];
                 }
             }
-            // $resDetailTx[$x]['kewajiban_C2'] = $kewajibanC2;
-            // $resDetailTx[$x]['kewajiban_C3'] = $kewajibanC3;
-            // $resDetailTx[$x]['kewajiban_TGCS'] = $kewajibanTGCS;
-            // $resDetailTx[$x]['kewajiban_KMHS'] = (int)$kewajibanKMHS;
-            // $resDetailTx[$x]['kewajiban_TGKMHS'] = (int)$kewajibanTGKMHS;
         }
 
         $dataTx['detail_transaksi'] = $resDetailTx;
