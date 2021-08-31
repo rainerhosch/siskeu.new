@@ -12,7 +12,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Writer\Word2007;
-use \PhpOffice\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -272,46 +271,103 @@ class Laporan extends CI_Controller
 
     public function BuatLaporanBulanan()
     {
-        // $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
-        // $smtAktif = $smtAktifRes['id_smt'];
-
         date_default_timezone_set('Asia/Jakarta');
         $date = date('Y-m-d');
         $bln_thn = SUBSTR($date, 0, 7);
         // var_dump($bln_thn);
         // die;
 
-        if ($this->input->is_ajax_request()) {
-            $jenis_kas = $this->input->post('jenis_kas');
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Hello World !');
 
-            $where = [
-                'mjp.jenis_kas' => $jenis_kas,
-                'SUBSTRING(t.tanggal, 1, 7) =' => $bln_thn
-            ];
-            $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
-            $countHistoriTx = count($dataHistoriTx);
-            for ($i = 0; $i < $countHistoriTx; $i++) {
-                $where_DTx = [
-                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
-                    'mjp.jenis_kas' => 1
-                ];
-                $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
-                if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
-                    $keterangan = '';
-                } else {
-                    $keterangan = 'Potongan/Subsidi SPP';
-                }
-                $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
+        $writer = new Xlsx($spreadsheet);
 
-                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
-            }
-            $data['trx_bulan_ini'] = $dataHistoriTx;
-        } else {
-            $data = [
-                'status' => false,
-                'msg' => 'Invalid Request.'
-            ];
-        }
-        echo json_encode($data);
+        $filename = 'simple';
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+
+
+        // $spreadsheet = new Spreadsheet();
+        // $sheet = $spreadsheet->setActiveSheetIndex((int) $indexSheet);
+        // $sheet = $spreadsheet->setActiveSheetIndex((int) $indexSheet);
+
+        // //define width of column
+        // $sheet->getColumnDimension('A')->setWidth(8.43 + 0.72);
+        // $sheet->getColumnDimension('B')->setWidth(8.43 + 0.72);
+        // $sheet->getColumnDimension('C')->setWidth(4.43 + 0.72);
+        // $sheet->getColumnDimension('D')->setWidth(8.43 + 0.72);
+        // $sheet->getColumnDimension('E')->setWidth(3.86 + 0.72);
+        // $sheet->getColumnDimension('F')->setWidth(3.86 + 0.72);
+        // $sheet->getColumnDimension('G')->setWidth(3.71 + 0.72);
+        // $sheet->getColumnDimension('H')->setWidth(3.86 + 0.72);
+        // $sheet->getColumnDimension('I')->setWidth(12.29 + 0.72);
+        // $sheet->getColumnDimension('J')->setWidth(8.43 + 0.72);
+        // $sheet->getColumnDimension('K')->setWidth(8.43 + 0.72);
+        // $sheet->getColumnDimension('L')->setWidth(3.57 + 0.72);
+        // $sheet->getColumnDimension('M')->setWidth(3.57 + 0.72);
+        // $sheet->getColumnDimension('N')->setWidth(1.86 + 0.72);
+        // $sheet->getColumnDimension('O')->setWidth(1.86 + 0.72);
+        // $sheet->getColumnDimension('P')->setWidth(1.86 + 0.72);
+        // $sheet->getColumnDimension('Q')->setWidth(1.86 + 0.72);
+
+        // //define height of row
+        // $sheet->getRowDimension('3')->setRowHeight(27.75);
+        // $sheet->getRowDimension('4')->setRowHeight(27.75);
+        // $sheet->getRowDimension('5')->setRowHeight(27.75);
+        // $sheet->getRowDimension('6')->setRowHeight(27.85);
+
+        // //merge cell
+        // $sheet->mergeCells('A1:Q1');
+        // $sheet->mergeCells('D3:I3');
+        // $sheet->mergeCells('D4:I4');
+        // $sheet->mergeCells('D5:I5');
+        // $sheet->mergeCells('D6:I6');
+        // $sheet->mergeCells('M3:Q3');
+        // $sheet->mergeCells('M4:Q4');
+        // $sheet->mergeCells('M5:Q5');
+        // $sheet->mergeCells('M8:Q8');
+        // $sheet->mergeCells('B8:C8');
+        // $sheet->mergeCells('D8:L8');
+
+        // $sheet->setCellValue('A1', "Rekap Nilai " . $data);
+        // $sheet->setCellValue('A1', "Rekap Nilai ");
+
+        // if ($this->input->is_ajax_request()) {
+        //     $jenis_kas = $this->input->post('jenis_kas');
+
+        //     $where = [
+        //         'mjp.jenis_kas' => $jenis_kas,
+        //         'SUBSTRING(t.tanggal, 1, 7) =' => $bln_thn
+        //     ];
+        //     $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+        //     $countHistoriTx = count($dataHistoriTx);
+        //     for ($i = 0; $i < $countHistoriTx; $i++) {
+        //         $where_DTx = [
+        //             't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+        //             'mjp.jenis_kas' => 1
+        //         ];
+        //         $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+        //         if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
+        //             $keterangan = '';
+        //         } else {
+        //             $keterangan = 'Potongan/Subsidi SPP';
+        //         }
+        //         $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
+
+        //         $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+        //     }
+        //     $data['trx_bulan_ini'] = $dataHistoriTx;
+        // } else {
+        //     $data = [
+        //         'status' => false,
+        //         'msg' => 'Invalid Request.'
+        //     ];
+        // }
+        // echo json_encode($data);
     }
 }

@@ -65,7 +65,8 @@ $autoload['libraries'] = array(
     'form_validation',
     'formattanggal',
     'formattanggal2',
-    'createtxid'
+    'createtxid',
+    'fpdf'
 );
 
 /*
@@ -119,7 +120,9 @@ $autoload['helper'] = array(
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = [
+    'pdf_config'
+];
 
 /*
 | -------------------------------------------------------------------

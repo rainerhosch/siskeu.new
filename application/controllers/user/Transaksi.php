@@ -21,8 +21,6 @@ class Transaksi extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         // $this->date = date('Y-m-d H:i:s');
         // $this->smt_aktif = getSemesterAktif();
-        $this->load->config('pdf_config');
-        $this->load->library('fpdf');
         $this->load->library('Terbilang');
         $this->load->library('FormatTanggal');
         define('FPDF_FONTPATH', $this->config->item('fonts_path'));
