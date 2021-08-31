@@ -142,7 +142,7 @@ class Laporan extends CI_Controller
                 if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
                     $keterangan = '';
                 } else {
-                    $keterangan = 'Potongan Subsidi SPP';
+                    $keterangan = 'Potongan/Subsidi SPP';
                 }
                 $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
 
@@ -253,6 +253,52 @@ class Laporan extends CI_Controller
                     'msg' => 'berhasil dihapus.'
                 ];
             }
+        } else {
+            $data = [
+                'status' => false,
+                'msg' => 'Invalid Request.'
+            ];
+        }
+        echo json_encode($data);
+    }
+
+
+    public function BuatLaporanBulanan()
+    {
+        // $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        // $smtAktif = $smtAktifRes['id_smt'];
+
+        date_default_timezone_set('Asia/Jakarta');
+        $date = date('Y-m-d');
+        $bln_thn = SUBSTR($date, 0, 7);
+        // var_dump($bln_thn);
+        // die;
+
+        if ($this->input->is_ajax_request()) {
+            $jenis_kas = $this->input->post('jenis_kas');
+
+            $where = [
+                'mjp.jenis_kas' => $jenis_kas,
+                'SUBSTRING(t.tanggal, 1, 7) =' => $bln_thn
+            ];
+            $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            for ($i = 0; $i < $countHistoriTx; $i++) {
+                $where_DTx = [
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+                    'mjp.jenis_kas' => 1
+                ];
+                $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+                if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
+                    $keterangan = '';
+                } else {
+                    $keterangan = 'Potongan/Subsidi SPP';
+                }
+                $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
+
+                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            }
+            $data['trx_bulan_ini'] = $dataHistoriTx;
         } else {
             $data = [
                 'status' => false,

@@ -5,7 +5,20 @@
         <li><a href=""><?= $page; ?></a></li>
     </ul>
     <div class="row">
-        <div class="col-sm-6 col-lg-12">
+        <div class="col-sm-6 col-lg-6" id="btn_cetak_laporan">
+            <a class="widget widget-hover-effect1" data-toggle="modal">
+                <div class="widget-simple">
+                    <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+                        <i class="gi gi-print"></i>
+                    </div>
+                    <h3 class="widget-content text-right animation-pullDown">
+                        Buat Laporan<strong> Excel</strong><br>
+                        <small>Membuat Laporan Bulan <?= $bln_transaksi; ?></small>
+                    </h3>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6 col-lg-6">
             <a class="widget widget-hover-effect1" data-toggle="modal">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
@@ -18,32 +31,6 @@
                 </div>
             </a>
         </div>
-        <!-- <div class="col-sm-6 col-lg-3">
-            <a href="#pembayaran-lain" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaranLain">
-                <div class="widget-simple">
-                    <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
-                        <i class="fa fa-dollar"></i>
-                    </div>
-                    <h3 class="widget-content text-right animation-pullDown">
-                        Pembayaran <strong>Lain</strong><br>
-                        <small>Buat Transaksi Baru</small>
-                    </h3>
-                </div>
-            </a>
-        </div> -->
-        <!-- <div class="col-sm-6 col-lg-3">
-            <a href="#" class="widget widget-hover-effect1">
-                <div class="widget-simple">
-                    <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
-                        <i class="gi gi-circle_info"></i>
-                    </div>
-                    <h3 class="widget-content text-right animation-pullDown">
-                        0 <strong>Pembayaran</strong><br>
-                        <small>Transaksi Online</small>
-                    </h3>
-                </div>
-            </a>
-        </div> -->
     </div>
 
     <div class="row">
@@ -55,16 +42,8 @@
                             <h2><strong>Data</strong> Penerimaan Kas</h2>
                         </div>
                         <div class="table-responsive">
+                            <!-- <button class="btn btn-info" style="margin-bottom: 5px;">Cetak Laporan</button> -->
                             <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
-                                <!-- <div class="col-md-12">
-                                    <div class="col-md-4 pull-left">
-                                        <div class="input-group" id="date_filter">
-                                            <input type="text" id="datepicker_from" class="form-control date_range_filter" data-date-format="yyyy-mm-dd" placeholder="From:">
-                                            <div class="input-group-addon">to</div>
-                                            <input type="text" id="datepicker_to" class="form-control date_range_filter" data-date-format="yyyy-mm-dd" placeholder="To:">
-                                        </div>
-                                    </div>
-                                </div> -->
                                 <thead>
                                     <tr>
                                         <th class="text-center">No</th>
@@ -147,7 +126,19 @@
                 }
             });
 
-
+            $('#btn_cetak_laporan').on('click', function() {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>laporan/BuatLaporanBulanan",
+                    data: {
+                        jenis_kas: 1
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
         });
     </script>
 </div>
