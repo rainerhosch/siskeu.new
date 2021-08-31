@@ -223,7 +223,42 @@ class Laporan extends CI_Controller
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Data Tunggakan';
         $data['content'] = 'laporan/data_tunggakan';
-        $data['tunggakan'] = $this->tunggakan->getAllDataTunggakanMhs()->result_array();
         $this->load->view('template', $data);
+    }
+
+    public function getDataTunggakan()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data['tunggakan'] = $this->tunggakan->getAllDataTunggakanMhs()->result_array();
+            $data['admin_log'] = $this->session->userdata();
+        } else {
+            $data = 'Invalid Request.';
+        }
+        echo json_encode($data);
+    }
+
+    public function hapus_tunggakan()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_tg = $this->input->post('id_tg');
+            $delete = $this->tunggakan->deleteTunggakan(['id_tunggakan' => $id_tg]);
+            if (!$delete) {
+                $data = [
+                    'status' => false,
+                    'msg' => 'gagal dihapus.'
+                ];
+            } else {
+                $data = [
+                    'status' => true,
+                    'msg' => 'berhasil dihapus.'
+                ];
+            }
+        } else {
+            $data = [
+                'status' => false,
+                'msg' => 'Invalid Request.'
+            ];
+        }
+        echo json_encode($data);
     }
 }

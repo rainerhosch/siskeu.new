@@ -49,7 +49,7 @@
     </div>
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="<?= base_url('laporan/DataTunggakan') ?>" class="widget widget-hover-effect1">
             <div class="widget-simple">
                 <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
                     <i class="gi gi-usd"></i>
