@@ -27,7 +27,6 @@ class Laporan extends CI_Controller
         // $this->smt_aktif = getSemesterAktif($token);
         date_default_timezone_set('Asia/Jakarta');
         $this->load->library('terbilang');
-        define('FPDF_FONTPATH', $this->config->item('fonts_path'));
 
         $this->load->model('M_cetak_kwitansi', 'cetak');
         $this->load->model('M_masterdata', 'masterdata');
