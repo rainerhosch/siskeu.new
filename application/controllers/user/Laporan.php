@@ -10,8 +10,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *  Quots of the code     : 'rapihkan lah code mu, seperti halnya kau menata kehidupan'
  */
 
-use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Writer\Word2007;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -28,8 +26,6 @@ class Laporan extends CI_Controller
         // $token = 'semogabahagia';
         // $this->smt_aktif = getSemesterAktif($token);
         date_default_timezone_set('Asia/Jakarta');
-        $this->load->config('pdf_config');
-        $this->load->library('fpdf');
         $this->load->library('terbilang');
         define('FPDF_FONTPATH', $this->config->item('fonts_path'));
 
@@ -276,23 +272,53 @@ class Laporan extends CI_Controller
         $bln_thn = SUBSTR($date, 0, 7);
         // var_dump($bln_thn);
         // die;
+        $jenis_kas = $this->input->post('jenis_kas');
+
+
+        $where = [
+            'mjp.jenis_kas' => $jenis_kas,
+            'SUBSTRING(t.tanggal, 1, 7) =' => $bln_thn
+        ];
+        $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+        $countHistoriTx = count($dataHistoriTx);
+        for ($i = 0; $i < $countHistoriTx; $i++) {
+            $where_DTx = [
+                't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
+                'mjp.jenis_kas' => 1
+            ];
+            $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
+            if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
+                $keterangan = '';
+            } else {
+                $keterangan = 'Potongan/Subsidi SPP';
+            }
+            $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
+
+            $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+        }
+
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Hello World !');
-
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Tgl Transaksi');
+        $sheet->setCellValue('C1', 'NIM');
+        $sheet->setCellValue('D1', 'Rincian');
+        $sheet->setCellValue('E1', 'Total');
+        $sheet->setCellValue('F1', 'Semester');
+        $sheet->setCellValue('F1', 'Keterangan');
+        $sheet->setCellValue('F1', 'Admin');
+        $rows = 0;
+        foreach ($dataHistoriTx as $val) {
+            $sheet->setCellValue('A' . $rows, $val['id']);
+            $sheet->setCellValue('B' . $rows, $val['name']);
+            $sheet->setCellValue('C' . $rows, $val['skills']);
+            $sheet->setCellValue('D' . $rows, $val['address']);
+            $sheet->setCellValue('E' . $rows, $val['age']);
+            $sheet->setCellValue('F' . $rows, $val['designation']);
+            $rows++;
+        }
         $writer = new Xlsx($spreadsheet);
-
-        $filename = 'simple';
-
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
-        header('Cache-Control: max-age=0');
-
-        $writer->save('php://output');
-
-
-        // $spreadsheet = new Spreadsheet();
         // $sheet = $spreadsheet->setActiveSheetIndex((int) $indexSheet);
         // $sheet = $spreadsheet->setActiveSheetIndex((int) $indexSheet);
 
@@ -369,5 +395,8 @@ class Laporan extends CI_Controller
         //     ];
         // }
         // echo json_encode($data);
+
+
+        $writer->save('php://output');
     }
 }

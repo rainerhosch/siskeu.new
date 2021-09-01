@@ -19,11 +19,8 @@ class Transaksi extends CI_Controller
             redirect(base_url());
         }
         date_default_timezone_set('Asia/Jakarta');
-        // $this->date = date('Y-m-d H:i:s');
-        // $this->smt_aktif = getSemesterAktif();
         $this->load->library('Terbilang');
         $this->load->library('FormatTanggal');
-        define('FPDF_FONTPATH', $this->config->item('fonts_path'));
 
 
         $this->load->model('M_cetak_kwitansi', 'cetak');
@@ -1044,7 +1041,7 @@ class Transaksi extends CI_Controller
         $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
         for ($x = 0; $x < $countDetailTX; $x++) {
             $biaya_Lainnya = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $resDetailTx[$x]['id_jenis_pembayaran']])->row_array();
-            $kewajibanLain[] = $biaya_Lainnya['biaya'];
+            $kewajibanLain[] = isset($biaya_Lainnya['biaya']);
         }
         foreach ($resDetailTx as $i => $Dtx) {
             $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
@@ -1277,7 +1274,7 @@ class Transaksi extends CI_Controller
         $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
         for ($x = 0; $x < $countDetailTX; $x++) {
             $biaya_Lainnya = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $resDetailTx[$x]['id_jenis_pembayaran']])->row_array();
-            $kewajibanLain[] = $biaya_Lainnya['biaya'];
+            $kewajibanLain[] = isset($biaya_Lainnya['biaya']);
         }
         foreach ($resDetailTx as $i => $Dtx) {
             $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();

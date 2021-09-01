@@ -1,5 +1,5 @@
 <?php
-class PDF extends FPDF
+class PDF extends PDF
 {
 
     function format_tgl($tgl)

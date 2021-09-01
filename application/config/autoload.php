@@ -66,7 +66,7 @@ $autoload['libraries'] = array(
     'formattanggal',
     'formattanggal2',
     'createtxid',
-    'fpdf'
+    // 'PHPExcel'
 );
 
 /*
@@ -103,7 +103,6 @@ $autoload['helper'] = array(
     'file',
     'security',
     'cek_akses',
-    // 'tahun_ajaran',
     'get_data_from_simak',
     'date'
 );

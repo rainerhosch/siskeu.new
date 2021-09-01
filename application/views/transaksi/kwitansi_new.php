@@ -1,4 +1,6 @@
 <?php
+//above line is import to define, otherwise it gives an error : Could not include font metric file
+require(APPPATH . 'third_party/fpdf/fpdf.php');
 class PDF extends FPDF
 {
 
@@ -70,28 +72,28 @@ $pdf->AddPage();
 $pdf->SetMargins(5, 5, 5);
 
 // header
-$pdf->SetFont('times', '', 11);
+$pdf->SetFont('Times', '', 11);
 $pdf->Image('assets/image/logo2.jpg', 10, 8, 17);
 $pdf->Cell(15, 5, '', 0, 0, 'L');
 
 $pdf->Cell(155, 5, 'YAYASAN BUNGA BANGSA', 0, 0, 'C');
 $pdf->SetTextColor(0, 0, 255);
 $pdf->Cell(70, 4, '', 0, 1, 'L');
-$pdf->SetFont('times', 'B', 11);
+$pdf->SetFont('Times', 'B', 11);
 $pdf->Cell(15, 5, '', 0, 0, 'L');
 $pdf->Cell(166, 5, 'SEKOLAH TINGGI TEKNOLOGI', 0, 0, 'C');
-$pdf->SetFont('times', '', 10);
+$pdf->SetFont('Times', '', 10);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(70, 4, '', 0, 1, 'L');
-$pdf->SetFont('times', 'B', 14);
+$pdf->SetFont('Times', 'B', 14);
 $pdf->SetTextColor(255, 0, 0);
 $pdf->Cell(15, 7, '', 0, 0, 'L');
 $pdf->Cell(166, 7, 'STT. WASTUKANCANA PURWAKARTA', 0, 0, 'C');
-$pdf->SetFont('times', '', 10);
+$pdf->SetFont('Times', '', 10);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(70, 7, '', 0, 1, 'L');
 $pdf->SetFont('Arial', 'BU', 11);
-$pdf->SetFont('times', '', 10);
+$pdf->SetFont('Times', '', 10);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(15, 6, '', 0, 0, 'L');
 $pdf->Cell(165, 4, 'Jl. Raya Cikopak No. 53 Sadang - Purwakarta | Telp: (0264) 214952', 0, 0, 'C');
@@ -292,80 +294,5 @@ $pdf->SetFont('Courier', 'I', 9);
 $pdf->Line(7, 143, 207, 143);
 $pdf->Cell(163, 7, '', 0, 0, 'R');
 // end
-
-
-// konten bagian samping
-
-// if ($data_transaksi['data_kewajiban_cs'] == null || $data_transaksi['bayar_tg_cs'] == 1 || $dtx['id_jenis_pembayaran'] == 2) {
-
-// $pdf->Line(143, 5, 143, 143);
-// $pdf->Line(143, 5, 207, 5);
-// $pdf->Line(207, 5, 207, 143);
-// $pdf->Line(143, 143, 207, 143);
-// $pdf->SetFont('Arial', 'B', 14);
-// $pdf->RotatedText(147, 120, 'HALAMAN INI SENGAJA DIKOSONGKAN !', 55);
-// } else {
-//     $judul = '';
-//     $ket = '';
-//     if ($dtx['id_jenis_pembayaran'] == 3) {
-//         if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
-//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UTS';
-//             $ket = 'Telah melunasi cicilan-2, bisa mengikuti Ujuan Tengah Semester (UTS)';
-//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] < 500000) {
-//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UTS';
-//             $ket = 'Telah mendapat persetujuan PK-2 & bisa mengikuti Ujuan Tengah Semester (UTS)';
-//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] > 500000) {
-//             $judul = 'BELUM BISA MENGIKUTI UTS';
-//             $ket = 'Belum melunasi cicilan-2 & belum dapat mengikuti UTS';
-//         }
-//     }
-//     if ($dtx['id_jenis_pembayaran'] == 4) {
-//         if (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] == 0) {
-//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UAS';
-//             $ket = 'Telah melunasi cicilan-3, bisa mengikuti Ujuan Akhir Semester (UAS)';
-//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] < 500000) {
-//             $judul = 'SURAT PENGANTAR PENGAMBILAN KARTU UAS';
-//             $ket = 'Telah mendapat persetujuan PK-2 & bisa mengikuti Ujuan Akhir Semester (UAS)';
-//         } elseif (($data_transaksi['data_kewajiban_cs'] / 3) - $dtx['jml_bayar'] > 500000) {
-//             $judul = 'BELUM BISA MENGIKUTI UAS';
-//             $ket = 'Belum melunasi cicilan-2 & belum dapat mengikuti UAS';
-//         }
-//     }
-//     // layout keterangan bag samping
-//     $pdf->Image('assets/image/gunting.png', 139, 4, 12);
-//     $pdf->Line(145, 12, 145, 143);
-//     $pdf->Line(150, 5, 150, 143);
-//     $pdf->Line(150, 5, 207, 5);
-//     $pdf->Line(207, 5, 207, 143);
-//     $pdf->Line(150, 143, 207, 143);
-//     $pdf->SetFont('Arial', 'i', 9);
-//     $pdf->RotatedText(148, 121, 'Potong atau gunting kertas disini  !', 90);
-//     $pdf->SetFont('Arial', 'B', 12);
-//     $pdf->RotatedImage('assets/image/logo2.jpg', 151, 140, 11, 11, 90);
-//     // end
-//     $pdf->RotatedText(155, 120, $judul, 90);
-//     $pdf->SetFont('Arial', 'B', 10);
-//     $pdf->RotatedText(160, 128, 'STT. WASTUKANCANA - TAHUN AKADEMIK 2020/2021 GANJIL', 90);
-//     $pdf->Line(163, 5, 163, 143);
-//     $pdf->SetFont('Arial', '', 10);
-//     $pdf->RotatedText(168, 140, 'Yang bertanda tangan di bawah ini menerangkan bahwa :', 90);
-//     $pdf->SetFont('Arial', 'B', 10);
-//     $pdf->RotatedText(173, 140, 'Nama/Kode', 90);
-//     $pdf->RotatedText(173, 117, ': ' . $data_transaksi['nm_pd'] . ' / ' . $data_transaksi['id_transaksi'], 90);
-//     $pdf->RotatedText(178, 140, 'NIM/Jurusan', 90);
-//     $pdf->RotatedText(178, 117, ': ' . $data_transaksi['nim'] . ' /' . $data_transaksi['nm_jur'], 90);
-//     $pdf->SetFont('Arial', '', 10);
-//     $pdf->RotatedText(185, 140, $ket, 90);
-//     $pdf->RotatedText(189, 140, 'Tahun Akademik 2020/2021 Ganjil.', 90);
-
-//     // date_default_timezone_set('Asia/Jakarta');
-//     // $pdf->RotatedText(192, 45, date('d M Y'), 90);
-//     $pdf->RotatedText(192, 45, $tglLog, 90);
-//     $pdf->SetFont('Arial', 'U', 10);
-//     $pdf->RotatedText(205, 45, $data_transaksi['nama_user'], 90);
-//     $pdf->RotatedImage('assets/image/ttd/' . $data_transaksi['ttd'], 193, 45, 15, 9, 90);
-// }
-
-
 //end kontent samping
 $pdf->Output();
