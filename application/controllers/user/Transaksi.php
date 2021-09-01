@@ -490,7 +490,7 @@ class Transaksi extends CI_Controller
             ];
             $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
             $id_TGCS = [
-                'id_tunggakan' => $dataTG_CS['id_tunggakan']
+                'id_tunggakan' => isset($dataTG_CS['id_tunggakan'])
             ];
             if ($bayarTG != null) {
                 $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $bayarTG;
@@ -522,7 +522,7 @@ class Transaksi extends CI_Controller
             ];
             $dataTG_KMHS = $this->tunggakan->getTunggakanMhs($CekTGKMHS)->row_array();
             $id_tgKMHS = [
-                'id_tunggakan' => $dataTG_KMHS['id_tunggakan']
+                'id_tunggakan' => isset($dataTG_KMHS['id_tunggakan'])
             ];
             if ($bayarTG_KMHS != null) {
                 $dataTGKMHSBaru = $dataTG_KMHS['jml_tunggakan'] - $bayarTG_KMHS;

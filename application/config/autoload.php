@@ -66,7 +66,7 @@ $autoload['libraries'] = array(
     'formattanggal',
     'formattanggal2',
     'createtxid',
-    // 'PHPExcel'
+    'PHPExcel'
 );
 
 /*
