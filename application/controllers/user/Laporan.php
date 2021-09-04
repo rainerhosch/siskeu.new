@@ -10,6 +10,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *  Quots of the code     : 'rapihkan lah code mu, seperti halnya kau menata kehidupan'
  */
 
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Writer\Word2007;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use \PhpOffice\PhpSpreadsheet;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -26,7 +31,7 @@ class Laporan extends CI_Controller
         // $token = 'semogabahagia';
         // $this->smt_aktif = getSemesterAktif($token);
         date_default_timezone_set('Asia/Jakarta');
-        $this->load->library('terbilang');
+        $this->load->library('formatterbilang');
 
         $this->load->model('M_cetak_kwitansi', 'cetak');
         $this->load->model('M_masterdata', 'masterdata');
@@ -97,11 +102,11 @@ class Laporan extends CI_Controller
 
         date_default_timezone_set('Asia/Jakarta');
         $now = date('Y-m-d');
-        $pecah_tgl_waktu = explode(' ', $now);
-        $tanggal = $this->formattanggal->konversi($pecah_tgl_waktu[0]);
+        // $pecah_tgl_waktu = explode(' ', $now);
+        $tanggal = $this->formattanggal->konversi($now);
         $pecah_konversi = explode(' ', $tanggal);
-        $bln_transaksi = $pecah_konversi[1] . ' ' . $pecah_konversi[2];
-        $data['bln_transaksi'] = $bln_transaksi;
+        $bln_berjalan = $pecah_konversi[1] . ' ' . $pecah_konversi[2];
+        $data['bln_berjalan'] = $bln_berjalan;
 
         $this->load->view('template', $data);
     }
@@ -143,7 +148,7 @@ class Laporan extends CI_Controller
                 if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
                     $keterangan = '';
                 } else {
-                    $keterangan = 'Potongan/Subsidi SPP';
+                    $keterangan = 'Potongan SPP/Beasiswa';
                 }
                 $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
 
@@ -268,15 +273,21 @@ class Laporan extends CI_Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $date = date('Y-m-d');
-        $bln_thn = SUBSTR($date, 0, 7);
-        // var_dump($bln_thn);
-        // die;
-        $jenis_kas = $this->input->post('jenis_kas');
+        $pecah_date = explode('-', $date);
+        $thn = $pecah_date[0];
+        $bln = $pecah_date[1];
+        $bln_lalu = $bln - 1;
+        $jenis_kas = $this->input->get('jenis_laporan');
+        $FormatTanggal = new FormatTanggal;
+
+        // seting ambil bulan laporan
+        $nm_bln_lalu = $FormatTanggal->konversiBulan($bln_lalu);
+        $bulan_laporan = $nm_bln_lalu . ' ' . $thn;
 
 
         $where = [
             'mjp.jenis_kas' => $jenis_kas,
-            'SUBSTRING(t.tanggal, 1, 7) =' => $bln_thn
+            'SUBSTRING(t.tanggal, 1, 7) =' => $thn . '-0' . $bln_lalu
         ];
         $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
         $countHistoriTx = count($dataHistoriTx);
@@ -289,113 +300,159 @@ class Laporan extends CI_Controller
             if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
                 $keterangan = '';
             } else {
-                $keterangan = 'Potongan/Subsidi SPP';
+                $keterangan = 'Potongan SPP/Beasiswa';
             }
             $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
 
             $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
         }
-
-
         $spreadsheet = new Spreadsheet();
+        $Terbilang = new FormatTerbilang();
+        $spreadsheet->setActiveSheetIndex(0);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'No');
-        $sheet->setCellValue('B1', 'Tgl Transaksi');
-        $sheet->setCellValue('C1', 'NIM');
-        $sheet->setCellValue('D1', 'Rincian');
-        $sheet->setCellValue('E1', 'Total');
-        $sheet->setCellValue('F1', 'Semester');
-        $sheet->setCellValue('F1', 'Keterangan');
-        $sheet->setCellValue('F1', 'Admin');
-        $rows = 0;
-        foreach ($dataHistoriTx as $val) {
-            $sheet->setCellValue('A' . $rows, $val['id']);
-            $sheet->setCellValue('B' . $rows, $val['name']);
-            $sheet->setCellValue('C' . $rows, $val['skills']);
-            $sheet->setCellValue('D' . $rows, $val['address']);
-            $sheet->setCellValue('E' . $rows, $val['age']);
-            $sheet->setCellValue('F' . $rows, $val['designation']);
-            $rows++;
+        $sheet->setTitle('Penerimaan_Kas');
+
+
+        //define width of column
+        $sheet->getColumnDimension('A')->setWidth(5.00);
+        $sheet->getColumnDimension('B')->setWidth(19.00);
+        $sheet->getColumnDimension('C')->setWidth(15.00);
+        $sheet->getColumnDimension('D')->setWidth(25.00);
+        $sheet->getColumnDimension('E')->setWidth(15.00);
+        $sheet->getColumnDimension('F')->setWidth(15.00);
+        $sheet->getColumnDimension('G')->setWidth(13.00);
+        $sheet->getColumnDimension('H')->setWidth(10.00);
+
+        //Define Style table
+        $styleTitle = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+        ];
+        $styleTable = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['RGB' => '000000']
+                ]
+            ]
+        ];
+
+        // configurasi Title
+        $sheet->setCellValue('A1', 'LAPORAN PENERIMAAN KAS YAYASAN BUNGA BANGSA');
+        $sheet->mergeCells('A1:H2');
+        $sheet->setCellValue('A3', $bulan_laporan);
+        $sheet->mergeCells('A3:H4');
+        $sheet->getStyle('A1:H4')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H4')->getFont()->setSize(14);
+        $sheet->getStyle('A1:H4')->applyFromArray($styleTitle); //styling header table
+
+        $row_header = 6;
+        $merge_header = $row_header + 1;
+        $sheet->setCellValue('A' . $row_header, 'No');
+        $sheet->setCellValue('B' . $row_header, 'Tgl Transaksi');
+        $sheet->setCellValue('C' . $row_header, 'NIM');
+        $sheet->setCellValue('D' . $row_header, 'Rincian Transaksis');
+        $sheet->mergeCells('D' . $row_header . ':' . 'E' . $row_header);
+        $sheet->setCellValue('D' . ($row_header + 1), 'Jenis Pembayaran');
+        $sheet->setCellValue('E' . ($row_header + 1), 'Jumlah Bayar');
+        $sheet->setCellValue('F' . $row_header, 'Total');
+        $sheet->setCellValue('G' . $row_header, 'Semester');
+        $sheet->setCellValue('H' . $row_header, 'Admin');
+        // merge all header
+        $sheet->mergeCells('A' . $row_header . ':A' . $merge_header);
+        $sheet->mergeCells('B' . $row_header . ':B' . $merge_header);
+        $sheet->mergeCells('C' . $row_header . ':C' . $merge_header);
+        $sheet->mergeCells('F' . $row_header . ':F' . $merge_header);
+        $sheet->mergeCells('G' . $row_header . ':G' . $merge_header);
+        $sheet->mergeCells('H' . $row_header . ':H' . $merge_header);
+        //styling title
+        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $merge_header . ':H' . $merge_header)->getFont()->setBold(true);
+
+
+        $row_tbl = 8;
+        $data_terbilang = [];
+        foreach ($dataHistoriTx as $i => $val) {
+            $i++;
+            if (count($val['detail_transaksi']) > 1) {
+                $row_tbl = ($row_tbl + count($val['detail_transaksi'])) - 1;
+            }
+            // var_dump($jml_detail);
+            // die;
+            $row_min = (($row_tbl + 1) - count($val['detail_transaksi']));
+            $sheet->setCellValue('A' . $row_min, $i);
+            $sheet->setCellValue('B' . $row_min, $val['tanggal']);
+            $sheet->setCellValue('C' . $row_min, $val['nim']);
+            if (count($val['detail_transaksi']) > 0) {
+
+                $sheet->mergeCells('A' . $row_min  . ':' . 'A' . $row_tbl);
+                $sheet->mergeCells('B' . $row_min . ':' . 'B' . $row_tbl);
+                $sheet->mergeCells('C' . $row_min . ':' . 'C' . $row_tbl);
+                $sheet->mergeCells('F' . $row_min  . ':' . 'F' . $row_tbl);
+                $sheet->mergeCells('G' . $row_min . ':' . 'G' . $row_tbl);
+                $sheet->mergeCells('H' . $row_min . ':' . 'H' . $row_tbl);
+            }
+
+
+            $jml_bayar = [];
+            foreach ($val['detail_transaksi'] as $keyls => $dtx) {
+                $now = ($row_min + $keyls);
+                if ($keyls > 0) {
+
+                    $sheet->setCellValue('D' . $now, $dtx['nm_jenis_pembayaran']);
+                    $sheet->setCellValue('E' . $now, $dtx['jml_bayar']);
+                } else {
+
+                    $sheet->setCellValue('D' . $row_min, $dtx['nm_jenis_pembayaran']);
+                    $sheet->setCellValue('E' . $now, $dtx['jml_bayar']);
+                }
+                // $sheet->setCellValue('D' . ($row_tbl + $keyls), $dtx['nm_jenis_pembayaran']);
+                // $sheet->setCellValue('E' . ($row_tbl + $keyls), $dtx['jml_bayar']);
+                // $row_tbl_detail++;
+                $jml_bayar[] = $dtx['jml_bayar'];
+                $keyls++;
+            }
+            $total_bayar = array_sum($jml_bayar);
+            $sheet->setCellValue('F' . $row_min, $total_bayar);
+            $sheet->setCellValue('G' . $row_min, $val['semester']);
+            $sheet->setCellValue('H' . $row_min, $val['nama_user']);
+            $data_terbilang[] = $total_bayar;
+
+            $row_tbl++;
         }
+        $sum_total = array_sum($data_terbilang);
+        $terbilang = $Terbilang->terbilang($sum_total);
+        $sheet->getStyle('E8:F' . ($row_tbl - 1))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->setCellValue('A' . $row_tbl, 'TOTAL (RP)');
+        $sheet->mergeCells('A' . $row_tbl . ':' . 'C' . ($row_tbl + 1));
+        $sheet->setCellValue(
+            'D' . $row_tbl,
+            '=SUM(F8:F' . ($row_tbl - 1) . ')'
+        );
+        $sheet->setCellValue(
+            'D' . ($row_tbl + 1),
+            $terbilang
+        );
+        $sheet->getStyle('D' . $row_tbl)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->mergeCells('D' . $row_tbl . ':' . 'H' . $row_tbl);
+        $sheet->mergeCells('D' . ($row_tbl + 1) . ':' . 'H' . ($row_tbl + 1));
+        $sheet->getStyle('A' . $row_tbl . ':' . 'H' . ($row_tbl + 1))->getFont()->setBold(true);
+        $sheet->getStyle('A6:H' . ($row_tbl + 1))->applyFromArray($styleTable); //styling header table
+
+        $filename = 'Laporan_Penerimaan_Kas_Yayasan_Bunga_Bangsa(' . $bulan_laporan . ')';
         $writer = new Xlsx($spreadsheet);
-        // $sheet = $spreadsheet->setActiveSheetIndex((int) $indexSheet);
-        // $sheet = $spreadsheet->setActiveSheetIndex((int) $indexSheet);
-
-        // //define width of column
-        // $sheet->getColumnDimension('A')->setWidth(8.43 + 0.72);
-        // $sheet->getColumnDimension('B')->setWidth(8.43 + 0.72);
-        // $sheet->getColumnDimension('C')->setWidth(4.43 + 0.72);
-        // $sheet->getColumnDimension('D')->setWidth(8.43 + 0.72);
-        // $sheet->getColumnDimension('E')->setWidth(3.86 + 0.72);
-        // $sheet->getColumnDimension('F')->setWidth(3.86 + 0.72);
-        // $sheet->getColumnDimension('G')->setWidth(3.71 + 0.72);
-        // $sheet->getColumnDimension('H')->setWidth(3.86 + 0.72);
-        // $sheet->getColumnDimension('I')->setWidth(12.29 + 0.72);
-        // $sheet->getColumnDimension('J')->setWidth(8.43 + 0.72);
-        // $sheet->getColumnDimension('K')->setWidth(8.43 + 0.72);
-        // $sheet->getColumnDimension('L')->setWidth(3.57 + 0.72);
-        // $sheet->getColumnDimension('M')->setWidth(3.57 + 0.72);
-        // $sheet->getColumnDimension('N')->setWidth(1.86 + 0.72);
-        // $sheet->getColumnDimension('O')->setWidth(1.86 + 0.72);
-        // $sheet->getColumnDimension('P')->setWidth(1.86 + 0.72);
-        // $sheet->getColumnDimension('Q')->setWidth(1.86 + 0.72);
-
-        // //define height of row
-        // $sheet->getRowDimension('3')->setRowHeight(27.75);
-        // $sheet->getRowDimension('4')->setRowHeight(27.75);
-        // $sheet->getRowDimension('5')->setRowHeight(27.75);
-        // $sheet->getRowDimension('6')->setRowHeight(27.85);
-
-        // //merge cell
-        // $sheet->mergeCells('A1:Q1');
-        // $sheet->mergeCells('D3:I3');
-        // $sheet->mergeCells('D4:I4');
-        // $sheet->mergeCells('D5:I5');
-        // $sheet->mergeCells('D6:I6');
-        // $sheet->mergeCells('M3:Q3');
-        // $sheet->mergeCells('M4:Q4');
-        // $sheet->mergeCells('M5:Q5');
-        // $sheet->mergeCells('M8:Q8');
-        // $sheet->mergeCells('B8:C8');
-        // $sheet->mergeCells('D8:L8');
-
-        // $sheet->setCellValue('A1', "Rekap Nilai " . $data);
-        // $sheet->setCellValue('A1', "Rekap Nilai ");
-
-        // if ($this->input->is_ajax_request()) {
-        //     $jenis_kas = $this->input->post('jenis_kas');
-
-        //     $where = [
-        //         'mjp.jenis_kas' => $jenis_kas,
-        //         'SUBSTRING(t.tanggal, 1, 7) =' => $bln_thn
-        //     ];
-        //     $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
-        //     $countHistoriTx = count($dataHistoriTx);
-        //     for ($i = 0; $i < $countHistoriTx; $i++) {
-        //         $where_DTx = [
-        //             't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi'],
-        //             'mjp.jenis_kas' => 1
-        //         ];
-        //         $resDetailTx = $this->laporan->getDetailTx($where_DTx)->result_array();
-        //         if ($dataHistoriTx[$i]['uang_masuk'] == 1) {
-        //             $keterangan = '';
-        //         } else {
-        //             $keterangan = 'Potongan/Subsidi SPP';
-        //         }
-        //         $dataHistoriTx[$i]['uang_masuk'] = $keterangan;
-
-        //         $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
-        //     }
-        //     $data['trx_bulan_ini'] = $dataHistoriTx;
-        // } else {
-        //     $data = [
-        //         'status' => false,
-        //         'msg' => 'Invalid Request.'
-        //     ];
-        // }
-        // echo json_encode($data);
-
-
+        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Type:application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
         $writer->save('php://output');
     }
 }

@@ -692,7 +692,7 @@ class Transaksi extends CI_Controller
                 'jam' => $jam,
                 'semester' => $smtBayar,
                 'nim' => $nimMhs,
-                'total_bayar' => $totalBayar,
+                // 'total_bayar' => $totalBayar,
                 'user_id' => $this->session->userdata('id_user'),
                 'status_transaksi' => 1,
                 'transaksi_ke' => $trx_ke,
@@ -898,11 +898,12 @@ class Transaksi extends CI_Controller
                 'tanggal' => $tgl,
                 'jam' => $jam,
                 'nim' => $nimMhs,
-                'total_bayar' => $totalBayar,
+                // 'total_bayar' => $totalBayar,
                 'semester' => $smtAktif,
                 'user_id' => $this->session->userdata('id_user'),
                 'status_transaksi' => 1,
-                'transaksi_ke' => $trx_ke
+                'transaksi_ke' => $trx_ke,
+                'uang_masuk' => 1
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
 

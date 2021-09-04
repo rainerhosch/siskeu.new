@@ -13,7 +13,7 @@
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
                         Buat Laporan<strong> Excel</strong><br>
-                        <small>Membuat Laporan Bulan <?= $bln_transaksi; ?></small>
+                        <small>Membuat Laporan Bulan Kas Bulan Lalu.</small>
                     </h3>
                 </div>
             </a>
@@ -25,7 +25,7 @@
                         <i class="fa fa-usd"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
-                        Kas Diterima Per<strong> <?= $bln_transaksi; ?></strong><br>
+                        Kas Diterima Per<strong> <?= $bln_berjalan; ?></strong><br>
                         <small><?= 'Rp.' . number_format($total_uang_masuk_bulan_ini); ?> </small>
                     </h3>
                 </div>
@@ -126,18 +126,10 @@
                 }
             });
 
-            $('#btn_cetak_laporan').on('click', function() {
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>laporan/BuatLaporanBulanan",
-                    data: {
-                        jenis_kas: 1
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        console.log(response);
-                    }
-                });
+            $('#btn_cetak_laporan').on('click', function(e) {
+                e.preventDefault();
+                let hrf = `<?= base_url('laporan/BuatLaporanBulanan') ?>?jenis_laporan=1`;
+                window.open(hrf, '_blank');
             });
         });
     </script>

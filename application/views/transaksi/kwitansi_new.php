@@ -244,51 +244,65 @@ $pdf->SetFont('Courier', 'IB', 11);
 $pdf->Cell(40, 5, number_format($total_kewajiban, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(40, 5, number_format($total_bayar_trx, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(40, 5, number_format($total_kewajiban - $total_bayar_trx, 0, '', '.'), 1, 1, 'R');
-
-// footer
-$pdf->SetY(-200);
+$pdf->Ln(5);
+//terbilang
+$data_terbilang = $Terbilang->bilang($total_bayar_trx);
+$panjang_kata = strlen($data_terbilang);
+$pdf->SetFont('Courier', 'IB', 9);
+$pdf->Cell(65, 5, 'TERBILANG BAYAR :', 0, 1, 'L');
+$pdf->SetFont('Courier', 'IB', 9);
+$pdf->MultiCell(80, 5, $data_terbilang . 'Rupiah ', 1, 'L');
 $pdf->SetFont('Courier', 'UB', 9);
 $pdf->Cell(20, 4, 'CATATAN', 0, 0, 'L');
 $pdf->SetFont('Courier', 'B', 9);
-$pdf->Cell(3, 4, ':', 0, 0, 'L');
+$pdf->Cell(3, 4, ':', 0, 1, 'L');
+$data_catatan = [
+    0 => [
+        'no' => '1. ',
+        'text' => 'Syarat Bisa Perwalian Online, Harus Lunas Cicilan Ke-1 !'
+    ],
+    1 => [
+        'no' => '2. ',
+        'text' => 'Syarat Bisa Mengikuti UTS, Harus Lunas Cicilan Ke-2 !'
+    ],
+    2 => [
+        'no' => '3. ',
+        'text' => 'Syarat Bisa Mengikuti UAS, Harus Lunas Cicilan Ke-3 !'
+    ],
+];
 $pdf->SetFont('Courier', 'B', 9);
-$pdf->Cell(148, 4, '1. Syarat Bisa Perwalian Online, Harus Lunas Cicilan Ke-1 !', 0, 1, 'L');
-$pdf->Cell(23, 4, '', 0, 0, 'L');
-$pdf->Cell(148, 4, '2. Syarat Bisa Mengikuti UTS, Harus Lunas Cicilan Ke-2 !', 0, 1, 'L');
-$pdf->Cell(23, 4, '', 0, 0, 'L');
-$pdf->Cell(148, 4, '3. Syarat Bisa Mengikuti UAS, Harus Lunas Cicilan Ke-3 !', 0, 1, 'L');
-$pdf->SetFont('Courier', '', 9);
-$pdf->Cell(75, 5, '', 0, 1, 'R');
+foreach ($data_catatan as $val) {
+    $pdf->Cell(4, 4, $val['no'], 0, 0, 'L');
+    $pdf->Cell(145, 4, $val['text'], 0, 1, 'L');
+}
 
-//terbilang
-$data_terbilang = $Terbilang->bilang($total_bayar_trx);
-$pdf->SetFont('Courier', 'IB', 9);
-$pdf->Cell(65, 5, 'TERBILANG BAYAR :', 0, 0, 'L');
+// footer
+$pdf->SetY(-185);
 $pdf->SetFont('Courier', 'IB', 10);
-$pdf->Cell(206, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
-
-$pdf->SetFont('Courier', 'IB', 9);
-$pdf->Cell(90, 19, $data_terbilang . 'Rupiah ', 1, 0, 'L');
+$pdf->Cell(100, 5, '', 0, 0, 'C');
+$pdf->Cell(137, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
+$pdf->Ln(3);
 
 $pdf->SetFont('Courier', 'IB', 8);
-$pdf->Cell(57, 7, 'Staf Keuangan', 0, 0, 'C');
+$pdf->Cell(100, 5, '', 0, 0, 'C');
+$pdf->Cell(55, 5, 'Penyetor', 0, 0, 'C');
 $pdf->Cell(5, 5, '', 0, 0, 'R');
-$pdf->Cell(55, 7, 'Penyetor', 0, 1, 'C');
+$pdf->Cell(40, 5, 'Staf Keuangan', 0, 1, 'C');
 $pdf->SetFont('Courier', '', 9);
 $pdf->Ln(5);
-$pdf->Cell(70, 4, '', 0, 0, 'R');
-$pdf->Image('assets/image/ttd/' . $admin_log['ttd'], 115, 124, 17);
-$pdf->Cell(95, 9, '( ______________ )', 0, 0, 'C');
+$pdf->Cell(100, 4, '', 0, 0, 'R');
+$pdf->Image('assets/image/ttd/' . $admin_log['ttd'], 178, 124, 17);
+$pdf->Cell(55, 9, '( ______________ )', 0, 0, 'C');
 $pdf->Cell(5, 4, '', 0, 0, 'R');
-$pdf->Cell(20, 9, '( ______________ )', 0, 1, 'C');
+$pdf->Cell(40, 9, '( ______________ )', 0, 1, 'C');
 $pdf->SetFont('Arial', 'I', 9);
 $pdf->Cell(30, 1, 'tgl print : ' . $tglLog . ' | ' . $admin_log['ket_cetak'] . '/trx_ke-' . $data_transaksi['transaksi_ke'], 0, 0, 'L');
 
 $pdf->SetFont('Courier', 'IB', 9);
-$pdf->Cell(40, 4, '', 0, 0, 'R');
-$pdf->Cell(93, 1, $admin_log['nama_user'], 0, 0, 'C');
+$pdf->Cell(70, 4, '', 0, 0, 'R');
+$pdf->Cell(55, 1, 'Nama Jelas', 0, 0, 'C');
 $pdf->Cell(5, 4, '', 0, 0, 'R');
-$pdf->Cell(25, 1, 'Nama Jelas', 0, 1, 'C');
+$pdf->Cell(40, 1, $admin_log['nama_user'], 0, 1, 'C');
 $pdf->SetFont('Courier', 'I', 9);
 
 $pdf->Line(7, 143, 207, 143);

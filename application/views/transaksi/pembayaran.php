@@ -290,11 +290,6 @@
                             });
                             htmlx += `</td>`;
                             htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
-                            // htmlx += `<td class = "text-center" >`;
-                            // $.each(value.detail_transaksi, function(k, val) {
-                            //     htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.sisa_bayar).toLocaleString()}</i><br>`;
-                            // });
-                            // htmlx += `</td>`;
                             htmlx += `<td class = "text-center" >${value.semester}</td>`;
                             if (total_bayarTrx < value.kewajiban_Semester_ini) {
                                 htmlx += `<td class = "text-center" >BL</td>`;
@@ -302,7 +297,6 @@
                                 htmlx += `<td class = "text-center" >L</td>`;
                             }
                             htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
-                            // htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                             htmlx += `<td class="text-center">`;
                             if (value.user_id !== response.user_loged) {
                                 // htmlx += `<a href="#" onclick="" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="" disabled>Edit</a> | `;
