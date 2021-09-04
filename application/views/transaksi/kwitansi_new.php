@@ -285,14 +285,14 @@ $pdf->Ln(3);
 
 $pdf->SetFont('Courier', 'IB', 8);
 $pdf->Cell(100, 5, '', 0, 0, 'C');
-$pdf->Cell(55, 5, 'Penyetor', 0, 0, 'C');
+$pdf->Cell(60, 5, 'Penyetor', 0, 0, 'C');
 $pdf->Cell(5, 5, '', 0, 0, 'R');
 $pdf->Cell(40, 5, 'Staf Keuangan', 0, 1, 'C');
 $pdf->SetFont('Courier', '', 9);
 $pdf->Ln(5);
 $pdf->Cell(100, 4, '', 0, 0, 'R');
-$pdf->Image('assets/image/ttd/' . $admin_log['ttd'], 178, 124, 17);
-$pdf->Cell(55, 9, '( ______________ )', 0, 0, 'C');
+$pdf->Image('assets/image/ttd/' . $admin_log['ttd'], 183, 124, 17);
+$pdf->Cell(60, 9, '( ______________ )', 0, 0, 'C');
 $pdf->Cell(5, 4, '', 0, 0, 'R');
 $pdf->Cell(40, 9, '( ______________ )', 0, 1, 'C');
 $pdf->SetFont('Arial', 'I', 9);
@@ -300,7 +300,7 @@ $pdf->Cell(30, 1, 'tgl print : ' . $tglLog . ' | ' . $admin_log['ket_cetak'] . '
 
 $pdf->SetFont('Courier', 'IB', 9);
 $pdf->Cell(70, 4, '', 0, 0, 'R');
-$pdf->Cell(55, 1, 'Nama Jelas', 0, 0, 'C');
+$pdf->Cell(60, 1, 'Nama Jelas', 0, 0, 'C');
 $pdf->Cell(5, 4, '', 0, 0, 'R');
 $pdf->Cell(40, 1, $admin_log['nama_user'], 0, 1, 'C');
 $pdf->SetFont('Courier', 'I', 9);
