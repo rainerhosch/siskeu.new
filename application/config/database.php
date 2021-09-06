@@ -98,22 +98,22 @@ $db['default'] = array(
 	'save_queries' => TRUE
 );
 
-$db['wastudig_simak'] = [
-	'hostname' => 'wastu.digital',
-	'username' => 'wastudig_simak',
-	'password' => 'Inovasi2025DIGITAL',
-	'database' => 'wastudig_simak',
-	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'autoinit' => TRUE,
-	'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
-];
+// $db['wastudig_simak'] = [
+// 	'hostname' => 'wastu.digital',
+// 	'username' => 'wastudig_simak',
+// 	'password' => 'Inovasi2025DIGITAL',
+// 	'database' => 'wastudig_simak',
+// 	'dbdriver' => 'mysqli',
+// 	'dbprefix' => '',
+// 	'pconnect' => FALSE,
+// 	'db_debug' => (ENVIRONMENT !== 'production'),
+// 	'cache_on' => FALSE,
+// 	'cachedir' => '',
+// 	'char_set' => 'utf8',
+// 	'dbcollat' => 'utf8_general_ci',
+// 	'swap_pre' => '',
+// 	'autoinit' => TRUE,
+// 	'stricton' => FALSE,
+// 	'failover' => array(),
+// 	'save_queries' => TRUE
+// ];
