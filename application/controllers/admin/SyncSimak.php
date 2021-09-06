@@ -21,8 +21,8 @@ class SyncSimak extends CI_Controller
         $token = 'semogabahagia';
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_api', 'api');
-        $this->smt_aktif = getSemesterAktif($token);
-        $this->getMhsFromApiSimak = getDataMahasiswa($token);
+        $this->smt_aktif = reqData('TahunAkademikAktif');
+        // $this->getMhsFromApiSimak = reqData('MahasiswaForSiskeu');
     }
 
     public function index()
@@ -35,18 +35,17 @@ class SyncSimak extends CI_Controller
     }
     public function getCountData()
     {
-        $token = 'semogabahagia';
         $smtAktif = $this->smt_aktif['id_smt'];
-        $dataRegMhs = getRegMhs($token);
-        $dataRegUjian = getRegUjian($token);
-        $dataRes = $this->getMhsFromApiSimak;
-        $counApiDataMhs = count($dataRes['mhsdata']);
-        $countRegMhsSimak = count($dataRegMhs['regmhs']);
-        $countRegUjianSimak = count($dataRegUjian['reg_ujian']);
-        $data['count_mhs_simak'] = $counApiDataMhs;
+        // $dataRegMhs = reqData('RegMhs');
+        // $dataRegUjian = reqData('RegUjian');
+        // $dataRes = $this->getMhsFromApiSimak;
+        // $counApiDataMhs = count($dataRes['mhsdata']);
+        // $countRegMhsSimak = count($dataRegMhs['regmhs']);
+        // $countRegUjianSimak = count($dataRegUjian['reg_ujian']);
+        // $data['count_mhs_simak'] = $counApiDataMhs;
         $data['semester_aktif_simak'] = $smtAktif;
-        $data['reg_mhs_simak'] = $countRegMhsSimak;
-        $data['reg_ujian_simak'] = $countRegUjianSimak;
+        // $data['reg_mhs_simak'] = $countRegMhsSimak;
+        // $data['reg_ujian_simak'] = $countRegUjianSimak;
         // ======================= Lokal ====================================
 
         $condition = [
