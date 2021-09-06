@@ -750,13 +750,11 @@ class Transaksi extends CI_Controller
                 ];
             } else {
                 if ($id_pembayaran != null) {
-                    if ($id_pembayaran != 8) {
-                        $data = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $id_pembayaran])->row_array();
-                    } else {
-                        $where_tahun = [
-                            'angkatan' => $angkatanMhs
-                        ];
-                        $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+                    $where_tahun = [
+                        'angkatan' => $angkatanMhs
+                    ];
+                    $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+                    if ($id_pembayaran == 8) {
                         $where = [
                             'id_jenis_pembayaran' => $id_pembayaran
                         ];
@@ -766,6 +764,18 @@ class Transaksi extends CI_Controller
                             'nm_jp' => $resJnsPembayaran['nm_jp'],
                             'biaya' => $dataBiaya['cicilan_semester'] / 2
                         ];
+                    } else if ($id_pembayaran == 9) {
+                        $where = [
+                            'id_jenis_pembayaran' => $id_pembayaran
+                        ];
+                        $resJnsPembayaran = $this->masterdata->GetJenisPembayaran($where)->row_array();
+                        $data = [
+                            'id_jp' => $id_pembayaran,
+                            'nm_jp' => $resJnsPembayaran['nm_jp'],
+                            'biaya' => $dataBiaya['uang_bangunan']
+                        ];
+                    } else {
+                        $data = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $id_pembayaran])->row_array();
                     }
                 } else {
                     $data = $this->masterdata->getBiayaPembayaranLain()->result_array();

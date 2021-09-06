@@ -115,13 +115,8 @@ $tglTrx = $FormatTanggal->konversi($data_transaksi['tanggal']);
 $tglLog = $FormatTanggal->konversi($admin_log['tanggal_log']);
 // data identitas penyetor
 $pdf->Ln(3);
-// $pdf->Line(7, 29, 135, 29);
-// $pdf->Line(8, 30, 134, 30);
-// $pdf->Line(8, 30.5, 134, 30.5);
 $pdf->Line(5, 29, 207, 29);
 $pdf->Line(5, 30, 207, 30);
-// $pdf->Line(8, 30, 206, 30);
-// $pdf->Line(8, 30.5, 206, 30.5);
 $pdf->Ln(4);
 $pdf->SetFont('Courier', 'B', 12);
 $pdf->SetTextColor(0, 0, 0);
@@ -129,21 +124,27 @@ $pdf->Cell(194, 4, 'BUKTI PEMBAYARAN BIAYA KULIAH MAHASISWA', 0, 1, 'C');
 $pdf->Line(5, 37, 207, 37);
 // $pdf->Line(7, 30, 207, 30);
 $pdf->SetFont('Courier', 'B', 10);
-$pdf->Ln(5);
+$pdf->Ln(3);
 $pdf->Cell(40, 4, 'No. Transaksi', 0, 0, 'L');
-$pdf->Cell(65, 4, ': ' . $data_transaksi['id_transaksi'], 0, 0, 'L');
+$pdf->Cell(4, 4, ': ', 0, 0, 'L');
+$pdf->Cell(61, 4, $data_transaksi['id_transaksi'], 0, 0, 'L');
 $pdf->Cell(40, 4, 'NIM', 0, 0, 'L');
-$pdf->Cell(70, 4, ': ' . $data_transaksi['nim'], 0, 1, 'L');
+$pdf->Cell(4, 4, ': ', 0, 0, 'L');
+$pdf->Cell(61, 4, $data_transaksi['nim'], 0, 1, 'L');
 
 $pdf->Cell(40, 4, 'Tgl Transaksi', 0, 0, 'L');
-$pdf->Cell(65, 4, ': ' . $tglTrx, 0, 0, 'L');
-$pdf->Cell(40, 4, 'Nama', 0, 0, 'L');
-$pdf->Cell(70, 4, ': ' .  $data_transaksi['nm_pd'], 0, 1, 'L');
+$pdf->Cell(4, 4, ': ', 0, 0, 'L');
+$pdf->Cell(61, 4, $tglTrx, 0, 0, 'L');
+$pdf->Cell(40, 4, 'Jurusan', 0, 0, 'L');
+$pdf->Cell(4, 4, ': ', 0, 0, 'L');
+$pdf->Cell(61, 4, $data_transaksi['nm_jur'], 0, 1, 'L');
 
 $pdf->Cell(40, 4, 'Semester', 0, 0, 'L');
-$pdf->Cell(65, 4, ': ' . $tahun_akademik . ' (' . $cetak_ganjil_genal . ')', 0, 0, 'L');
-$pdf->Cell(40, 4, 'Jurusan', 0, 0, 'L');
-$pdf->Cell(70, 4, ': ' .  $data_transaksi['nm_jur'], 0, 1, 'L');
+$pdf->Cell(4, 4, ': ', 0, 0, 'L');
+$pdf->Cell(61, 4, $tahun_akademik . ' (' . $cetak_ganjil_genal . ')', 0, 0, 'L');
+$pdf->Cell(40, 4, 'Nama', 0, 0, 'L');
+$pdf->Cell(4, 4, ': ', 0, 0, 'L');
+$pdf->MultiCell(60, 4, $data_transaksi['nm_pd'], 0, 'L');
 // end
 
 $pdf->Line(5, 56, 207, 56);
