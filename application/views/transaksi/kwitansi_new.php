@@ -278,7 +278,7 @@ foreach ($data_catatan as $val) {
 }
 
 // footer
-$pdf->SetY(-185);
+$pdf->SetY(-183);
 $pdf->SetFont('Courier', 'IB', 10);
 $pdf->Cell(100, 5, '', 0, 0, 'C');
 $pdf->Cell(137, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
@@ -306,7 +306,7 @@ $pdf->Cell(5, 4, '', 0, 0, 'R');
 $pdf->Cell(40, 1, $admin_log['nama_user'], 0, 1, 'C');
 $pdf->SetFont('Courier', 'I', 9);
 
-$pdf->Line(7, 143, 207, 143);
+$pdf->Line(5, 143, 207, 143);
 $pdf->Cell(163, 7, '', 0, 0, 'R');
 // end
 //end kontent samping
