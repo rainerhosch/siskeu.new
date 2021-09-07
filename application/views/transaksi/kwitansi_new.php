@@ -278,7 +278,7 @@ foreach ($data_catatan as $val) {
 }
 
 // footer
-$pdf->SetY(-185);
+$pdf->SetY(-187);
 $pdf->SetFont('Courier', 'IB', 10);
 $pdf->Cell(100, 5, '', 0, 0, 'C');
 $pdf->Cell(137, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
