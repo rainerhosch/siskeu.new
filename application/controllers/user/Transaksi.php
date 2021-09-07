@@ -692,7 +692,7 @@ class Transaksi extends CI_Controller
                 'jam' => $jam,
                 'semester' => $smtBayar,
                 'nim' => $nimMhs,
-                'total_bayar' => $totalBayar,
+                // 'total_bayar' => $totalBayar,
                 'user_id' => $this->session->userdata('id_user'),
                 'status_transaksi' => 1,
                 'transaksi_ke' => $trx_ke,
@@ -908,7 +908,7 @@ class Transaksi extends CI_Controller
                 'tanggal' => $tgl,
                 'jam' => $jam,
                 'nim' => $nimMhs,
-                'total_bayar' => $totalBayar,
+                // 'total_bayar' => $totalBayar,
                 'semester' => $smtAktif,
                 'user_id' => $this->session->userdata('id_user'),
                 'status_transaksi' => 1,
@@ -1022,6 +1022,7 @@ class Transaksi extends CI_Controller
 
     public function cetak_kwitansi($id_transaksi)
     {
+
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $smtAktif = $smtAktifRes['id_smt'];
         $bayarCS = false;
@@ -1221,22 +1222,16 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanTGKMHS;
                 }
             } else {
-                if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
-                    $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                } else {
-
-                    $where22 = [
-                        't.nim' => $dataTx['nim'],
-                        't.semester' => $dataTx['semester'],
-                        't.id_transaksi <' => $id_transaksi,
-                        'mjp.id_jenis_pembayaran' => $resDetailTx[$x]['id_jenis_pembayaran']
-
-                    ];
-                    $dataTxSebelumnya2 = $this->transaksi->getDataTransaksiSebelumnya($where22)->result_array();
-                    foreach ($dataTxSebelumnya2 as $j => $val) {
-                        $kewajibanLain[$x] = $kewajibanLain[$x] - $val['jml_bayar'];
+                // var_dump($dataBiayaAngkatan['uang_bangunan']);
+                // die;
+                for ($j = 0; $j < count($resBiayaLain); $j++) {
+                    if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                    } else {
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
                     }
-                    $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanLain[$x];
                 }
             }
         }
@@ -1454,10 +1449,14 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanTGKMHS;
                 }
             } else {
+                // var_dump($dataBiayaAngkatan['uang_bangunan']);
+                // die;
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                    } else {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
                     }
                 }
@@ -1471,6 +1470,8 @@ class Transaksi extends CI_Controller
         $dataTx['admin_log']['tanggal_log'] = mdate($tgl_str, $tgl_now);
         $dataTx['admin_log']['ket_cetak'] = 'print_ulang';
         $data['data_transaksi'] = $dataTx;
+        // var_dump($dataTx);
+        // die;
         $this->load->view('transaksi/kwitansi_new', $data);
     }
 }
