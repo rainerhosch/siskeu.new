@@ -72,9 +72,8 @@ $pdf->AddPage();
 $pdf->SetMargins(5, 5, 5);
 
 // header
-$pdf->SetY(2);
 $pdf->SetFont('Times', '', 11);
-$pdf->Image('assets/image/logo2.jpg', 10, 2, 17);
+$pdf->Image('assets/image/logo2.jpg', 10, 8, 17);
 $pdf->Cell(15, 5, '', 0, 0, 'L');
 
 $pdf->Cell(155, 5, 'YAYASAN BUNGA BANGSA', 0, 0, 'C');
@@ -116,13 +115,13 @@ $tglTrx = $FormatTanggal->konversi($data_transaksi['tanggal']);
 $tglLog = $FormatTanggal->konversi($admin_log['tanggal_log']);
 // data identitas penyetor
 $pdf->Ln(3);
-$pdf->Line(5, 22, 207, 22);
-$pdf->Line(5, 23, 207, 23);
+$pdf->Line(5, 29, 207, 29);
+$pdf->Line(5, 30, 207, 30);
 $pdf->Ln(4);
 $pdf->SetFont('Courier', 'B', 12);
 $pdf->SetTextColor(0, 0, 0);
 $pdf->Cell(194, 4, 'BUKTI PEMBAYARAN BIAYA KULIAH MAHASISWA', 0, 1, 'C');
-$pdf->Line(5, 30, 207, 30);
+$pdf->Line(5, 37, 207, 37);
 // $pdf->Line(7, 30, 207, 30);
 $pdf->SetFont('Courier', 'B', 10);
 $pdf->Ln(3);
@@ -147,11 +146,13 @@ $pdf->Cell(40, 4, 'Nama', 0, 0, 'L');
 $pdf->Cell(4, 4, ': ', 0, 0, 'L');
 $pdf->MultiCell(60, 4, $data_transaksi['nm_pd'], 0, 'L');
 // end
-$pdf->Line(5, 48, 207, 48);
-$pdf->Ln(7);
+
+$pdf->Line(5, 56, 207, 56);
+$pdf->Ln(5);
+
 
 // rincian pembayaran
-// $pdf->Ln(2);
+$pdf->Ln(2);
 $pdf->SetFont('Courier', 'B', 10);
 $pdf->Cell(81, 5, 'Keterangan Pembayaran', 1, 0, 'C');
 $pdf->Cell(40, 5, 'Kewajiban', 1, 0, 'C');
@@ -244,7 +245,7 @@ $pdf->SetFont('Courier', 'IB', 11);
 $pdf->Cell(40, 5, number_format($total_kewajiban, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(40, 5, number_format($total_bayar_trx, 0, '', '.'), 1, 0, 'R');
 $pdf->Cell(40, 5, number_format($total_kewajiban - $total_bayar_trx, 0, '', '.'), 1, 1, 'R');
-$pdf->Ln(3);
+$pdf->Ln(5);
 //terbilang
 $data_terbilang = $Terbilang->bilang($total_bayar_trx);
 $panjang_kata = strlen($data_terbilang);
@@ -252,7 +253,6 @@ $pdf->SetFont('Courier', 'IB', 9);
 $pdf->Cell(65, 5, 'TERBILANG BAYAR :', 0, 1, 'L');
 $pdf->SetFont('Courier', 'IB', 9);
 $pdf->MultiCell(80, 5, $data_terbilang . 'Rupiah ', 1, 'L');
-$pdf->Ln(3);
 $pdf->SetFont('Courier', 'UB', 9);
 $pdf->Cell(20, 4, 'CATATAN', 0, 0, 'L');
 $pdf->SetFont('Courier', 'B', 9);
@@ -278,7 +278,7 @@ foreach ($data_catatan as $val) {
 }
 
 // footer
-$pdf->SetY(-183);
+$pdf->SetY(-185);
 $pdf->SetFont('Courier', 'IB', 10);
 $pdf->Cell(100, 5, '', 0, 0, 'C');
 $pdf->Cell(137, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
@@ -306,7 +306,7 @@ $pdf->Cell(5, 4, '', 0, 0, 'R');
 $pdf->Cell(40, 1, $admin_log['nama_user'], 0, 1, 'C');
 $pdf->SetFont('Courier', 'I', 9);
 
-$pdf->Line(5, 143, 207, 143);
+$pdf->Line(7, 143, 207, 143);
 $pdf->Cell(163, 7, '', 0, 0, 'R');
 // end
 //end kontent samping
