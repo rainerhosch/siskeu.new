@@ -84,7 +84,8 @@ $route['manajemen/edit-user'] = 'admin/Manajemen/EditUser';
 $route['manajemen/hapus-user'] = 'admin/Manajemen/DeleteUser';
 
 // route for admin access datamaster
-// $route['masterdata/BiayaSpp'] = 'admin/MasterData/BiayaKuliahAngkatan';
+$route['aktivasi-mahasiswa'] = 'admin/AktivasiMhs';
+$route['aktivasi-mahasiswa/(:any)'] = 'admin/AktivasiMhs/$1';
 $route['masterdata/(:any)'] = 'admin/MasterData/$1';
 $route['laporan/(:any)'] = 'user/Laporan/$1';
 $route['rekap/(:any)'] = 'user/Rekap/$1';

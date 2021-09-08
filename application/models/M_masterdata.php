@@ -25,11 +25,11 @@ class M_masterdata extends CI_Model
     // }
 
 
-    public function getMahasiswaByNim($nim)
+    public function getMahasiswaByNim($data)
     {
         $this->db->select('*');
         $this->db->from('mahasiswa');
-        $this->db->where($nim);
+        $this->db->where($data);
         return $this->db->get();
     }
 

@@ -489,20 +489,25 @@ class Transaksi extends CI_Controller
                 'jenis_tunggakan' => 6
             ];
             $dataTG_CS = $this->tunggakan->getTunggakanMhs($whereCekNim)->row_array();
-            $id_TGCS = [
-                'id_tunggakan' => isset($dataTG_CS['id_tunggakan'])
-            ];
             if ($bayarTG != null) {
-                $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $bayarTG;
-                if ($dataTGBaru === 0) {
-                    // hapus data tunggakan
-                    $this->tunggakan->deleteTunggakan($id_TGCS);
-                } else {
+                $dataTGBaru = 0;
+                if ($dataTG_CS != null) {
+                    $id_TGCS = [
+                        'id_tunggakan' => $dataTG_CS['id_tunggakan']
+                    ];
+                    $dataTGBaru = $dataTG_CS['jml_tunggakan'] - $bayarTG;
+                }
+                // var_dump($dataTGBaru);
+                // die;
+                if ($dataTGBaru != 0) {
                     // update data tunggakan
                     $dataUpdateTG = [
                         'jml_tunggakan' => $dataTGBaru
                     ];
                     $this->tunggakan->updateTunggakan($id_TGCS, $dataUpdateTG);
+                } else {
+                    // hapus data tunggakan
+                    $this->tunggakan->deleteTunggakan($id_TGCS);
                 }
                 // add transaksi
                 $dataTxDetail[] = [
@@ -521,20 +526,23 @@ class Transaksi extends CI_Controller
                 'jenis_tunggakan' => 7
             ];
             $dataTG_KMHS = $this->tunggakan->getTunggakanMhs($CekTGKMHS)->row_array();
-            $id_tgKMHS = [
-                'id_tunggakan' => isset($dataTG_KMHS['id_tunggakan'])
-            ];
             if ($bayarTG_KMHS != null) {
-                $dataTGKMHSBaru = $dataTG_KMHS['jml_tunggakan'] - $bayarTG_KMHS;
-                if ($dataTGKMHSBaru === 0) {
-                    // hapus data tunggakan
-                    $this->tunggakan->deleteTunggakan($id_tgKMHS);
-                } else {
+                $dataTGKMHSBaru = 0;
+                if ($dataTG_KMHS != null) {
+                    $id_tgKMHS = [
+                        'id_tunggakan' => $dataTG_KMHS['id_tunggakan']
+                    ];
+                    $dataTGKMHSBaru = $dataTG_KMHS['jml_tunggakan'] - $bayarTG_KMHS;
+                }
+                if ($dataTGKMHSBaru != 0) {
                     // update data tunggakan
                     $dataUpdateTGKMHS = [
                         'jml_tunggakan' => $dataTGKMHSBaru
                     ];
                     $this->tunggakan->updateTunggakan($id_tgKMHS, $dataUpdateTGKMHS);
+                } else {
+                    // hapus data tunggakan
+                    $this->tunggakan->deleteTunggakan($id_tgKMHS);
                 }
                 // add transaksi
                 $dataTxDetail[] = [
@@ -553,21 +561,24 @@ class Transaksi extends CI_Controller
                 'NIM' => $nimMhs,
                 'tgl_reg' => $tgl,
                 'aktif' => 2,
-                'keterangan' => 'from siskeu_new'
+                'keterangan' => 'from siskeu_new',
+                'aktif_by' => 0
             ];
             $dataAktifUTS = [
                 'tahun' => $smtBayar,
                 'nim' => $nimMhs,
                 'tgl_reg' => $tgl,
                 'aktif' => 1,
-                'keterangan' => 'from siskeu_new'
+                'keterangan' => 'from siskeu_new',
+                'aktif_by' => 0
             ];
             $dataAktifUAS = [
                 'tahun' => $smtBayar,
                 'nim' => $nimMhs,
                 'tgl_reg' => $tgl,
                 'aktif' => 2,
-                'keterangan' => 'from siskeu_new'
+                'keterangan' => 'from siskeu_new',
+                'aktif_by' => 0
             ];
 
             // ===============================  Fungsi aktifasi perwalian dan ujian ==============
@@ -842,15 +853,39 @@ class Transaksi extends CI_Controller
                         $this->tunggakan->deleteTunggakan($id_TG);
                     }
                 } else {
-                    if ($pembayaran[$i] === '8') {
+                    if ($pembayaran[$i] == '8') {
                         // cek baiay perangkatan
                         $where_tahun = [
                             'angkatan' => $angkatanMhs
                         ];
                         $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
                         $biayaPerpanjang = $dataBiaya['cicilan_semester'] / 2;
+                        $sisabayarPerpanjang = 0;
 
-                        $sisabayarPerpanjang = $biayaPerpanjang - $dataBiayaPembayaran[8];
+                        $where = [
+                            't.nim' => $dataTx['nim'],
+                            't.semester' => $dataTx['semester'],
+                            'mjp.id_jenis_pembayaran' => $pembayaran[$i],
+
+                        ];
+                        $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
+                        if (count($dataTxSebelumnya) != 0) {
+                            foreach ($dataTxSebelumnya as $val) {
+                                $sisabayarPerpanjang = ($biayaPerpanjang - $dataBiayaPembayaran[8]) - $val['jml_bayar'];
+                            }
+                        } else {
+                            $sisabayarPerpanjang = $biayaPerpanjang - $dataBiayaPembayaran[8];
+                        }
+
+                        $dataAktifKRS = [
+                            'Tahun' => $smtBayar,
+                            'Identitas_ID' => '',
+                            'Jurusan_ID' => '',
+                            'NIM' => $nimMhs,
+                            'tgl_reg' => $tgl,
+                            'aktif' => 2,
+                            'keterangan' => 'from siskeu_new'
+                        ];
                         if ($sisabayarPerpanjang != 0) {
                             // add data tunggakan
                             $dataAddTG = [
@@ -859,7 +894,27 @@ class Transaksi extends CI_Controller
                                 'jml_tunggakan' => $sisabayarPerpanjang,
                             ];
                             $this->tunggakan->addNewTunggakan($dataAddTG);
-                            // }
+                            if ($sisabayarPerpanjang < 500000) {
+                                $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+                            }
+                        } else {
+                            // bayar lunas
+                            $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+                        }
+                    } else if ($pembayaran[$i] == '9') {
+                        $where_tahun = [
+                            'angkatan' => $angkatanMhs
+                        ];
+                        $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+                        $sisaBayarPK = $dataBiaya['uang_bangunan'] - $dataBiayaPembayaran[$pembayaran[$i]];
+                        if ($sisaBayarPK != 0) {
+                            // add data tunggakan
+                            $dataAddTG = [
+                                'nim' => $nimMhs,
+                                'jenis_tunggakan' => $pembayaran[$i],
+                                'jml_tunggakan' => $sisaBayarPK,
+                            ];
+                            $this->tunggakan->addNewTunggakan($dataAddTG);
                         }
                     } else {
                         $dataBiayaLain = $this->masterdata->getBiayaPembayaranLain()->result_array();
