@@ -251,6 +251,17 @@ class Manajemen extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function getUserByID()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_user = $this->session->userdata('id_user');
+            $data = $this->user->getUser(['id_user' => $id_user])->row_array();
+        } else {
+            $data = 'invalid request.';
+        }
+        echo json_encode($data);
+    }
+
     public function AddUser()
     {
         // code here

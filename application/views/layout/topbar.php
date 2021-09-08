@@ -38,9 +38,9 @@
             </a>
             <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
                 <li>
-                    <a href="javascript:void(0)">
+                    <a href="javascript:void(0)" id="edit_profile">
                         <i class="fa fa-cog fa-fw pull-right"></i>
-                        Pengaturan
+                        Edit Profile
                     </a>
                     <a href="<?= base_url('auth/logout'); ?>">
                         <i class="fa fa-sign-out fa-fw pull-right"></i>
@@ -51,16 +51,67 @@
         </li>
         <!-- END User Dropdown -->
     </ul>
-    <!-- END Right Header Navigation -->
-</header>
-<!-- <script type="text/javascript">
-    var timestamp = '<?= time(); ?>';
 
-    function updateTime() {
-        $('#time').html(Date(timestamp));
-        timestamp++;
-    }
-    $(function() {
-        setInterval(updateTime, 1000);
+
+    <!-- modal edit -->
+    <div class="modal" tabindex="-1" role="dialog" id="editProfile">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url('admin/manajemen'); ?>/UpdateUser" method="post" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" value="" name="edit_id_user" id="edit_id_user_profile">
+                        <input type="hidden" class="form-control" name="edit_username" id="edit_username_profile">
+                        <input type="hidden" class="form-control validate" name="edit_role" id="edit_role_profile">
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="edit_nama_profile">Nama</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="edit_nama_profile" name="edit_nama" class="form-control validate">
+                            </div>
+                        </div>
+
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="edit_password">Password</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="password" id="edit_password_profile" name="edit_password" class="form-control validate">
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<script>
+    $(document).ready(function() {
+        $('#edit_profile').on('click', function() {
+            let BASE_URL = "<?php echo base_url(); ?>";
+            $.ajax({
+                type: "GET",
+                url: BASE_URL + 'manajemen/getUserByID',
+                dataType: "json",
+                success: function(response) {
+                    $('#editProfile').modal('show');
+                    $('#edit_id_user_profile').val(response.id_user);
+                    $('#edit_username_profile').val(response.username);
+                    $('#edit_nama_profile').val(response.nama_user);
+                    $('#edit_password_profile').val(response.password);
+                    $('#edit_role_profile').val(response.role);
+                }
+            });
+        });
     });
-</script> -->
+</script>
