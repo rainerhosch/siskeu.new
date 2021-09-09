@@ -111,6 +111,9 @@ class AktivasiMhs extends CI_Controller
         if ($this->input->is_ajax_request()) {
             $nipd = $this->input->post('nipd');
             $jenis_dispen = $this->input->post('jenis_dispen');
+
+            // var_dump($dataDispen);
+            // die;
             if ($jenis_dispen == '1') {
                 $jns_bayar = 2;
                 $nm_jns_dispen = 'Cicilan Ke-1';
@@ -124,58 +127,67 @@ class AktivasiMhs extends CI_Controller
             $tahun_akademik = $this->input->post('tahun_akademik');
             $data = $this->masterdata->getMahasiswaByNim(['nipd' => $nipd])->row_array();
             // cek tunggakan smt lalu
-            $whereTG = [
-                'nim' => $nipd,
-                'tg.jenis_tunggakan' => 6
-            ];
-            $dataTG = $this->tunggakan->getTunggakanMhs($whereTG)->row_array();
-            $data['tg_smt_lalu'] = 0;
-            if ($dataTG != null) {
-                $data['tg_smt_lalu'] = $dataTG['jml_tunggakan'];
-            }
-            // cek biaya angkatan
-            $jenjangMhs = $data['nm_jenj_didik'];
-            $angkatan_mhs = '20' . substr($data['nipd'], 0, 2);
-            $where_tahun = [
-                'angkatan' =>  $angkatan_mhs
-            ];
-            $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
-            $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
-            $biayaC_ke = $biayaCS / 3;
-            $dataCekNim = [
-                'nim' => $nipd,
-                'semester' => $smtAktif
-            ];
-            $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCekNim)->result_array();
-            $countHistoriTx = count($dataHistoriTx);
-            if ($countHistoriTx > 0) {
-                for ($i = 0; $i < $countHistoriTx; $i++) {
-                    $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
-                    $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
-                    foreach ($dataHistoriTx[$i]['detail_transaksi'] as $dTX) {
-                        if ($dTX['id_jenis_pembayaran'] == $jns_bayar) {
-                            $biayaC_ke = $biayaC_ke - $dTX['jml_bayar'];
-                        }
-                        $data['pengajuan_dispen'] = $biayaC_ke;
-                        $data['nm_kewajiban'] = $nm_jns_dispen;
-                    }
-                }
-            } else {
-                $data['pengajuan_dispen'] = $biayaC_ke;
-                $data['nm_kewajiban'] = $nm_jns_dispen;
-            }
-
-
-
-            // var_dump($dataHistoriTx);
-            // die;
-
             if ($data != null) {
-                $response = [
-                    'status' => 200,
-                    'msg'   => 'data ditemukan',
-                    'data' => $data
+                $whereTG = [
+                    'nim' => $nipd,
+                    'tg.jenis_tunggakan' => 6
                 ];
+                $dataTG = $this->tunggakan->getTunggakanMhs($whereTG)->row_array();
+                $data['tg_smt_lalu'] = 0;
+                if ($dataTG != null) {
+                    $data['tg_smt_lalu'] = $dataTG['jml_tunggakan'];
+                }
+                // cek biaya angkatan
+                $jenjangMhs = $data['nm_jenj_didik'];
+                $angkatan_mhs = '20' . substr($data['nipd'], 0, 2);
+                $where_tahun = [
+                    'angkatan' =>  $angkatan_mhs
+                ];
+                $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+                $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
+                $biayaC_ke = $biayaCS / 3;
+                $dataCekNim = [
+                    'nim' => $nipd,
+                    'semester' => $smtAktif
+                ];
+                $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCekNim)->result_array();
+                $countHistoriTx = count($dataHistoriTx);
+                if ($countHistoriTx > 0) {
+                    for ($i = 0; $i < $countHistoriTx; $i++) {
+                        $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                        $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                        foreach ($dataHistoriTx[$i]['detail_transaksi'] as $dTX) {
+                            if ($dTX['id_jenis_pembayaran'] == $jns_bayar) {
+                                $biayaC_ke = $biayaC_ke - $dTX['jml_bayar'];
+                            }
+                            $data['pengajuan_dispen'] = $biayaC_ke;
+                            $data['nm_kewajiban'] = $nm_jns_dispen;
+                        }
+                    }
+                } else {
+                    $data['pengajuan_dispen'] = $biayaC_ke;
+                    $data['nm_kewajiban'] = $nm_jns_dispen;
+                }
+                // cek data dispen
+                $dataCekDispen = [
+                    'm.nipd' => $nipd,
+                    'd.tahun_akademik' => $smtAktif,
+                    'd.jenis_dispen' => $jenis_dispen
+                ];
+                $dataDispen = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
+                if ($dataDispen == NULL) {
+                    $response = [
+                        'status' => 200,
+                        'msg'   => 'data ditemukan',
+                        'data' => $data
+                    ];
+                } else {
+                    $response = [
+                        'status' => 203,
+                        'msg'   => 'Data dispen, ' . $dataDispen['nm_pd'] . ' sudah ada!',
+                        'data' => $dataDispen
+                    ];
+                }
             } else {
                 $response = [
                     'status' => 203,

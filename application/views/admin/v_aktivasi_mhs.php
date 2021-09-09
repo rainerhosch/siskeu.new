@@ -94,6 +94,7 @@
                                         <th class="text-center">Rincian Tagihan</th>
                                         <th class="text-center">Total Tagihan</th>
                                         <th class="text-center">Tgl Perjanjian Pelunasan</th>
+                                        <th class="text-center">Semester</th>
                                         <th class="text-center">No Tlp</th>
                                         <th class="text-center">Tools</th>
                                     </tr>
@@ -211,6 +212,7 @@
                         html += `</td>`;
                         html += `<td class = "text-center"><i>Rp.${parseInt(total_Tagihan).toLocaleString()}</i></td>`;
                         html += `<td class = "text-center" >${value.tanggal_lunas}</td>`;
+                        html += `<td class = "text-center" >${value.tahun_akademik}</td>`;
                         html += `<td class = "text-center" >${value.no_tlp}</td>`;
                         html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}', '_blank');" class="btn btn-xs btn-success">Chat WA</a></td>`;
                         // html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}', '_blank');" class="btn btn-xs btn-success">Chat WA</a> | <a class="btn btn-xs btn-danger">Hapus</a></td>`;
@@ -316,10 +318,17 @@
                             $(".form_input_data").val('');
                             $('#btn_aktivasi').attr('disabled', true);
                             $('#btn_aktivasi').html('Tombol Aktivasi');
-                            $('#suggesstion-box').html('<span><code>' + response.msg + '</code></span>');
-                            setTimeout(function() {
-                                $("#suggesstion-box").html("");
-                            }, 2000);
+                            if (response.data === null) {
+                                swal.fire("Error!", response.msg, "error");
+                                $('.swal2-confirm').click(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                swal.fire("Info!", response.msg, "info");
+                                $('.swal2-confirm').click(function() {
+                                    location.reload();
+                                });
+                            }
                         }
                     }
                 });
