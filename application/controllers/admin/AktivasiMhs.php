@@ -53,7 +53,7 @@ class AktivasiMhs extends CI_Controller
                 if ($dataTG != null) {
                     $tg_smt_lalu = $dataTG['jml_tunggakan'];
                 }
-                if ($dataDispen[$i]['id_dispensasi'] == '1') {
+                if ($dataDispen[$i]['jenis_dispen'] == '1') {
                     $dataDispen[$i]['rincian'] = [
                         0 => [
                             'label' => 'Cicilan Ke-1',
@@ -64,7 +64,7 @@ class AktivasiMhs extends CI_Controller
                             'jumlah' => $tg_smt_lalu
                         ],
                     ];
-                } elseif ($dataDispen[$i]['id_dispensasi'] == '3') {
+                } elseif ($dataDispen[$i]['jenis_dispen'] == '3') {
                     $dataDispen[$i]['rincian'] = [
                         0 => [
                             'label' => 'Cicilan Ke-2',
@@ -75,7 +75,7 @@ class AktivasiMhs extends CI_Controller
                             'jumlah' => $tg_smt_lalu
                         ],
                     ];
-                } elseif ($dataDispen[$i]['id_dispensasi'] == '4') {
+                } elseif ($dataDispen[$i]['jenis_dispen'] == '4') {
                     $dataDispen[$i]['rincian'] = [
                         0 => [
                             'label' => 'Cicilan Ke-3',
