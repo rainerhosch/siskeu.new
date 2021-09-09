@@ -25,8 +25,8 @@
                         <i class="fa fa-usd"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
-                        Kas Diterima Per<strong> <?= $bln_berjalan; ?></strong><br>
-                        <small><?= 'Rp.' . number_format($total_uang_masuk_bulan_ini); ?> </small>
+                        Kas Diterima Per <?= $bln_berjalan; ?> <strong><?= 'Rp.' . number_format($total_uang_masuk_bulan_ini); ?></strong><br>
+                        <small>(Data tersebut pure uang masuk, data input potongan tidak di hitung.)</small>
                     </h3>
                 </div>
             </a>

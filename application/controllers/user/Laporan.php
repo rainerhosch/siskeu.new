@@ -69,12 +69,12 @@ class Laporan extends CI_Controller
         $datenow = date("Y-m-d");
         $bnlOfYear = SUBSTR($datenow, 0, 7);
         // where '2009-01-01' <= datecolumn and datecolumn < '2009-02-01'
-
-
+        // var_dump($bnlOfYear);
+        // die;
         $where = [
             't.uang_masuk' => 1,
             'SUBSTR(t.tanggal, 1, 7)=' => $bnlOfYear,
-            'mjp.jenis_kas' => 1
+            'mjp.jenis_kas' => 1,
         ];
         $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
         $countHistoriTx = count($dataHistoriTx);
@@ -281,12 +281,15 @@ class Laporan extends CI_Controller
         $FormatTanggal = new FormatTanggal;
 
         // seting ambil bulan laporan
+        // $nm_bln = $FormatTanggal->konversiBulan($bln);
+        // $bulan_laporan = $nm_bln . ' ' . $thn;
         $nm_bln_lalu = $FormatTanggal->konversiBulan($bln_lalu);
         $bulan_laporan = $nm_bln_lalu . ' ' . $thn;
 
 
         $where = [
             'mjp.jenis_kas' => $jenis_kas,
+            // 'SUBSTRING(t.tanggal, 1, 7) =' => $thn . '-' . $bln
             'SUBSTRING(t.tanggal, 1, 7) =' => $thn . '-0' . $bln_lalu
         ];
         $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
@@ -322,6 +325,7 @@ class Laporan extends CI_Controller
         $sheet->getColumnDimension('F')->setWidth(15.00);
         $sheet->getColumnDimension('G')->setWidth(13.00);
         $sheet->getColumnDimension('H')->setWidth(10.00);
+        $sheet->getColumnDimension('I')->setWidth(26.00);
 
         //Define Style table
         $styleTitle = [
@@ -345,12 +349,12 @@ class Laporan extends CI_Controller
 
         // configurasi Title
         $sheet->setCellValue('A1', 'LAPORAN PENERIMAAN KAS YAYASAN BUNGA BANGSA');
-        $sheet->mergeCells('A1:H2');
+        $sheet->mergeCells('A1:I2');
         $sheet->setCellValue('A3', $bulan_laporan);
-        $sheet->mergeCells('A3:H4');
-        $sheet->getStyle('A1:H4')->getFont()->setBold(true);
-        $sheet->getStyle('A1:H4')->getFont()->setSize(14);
-        $sheet->getStyle('A1:H4')->applyFromArray($styleTitle); //styling header table
+        $sheet->mergeCells('A3:I4');
+        $sheet->getStyle('A1:I4')->getFont()->setBold(true);
+        $sheet->getStyle('A1:I4')->getFont()->setSize(14);
+        $sheet->getStyle('A1:I4')->applyFromArray($styleTitle); //styling header table
 
         $row_header = 6;
         $merge_header = $row_header + 1;
@@ -364,6 +368,7 @@ class Laporan extends CI_Controller
         $sheet->setCellValue('F' . $row_header, 'Total');
         $sheet->setCellValue('G' . $row_header, 'Semester');
         $sheet->setCellValue('H' . $row_header, 'Admin');
+        $sheet->setCellValue('I' . $row_header, 'Keterangan');
         // merge all header
         $sheet->mergeCells('A' . $row_header . ':A' . $merge_header);
         $sheet->mergeCells('B' . $row_header . ':B' . $merge_header);
@@ -371,11 +376,12 @@ class Laporan extends CI_Controller
         $sheet->mergeCells('F' . $row_header . ':F' . $merge_header);
         $sheet->mergeCells('G' . $row_header . ':G' . $merge_header);
         $sheet->mergeCells('H' . $row_header . ':H' . $merge_header);
+        $sheet->mergeCells('I' . $row_header . ':I' . $merge_header);
         //styling title
-        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getFont()->setBold(true);
-        $sheet->getStyle('A' . $merge_header . ':H' . $merge_header)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $row_header . ':I' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':I' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':I' . $row_header)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $merge_header . ':I' . $merge_header)->getFont()->setBold(true);
 
 
         $row_tbl = 8;
@@ -399,6 +405,7 @@ class Laporan extends CI_Controller
                 $sheet->mergeCells('F' . $row_min  . ':' . 'F' . $row_tbl);
                 $sheet->mergeCells('G' . $row_min . ':' . 'G' . $row_tbl);
                 $sheet->mergeCells('H' . $row_min . ':' . 'H' . $row_tbl);
+                $sheet->mergeCells('I' . $row_min . ':' . 'I' . $row_tbl);
             }
 
 
@@ -424,6 +431,7 @@ class Laporan extends CI_Controller
             $sheet->setCellValue('F' . $row_min, $total_bayar);
             $sheet->setCellValue('G' . $row_min, $val['semester']);
             $sheet->setCellValue('H' . $row_min, $val['nama_user']);
+            $sheet->setCellValue('I' . $row_min, $val['uang_masuk']);
             $data_terbilang[] = $total_bayar;
 
             $row_tbl++;
@@ -442,10 +450,10 @@ class Laporan extends CI_Controller
             $terbilang
         );
         $sheet->getStyle('D' . $row_tbl)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->mergeCells('D' . $row_tbl . ':' . 'H' . $row_tbl);
-        $sheet->mergeCells('D' . ($row_tbl + 1) . ':' . 'H' . ($row_tbl + 1));
-        $sheet->getStyle('A' . $row_tbl . ':' . 'H' . ($row_tbl + 1))->getFont()->setBold(true);
-        $sheet->getStyle('A6:H' . ($row_tbl + 1))->applyFromArray($styleTable); //styling header table
+        $sheet->mergeCells('D' . $row_tbl . ':' . 'I' . $row_tbl);
+        $sheet->mergeCells('D' . ($row_tbl + 1) . ':' . 'I' . ($row_tbl + 1));
+        $sheet->getStyle('A' . $row_tbl . ':' . 'I' . ($row_tbl + 1))->getFont()->setBold(true);
+        $sheet->getStyle('A6:I' . ($row_tbl + 1))->applyFromArray($styleTable); //styling header table
 
         $filename = 'Laporan_Penerimaan_Kas_Yayasan_Bunga_Bangsa(' . $bulan_laporan . ')';
         $writer = new Xlsx($spreadsheet);

@@ -14,6 +14,15 @@ class Manajemen extends CI_Controller
         $this->load->model('M_user', 'user');
     }
 
+    public function UserAccessMenu()
+    {
+        $data['title'] = 'SISKEU NEW';
+        $data['page'] = 'User Access Menu';
+        $data['content'] = 'manajemen/user_access_menu';
+        // $data['menu'] = $this->menu->getMenu()->result_array();
+        $this->load->view('template', $data);
+    }
+
     // ===================== Menu Manajemen ==================================
     public function ManajemenMenu()
     {

@@ -11,6 +11,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class M_aktivasi_mhs extends CI_Model
 {
+    public function input_data_dispen_mhs($data)
+    {
+        return $this->db->insert('dispensasi', $data);
+    }
+
+    public function getDataDispenMhs($data = null)
+    {
+        /*
+        SELECT d.id_dispensasi, d.tanggal_input, m.nipd, m.nm_pd, m.nm_jur, d.tanggal_lunas, d.no_tlp, d.tg_dispen 
+        FROM dispensasi d 
+        JOIN mahasiswa m ON m.id_pd=d.id_reg_pd;
+        */
+        $this->db->select('d.id_dispensasi, d.tanggal_input, m.nipd, m.nm_pd, m.nm_jur, d.tanggal_lunas, d.no_tlp, d.tg_dispen');
+        $this->db->from('dispensasi d');
+        $this->db->join('mahasiswa m', 'm.id_pd=d.id_reg_pd');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+    // Delete Data
+    public function deleteDataDispen($data)
+    {
+        $this->db->where($data);
+        $this->db->delete('dispensasi');
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
     public function aktivasi_perwalian($data)
     {
         $exists = $this->db->get_where('reg_mhs', [

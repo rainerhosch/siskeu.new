@@ -66,6 +66,7 @@ $route['transaksi/cetak_ulang_kwitansi/(:num)'] = 'user/transaksi/cetak_ulang_kw
 $route['sync-simak'] = 'admin/SyncSimak';
 $route['sync-simak/(:any)'] = 'admin/SyncSimak/$1';
 
+$route['manajemen/user-access-menu'] = 'admin/Manajemen/UserAccessMenu';
 $route['manajemen/manajemen-menu'] = 'admin/Manajemen/ManajemenMenu';
 $route['manajemen/get-menu'] = 'admin/Manajemen/getDataMenu';
 $route['manajemen/change-status-menu'] = 'admin/Manajemen/ChangeStatusMenu';

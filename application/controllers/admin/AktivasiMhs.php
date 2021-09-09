@@ -7,6 +7,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
  ** * * * * * * * * * * * * * * * * * **
  *  Author                : Rizky Ardiansyah
  *  Date Created          : 07/09/2021
+ *  Note                  : Sebenernya ini tuh Class Dispensasi, cuman karena terburu2 bikin jadi asal bikin nama aja, untuk kedepnnya mau di ganti jadi class dipensasiMhs silahkan enggak juga gak apa2
  *  Quots of the code     : 'rapihkan lah code mu, seperti halnya kau menata kehidupan'
  */
 class AktivasiMhs extends CI_Controller
@@ -14,8 +15,11 @@ class AktivasiMhs extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+
+        $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
+        $this->load->model('M_tunggakan', 'tunggakan');
         $this->load->model('M_user', 'user');
     }
 
@@ -32,13 +36,140 @@ class AktivasiMhs extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function get_data_dispen_mhs()
+    {
+        if ($this->input->is_ajax_request()) {
+            $dataDispen = $this->aktivasi->getDataDispenMhs()->result_array();
+            $countData = count($dataDispen);
+            // var_dump($countData);
+            // die;
+            for ($i = 0; $i < $countData; $i++) {
+                $whereTG = [
+                    'nim' => $dataDispen[$i]['nipd'],
+                    'tg.jenis_tunggakan' => 6
+                ];
+                $dataTG = $this->tunggakan->getTunggakanMhs($whereTG)->row_array();
+                $tg_smt_lalu = 0;
+                if ($dataTG != null) {
+                    $tg_smt_lalu = $dataTG['jml_tunggakan'];
+                }
+                if ($dataDispen[$i]['id_dispensasi'] == '1') {
+                    $dataDispen[$i]['rincian'] = [
+                        0 => [
+                            'label' => 'Cicilan Ke-1',
+                            'jumlah' => $dataDispen[$i]['tg_dispen']
+                        ],
+                        1 => [
+                            'label' => 'TG semester lalu',
+                            'jumlah' => $tg_smt_lalu
+                        ],
+                    ];
+                } elseif ($dataDispen[$i]['id_dispensasi'] == '3') {
+                    $dataDispen[$i]['rincian'] = [
+                        0 => [
+                            'label' => 'Cicilan Ke-2',
+                            'jumlah' => $dataDispen[$i]['tg_dispen']
+                        ],
+                        1 => [
+                            'label' => 'TG semester lalu',
+                            'jumlah' => $tg_smt_lalu
+                        ],
+                    ];
+                } elseif ($dataDispen[$i]['id_dispensasi'] == '4') {
+                    $dataDispen[$i]['rincian'] = [
+                        0 => [
+                            'label' => 'Cicilan Ke-3',
+                            'jumlah' => $dataDispen[$i]['tg_dispen']
+                        ],
+                        1 => [
+                            'label' => 'TG semester lalu',
+                            'jumlah' => $tg_smt_lalu
+                        ],
+                    ];
+                }
+            }
+            $response = [
+                'satatus' => true,
+                'data' => $dataDispen,
+                'msg' => 'Data Ditemukan.'
+            ];
+        } else {
+            $response = [
+                'satatus' => false,
+                'data' => null,
+                'msg' => 'Invalid Request'
+            ];
+        }
+        echo json_encode($response);
+    }
+
     public function cari_mhs()
     {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+
         if ($this->input->is_ajax_request()) {
             $nipd = $this->input->post('nipd');
             $jenis_dispen = $this->input->post('jenis_dispen');
+            if ($jenis_dispen == '1') {
+                $jns_bayar = 2;
+                $nm_jns_dispen = 'Cicilan Ke-1';
+            } else if ($jenis_dispen == '3') {
+                $jns_bayar = 3;
+                $nm_jns_dispen = 'Cicilan Ke-2';
+            } else {
+                $jns_bayar = 4;
+                $nm_jns_dispen = 'Cicilan Ke-3';
+            }
             $tahun_akademik = $this->input->post('tahun_akademik');
             $data = $this->masterdata->getMahasiswaByNim(['nipd' => $nipd])->row_array();
+            // cek tunggakan smt lalu
+            $whereTG = [
+                'nim' => $nipd,
+                'tg.jenis_tunggakan' => 6
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($whereTG)->row_array();
+            $data['tg_smt_lalu'] = 0;
+            if ($dataTG != null) {
+                $data['tg_smt_lalu'] = $dataTG['jml_tunggakan'];
+            }
+            // cek biaya angkatan
+            $jenjangMhs = $data['nm_jenj_didik'];
+            $angkatan_mhs = '20' . substr($data['nipd'], 0, 2);
+            $where_tahun = [
+                'angkatan' =>  $angkatan_mhs
+            ];
+            $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+            $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
+            $biayaC_ke = $biayaCS / 3;
+            $dataCekNim = [
+                'nim' => $nipd,
+                'semester' => $smtAktif
+            ];
+            $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCekNim)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            if ($countHistoriTx > 0) {
+                for ($i = 0; $i < $countHistoriTx; $i++) {
+                    $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                    $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                    foreach ($dataHistoriTx[$i]['detail_transaksi'] as $dTX) {
+                        if ($dTX['id_jenis_pembayaran'] == $jns_bayar) {
+                            $biayaC_ke = $biayaC_ke - $dTX['jml_bayar'];
+                        }
+                        $data['pengajuan_dispen'] = $biayaC_ke;
+                        $data['nm_kewajiban'] = $nm_jns_dispen;
+                    }
+                }
+            } else {
+                $data['pengajuan_dispen'] = $biayaC_ke;
+                $data['nm_kewajiban'] = $nm_jns_dispen;
+            }
+
+
+
+            // var_dump($dataHistoriTx);
+            // die;
+
             if ($data != null) {
                 $response = [
                     'status' => 200,
@@ -60,6 +191,7 @@ class AktivasiMhs extends CI_Controller
 
     public function aktif_manual()
     {
+
         if ($this->input->is_ajax_request()) {
             $dateNow = date('Y-m-d H:i:s');
             $pecah_tgl_waktu = explode(' ', $dateNow);
@@ -69,60 +201,81 @@ class AktivasiMhs extends CI_Controller
 
             // data input
             $dataInput = $this->input->post();
-            $nipd = $dataInput['nipd'];
-            $smt = $dataInput['tahun_akademik'];
-            $jns_dispen = $dataInput['jenis_dispen'];
-            // var_dump($this->input->post());
-            // die;
 
-
-            if ($jns_dispen = '1') {
-                // disepen perwalian
-                $dataAktifDispenKrs = [
-                    'Tahun' => $smt,
-                    'Identitas_ID' => '',
-                    'Jurusan_ID' => '',
-                    'NIM' => $nipd,
-                    'tgl_reg' => $tgl,
-                    'aktif' => $jns_dispen,
-                    'keterangan' => 'from siskeu_new',
-                    'aktif_by' => $id_user
-                ];
-                $active = $this->aktivasi->aktivasi_perwalian($dataAktifDispenKrs);
-                if (!$active) {
-                    // error
-                    // $data = $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal Aktivasi!</div>');
-                    $reponse = $active;
+            $dataPengajuanDispen = [
+                'tanggal_input' => $tgl,
+                'id_reg_pd' => $dataInput['id_reg_pd'],
+                'id_jur' => $dataInput['id_jur'],
+                'no_tlp' => $dataInput['no_tlp'],
+                'jenis_dispen' => $dataInput['jenis_dispen'],
+                'tg_dispen' => $dataInput['tg_dispen'],
+                'tanggal_lunas' => $dataInput['tgl_pelunasan'],
+                'tahun_akademik' => $dataInput['tahun_akademik'],
+            ];
+            $inputPengajuanDispen = $this->aktivasi->input_data_dispen_mhs($dataPengajuanDispen);
+            if ($inputPengajuanDispen == true) {
+                if ($dataInput['jenis_dispen'] = '1') {
+                    // disepen perwalian
+                    $dataAktifDispenKrs = [
+                        'Tahun' => $dataInput['tahun_akademik'],
+                        'Identitas_ID' => '',
+                        'Jurusan_ID' => '',
+                        'NIM' => $dataInput['nipd'],
+                        'tgl_reg' => $tgl,
+                        'aktif' => $dataInput['jenis_dispen'],
+                        'keterangan' => 'from siskeu_new',
+                        'aktif_by' =>  $id_user
+                    ];
+                    $active = $this->aktivasi->aktivasi_perwalian($dataAktifDispenKrs);
+                    if ($active == true) {
+                        // success
+                        $reponse = [
+                            'status' => true,
+                            'msg'   => 'success'
+                        ];
+                    } else {
+                        // error
+                        $reponse = [
+                            'status' => false,
+                            'msg'   => $active
+                        ];
+                    }
                 } else {
-                    // success
-                    // $data = $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Aktivasi Mahasiswa!</div>');
-                    $reponse = $active;
+                    // dispen UTS or UAS
+                    $dataAktifDispenUjian = [
+                        'tahun' => $dataInput['tahun_akademik'],
+                        'nim' => $dataInput['nipd'],
+                        'tgl_reg' => $tgl,
+                        'aktif' => $dataInput['jenis_dispen'],
+                        'keterangan' => 'from siskeu_new',
+                        'aktif_by' => $id_user
+                    ];
+                    $active = $this->aktivasi->aktivasi_ujian($dataAktifDispenUjian);
+                    if ($active == true) {
+                        // success
+                        $reponse = [
+                            'status' => true,
+                            'msg'   => 'success'
+                        ];
+                    } else {
+                        // error
+                        $reponse = [
+                            'status' => false,
+                            'msg'   => $active
+                        ];
+                    }
                 }
-                // redirect('aktivasi-mahasiswa', $data);
             } else {
-                // dispen UTS or UAS
-                $dataAktifDispenUjian = [
-                    'tahun' => $smt,
-                    'nim' => $nipd,
-                    'tgl_reg' => $tgl,
-                    'aktif' => $jns_dispen,
-                    'keterangan' => 'from siskeu_new',
-                    'aktif_by' => $id_user
+                $reponse = [
+                    'status' => false,
+                    'msg'   => 'Gagal insert data'
                 ];
-                $active = $this->aktivasi->aktivasi_ujian($dataAktifDispenUjian);
-                if (!$active) {
-                    // error
-                    // $data = $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal Aktivasi!</div>');
-                    $reponse = $active;
-                } else {
-                    // success
-                    // $reponse = $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Aktivasi Mahasiswa!</div>');
-                    $response = $active;
-                }
-                // redirect('aktivasi-mahasiswa', $data);
             }
         } else {
-            $reponse = 'invalid request';
+            $reponse = [
+                'status' => false,
+                'msg'   => 'invalid request'
+            ];
         }
         echo json_encode($reponse);
     }
