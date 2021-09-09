@@ -214,11 +214,13 @@ class AktivasiMhs extends CI_Controller
             // data input
             $dataInput = $this->input->post();
 
+            $no_tlp = $dataInput['no_tlp'];
+            $format_no = substr($no_tlp, 1, 11);
             $dataPengajuanDispen = [
                 'tanggal_input' => $tgl,
                 'id_reg_pd' => $dataInput['id_reg_pd'],
                 'id_jur' => $dataInput['id_jur'],
-                'no_tlp' => $dataInput['no_tlp'],
+                'no_tlp' => '62' . $format_no,
                 'jenis_dispen' => $dataInput['jenis_dispen'],
                 'tg_dispen' => $dataInput['tg_dispen'],
                 'tanggal_lunas' => $dataInput['tgl_pelunasan'],

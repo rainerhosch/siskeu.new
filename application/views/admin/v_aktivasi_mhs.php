@@ -184,192 +184,192 @@
         </div>
     </div>
     <!-- end Modal Dispen -->
-</div>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $.ajax({
-            type: "GET",
-            url: "aktivasi-mahasiswa/get_data_dispen_mhs",
-            dataType: "json",
-            success: function(response) {
-                console.log(response.data)
-                html = ``;
-                if (response.data != 0) {
-                    $.each(response.data, function(i, value) {
-                        i++;
-                        var total_Tagihan = 0;
-                        html += `<tr>`;
-                        html += `<td class = "text-center" >${i}</td>`;
-                        html += `<td class = "text-center" >${value.tanggal_input}</td>`;
-                        html += `<td class = "text-center" >${value.nipd}</td>`;
-                        html += `<td class = "text-center" >${value.nm_pd}</td>`;
-                        html += `<td class = "text-center" >`;
-                        $.each(value.rincian, function(j, val) {
-                            html += `<i style="font-size:1rem; font-weight: bold;">${val.label}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jumlah).toLocaleString()}</i><br>`;
-                            total_Tagihan += parseInt(val.jumlah);
-                        });
-                        html += `</td>`;
-                        html += `<td class = "text-center"><i>Rp.${parseInt(total_Tagihan).toLocaleString()}</i></td>`;
-                        html += `<td class = "text-center" >${value.tanggal_lunas}</td>`;
-                        html += `<td class = "text-center" >${value.tahun_akademik}</td>`;
-                        html += `<td class = "text-center" >${value.no_tlp}</td>`;
-                        html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}', '_blank');" class="btn btn-xs btn-success">Chat WA</a></td>`;
-                        // html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}', '_blank');" class="btn btn-xs btn-success">Chat WA</a> | <a class="btn btn-xs btn-danger">Hapus</a></td>`;
-                        html += `</tr>`;
-                    });
-                } else {
-                    html += `<tr>`;
-                    html += `<td colspan="12" class="text-center"><br>`;
-                    html += `<div class='col-lg-12'>`;
-                    html += `<div class='alert alert-danger alert-dismissible'>`;
-                    html += `<h4><i class='icon fa fa-warning'></i> Data Kosong!</h4>`;
-                    html += `</div>`;
-                    html += `</div>`;
-                    html += `</td>`;
-                    html += `</tr>`;
-                }
-                $("#data_dispen_tbody").html(html);
-                $(function() {
-                    TablesDatatables.init();
-                });
-            }
-        })
-
-
-
-
-
-
-        $('.button_not_active').on('click', function() {
-            alert("Modul Belum Dapat Digunakan!");
-        });
-        setTimeout(function() {
-            $("#alert_alert").html("");
-        }, 2000);
-        $('#tgl_pelunasan').on('change', function() {
-            let tgl_pelunasan = $("#tgl_pelunasan").val();
-            if (tgl_pelunasan != '') {
-                $("#jenis_dispen_form").attr('hidden', false);
-            } else {
-                $(".form_input_data").val('');
-                $("#jenis_dispen_form").attr('hidden', true);
-                $('#form_cari').attr('hidden', true);
-                $('#form_data_mhs').attr('hidden', true);
-                $('#btn_aktivasi').attr('disabled', true);
-                $('#btn_aktivasi').html('Tombol Aktivasi');
-            }
-        });
-        $("#jenis_dispen").on('change', function() {
-            $(".form_input_data").val('');
-            $('#btn_aktivasi').attr('disabled', true);
-            $('#btn_aktivasi').html('Tombol Aktivasi');
-            let jenis_dispen = $("#jenis_dispen").val();
-            // console.log(jenis_dispen)
-            if (jenis_dispen != 'x') {
-                $('#form_cari').attr('hidden', false);
-            } else {
-                $(".form_input_data").val('');
-                $('#btn_aktivasi').attr('disabled', true);
-                $('#form_cari').attr('hidden', true);
-                $('#form_data_mhs').attr('hidden', true);
-                $('#btn_aktivasi').html('Tombol Aktivasi');
-            }
-        });
-        $("#search-box").on("keypress", function(e) {
-            if (e.which == 13) {
-                let nipd = $("#search-box").val();
-                let jenis_dispen = $("#jenis_dispen").val();
-                let tahun_akademik = $("#tahun_akademik").val();
-                let str = '';
-                if (jenis_dispen === '3') {
-                    str = 'UTS';
-                } else if (jenis_dispen === '4') {
-                    str = 'UAS';
-                } else {
-                    str = 'Perwalian';
-                }
-                $.ajax({
-                    type: "POST",
-                    url: "aktivasi-mahasiswa/cari_mhs",
-                    data: {
-                        nipd: nipd,
-                        tahun_akademik: tahun_akademik,
-                        jenis_dispen: jenis_dispen
-                    },
-                    dataType: "json",
-                    success: function(response) {
-                        console.log(response)
-                        if (response.status === 200) {
-                            $('#form_data_mhs').attr('hidden', false);
-                            $("#search-box").val('');
-                            $("#nipd").val(response.data.nipd);
-                            $("#nama").val(response.data.nm_pd);
-                            $("#id_reg_pd").val(response.data.id_pd);
-                            $("#id_jur").val(response.data.id_jur);
-                            $("#jurusan").val(response.data.nm_jur);
-                            $("#tg_smt_lalu").val(response.data.tg_smt_lalu);
-                            $("#tg_dispen").val(response.data.pengajuan_dispen);
-                            $('#lbl_tg_dispen').html('Sisa ' + response.data.nm_kewajiban + ' Semester Ini');
-                            $('#btn_aktivasi').attr('disabled', false);
-                            $('#btn_aktivasi').html('Aktifkan ' + str);
-                        } else {
-                            $("#search-box").val('');
-                            $(".form_input_data").val('');
-                            $('#btn_aktivasi').attr('disabled', true);
-                            $('#btn_aktivasi').html('Tombol Aktivasi');
-                            if (response.data === null) {
-                                swal.fire("Error!", response.msg, "error");
-                                $('.swal2-confirm').click(function() {
-                                    location.reload();
-                                });
-                            } else {
-                                swal.fire("Info!", response.msg, "info");
-                                $('.swal2-confirm').click(function() {
-                                    location.reload();
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-        });
-
-        $('#btn_aktivasi').on('click', function() {
-            // get all the inputs into an array.
-            let $inputs = $('#form_dispen :input');
-            let values = {};
-            $inputs.each(function() {
-                values[this.name] = $(this).val();
-            });
+    <script type="text/javascript">
+        $(document).ready(function() {
             $.ajax({
-                type: "POST",
-                url: "aktivasi-mahasiswa/aktif_manual",
-                data: values,
+                type: "GET",
+                url: "aktivasi-mahasiswa/get_data_dispen_mhs",
                 dataType: "json",
                 success: function(response) {
-                    if (response.status === true) {
-                        swal.fire("Sukses!", `Aktivasi Dispen Berhasil.`, "success");
-                        $('.swal2-confirm').click(function() {
-                            location.reload();
-                        });
-                    } else if (response.status === false && response.msg === 'exist') {
-                        swal.fire("Sukses!", `Aktivasi Dispen Mahasiswa Tersebut Sudah Ada.`, "success");
-                        $('.swal2-confirm').click(function() {
-                            location.reload();
+                    console.log(response.data)
+                    html = ``;
+                    if (response.data != 0) {
+                        $.each(response.data, function(i, value) {
+                            i++;
+                            var total_Tagihan = 0;
+                            let no_tlp = value.no_tlp;
+                            let format_no = '0' + no_tlp.substring(2, 11);
+                            html += `<tr>`;
+                            html += `<td class = "text-center" >${i}</td>`;
+                            html += `<td class = "text-center" >${value.tanggal_input}</td>`;
+                            html += `<td class = "text-center" >${value.nipd}</td>`;
+                            html += `<td class = "text-center" >${value.nm_pd}</td>`;
+                            html += `<td class = "text-center" >`;
+                            $.each(value.rincian, function(j, val) {
+                                html += `<i style="font-size:1rem; font-weight: bold;">${val.label}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jumlah).toLocaleString()}</i><br>`;
+                                total_Tagihan += parseInt(val.jumlah);
+                            });
+                            html += `</td>`;
+                            html += `<td class = "text-center"><i>Rp.${parseInt(total_Tagihan).toLocaleString()}</i></td>`;
+                            html += `<td class = "text-center" >${value.tanggal_lunas}</td>`;
+                            html += `<td class = "text-center" >${value.tahun_akademik}</td>`;
+                            html += `<td class = "text-center" >${format_no}</td>`;
+                            html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}?text=Saudara%20${value.nm_pd}, %0AMohon%20untuk%20segera%20melunasi%20tagihan%20semester%20perkuliahan.%0AKarena%20sudah%20melawati%20tanggal%20perjanjian%20pelunasan%20yaitu%20%28${value.tanggal_lunas}%29.%20Adapun%20nominal%20pembayarannya%20Rp.${parseInt(total_Tagihan).toLocaleString()}.%0ATerima%20Kasih', '_blank');" class="btn btn-xs btn-success">Chat WA</a></td>`;
+                            // html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}', '_blank');" class="btn btn-xs btn-success">Chat WA</a> | <a class="btn btn-xs btn-danger">Hapus</a></td>`;
+                            html += `</tr>`;
                         });
                     } else {
-                        swal.fire("Gagal!", `Aktivasi Dispen Gagal.`, "error");
-                        $('.swal2-confirm').click(function() {
-                            location.reload();
-                        });
+                        html += `<tr>`;
+                        html += `<td colspan="12" class="text-center"><br>`;
+                        html += `<div class='col-lg-12'>`;
+                        html += `<div class='alert alert-danger alert-dismissible'>`;
+                        html += `<h4><i class='icon fa fa-warning'></i> Data Kosong!</h4>`;
+                        html += `</div>`;
+                        html += `</div>`;
+                        html += `</td>`;
+                        html += `</tr>`;
                     }
+                    $("#data_dispen_tbody").html(html);
+                    $(function() {
+                        TablesDatatables.init();
+                    });
                 }
             })
 
-        });
 
-    });
-</script>
+
+
+
+
+            $('.button_not_active').on('click', function() {
+                alert("Modul Belum Dapat Digunakan!");
+            });
+            setTimeout(function() {
+                $("#alert_alert").html("");
+            }, 2000);
+            $('#tgl_pelunasan').on('change', function() {
+                let tgl_pelunasan = $("#tgl_pelunasan").val();
+                if (tgl_pelunasan != '') {
+                    $("#jenis_dispen_form").attr('hidden', false);
+                } else {
+                    $(".form_input_data").val('');
+                    $("#jenis_dispen_form").attr('hidden', true);
+                    $('#form_cari').attr('hidden', true);
+                    $('#form_data_mhs').attr('hidden', true);
+                    $('#btn_aktivasi').attr('disabled', true);
+                    $('#btn_aktivasi').html('Tombol Aktivasi');
+                }
+            });
+            $("#jenis_dispen").on('change', function() {
+                $(".form_input_data").val('');
+                $('#btn_aktivasi').attr('disabled', true);
+                $('#btn_aktivasi').html('Tombol Aktivasi');
+                let jenis_dispen = $("#jenis_dispen").val();
+                // console.log(jenis_dispen)
+                if (jenis_dispen != 'x') {
+                    $('#form_cari').attr('hidden', false);
+                } else {
+                    $(".form_input_data").val('');
+                    $('#btn_aktivasi').attr('disabled', true);
+                    $('#form_cari').attr('hidden', true);
+                    $('#form_data_mhs').attr('hidden', true);
+                    $('#btn_aktivasi').html('Tombol Aktivasi');
+                }
+            });
+            $("#search-box").on("keypress", function(e) {
+                if (e.which == 13) {
+                    let nipd = $("#search-box").val();
+                    let jenis_dispen = $("#jenis_dispen").val();
+                    let tahun_akademik = $("#tahun_akademik").val();
+                    let str = '';
+                    if (jenis_dispen === '3') {
+                        str = 'UTS';
+                    } else if (jenis_dispen === '4') {
+                        str = 'UAS';
+                    } else {
+                        str = 'Perwalian';
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "aktivasi-mahasiswa/cari_mhs",
+                        data: {
+                            nipd: nipd,
+                            tahun_akademik: tahun_akademik,
+                            jenis_dispen: jenis_dispen
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            console.log(response)
+                            if (response.status === 200) {
+                                $('#form_data_mhs').attr('hidden', false);
+                                $("#search-box").val('');
+                                $("#nipd").val(response.data.nipd);
+                                $("#nama").val(response.data.nm_pd);
+                                $("#id_reg_pd").val(response.data.id_pd);
+                                $("#id_jur").val(response.data.id_jur);
+                                $("#jurusan").val(response.data.nm_jur);
+                                $("#tg_smt_lalu").val(response.data.tg_smt_lalu);
+                                $("#tg_dispen").val(response.data.pengajuan_dispen);
+                                $('#lbl_tg_dispen').html('Sisa ' + response.data.nm_kewajiban + ' Semester Ini');
+                                $('#btn_aktivasi').attr('disabled', false);
+                                $('#btn_aktivasi').html('Aktifkan ' + str);
+                            } else {
+                                $("#search-box").val('');
+                                $(".form_input_data").val('');
+                                $('#btn_aktivasi').attr('disabled', true);
+                                $('#btn_aktivasi').html('Tombol Aktivasi');
+                                if (response.data === null) {
+                                    swal.fire("Error!", response.msg, "error");
+                                    $('.swal2-confirm').click(function() {
+                                        location.reload();
+                                    });
+                                } else {
+                                    swal.fire("Info!", response.msg, "info");
+                                    $('.swal2-confirm').click(function() {
+                                        location.reload();
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('#btn_aktivasi').on('click', function() {
+                // get all the inputs into an array.
+                let $inputs = $('#form_dispen :input');
+                let values = {};
+                $inputs.each(function() {
+                    values[this.name] = $(this).val();
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "aktivasi-mahasiswa/aktif_manual",
+                    data: values,
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.status === true) {
+                            swal.fire("Sukses!", `Aktivasi Dispen Berhasil.`, "success");
+                            $('.swal2-confirm').click(function() {
+                                location.reload();
+                            });
+                        } else if (response.status === false && response.msg === 'exist') {
+                            swal.fire("Sukses!", `Aktivasi Dispen Mahasiswa Tersebut Sudah Ada.`, "success");
+                            $('.swal2-confirm').click(function() {
+                                location.reload();
+                            });
+                        } else {
+                            swal.fire("Gagal!", `Aktivasi Dispen Gagal.`, "error");
+                            $('.swal2-confirm').click(function() {
+                                location.reload();
+                            });
+                        }
+                    }
+                })
+
+            });
+
+        });
+    </script>
 </div>
 <!-- END Page Content -->
