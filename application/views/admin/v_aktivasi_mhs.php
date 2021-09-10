@@ -96,7 +96,8 @@
                                         <th class="text-center">Tgl Perjanjian Pelunasan</th>
                                         <th class="text-center">Semester</th>
                                         <th class="text-center">No Tlp</th>
-                                        <th class="text-center">Tools</th>
+                                        <th class="text-center">Pemberitahuan</th>
+                                        <th class="text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="data_dispen_tbody">
@@ -210,12 +211,23 @@
                                 total_Tagihan += parseInt(val.jumlah);
                             });
                             html += `</td>`;
-                            html += `<td class = "text-center"><i>Rp.${parseInt(total_Tagihan).toLocaleString()}</i></td>`;
-                            html += `<td class = "text-center" >${value.tanggal_lunas}</td>`;
-                            html += `<td class = "text-center" >${value.tahun_akademik}</td>`;
-                            html += `<td class = "text-center" >${format_no}</td>`;
-                            html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}?text=Saudara%20${value.nm_pd}, %0AMohon%20untuk%20segera%20melunasi%20tagihan%20semester%20perkuliahan.%0AKarena%20sudah%20melawati%20tanggal%20perjanjian%20pelunasan%20yaitu%20%28${value.tanggal_lunas}%29.%20Adapun%20nominal%20pembayarannya%20Rp.${parseInt(total_Tagihan).toLocaleString()}.%0ATerima%20Kasih', '_blank');" class="btn btn-xs btn-success">Chat WA</a></td>`;
-                            // html += `<td class = "text-center" ><a target="blank" onclick="window.open('https://wa.me/${value.no_tlp}', '_blank');" class="btn btn-xs btn-success">Chat WA</a> | <a class="btn btn-xs btn-danger">Hapus</a></td>`;
+                            html += `<td class="text-center"><i>Rp.${parseInt(total_Tagihan).toLocaleString()}</i></td>`;
+                            html += `<td class="text-center" >${value.tgl_janji_lunas}</td>`;
+                            html += `<td class="text-center" >${value.tahun_akademik}</td>`;
+                            html += `<td class="text-center" >${format_no}</td>`;
+                            html += `<td class="text-center" >`;
+                            html += `<i style="font-size:1.5rem; font-weight: bold;">${value.jml_kirim_pesan}<i><br>`;
+                            html += `<i style="font-size:1rem; font-weight: bold;">Pesan Terkirim<i>`;
+                            html += `</td>`;
+                            if (value.status == 1) {
+                                html += `<td class="text-center">`;
+                                html += `<i style="font-size:1rem; font-weight: bold;">Sudah Bayar</i><br>`
+                                html += `<i style="font-size:1rem; font-weight: bold;">Tgl : ${value.tgl_pelunasan}</i>`;
+                                html += `</td>`;
+                            } else {
+                                html += `<td class="text-center" ><a target="blank" id-dispen="${value.id_dispensasi}" class="btn btn-xs btn-success btn_WA" onclick="window.open('https://wa.me/${value.no_tlp}?text=Yth%20Saudara,%0ANAMA%20:%20${value.nm_pd}%0ANIM%20:%20${value.nipd}%0AProdi%20:%20${value.nm_jur}%0AMohon%20untuk%20segera%20menyelesaikan%20administrasi%20pembayaran%20semester%20perkuliahan.%0AKarena%20sudah%20melawati%20tanggal%20perjanjian%20pelunasan%20yaitu%20%28${value.tanggal_lunas}%29.%0AAdapun%20nominal%20pembayarannya%20Rp.${parseInt(total_Tagihan).toLocaleString()}.%0ATerima%20Kasih%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20STT%20WASTUKANCANA', '_blank');">Chat WA</a></td>`;
+                            }
+
                             html += `</tr>`;
                         });
                     } else {
@@ -233,8 +245,25 @@
                     $(function() {
                         TablesDatatables.init();
                     });
+                    $('.btn_WA').on('click', function() {
+                        let id_dispen = $(this).attr("id-dispen")
+                        $.ajax({
+                            type: "POST",
+                            url: "aktivasi-mahasiswa/update_jml_pesan",
+                            data: {
+                                id_dispen: id_dispen
+                            },
+                            success: function(response) {
+                                if (response.status === true) {
+                                    location.reload();
+                                } else {
+                                    location.reload();
+                                }
+                            }
+                        });
+                    });
                 }
-            })
+            });
 
 
 

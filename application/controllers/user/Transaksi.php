@@ -44,6 +44,43 @@ class Transaksi extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function getDataTrxServerSide()
+    {
+        $list = $this->transaksi->get_datatables();
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($list as $dataTrx) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $dataTrx->id_transaksi;
+            $row[] = $dataTrx->tanggal;
+            $row[] = $dataTrx->jam;
+            $row[] = $dataTrx->semester;
+            $row[] = $dataTrx->nim;
+            $row[] = $dataTrx->user_id;
+            $row[] = $dataTrx->status_transaksi;
+            $row[] = $dataTrx->transaksi_ke;
+            $row[] = $dataTrx->nm_pd;
+            $row[] = $dataTrx->nm_jur;
+            $row[] = $dataTrx->nm_jenj_didik;
+            $row[] = $dataTrx->icon_status_tx;
+            $row[] = $dataTrx->nama_user;
+            $row[] = $dataTrx->ttd;
+
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->transaksi->count_all(),
+            "recordsFiltered" => $this->transaksi->count_filtered(),
+            "data" => $data,
+        );
+        //output to json format
+        echo json_encode($output);
+    }
+
     public function getDataTransaksi()
     {
         // code here...
@@ -634,12 +671,18 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
+                        'd.tahun_akademik' => $smtAktif,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 1
                     ];
                     $dispen_C1 = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
                     if ($dispen_C1 != null) {
-                        $this->aktivasi->deleteDataDispen(['id_dispensasi' => $dispen_C1['id_dispensasi']]);
+                        $id_dispen = $dispen_C1['id_dispensasi'];
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                            'tgl_pelunasan' => $tgl
+                        ];
+                        $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
                     }
                 }
 
@@ -656,12 +699,18 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
+                        'd.tahun_akademik' => $smtAktif,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 3
                     ];
                     $dispen_C2 = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
                     if ($dispen_C2 != null) {
-                        $this->aktivasi->deleteDataDispen(['id_dispensasi' => $dispen_C2['id_dispensasi']]);
+                        $id_dispen = $dispen_C2['id_dispensasi'];
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                            'tgl_pelunasan' => $tgl
+                        ];
+                        $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
                     }
                 }
 
@@ -678,12 +727,18 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
+                        'd.tahun_akademik' => $smtAktif,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 4
                     ];
                     $dispen_C3 = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
                     if ($dispen_C3 != null) {
-                        $this->aktivasi->deleteDataDispen(['id_dispensasi' => $dispen_C3['id_dispensasi']]);
+                        $id_dispen = $dispen_C3['id_dispensasi'];
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                            'tgl_pelunasan' => $tgl
+                        ];
+                        $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
                     }
                 }
             } else {
@@ -708,12 +763,18 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
+                        'd.tahun_akademik' => $smtAktif,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 1
                     ];
                     $dispen_C1 = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
                     if ($dispen_C1 != null) {
-                        $this->aktivasi->deleteDataDispen(['id_dispensasi' => $dispen_C1['id_dispensasi']]);
+                        $id_dispen = $dispen_C1['id_dispensasi'];
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                            'tgl_pelunasan' => $tgl
+                        ];
+                        $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
                     }
                 }
 
@@ -730,12 +791,18 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
+                        'd.tahun_akademik' => $smtAktif,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 3
                     ];
                     $dispen_C2 = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
                     if ($dispen_C2 != null) {
-                        $this->aktivasi->deleteDataDispen(['id_dispensasi' => $dispen_C2['id_dispensasi']]);
+                        $id_dispen = $dispen_C2['id_dispensasi'];
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                            'tgl_pelunasan' => $tgl
+                        ];
+                        $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
                     }
                 }
 
@@ -752,12 +819,18 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
+                        'd.tahun_akademik' => $smtAktif,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 4
                     ];
                     $dispen_C3 = $this->aktivasi->getDataDispenMhs($dataCekDispen)->row_array();
                     if ($dispen_C3 != null) {
-                        $this->aktivasi->deleteDataDispen(['id_dispensasi' => $dispen_C3['id_dispensasi']]);
+                        $id_dispen = $dispen_C3['id_dispensasi'];
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                            'tgl_pelunasan' => $tgl
+                        ];
+                        $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
                     }
                 }
             }
@@ -833,14 +906,24 @@ class Transaksi extends CI_Controller
                     ];
                     $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
                     if ($id_pembayaran == 8) {
+                        $biayaPerpanjang = $dataBiaya['cicilan_semester'] / 2;
                         $where = [
                             'id_jenis_pembayaran' => $id_pembayaran
                         ];
                         $resJnsPembayaran = $this->masterdata->GetJenisPembayaran($where)->row_array();
+                        // cek Tg CS
+                        $cekTGCS = [
+                            'nim' => $nim,
+                            'jenis_tunggakan' => 6
+                        ];
+                        $dataTGCS = $this->tunggakan->getTunggakanMhs($cekTGCS)->row_array();
+                        if ($dataTGCS != null) {
+                            $biayaPerpanjang = $biayaPerpanjang + $dataTGCS['jml_tunggakan'];
+                        }
                         $data = [
                             'id_jp' => $id_pembayaran,
                             'nm_jp' => $resJnsPembayaran['nm_jp'],
-                            'biaya' => $dataBiaya['cicilan_semester'] / 2
+                            'biaya' => $biayaPerpanjang
                         ];
                     } else if ($id_pembayaran == 9) {
                         $where = [
@@ -929,8 +1012,18 @@ class Transaksi extends CI_Controller
                         ];
                         $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
                         $biayaPerpanjang = $dataBiaya['cicilan_semester'] / 2;
-                        $sisabayarPerpanjang = 0;
 
+                        // cek Tg CS
+                        $cekTGCS = [
+                            'nim' => $nimMhs,
+                            'jenis_tunggakan' => 6
+                        ];
+                        $dataTGCS = $this->tunggakan->getTunggakanMhs($cekTGCS)->row_array();
+                        if ($dataTGCS != null) {
+                            $biayaPerpanjang = $biayaPerpanjang + $dataTGCS['jml_tunggakan'];
+                        }
+
+                        $sisabayarPerpanjang = 0;
                         $where = [
                             't.nim' => $nimMhs,
                             't.semester' => $smtAktif,
@@ -964,12 +1057,18 @@ class Transaksi extends CI_Controller
                                 'jml_tunggakan' => $sisabayarPerpanjang,
                             ];
                             $this->tunggakan->addNewTunggakan($dataAddTG);
+                            if ($dataTGCS != null) {
+                                $this->tunggakan->deleteTunggakan(['id_tunggakan' => $dataTGCS['id_tunggakan']]);
+                            }
                             if ($sisabayarPerpanjang < 500000) {
                                 $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
                             }
                         } else {
                             // bayar lunas
                             $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+                            if ($dataTGCS != null) {
+                                $this->tunggakan->deleteTunggakan(['id_tunggakan' => $dataTGCS['id_tunggakan']]);
+                            }
                         }
                     } else if ($pembayaran[$i] == '9') {
                         $where_tahun = [
@@ -1201,6 +1300,8 @@ class Transaksi extends CI_Controller
 
         ];
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
+        // var_dump(count($dataTxSebelumnya));
+        // die;
         $kewajibanCS = $dataBiayaAngkatan['cicilan_semester'];
         $kewajibanPerpanjangSemester = $kewajibanCS / 2;
         $kewajibanC1 = $biayaCS;
@@ -1226,6 +1327,17 @@ class Transaksi extends CI_Controller
                 }
             } else {
                 $kewajibanTGCS = $dataTG['jml_tunggakan'];
+                $whereXX = [
+                    't.nim' => $dataTx['nim'],
+                    't.semester' => $dataTx['semester'],
+                    't.id_transaksi >' => $id_transaksi,
+
+                ];
+                $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereXX)->result_array();
+                foreach ($dataTxSetelahnya as $a => $value) {
+                    $kewajibanTGCS = $kewajibanTGCS + $value['jml_bayar'];
+                }
+
                 foreach ($resDetailTx as $i => $Dtx) {
                     if ($Dtx['id_jenis_pembayaran'] == 6) {
                         $kewajibanTGCS = $kewajibanTGCS + (int)$Dtx['jml_bayar'];
@@ -1246,8 +1358,16 @@ class Transaksi extends CI_Controller
                     $kewajibanC3 = $kewajibanC3 - $val['jml_bayar'];
                     $kewajibanCS = $kewajibanCS - $val['jml_bayar'];
                 }
-                if ($val['id_jenis_pembayaran'] == 6) {
-                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                // if ($val['id_jenis_pembayaran'] == 6) {
+                //     $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                // }
+            }
+
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $dataTx['bayar_tg_cs'] = 1;
+                } else {
+                    $dataTx['bayar_tg_cs'] = 0;
                 }
             }
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
@@ -1290,6 +1410,15 @@ class Transaksi extends CI_Controller
                     $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
                 }
             }
+
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $dataTx['bayar_tg_cs'] = 1;
+                } else {
+                    $dataTx['bayar_tg_cs'] = 0;
+                }
+            }
+
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
             $dataTx['kewajiban']['cs'] = $kewajibanCS;
             $dataTx['bayar_cs'] = 0;
@@ -1403,8 +1532,6 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanTGKMHS;
                 }
             } else {
-                // var_dump($dataBiayaAngkatan['uang_bangunan']);
-                // die;
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
@@ -1484,6 +1611,8 @@ class Transaksi extends CI_Controller
 
         ];
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
+        // var_dump(count($dataTxSebelumnya));
+        // die;
         $kewajibanCS = $dataBiayaAngkatan['cicilan_semester'];
         $kewajibanPerpanjangSemester = $kewajibanCS / 2;
         $kewajibanC1 = $biayaCS;
@@ -1509,6 +1638,17 @@ class Transaksi extends CI_Controller
                 }
             } else {
                 $kewajibanTGCS = $dataTG['jml_tunggakan'];
+                $whereXX = [
+                    't.nim' => $dataTx['nim'],
+                    't.semester' => $dataTx['semester'],
+                    't.id_transaksi >' => $id_transaksi,
+
+                ];
+                $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereXX)->result_array();
+                foreach ($dataTxSetelahnya as $a => $value) {
+                    $kewajibanTGCS = $kewajibanTGCS + $value['jml_bayar'];
+                }
+
                 foreach ($resDetailTx as $i => $Dtx) {
                     if ($Dtx['id_jenis_pembayaran'] == 6) {
                         $kewajibanTGCS = $kewajibanTGCS + (int)$Dtx['jml_bayar'];
@@ -1529,8 +1669,16 @@ class Transaksi extends CI_Controller
                     $kewajibanC3 = $kewajibanC3 - $val['jml_bayar'];
                     $kewajibanCS = $kewajibanCS - $val['jml_bayar'];
                 }
-                if ($val['id_jenis_pembayaran'] == 6) {
-                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                // if ($val['id_jenis_pembayaran'] == 6) {
+                //     $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                // }
+            }
+
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $dataTx['bayar_tg_cs'] = 1;
+                } else {
+                    $dataTx['bayar_tg_cs'] = 0;
                 }
             }
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
@@ -1573,6 +1721,15 @@ class Transaksi extends CI_Controller
                     $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
                 }
             }
+
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $dataTx['bayar_tg_cs'] = 1;
+                } else {
+                    $dataTx['bayar_tg_cs'] = 0;
+                }
+            }
+
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
             $dataTx['kewajiban']['cs'] = $kewajibanCS;
             $dataTx['bayar_cs'] = 0;
@@ -1686,8 +1843,6 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanTGKMHS;
                 }
             } else {
-                // var_dump($dataBiayaAngkatan['uang_bangunan']);
-                // die;
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;

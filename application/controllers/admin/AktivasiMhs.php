@@ -36,10 +36,59 @@ class AktivasiMhs extends CI_Controller
         $this->load->view('template', $data);
     }
 
-    public function get_data_dispen_mhs()
+    public function update_jml_pesan()
     {
         if ($this->input->is_ajax_request()) {
-            $dataDispen = $this->aktivasi->getDataDispenMhs()->result_array();
+            $id_dispen = $this->input->post('id_dispen');
+            $kondisi = [
+                'd.id_dispensasi' => $id_dispen
+            ];
+            $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->row_array();
+            $jml_update = $dataDispen['jml_kirim_pesan'] + 1;
+            $dataUpdate = [
+                'jml_kirim_pesan' => $jml_update
+            ];
+            $update = $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdate);
+            if (!$update) {
+                $response = [
+                    'status' => false,
+                    'msg' => 'Gagal Update',
+                    'data' => [
+                        'id' => $id_dispen,
+                        'jml_now' => $dataDispen['jml_kirim_pesan']
+                    ]
+                ];
+            } else {
+                $response = [
+                    'status' => true,
+                    'msg' => 'Berhasil Update',
+                    'data' => [
+                        'id' => $id_dispen,
+                        'jml_now' => $jml_update
+                    ]
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'Invalid Request.',
+                'data' => null
+            ];
+        }
+        echo json_encode($response);
+    }
+
+    public function get_data_dispen_mhs()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        if ($this->input->is_ajax_request()) {
+            $kondisi = [
+                // 'd.status' => 0,
+                'd.tahun_akademik' => $smtAktif
+
+            ];
+            $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->result_array();
             $countData = count($dataDispen);
             // var_dump($countData);
             // die;
@@ -223,8 +272,11 @@ class AktivasiMhs extends CI_Controller
                 'no_tlp' => '62' . $format_no,
                 'jenis_dispen' => $dataInput['jenis_dispen'],
                 'tg_dispen' => $dataInput['tg_dispen'],
-                'tanggal_lunas' => $dataInput['tgl_pelunasan'],
+                'tgl_janji_lunas' => $dataInput['tgl_pelunasan'],
                 'tahun_akademik' => $dataInput['tahun_akademik'],
+                'tgl_pelunasan' => NULL,
+                'status' => 0,
+                'jml_kirim_pesan' => 0
             ];
             $inputPengajuanDispen = $this->aktivasi->input_data_dispen_mhs($dataPengajuanDispen);
             if ($inputPengajuanDispen == true) {

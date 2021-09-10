@@ -23,13 +23,24 @@ class M_aktivasi_mhs extends CI_Model
         FROM dispensasi d 
         JOIN mahasiswa m ON m.id_pd=d.id_reg_pd;
         */
-        $this->db->select('d.id_dispensasi, d.jenis_dispen, d.tanggal_input, m.nipd, m.nm_pd, m.nm_jur, d.tanggal_lunas, d.no_tlp, d.tg_dispen, d.tahun_akademik');
+        $this->db->select('d.id_dispensasi, d.jenis_dispen, d.tanggal_input, m.nipd, m.nm_pd, m.nm_jur, d.tgl_janji_lunas, d.no_tlp, d.tg_dispen, d.tahun_akademik, d.tgl_pelunasan, d.status, d.jml_kirim_pesan');
         $this->db->from('dispensasi d');
         $this->db->join('mahasiswa m', 'm.id_pd=d.id_reg_pd');
         if ($data != null) {
             $this->db->where($data);
         }
         return $this->db->get();
+    }
+
+    public function updateDataDispenMhs($id, $data)
+    {
+        $this->db->where('id_dispensasi', $id);
+        $this->db->update('dispensasi', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     // Delete Data
     public function deleteDataDispen($data)

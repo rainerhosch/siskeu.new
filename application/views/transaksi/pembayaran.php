@@ -234,11 +234,6 @@
                         </div>
                     </form>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                    </form>
-                </div> -->
             </div>
         </div>
     </div>
@@ -255,6 +250,7 @@
             setTimeout(function() {
                 $("#alert_tx").html("");
             }, 2000);
+
             // your code here
             $.ajax({
                 type: "POST",
@@ -262,6 +258,7 @@
                 data: {
                     data: 1
                 },
+                async: true,
                 dataType: "json",
                 success: function(response) {
                     console.log(response);
