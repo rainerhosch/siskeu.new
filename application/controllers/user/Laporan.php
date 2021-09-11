@@ -32,12 +32,107 @@ class Laporan extends CI_Controller
         // $this->smt_aktif = getSemesterAktif($token);
         date_default_timezone_set('Asia/Jakarta');
         $this->load->library('formatterbilang');
+        $this->load->library('pagination');
 
         $this->load->model('M_cetak_kwitansi', 'cetak');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_tunggakan', 'tunggakan');
         $this->load->model('M_laporan', 'laporan');
+    }
+    public function loadRecord()
+    {
+        $post_limit = $this->input->post('limit');
+        $post_offset = $this->input->post('offset');
+        $key_cari = $this->input->post('keyword');
+        // var_dump($this->input->post());
+        // die;
+        if ($post_offset != null) {
+            $offset = $post_offset;
+        } else {
+            $offset = 0;
+        }
+        if ($post_limit != 0) {
+            $limit = $post_limit;
+        } else {
+            $limit = 10;
+        }
+        if ($offset != 0) {
+            $offset = ($offset - 1) * $limit;
+        }
+        // All records count
+        $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
+        // Get records
+        $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset)->result_array();
+        $countHistoriTx = count($dataHistoriTx);
+        for ($i = 0; $i < $countHistoriTx; $i++) {
+
+            $jenjangMhs = $dataHistoriTx[$i]['nm_jenj_didik'];
+            $dataHistoriTx[$i]['angkatan_mhs'] = '20' . substr($dataHistoriTx[$i]['nim'], 0, 2);
+            $where_tahun = [
+                'angkatan' => $dataHistoriTx[$i]['angkatan_mhs']
+            ];
+            $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+            // var_dump($dataBiayaAngkatan);
+            // die;
+            $kewajiban_Semester_ini = 0;
+            $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
+            $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
+            $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+            $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            foreach ($resDetailTx as $dTX) {
+                if ($dTX['id_jenis_pembayaran'] == 8) {
+                    $kewajiban_Semester_ini = ($biayaCS / 2);
+                } else {
+                    $kewajiban_Semester_ini = $biayaCS + $biayaKMHS;
+                }
+            }
+
+            $dataHistoriTx[$i]['kewajiban_Semester_ini'] = $kewajiban_Semester_ini;
+        }
+
+        // Pagination Configuration
+        $config['base_url'] = base_url() . 'laporan/HistoriTransaksi';
+        $config['use_page_numbers'] = TRUE;
+        $config['total_rows'] = $allcount;
+        $config['per_page'] = $limit;
+
+        // ============ config css pagination ======================
+        $config['full_tag_open'] = "<ul class='pagination pagination-sm remove-margin'>";
+        $config['full_tag_close'] = '</ul>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="active"><a href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+
+        $config['prev_link'] = '<i class="fa fa-chevron-left"></i>';
+        $config['prev_tag_open'] = '<li class="prev">';
+        $config['prev_tag_close'] = '</li>';
+
+
+        $config['next_link'] = '<i class="fa fa-chevron-right"></i>';
+        $config['next_tag_open'] = '<li class="next">';
+        $config['next_tag_close'] = '</li>';
+        // ============ End config css pagination ======================
+
+
+        // Initialize
+        $this->pagination->initialize($config);
+
+        // Initialize $data Array
+        $data['pagination'] = $this->pagination->create_links();
+        $data['data_transaksi'] = $dataHistoriTx;
+        $data['total_result'] = $allcount;
+        $data['row'] = $offset;
+        $data['user_loged'] = $this->session->userdata('id_user');
+
+        echo json_encode($data);
     }
 
 

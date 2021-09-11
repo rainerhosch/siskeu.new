@@ -151,27 +151,57 @@
                             <h2><strong>Data</strong> Transaksi</h2>
                         </div>
                         <div class="table-responsive">
-                            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No</th>
-                                        <th class="text-center">Nomo Transaksi</th>
-                                        <th class="text-center">Tgl Transaksi</th>
-                                        <th class="text-center">Jam</th>
-                                        <th class="text-center">NIM</th>
-                                        <th class="text-center">Nama</th>
-                                        <th class="text-center">Rincian Transaksi</th>
-                                        <th class="text-center">Jumlah</th>
-                                        <!-- <th class="text-center">Sisa Bayar</th> -->
-                                        <th class="text-center">Semester</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Admin</th>
-                                        <th class="text-center">Tools</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="riwayat_transaksi_tbody">
-                                </tbody>
-                            </table>
+                            <div id="example-datatable_wrapper" class="dataTables_wrapper form-inline no-footer">
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-5">
+                                        <div class="dataTables_length">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-7">
+                                        <div id="example-datatable_filter" class="dataTables_filter">
+                                            <label>
+                                                <div class="input-group">
+                                                    <input type="search" class="form-control" placeholder="Search" aria-controls="example-datatable" id="form_cari">
+                                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">No</th>
+                                                <th class="text-center">Nomo Transaksi</th>
+                                                <th class="text-center">Tgl Transaksi</th>
+                                                <th class="text-center">Jam</th>
+                                                <th class="text-center">NIM</th>
+                                                <th class="text-center">Nama</th>
+                                                <th class="text-center">Rincian Transaksi</th>
+                                                <th class="text-center">Jumlah</th>
+                                                <!-- <th class="text-center">Sisa Bayar</th> -->
+                                                <th class="text-center">Semester</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Admin</th>
+                                                <th class="text-center">Tools</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="riwayat_transaksi_tbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-5 hidden-xs">
+                                        <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite"></div>
+                                    </div>
+                                    <!-- Paginate -->
+                                    <div class="col-sm-7 col-xs-12 clearfix">
+                                        <div class="dataTables_paginate paging_bootstrap" id='pagination'></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -244,6 +274,7 @@
     <?php $this->load->view('transaksi/modal_form_pembayaran_lain'); ?>
     <script>
         $(document).ready(function() {
+            loadPagination(0);
             $('.div_btn_row').hide();
             $("#riwayat_transaksi").hide();
             $(".data_kwajiban").hide();
@@ -251,81 +282,123 @@
                 $("#alert_tx").html("");
             }, 2000);
 
-            // your code here
-            $.ajax({
-                type: "POST",
-                url: "transaksi/getDataTransaksi",
-                data: {
-                    data: 1
-                },
-                async: true,
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
-                    let htmlx = ``;
-                    $("#riwayat_transaksi").show();
-                    if (response.data_transaksi != 0) {
-                        $.each(response.data_transaksi, function(i, value) {
-                            i++;
+            $(":input").on("keyup change", function(e) {
+                e.preventDefault();
+                let keyword = $(this).val();
+                loadFilter(keyword);
+            })
+            $('#pagination').on('click', 'a', function(e) {
+                e.preventDefault();
+                let limit = $('#datatable_length').val();
+                let offset = $(this).attr('data-ci-pagination-page');
+                loadPagination(limit, offset);
+            });
 
-                            var total_bayarTrx = 0;
-                            htmlx += `<tr>`;
-                            htmlx += `<td class = "text-center" >${i}</td>`;
-                            htmlx +=
-                                `<td class="text-center"><a target="_blank" rel="noopener noreferrer" href="<?= base_url('transaksi/cetak_ulang_kwitansi/') ?>` +
-                                value.id_transaksi +
-                                `" data-toggle="tooltip" title="Cetak Kwitansi">${value.id_transaksi}</a></td>`;
-                            htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
-                            htmlx += `<td class = "text-center" >${value.jam}</td>`;
-                            htmlx += `<td class = "text-center" >${value.nim}</td>`;
-                            htmlx += `<td class = "text-center" >${value.nm_pd}</td>`;
+            // Load pagination
+            function loadFilter(keyword) {
+                $.ajax({
+                    url: '<?= base_url() ?>laporan/loadRecord/',
+                    type: 'POST',
+                    data: {
+                        keyword: keyword
+                    },
+                    serverSide: true,
+                    dataType: 'json',
+                    success: function(response) {
+                        let user_log = response.user_loged;
+                        let data_transaksi = response.data_transaksi;
+                        let total_data = response.total_result;
+                        let offset = response.row;
+                        $('#pagination').html(response.pagination);
+                        // $('#datatable_info').html(`<strong>1</strong>-<strong>10</strong> of <strong>${total_data}</strong>`);
+                        createTable(user_log, data_transaksi, total_data, offset);
+                    }
+                });
+            }
+            // Load pagination
+            function loadPagination(limit, offset) {
+                $.ajax({
+                    url: '<?= base_url() ?>laporan/loadRecord/' + offset,
+                    type: 'POST',
+                    data: {
+                        offset: offset,
+                        limit: limit
+                    },
+                    serverSide: true,
+                    dataType: 'json',
+                    success: function(response) {
+                        let user_log = response.user_loged;
+                        let data_transaksi = response.data_transaksi;
+                        let total_data = response.total_result;
+                        let offset = response.row;
+                        $('#pagination').html(response.pagination);
+                        createTable(user_log, data_transaksi, total_data, offset);
+                    }
+                });
+            }
 
-                            htmlx += `<td class = "text-center" >`;
-                            $.each(value.detail_transaksi, function(k, val) {
-                                htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
-                                total_bayarTrx += parseInt(val.jml_bayar);
-                            });
-                            htmlx += `</td>`;
-                            htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
-                            htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                            if (total_bayarTrx < value.kewajiban_Semester_ini) {
-                                htmlx += `<td class = "text-center" >BL</td>`;
-                            } else {
-                                htmlx += `<td class = "text-center" >L</td>`;
-                            }
-                            htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
-                            htmlx += `<td class="text-center">`;
-                            if (value.user_id !== response.user_loged) {
-                                // htmlx += `<a href="#" onclick="" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="" disabled>Edit</a> | `;
-                                htmlx += `<a href="#" onclick="" class="btn btn-xs btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="" disabled>Hapus</a>`;
-                            } else {
-                                // htmlx += `<a href="#"  onclick="editTransaksi(${value.id_transaksi})" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="${value.id_transaksi}">Edit</a> | `;
-                                htmlx += `<a href="#"  onclick="deleteTransaksi(${value.id_transaksi})" class="btn btn-xs btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="${value.id_transaksi}">Hapus</a>`;
-                            }
-                            htmlx += `</td>`;
-                            htmlx += `</tr>`;
-                        });
-                    } else {
+            function createTable(user_log, data_transaksi, total_data, offset) {
+                let htmlx = ``;
+                offset = Number(offset);
+                $('#example-datatable tbody').empty();
+
+                if (data_transaksi != 0) {
+                    let numEnd = offset + 10;
+                    $('#datatable_info').html(`<strong>${offset+1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
+                    no = offset;
+                    $.each(data_transaksi, function(i, value) {
+                        no++;
+
+                        var total_bayarTrx = 0;
                         htmlx += `<tr>`;
-                        htmlx += `<td colspan="12" class="text-center"><br>`;
-                        htmlx += `<div class='col-lg-12'>`;
-                        htmlx += `<div class='alert alert-danger alert-dismissible'>`;
-                        htmlx += `<h4><i class='icon fa fa-warning'></i> Belum Transaksi Pada Semester Ini!</h4>`;
-                        htmlx += `</div>`;
-                        htmlx += `</div>`;
+                        htmlx += `<td class = "text-center" >${no}</td>`;
+                        htmlx +=
+                            `<td class="text-center"><a target="_blank" rel="noopener noreferrer" href="<?= base_url('transaksi/cetak_ulang_kwitansi/') ?>` +
+                            value.id_transaksi +
+                            `" data-toggle="tooltip" title="Cetak Kwitansi">${value.id_transaksi}</a></td>`;
+                        htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
+                        htmlx += `<td class = "text-center" >${value.jam}</td>`;
+                        htmlx += `<td class = "text-center" >${value.nim}</td>`;
+                        htmlx += `<td class = "text-center" >${value.nm_pd}</td>`;
+
+                        htmlx += `<td class = "text-center" >`;
+                        $.each(value.detail_transaksi, function(k, val) {
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
+                            total_bayarTrx += parseInt(val.jml_bayar);
+                        });
+                        htmlx += `</td>`;
+                        htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
+                        htmlx += `<td class = "text-center" >${value.semester}</td>`;
+                        if (total_bayarTrx < value.kewajiban_Semester_ini) {
+                            htmlx += `<td class = "text-center" >BL</td>`;
+                        } else {
+                            htmlx += `<td class = "text-center" >L</td>`;
+                        }
+                        htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
+                        htmlx += `<td class="text-center">`;
+                        if (value.user_id !== user_log) {
+                            // htmlx += `<a href="#" onclick="" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="" disabled>Edit</a> | `;
+                            htmlx += `<a href="#" onclick="" class="btn btn-xs btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="" disabled>Hapus</a>`;
+                        } else {
+                            // htmlx += `<a href="#"  onclick="editTransaksi(${value.id_transaksi})" class="btn btn-xs btn-info btn-edit-transaksi" id="btn_edit_transaksi" value="${value.id_transaksi}">Edit</a> | `;
+                            htmlx += `<a href="#"  onclick="deleteTransaksi(${value.id_transaksi})" class="btn btn-xs btn-danger btn-hapus-transaksi" id="btn_hapus_transaksi" value="${value.id_transaksi}">Hapus</a>`;
+                        }
                         htmlx += `</td>`;
                         htmlx += `</tr>`;
-                    }
-                    $("#riwayat_transaksi_tbody").html(htmlx);
-                    $(function() {
-                        TablesDatatables.init();
                     });
-                },
-                error: function(e) {
-                    error_server();
-                },
-            });
-            // end hapus menu
+                } else {
+                    htmlx += `<tr>`;
+                    htmlx += `<td colspan="12" class="text-center"><br>`;
+                    htmlx += `<div class='col-lg-12'>`;
+                    htmlx += `<div class='alert alert-danger alert-dismissible'>`;
+                    htmlx += `<h4><i class='icon fa fa-warning'></i> Belum Transaksi Pada Semester Ini!</h4>`;
+                    htmlx += `</div>`;
+                    htmlx += `</div>`;
+                    htmlx += `</td>`;
+                    htmlx += `</tr>`;
+                }
+                $("#riwayat_transaksi_tbody").html(htmlx);
+            }
         });
 
         function editTransaksi(id_transaksi) {

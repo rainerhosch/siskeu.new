@@ -90,4 +90,5 @@ $route['aktivasi-mahasiswa'] = 'admin/AktivasiMhs';
 $route['aktivasi-mahasiswa/(:any)'] = 'admin/AktivasiMhs/$1';
 $route['masterdata/(:any)'] = 'admin/MasterData/$1';
 $route['laporan/(:any)'] = 'user/Laporan/$1';
+$route['laporan/loadRecord/(:any)'] = 'user/Laporan/loadRecord/$1';
 $route['rekap/(:any)'] = 'user/Rekap/$1';
