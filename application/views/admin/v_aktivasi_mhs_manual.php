@@ -50,7 +50,7 @@
         <div class="block-title">
             <h2><?= $page; ?></h2>
         </div>
-        <form class="form-inline" action="#" id="form_search">
+        <form class="form-inline" action="#">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon"><strong>NIM</strong></div>
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <hr>
-            <div class="form-check roles">
+            <div class="form-check roles" hidden>
                 <input class="form-check-input" type="radio" name="jns_aktifasi" id="cekAktifPerwalian" value="2">
                 <label class="form-check-label" for="cekAktifPerwalian">
                     Perwalian
@@ -116,7 +116,24 @@
                         dataType: "json",
                         success: function(response) {
                             if (response.status === 200) {
-                                console.log(response.data);
+                                // console.log(response.data);
+                                $('.roles').prop('hidden', false);
+                                $('.roles').on('change', function() {
+                                    let jns_aktifasi = $('input[name="jns_aktifasi"]:checked').val();
+                                    // console.log(jns)
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "cek_satus_aktif",
+                                        data: {
+                                            nipd: nipd,
+                                            jns_aktifasi: jns_aktifasi
+                                        },
+                                        dataType: "json",
+                                        success: function(response) {
+                                            console.log(response)
+                                        }
+                                    });
+                                });
                             } else {
                                 console.log(response.msg);
                             }

@@ -161,15 +161,34 @@ class AktivasiMhs extends CI_Controller
 
     public function cek_satus_aktif()
     {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
         if ($this->input->is_ajax_request()) {
             $nipd = $this->input->post('nipd');
             $jenis_cek = $this->input->post('jns_aktifasi');
+            if ($jenis_cek == '3' || $jenis_cek == '4') {
+                $table = 'reg_ujian t';
+            } else {
+                $table = 'reg_mhs t';
+            }
             $where = [
                 't.nim' => $nipd,
                 't.tahun' => $smtAktif,
                 // 't.aktif' => $aktif
             ];
-            $response = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+            $dataMhs = $this->masterdata->getMahasiswaByNim(['nipd' => $nipd])->row_array();
+            $dataStatus = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+            if ($dataStatus != null) {
+                $status = $dataStatus['aktif'];
+            } else {
+                $status = $dataStatus;
+            }
+            $response = [
+                'nipd' => $dataMhs['nipd'],
+                'nama' => $dataMhs['nm_pd'],
+                'jurusan' => $dataMhs['nm_jur'],
+                'status' => $status
+            ];
         } else {
             $response = 'Invalid Request!';
         }
