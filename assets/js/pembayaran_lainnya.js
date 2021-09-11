@@ -21,6 +21,7 @@ $("#nipd_2").on("keypress", function (e) {
         $("#nim_mhs_bayar_hidden").val(response.nipd);
         $("#nama_mhs_bayar_hidden").val(response.nm_pd);
         $("#jenjang_mhs_bayar_hidden").val(response.nm_jenj_didik);
+        $("#tg_cs_mhs").val(response.tg_CS);
         $("#angkatan_mhs_bayar_hidden").val(response.tahun_masuk);
 
         if (response != null) {
@@ -32,6 +33,15 @@ $("#nipd_2").on("keypress", function (e) {
           setTimeout(function () {
             $("#notif_search2").html("");
           }, 2000);
+        }
+
+        if (response.tg_CS != "0") {
+          $("#notif_search2").html(
+            "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
+          );
+          setTimeout(function () {
+            $("#notif_search2").html("");
+          }, 5000);
         }
 
         // vier table history transaksi
@@ -98,8 +108,9 @@ $("#nipd_2").on("keypress", function (e) {
 
 $("#add_rows").click(function () {
   $("#tabel_pembayaranLain").each(function () {
+    let tg_cs = $("#tg_cs_mhs").val();
+    // console.log(tg_cs);
     $(".btn#delete_rows").prop("disabled", false);
-    $(".btn#btn_proses_2").prop("disabled", false);
     // $("tbody", this).empty();
     let tds = "<tr>";
     (size = jQuery("#tabel_pembayaranLain >tbody >tr").length + 1),
@@ -124,6 +135,7 @@ $("#add_rows").click(function () {
       url: "transaksi/Cari_Pembayaran_lain",
       data: {
         nm_jenj_didik: jnj_didikku,
+        tg_cs: tg_cs,
       },
       serverside: true,
       dataType: "json",
@@ -162,6 +174,13 @@ $("#add_rows").click(function () {
           // console.log(kewajiban);
           $("#pembayaran_" + rowid).attr("value", kewajiban);
           $("#pembayaran_" + rowid).attr("name", `biayaJenisPembayaran[${jp}]`);
+          if (tg_cs === "0") {
+            $(".btn#btn_proses_2").prop("disabled", false);
+          } else {
+            if (jp === "6") {
+              $(".btn#btn_proses_2").prop("disabled", false);
+            }
+          }
         },
       });
     });

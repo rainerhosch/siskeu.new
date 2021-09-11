@@ -189,7 +189,7 @@
         $(document).ready(function() {
             $.ajax({
                 type: "GET",
-                url: "aktivasi-mahasiswa/get_data_dispen_mhs",
+                url: "get_data_dispen_mhs",
                 dataType: "json",
                 success: function(response) {
                     console.log(response.data)
@@ -249,7 +249,7 @@
                         let id_dispen = $(this).attr("id-dispen")
                         $.ajax({
                             type: "POST",
-                            url: "aktivasi-mahasiswa/update_jml_pesan",
+                            url: "update_jml_pesan",
                             data: {
                                 id_dispen: id_dispen
                             },
@@ -320,7 +320,7 @@
                     }
                     $.ajax({
                         type: "POST",
-                        url: "aktivasi-mahasiswa/cari_mhs",
+                        url: "cari_mhs",
                         data: {
                             nipd: nipd,
                             tahun_akademik: tahun_akademik,
@@ -373,7 +373,7 @@
                 });
                 $.ajax({
                     type: "POST",
-                    url: "aktivasi-mahasiswa/aktif_manual",
+                    url: "aktif_dispen",
                     data: values,
                     dataType: "json",
                     success: function(response) {

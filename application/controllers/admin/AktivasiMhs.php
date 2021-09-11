@@ -23,12 +23,19 @@ class AktivasiMhs extends CI_Controller
         $this->load->model('M_user', 'user');
     }
 
-    public function index()
+    public function aktif_manual()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Aktivasi Mahasiswa Manual';
+        $data['content'] = 'admin/v_aktivasi_mhs_manual';
+        $this->load->view('template', $data);
+    }
+    public function dispen()
     {
         // code here...
         $data['title'] = 'SiskeuNEW';
-        $data['page'] = 'Aktivasi Mahasiswa';
-        $data['content'] = 'admin/v_aktivasi_mhs';
+        $data['page'] = 'Aktivasi Mahasiswa Dispen';
+        $data['content'] = 'admin/v_aktivasi_mhs_dispen';
 
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $data['tahun_akademik'] = $smtAktifRes['id_smt'];
@@ -250,7 +257,7 @@ class AktivasiMhs extends CI_Controller
         echo json_encode($response);
     }
 
-    public function aktif_manual()
+    public function aktif_dispen()
     {
 
         if ($this->input->is_ajax_request()) {

@@ -282,7 +282,7 @@
                 $("#alert_tx").html("");
             }, 2000);
 
-            $(":input").on("keyup change", function(e) {
+            $("#form_cari").on("keyup change", function(e) {
                 e.preventDefault();
                 let keyword = $(this).val();
                 loadFilter(keyword);

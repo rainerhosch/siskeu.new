@@ -10,6 +10,7 @@
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="row">
+                    <div class="alert alert-info" role="alert">Untuk Pembayaran Perpanjang Semester, Jika Mahasiswa Mempunya tunggakan di semester lalu, silahkan tambah transaksi/pembayaran "Tunggakan CS" pada (pilihan pembayaran).</div>
                     <div class="col-sm-4 form_invoice2">
                         <div class="sm-form mb-5 row" style="margin-top: 5px;">
                             <div class="col-sm-12">
@@ -30,6 +31,7 @@
                                     <input type="hidden" id="nama_mhs_bayar_hidden" name="nama_mhs_bayar_hidden" class="form-control validate" readonly>
                                     <input type="hidden" id="jenjang_mhs_bayar_hidden" name="jenjang_mhs_bayar_hidden" class="form-control validate" readonly>
                                     <input type="hidden" id="angkatan_mhs_bayar_hidden" name="angkatan_mhs_bayar_hidden" class="form-control validate" readonly>
+                                    <input type="hidden" id="tg_cs_mhs" name="tg_cs_mhs" class="form-control validate" readonly>
 
                                 </div>
                             </div>
