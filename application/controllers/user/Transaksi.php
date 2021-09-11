@@ -1362,14 +1362,13 @@ class Transaksi extends CI_Controller
                 //     $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
                 // }
             }
-
+            $bayar_tg_cs = 0;
             foreach ($resDetailTx as $i => $Dtx) {
                 if ($Dtx['id_jenis_pembayaran'] == 6) {
-                    $dataTx['bayar_tg_cs'] = 1;
-                } else {
-                    $dataTx['bayar_tg_cs'] = 0;
+                    $bayar_tg_cs = 1;
                 }
             }
+            $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
             $dataTx['kewajiban']['cs'] = $kewajibanCS;
             $dataTx['bayar_cs'] = 1;
@@ -1411,14 +1410,13 @@ class Transaksi extends CI_Controller
                 }
             }
 
+            $bayar_tg_cs = 0;
             foreach ($resDetailTx as $i => $Dtx) {
                 if ($Dtx['id_jenis_pembayaran'] == 6) {
-                    $dataTx['bayar_tg_cs'] = 1;
-                } else {
-                    $dataTx['bayar_tg_cs'] = 0;
+                    $bayar_tg_cs = 1;
                 }
             }
-
+            $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
             $dataTx['kewajiban']['cs'] = $kewajibanCS;
             $dataTx['bayar_cs'] = 0;
