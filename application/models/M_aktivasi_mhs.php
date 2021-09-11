@@ -16,6 +16,17 @@ class M_aktivasi_mhs extends CI_Model
         return $this->db->insert('dispensasi', $data);
     }
 
+    public function cekStatusAktifMhs($data = null, $table)
+    {
+        $this->db->select('m.nipd, m.nm_pd, m.nm_jur, t.aktif');
+        $this->db->from($table);
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
     public function getDataDispenMhs($data = null)
     {
         /*

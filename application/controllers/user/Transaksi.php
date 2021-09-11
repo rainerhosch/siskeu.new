@@ -1482,7 +1482,79 @@ class Transaksi extends CI_Controller
         }
 
         if ($bayarTG_CS == true) {
+            $dataCekTG = [
+                'nim' => $dataTx['nim'],
+                'jenis_tunggakan' => '6'
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+            if ($dataTG == null) {
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = (int)$Dtx['jml_bayar'];
+                    }
+                }
+            } else {
+                $kewajibanTGCS = $dataTG['jml_tunggakan'];
+                $whereXX = [
+                    't.nim' => $dataTx['nim'],
+                    't.semester' => $dataTx['semester'],
+                    't.id_transaksi >' => $id_transaksi,
+
+                ];
+                $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereXX)->result_array();
+                foreach ($dataTxSetelahnya as $a => $value) {
+                    $kewajibanTGCS = $kewajibanTGCS + $value['jml_bayar'];
+                }
+
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = $kewajibanTGCS + (int)$Dtx['jml_bayar'];
+                    }
+                }
+            }
+
+            $bayar_tg_cs = 0;
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $bayar_tg_cs = 1;
+                }
+            }
+            $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
+            $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
         } else {
+            $dataCekTG = [
+                'nim' => $dataTx['nim'],
+                'jenis_tunggakan' => '6'
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+            if ($dataTG == null) {
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = (int)$Dtx['jml_bayar'];
+                    }
+                }
+            } else {
+                $kewajibanTGCS = $dataTG['jml_tunggakan'];
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = $kewajibanTGCS + (int)$Dtx['jml_bayar'];
+                    }
+                }
+            }
+            foreach ($dataTxSebelumnya as $a => $val) {
+                if ($val['id_jenis_pembayaran'] == 6) {
+                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                }
+            }
+
+            $bayar_tg_cs = 0;
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $bayar_tg_cs = 1;
+                }
+            }
+            $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
+            $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
         }
 
 
@@ -1798,7 +1870,79 @@ class Transaksi extends CI_Controller
         }
 
         if ($bayarTG_CS == true) {
+            $dataCekTG = [
+                'nim' => $dataTx['nim'],
+                'jenis_tunggakan' => '6'
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+            if ($dataTG == null) {
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = (int)$Dtx['jml_bayar'];
+                    }
+                }
+            } else {
+                $kewajibanTGCS = $dataTG['jml_tunggakan'];
+                $whereXX = [
+                    't.nim' => $dataTx['nim'],
+                    't.semester' => $dataTx['semester'],
+                    't.id_transaksi >' => $id_transaksi,
+
+                ];
+                $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereXX)->result_array();
+                foreach ($dataTxSetelahnya as $a => $value) {
+                    $kewajibanTGCS = $kewajibanTGCS + $value['jml_bayar'];
+                }
+
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = $kewajibanTGCS + (int)$Dtx['jml_bayar'];
+                    }
+                }
+            }
+
+            $bayar_tg_cs = 0;
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $bayar_tg_cs = 1;
+                }
+            }
+            $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
+            $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
         } else {
+            $dataCekTG = [
+                'nim' => $dataTx['nim'],
+                'jenis_tunggakan' => '6'
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+            if ($dataTG == null) {
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = (int)$Dtx['jml_bayar'];
+                    }
+                }
+            } else {
+                $kewajibanTGCS = $dataTG['jml_tunggakan'];
+                foreach ($resDetailTx as $i => $Dtx) {
+                    if ($Dtx['id_jenis_pembayaran'] == 6) {
+                        $kewajibanTGCS = $kewajibanTGCS + (int)$Dtx['jml_bayar'];
+                    }
+                }
+            }
+            foreach ($dataTxSebelumnya as $a => $val) {
+                if ($val['id_jenis_pembayaran'] == 6) {
+                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                }
+            }
+
+            $bayar_tg_cs = 0;
+            foreach ($resDetailTx as $i => $Dtx) {
+                if ($Dtx['id_jenis_pembayaran'] == 6) {
+                    $bayar_tg_cs = 1;
+                }
+            }
+            $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
+            $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
         }
 
 

@@ -159,6 +159,23 @@ class AktivasiMhs extends CI_Controller
         echo json_encode($response);
     }
 
+    public function cek_satus_aktif()
+    {
+        if ($this->input->is_ajax_request()) {
+            $nipd = $this->input->post('nipd');
+            $jenis_cek = $this->input->post('jns_aktifasi');
+            $where = [
+                't.nim' => $nipd,
+                't.tahun' => $smtAktif,
+                // 't.aktif' => $aktif
+            ];
+            $response = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+        } else {
+            $response = 'Invalid Request!';
+        }
+        echo json_encode($response);
+    }
+
     public function cari_mhs()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
@@ -167,6 +184,7 @@ class AktivasiMhs extends CI_Controller
         if ($this->input->is_ajax_request()) {
             $nipd = $this->input->post('nipd');
             $jenis_dispen = $this->input->post('jenis_dispen');
+            $tahun_akademik = $this->input->post('tahun_akademik');
 
             // var_dump($dataDispen);
             // die;
@@ -180,7 +198,6 @@ class AktivasiMhs extends CI_Controller
                 $jns_bayar = 4;
                 $nm_jns_dispen = 'Cicilan Ke-3';
             }
-            $tahun_akademik = $this->input->post('tahun_akademik');
             $data = $this->masterdata->getMahasiswaByNim(['nipd' => $nipd])->row_array();
             // cek tunggakan smt lalu
             if ($data != null) {
