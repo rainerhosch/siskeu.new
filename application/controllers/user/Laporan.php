@@ -330,7 +330,12 @@ class Laporan extends CI_Controller
     public function getDataTunggakan()
     {
         if ($this->input->is_ajax_request()) {
-            $data['tunggakan'] = $this->tunggakan->getAllDataTunggakanMhs()->result_array();
+            $input = $this->input->post('id_tg');
+            if ($input != null) {
+                $data['tunggakan'] = $this->tunggakan->getTunggakanMhs(['id_tunggakan' => $input])->row_array();
+            } else {
+                $data['tunggakan'] = $this->tunggakan->getAllDataTunggakanMhs()->result_array();
+            }
             $data['admin_log'] = $this->session->userdata();
         } else {
             $data = 'Invalid Request.';
@@ -338,6 +343,21 @@ class Laporan extends CI_Controller
         echo json_encode($data);
     }
 
+    public function updateTunggakan()
+    {
+        $id_tg = $this->input->post('id_tunggakan');
+        $jml_update = $this->input->post('jml_tunggakan');
+        $update = $this->tunggakan->updateTunggakan(['id_tunggakan' => $id_tg], ['jml_tunggakan' => $jml_update]);
+        if (!$update) {
+            // gagal
+            $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Gagal Edit Tunggakan!</div>');
+            redirect('laporan/DataTunggakan');
+        } else {
+            // success
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Tunggakan berhasi diubah!</div>');
+            redirect('laporan/DataTunggakan');
+        }
+    }
     public function hapus_tunggakan()
     {
         if ($this->input->is_ajax_request()) {

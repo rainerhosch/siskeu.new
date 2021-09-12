@@ -13,8 +13,9 @@ class M_tunggakan extends CI_Model
     // ambil data tunggakan
     public function getTunggakanMhs($data = null)
     {
-        $this->db->select('tg.id_tunggakan, tg.nim, tg.jenis_tunggakan, tg.jml_tunggakan, tg.idtahun, mjp.nm_jenis_pembayaran');
+        $this->db->select('tg.id_tunggakan, tg.nim, tg.jenis_tunggakan, tg.jml_tunggakan, tg.idtahun, m.nm_pd, m.nm_jur, mjp.nm_jenis_pembayaran');
         $this->db->from('tunggakan tg');
+        $this->db->join('mahasiswa m', 'm.nipd=tg.nim');
         $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=tg.jenis_tunggakan');
         if ($data !== null) {
             $this->db->where($data);

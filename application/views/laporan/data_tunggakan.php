@@ -4,6 +4,9 @@
         <li>Page</li>
         <li><a href=""><?= $page; ?></a></li>
     </ul>
+    <div class="row" id="alert_tg">
+        <?= $this->session->flashdata('message'); ?>
+    </div>
 
     <div class="row">
         <div class="col-sm-12">
@@ -27,21 +30,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tunggakan_tbody">
-                                    <!-- <?php foreach ($tunggakan as $i => $tg) :
-                                                $total_tg[] = $tg['jml_tunggakan'];
-                                                $i++; ?>
-                                        <tr>
-                                            <td class="text-center"><?= $i ?></td>
-                                            <td class="text-center"><?= $tg['nipd']; ?></td>
-                                            <td class="text-center"><?= $tg['nm_pd']; ?></td>
-                                            <td class="text-center"><?= $tg['nm_jur']; ?></td>
-                                            <td class="text-center"><?= $tg['nm_jenis_pembayaran']; ?></td>
-                                            <td class="text-center"><?= number_format($tg['jml_tunggakan']); ?></td>
-                                            <td class="text-center">
-                                                <a href="#" class="btn-sm btn-danger btn-hapus" id="btn_hapus_biaya" value="<?= $tg['id_tunggakan']; ?>"><i class="fas fa-trash-alt"></i></a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?> -->
                                 </tbody>
                             </table>
                         </div>
@@ -51,8 +39,74 @@
         </div>
     </div>
 
+    <!-- modal edit -->
+    <div class="modal" tabindex="-1" role="dialog" id="editTunggakan">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Tunggakan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?= base_url('laporan'); ?>/updateTunggakan" method="post" enctype="multipart/form-data">
+                        <input type="hidden" class="form-control" value="" name="id_tunggakan" id="id_tunggakan">
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nim_mhs">NIM</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nim_mhs" name="nim_mhs" class="form-control validate" readonly>
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nm_mhs">Nama</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nm_mhs" name="nm_mhs" class="form-control validate" readonly>
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nm_jur">Jurusan</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nm_jur" name="nm_jur" class="form-control validate" readonly>
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nama_tunggakan">Jenis Tunggakan</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nama_tunggakan" name="nama_tunggakan" class="form-control validate" readonly>
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="jml_tunggakan">Jumlah</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="jml_tunggakan" name="jml_tunggakan" class="form-control validate">
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
+            setTimeout(function() {
+                $("#alert_tg").html("");
+            }, 3000);
             $.ajax({
                 type: "POST",
                 url: 'getDataTunggakan',
@@ -71,7 +125,7 @@
                             html += `<td class = "text-center" >${tg.nm_jenis_pembayaran}</td>`;
                             html += `<td class = "text-center" >${parseInt(tg.jml_tunggakan).toLocaleString()}</td>`;
                             html += `<td class="text-center">`;
-                            html += `<a href="#"  onclick="deleteTunggakan(${tg.id_tunggakan},'${tg.nm_pd}')" class="btn btn-xs btn-danger btn-hapus-tg" value="${tg.nm_pd}">Hapus</a>`;
+                            html += `<a href="#" class="btn btn-xs btn-warning btn_edit_tg" id="btn_edit_${tg.id_tunggakan}">Edit</a> | <a href="#"  onclick="deleteTunggakan(${tg.id_tunggakan},'${tg.nm_pd}')" class="btn btn-xs btn-danger btn-hapus-tg" value="${tg.nm_pd}">Hapus</a>`;
                             html += `</td>`;
                             html += `</tr>`;
                         });
@@ -90,9 +144,33 @@
                     $(function() {
                         TablesDatatables.init();
                     });
+                    $.each(response.tunggakan, function(i, tg) {
+                        $('#btn_edit_' + tg.id_tunggakan).on('click', function() {
+                            let id_tg = tg.id_tunggakan;
+                            $.ajax({
+                                type: "POST",
+                                url: 'getDataTunggakan',
+                                data: {
+                                    id_tg: id_tg
+                                },
+                                dataType: "json",
+                                success: function(response) {
+                                    $('#editTunggakan').modal('show');
+                                    $('#id_tunggakan').val(response.tunggakan.id_tunggakan);
+                                    $('#nim_mhs').val(response.tunggakan.nim);
+                                    $('#nm_mhs').val(response.tunggakan.nm_pd);
+                                    $('#nm_jur').val(response.tunggakan.nm_jur);
+                                    $('#nama_tunggakan').val(response.tunggakan.nm_jenis_pembayaran);
+                                    $('#jml_tunggakan').val(response.tunggakan.jml_tunggakan);
+                                    // console.log(response)
+                                }
+                            })
+                        });
+                    });
                 }
             });
         });
+
 
         function deleteTunggakan(id_tunggakan, nm_pd) {
             swal.fire({
