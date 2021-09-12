@@ -30,6 +30,68 @@ class AktivasiMhs extends CI_Controller
         $data['content'] = 'admin/v_aktivasi_mhs_manual';
         $this->load->view('template', $data);
     }
+
+    public function aktifkan_manual()
+    {
+        $dateNow = date('Y-m-d H:i:s');
+        $pecah_tgl_waktu = explode(' ', $dateNow);
+        $tgl = $pecah_tgl_waktu[0];
+
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        if ($this->input->is_ajax_request()) {
+            $nimMhs = $this->input->post('nipd');
+            $jenis_aktivasi = $this->input->post('jns_aktifasi');
+            $dataAktifKRS = [
+                'Tahun' => $smtAktif,
+                'Identitas_ID' => '',
+                'Jurusan_ID' => '',
+                'NIM' => $nimMhs,
+                'tgl_reg' => $tgl,
+                'aktif' => 2,
+                'keterangan' => 'from siskeu_new',
+                'aktif_by' => 0
+            ];
+            $dataAktifUTS = [
+                'tahun' => $smtAktif,
+                'nim' => $nimMhs,
+                'tgl_reg' => $tgl,
+                'aktif' => 1,
+                'keterangan' => 'from siskeu_new',
+                'aktif_by' => 0
+            ];
+            $dataAktifUAS = [
+                'tahun' => $smtAktif,
+                'nim' => $nimMhs,
+                'tgl_reg' => $tgl,
+                'aktif' => 2,
+                'keterangan' => 'from siskeu_new',
+                'aktif_by' => 0
+            ];
+
+            // ===============================  Fungsi aktifasi perwalian dan ujian ==============
+            if ($jenis_aktivasi == '2') {
+                // Aktifasi Perwalian, UTS, UAS
+                $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
+            } else if ($jenis_aktivasi == '3') {
+                $this->aktivasi->aktivasi_ujian($dataAktifUTS);
+            } else {
+                $this->aktivasi->aktivasi_ujian($dataAktifUAS);
+            }
+            $response = [
+                'status' => 200,
+                'msg' => 'Aktivasi Berhasil!'
+            ];
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'Invalid Request.'
+            ];
+        }
+        echo json_encode($response);
+    }
+
+
     public function dispen()
     {
         // code here...
@@ -166,28 +228,82 @@ class AktivasiMhs extends CI_Controller
         if ($this->input->is_ajax_request()) {
             $nipd = $this->input->post('nipd');
             $jenis_cek = $this->input->post('jns_aktifasi');
-            if ($jenis_cek == '3' || $jenis_cek == '4') {
-                $table = 'reg_ujian t';
-            } else {
-                $table = 'reg_mhs t';
+            $biaya_cs = $this->input->post('biaya_cs');
+            $kewajiban_cicilan = $biaya_cs / 3;
+
+            $dataMhs = $this->masterdata->getMahasiswaByNim(['nipd' => $nipd])->row_array();
+            // ============================================================================
+            // cek transaksi
+            $dataCekNim = [
+                'nim' => $nipd,
+                'semester' => $smtAktif
+            ];
+            $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCekNim)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            if ($countHistoriTx > 0) {
+                for ($i = 0; $i < $countHistoriTx; $i++) {
+                    $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                    $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                    foreach ($dataHistoriTx[$i]['detail_transaksi'] as $dTX) {
+                        if ($dTX['id_jenis_pembayaran'] == $jenis_cek) {
+                            $kewajiban_cicilan = $kewajiban_cicilan - $dTX['jml_bayar'];
+                        }
+                    }
+                }
             }
+
+            // ================================ cek status reg ===============================
             $where = [
                 't.nim' => $nipd,
                 't.tahun' => $smtAktif,
-                // 't.aktif' => $aktif
             ];
-            $dataMhs = $this->masterdata->getMahasiswaByNim(['nipd' => $nipd])->row_array();
-            $dataStatus = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
-            if ($dataStatus != null) {
-                $status = $dataStatus['aktif'];
+            if ($jenis_cek == '3' || $jenis_cek == '4') {
+                $table = 'reg_ujian t';
+                $dataStatus = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+                if ($dataStatus != null) {
+                    if ($dataStatus['aktif'] == '1' || $dataStatus['aktif'] == '2') {
+                        $status = 'Sudah Aktif';
+                        $aktif = $dataStatus['aktif'];
+                    } else {
+                        $status = 'Aktif by Dispen';
+                        $aktif = $dataStatus['aktif'];
+                    }
+                } else {
+                    if ($kewajiban_cicilan <= 500000) {
+                        $status = 1;
+                        $aktif = 0;
+                    } else {
+                        $status = 'Belum Melunasi Cicilan';
+                        $aktif = 0;
+                    }
+                }
             } else {
-                $status = $dataStatus;
+                $table = 'reg_mhs t';
+                $dataStatus = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+                if ($dataStatus != null) {
+                    if ($dataStatus['aktif'] == '2') {
+                        $status = 'Sudah Aktif';
+                        $aktif = $dataStatus['aktif'];
+                    } else {
+                        $status = 'Aktif by Dispen';
+                        $aktif = $dataStatus['aktif'];
+                    }
+                } else {
+                    if ($kewajiban_cicilan <= 500000) {
+                        $status = 1;
+                        $aktif = 0;
+                    } else {
+                        $status = 'Belum Melunasi Cicilan';
+                        $aktif = 0;
+                    }
+                }
             }
             $response = [
-                'nipd' => $dataMhs['nipd'],
-                'nama' => $dataMhs['nm_pd'],
-                'jurusan' => $dataMhs['nm_jur'],
-                'status' => $status
+                'nipd'      => $dataMhs['nipd'],
+                'nama'      => $dataMhs['nm_pd'],
+                'jurusan'   => $dataMhs['nm_jur'],
+                'status'    => $status,
+                'aktif'     => $aktif
             ];
         } else {
             $response = 'Invalid Request!';
@@ -254,9 +370,11 @@ class AktivasiMhs extends CI_Controller
                             }
                             $data['pengajuan_dispen'] = $biayaC_ke;
                             $data['nm_kewajiban'] = $nm_jns_dispen;
+                            $data['biaya_cs'] = $biayaCS;
                         }
                     }
                 } else {
+                    $data['biaya_cs'] = $biayaCS;
                     $data['pengajuan_dispen'] = $biayaC_ke;
                     $data['nm_kewajiban'] = $nm_jns_dispen;
                 }
