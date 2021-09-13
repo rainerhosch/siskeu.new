@@ -106,6 +106,7 @@ if ($data_transaksi['smt'] == 1) {
     $cetak_ganjil_genal = 'Genap';
 }
 
+$data_kewajiban = $data_transaksi['data_kewajiban_lain'];
 $detailTX = $data_transaksi['detail_transaksi'];
 $admin_log = $data_transaksi['admin_log'];
 $tahun_akademik = substr($data_transaksi['nm_smt'], 0, 9);
@@ -162,7 +163,8 @@ $pdf->Cell(40, 5, 'Sisa Bayar', 1, 1, 'C');
 $total_kewajiban = 0;
 $total_bayar_trx = 0;
 
-if (($data_transaksi['bayar_tg_cs'] !== 0 && $data_transaksi['bayar_cs'] != 0) || $data_transaksi['bayar_cs'] != 0 || $data_transaksi['bayar_kmhs'] !== 0 || $data_transaksi['bayar_tg_kmhs'] !== 0 || ($data_transaksi['bayar_tg_cs'] == 1 && $data_transaksi['data_kewajiban_lain'] == null)) {
+if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) || $data_transaksi['bayar_cs'] != 0 || $data_transaksi['bayar_kmhs'] != 0 || $data_transaksi['bayar_tg_kmhs'] != 0 || ($data_transaksi['bayar_tg_cs'] == 1 && $data_transaksi['data_kewajiban_lain'] == null)) {
+    // echo 1;
     foreach ($detailTX as $j => $dtx) {
         if ($dtx['id_jenis_pembayaran'] == 5 || $dtx['id_jenis_pembayaran'] == 7 || $dtx['id_jenis_pembayaran'] == 6) {
             $pdf->SetFont('Courier', 'IB', 10);
@@ -237,14 +239,23 @@ if (($data_transaksi['bayar_tg_cs'] !== 0 && $data_transaksi['bayar_cs'] != 0) |
     }
 } else {
     foreach ($detailTX as $j => $dtx) {
+        if ($dtx['id_jenis_pembayaran'] == "8" || $dtx['id_jenis_pembayaran'] == "9") {
+            $kewajiban_bayar = $dtx['kewajiban_Bayar'];
+        } else {
+            foreach ($data_kewajiban as $x => $dk) {
+                if ($dk['id_jp'] == $dtx['id_jenis_pembayaran']) {
+                    $kewajiban_bayar = $dk['biaya'];
+                }
+            }
+        }
         $pdf->SetFont('Courier', 'IB', 10);
         $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
         $pdf->SetFont('Courier', 'IB', 10);
-        $pdf->Cell(40, 5, number_format($dtx['kewajiban_Bayar'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($kewajiban_bayar, 0, '', '.'), 1, 0, 'R');
         $pdf->Cell(40, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(40, 5, number_format($dtx['kewajiban_Bayar'] - $dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+        $pdf->Cell(40, 5, number_format($kewajiban_bayar - $dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
         $total_bayar_trx = $total_bayar_trx + $dtx['jml_bayar'];
-        $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
+        $total_kewajiban = $total_kewajiban + $kewajiban_bayar;
     }
 }
 

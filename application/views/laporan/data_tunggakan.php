@@ -141,9 +141,6 @@
                         html += `</tr>`;
                     }
                     $("#tunggakan_tbody").html(html);
-                    $(function() {
-                        TablesDatatables.init();
-                    });
                     $.each(response.tunggakan, function(i, tg) {
                         $('#btn_edit_' + tg.id_tunggakan).on('click', function() {
                             let id_tg = tg.id_tunggakan;
@@ -166,6 +163,10 @@
                                 }
                             })
                         });
+                    });
+
+                    $(function() {
+                        TablesDatatables.init();
                     });
                 }
             });
