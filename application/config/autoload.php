@@ -103,7 +103,6 @@ $autoload['helper'] = array(
     'file',
     'security',
     'cek_akses',
-    'get_data_from_simak',
     'date'
 );
 

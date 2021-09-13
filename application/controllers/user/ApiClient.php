@@ -10,49 +10,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *  Quots of the code     : 'rapihkan lah code mu, seperti halnya kau menata kehidupan'
  */
 
-use \GuzzleHttp;
+use \GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 
 class ApiClient extends CI_Controller
 {
+    private $_client;
     public function __construct()
     {
         parent::__construct();
-    }
-    public function index()
-    {
-        $token = 'semogabahagia';
-        $type = 'count';
-        $url = "https://api.wastu.digital/resources/RegUjian";
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, $url);
-        curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl_handle, CURLOPT_HEADER, false);
-        curl_setopt($curl_handle, CURLOPT_HTTPHEADER, [
-            'Authorization: someAuthorization',
-            'token: ' . $token,
-            'type: ' . $type,
-            'Content-Type: application/json'
+        $this->_client = new Client([
+            'base_uri' => 'https://api.wastu.digital/resources/',
+            'headers' => ['token' => 'semogabahagia']
         ]);
-        $response = curl_exec($curl_handle);
-        curl_close($curl_handle);
-        $data = json_decode($response, true);
-        var_dump($data);
     }
 
-    public function get_data()
+    public function mGet($end_point, $data_param)
     {
-        $token = 'semogabahagia';
-        $type = 'count';
-        $url = "https://api.wastu.digital/resources/RegUjian";
-        // Create a PSR-7 request object to send
-        $headers = [
-            'token' => $token,
-            'type' => $type,
-            'Content-Type' => 'application/json'
+        // $end_point = 'RegUjian';
+        // $data_param = [
+        //     'query' => [
+        //         'type' => 'count',
+        //         'thn_akademik' => '20212',
+        //         // 'nipd' => '141351059'
+        //     ]
+        // ];
+        $response = $this->_client->request('GET', $end_point, $data_param);
+        echo ($response->getBody()->getContents());
+    }
+
+    public function mPost()
+    {
+        $end_point = 'RegUjian';
+        $data_param = [
+            'form_params' => [
+                'type' => 'count',
+                'thn_akademik' => '20212',
+                // 'nipd' => '141351059'
+            ]
         ];
-        $body = 'Hello!';
-        $request = new Request('HEAD', 'https://api.wastu.digital/resources/RegUjian', $headers, $body);
-        $promise = $client->sendAsync($request);
+        $response = $this->_client->request('POST', $end_point, $data_param);
+        echo ($response->getBody()->getContents());
     }
 }

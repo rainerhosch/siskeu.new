@@ -11,7 +11,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class SyncSimak extends CI_Controller
 {
-    private $smt_aktif;
     private $getMhsFromApiSimak;
     private $getRegMhs;
     private $getRegUjian;
@@ -21,7 +20,6 @@ class SyncSimak extends CI_Controller
         $token = 'semogabahagia';
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_api', 'api');
-        $this->smt_aktif = reqData('TahunAkademikAktif');
         // $this->getMhsFromApiSimak = reqData('MahasiswaForSiskeu');
     }
 
@@ -35,30 +33,35 @@ class SyncSimak extends CI_Controller
     }
     public function getCountData()
     {
-        $smtAktif = $this->smt_aktif['id_smt'];
-        // $dataRegMhs = reqData('RegMhs');
-        // $dataRegUjian = reqData('RegUjian');
-        // $dataRes = $this->getMhsFromApiSimak;
-        // $counApiDataMhs = count($dataRes['mhsdata']);
-        // $countRegMhsSimak = count($dataRegMhs['regmhs']);
-        // $countRegUjianSimak = count($dataRegUjian['reg_ujian']);
-        // $data['count_mhs_simak'] = $counApiDataMhs;
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        $counApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
+            'query' => [
+                'type' => 'get_count'
+            ]
+        ]);
+        $countRegMhsSimak = $this->api->mGet('RegMhs', [
+            'query' => [
+                'type' => 'get_count',
+                // 'thn_akademik' => $smtAktif,
+            ]
+        ]);
+        $countRegUjianSimak = $this->api->mGet('RegUjian', [
+            'query' => [
+                'type' => 'get_count',
+                // 'thn_akademik' => $smtAktif,
+            ]
+        ]);
+        $data['count_mhs_simak'] = $counApiDataMhs['mhsdata'];
         $data['semester_aktif_simak'] = $smtAktif;
-        // $data['reg_mhs_simak'] = $countRegMhsSimak;
-        // $data['reg_ujian_simak'] = $countRegUjianSimak;
+        $data['reg_mhs_simak'] = $countRegMhsSimak['reg_mhs'];
+        $data['reg_ujian_simak'] = $countRegUjianSimak['reg_ujian'];
         // ======================= Lokal ====================================
-
-        $condition = [
-            'a_periode_aktif' => 1
-        ];
-        $dataSemesterAktifLokal = $this->masterdata->getMaxKalenderAkademik($condition)->row_array();
-        $data['semester_aktif_local'] = $dataSemesterAktifLokal['id_smt'];
-        $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
-        $countLocalDataMhs = count($LocalDataMhs);
-        $data['count_mhs_local'] = $countLocalDataMhs;
-
+        $LocalDataMhs = $this->masterdata->getDataMhs()->num_rows();
         $dataRegMhs = $this->masterdata->getRegMhs()->num_rows();
         $dataRegUjian = $this->masterdata->getRegUjian()->num_rows();
+        $data['semester_aktif_local'] = $smtAktif;
+        $data['count_mhs_local'] = $LocalDataMhs;
         $data['reg_mhs_local'] = $dataRegMhs;
         $data['reg_ujian_local'] = $dataRegUjian;
         // ===========================================================
@@ -151,23 +154,29 @@ class SyncSimak extends CI_Controller
     {
         // code here...
         if ($this->input->is_ajax_request()) {
-            $table = 'reg_mhs';
-            $token = 'semogabahagia';
-            $response = getRegMhs($token);
-            $dataRegMhsSimakAll = $response['regmhs'];
 
+            $countRegMhsSimak = $this->api->mGet('RegMhs', [
+                'query' => [
+                    'type' => 'get_count',
+                ]
+            ]);
+            $jmlRegSimak = $countRegMhsSimak['reg_mhs'];
             // ========= Data lokal =============
+            $table = 'reg_mhs';
             $dataRegMhs = $this->masterdata->getRegMhs()->result_array();
             $jmlRegMhsLokal = count($dataRegMhs);
 
-            if (count($dataRegMhsSimakAll) < $jmlRegMhsLokal) {
+            if ($jmlRegSimak < $jmlRegMhsLokal) {
                 // inser data dari lokal ke simak
-            } elseif (count($dataRegMhsSimakAll) > $jmlRegMhsLokal) {
-                // insert data ke lokal
+            } elseif ($jmlRegSimak > $jmlRegMhsLokal) {
+                // insert simak ke lokal
                 if ($jmlRegMhsLokal > 0) {
-                    $offset = 'offset=' . $jmlRegMhsLokal;
-                    $response2 = getRegMhs($token, $offset);
-                    $dataRegMhsSimakOffset = $response2['regmhs'];
+                    $dataRegMhsSimakOffset = $this->api->mGet('RegMhs', [
+                        'query' => [
+                            'offset' =>  $jmlRegMhsLokal
+                        ]
+                    ]);
+                    $dataRegMhsSimakOffset = $dataRegMhsSimakOffset['reg_mhs'];
                     foreach ($dataRegMhsSimakOffset as $i => $val) {
                         $insert[] = $this->masterdata->insertData($table, $val);
                     }
@@ -187,6 +196,12 @@ class SyncSimak extends CI_Controller
                     }
                 } else {
                     // insert semua data dari simak berdasarkan tahun akademik aktif
+                    $dataRegMhsSimak = $this->api->mGet('RegMhs', [
+                        'query' => [
+                            // 'type' => 'get_count',
+                        ]
+                    ]);
+                    $dataRegMhsSimakAll = $dataRegMhsSimak['reg_mhs'];
                     foreach ($dataRegMhsSimakAll as $i => $val) {
                         $insert[] = $this->masterdata->insertData($table, $val);
                     }
@@ -216,25 +231,29 @@ class SyncSimak extends CI_Controller
     {
         // code here...
         if ($this->input->is_ajax_request()) {
-            $table = 'reg_ujian';
-            $token = 'semogabahagia';
-            $response = getRegUjian($token);
-            $dataRegUjianSimakAll = $response['reg_ujian'];
+            $countRegUjianSimak = $this->api->mGet('RegUjian', [
+                'query' => [
+                    'type' => 'get_count',
+                ]
+            ]);
+            $jmlRegUjianSimak = $countRegUjianSimak['reg_ujian'];
 
             // ========= Data lokal =============
+            $table = 'reg_ujian';
             $dataRegUjian = $this->masterdata->getRegUjian()->result_array();
             $jmlRegUjianLokal = count($dataRegUjian);
-            // var_dump($jmlRegUjianLokal);
-            // die;
 
-            if (count($dataRegUjianSimakAll) < $jmlRegUjianLokal) {
+            if ($jmlRegUjianSimak < $jmlRegUjianLokal) {
                 // inser data dari lokal ke simak
-            } elseif (count($dataRegUjianSimakAll) > $jmlRegUjianLokal) {
+            } elseif ($jmlRegUjianSimak > $jmlRegUjianLokal) {
                 // inser data dari simak ke lokal
                 if ($jmlRegUjianLokal > 0) {
-                    $offset = 'offset=' . $jmlRegUjianLokal;
-                    $response2 = getRegUjian($token, $offset);
-                    $dataRegUjianSimakOffset = $response2['reg_ujian'];
+                    $RegUjianSimakOffset = $this->api->mGet('RegUjian', [
+                        'query' => [
+                            'offset' =>  $jmlRegUjianLokal
+                        ]
+                    ]);
+                    $dataRegUjianSimakOffset = $RegUjianSimakOffset['reg_ujian'];
                     foreach ($dataRegUjianSimakOffset as $i => $val) {
                         $insert[] = $this->masterdata->insertData($table, $val);
                     }
@@ -254,6 +273,12 @@ class SyncSimak extends CI_Controller
                     }
                 } else {
                     // insert semua data dari simak berdasarkan tahun akademik aktif
+                    $dataRegUjianSimak = $this->api->mGet('RegUjian', [
+                        'query' => [
+                            // 'type' => 'get_count',
+                        ]
+                    ]);
+                    $dataRegUjianSimakAll = $dataRegUjianSimak['reg_ujian'];
                     foreach ($dataRegUjianSimakAll as $i => $val) {
                         $insert[] = $this->masterdata->insertData($table, $val);
                     }
