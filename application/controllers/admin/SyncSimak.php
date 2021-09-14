@@ -80,6 +80,34 @@ class SyncSimak extends CI_Controller
         echo json_encode($data);
     }
 
+    public function syncUpdateMhsById()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_pd = $this->input->post('id_pd');
+            $responseApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
+                'query' => [
+                    'id' => $id_pd
+                ]
+            ]);
+            $dataMhs = $responseApiDataMhs['mhsdata'];
+            $update = $this->masterdata->updateDataMhs($id_pd, $dataMhs);
+            if ($update) {
+                $response = [
+                    'status' => 200,
+                    'msg' => 'Berhasil Update'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'msg' => 'Data Tidak Diupdate, Karena Value Sama!'
+                ];
+            }
+        } else {
+            $response = "Invalid Request";
+        }
+        echo json_encode($response);
+    }
+
 
     public function SyncDataMhs()
     {

@@ -18,8 +18,89 @@ class MasterData extends CI_Controller
             redirect(base_url());
         }
 
+        $this->load->library('pagination');
         $this->load->model('M_masterdata', 'masterdata');
     }
+
+    public function Mahasiswa()
+    {
+        $data['title'] = 'Master Data';
+        $data['page'] = 'Data Mahasiswa';
+        $data['content'] = 'admin/data_mahasiswa';
+        $this->load->view('template', $data);
+    }
+
+    public function GetDataMhs()
+    {
+        if ($this->input->is_ajax_request()) {
+            $post_limit = $this->input->post('limit');
+            $post_offset = $this->input->post('offset');
+            $key_cari = $this->input->post('keyword');
+            if ($post_offset != null) {
+                $offset = $post_offset;
+            } else {
+                $offset = 0;
+            }
+            if ($post_limit != 0) {
+                $limit = $post_limit;
+            } else {
+                $limit = 10;
+            }
+            if ($offset != 0) {
+                $offset = ($offset - 1) * $limit;
+            }
+            $allcount = $this->masterdata->getDataMhsPagination()->num_rows();
+            $dataMhs = $this->masterdata->getDataMhsPagination($key_cari, $limit, $offset)->result_array();
+            // Pagination Configuration
+            $config['base_url'] = base_url() . 'masterdata/Mahasiswa';
+            $config['use_page_numbers'] = TRUE;
+            $config['total_rows'] = $allcount;
+            $config['per_page'] = $limit;
+
+            // ============ config css pagination ======================
+            $config['full_tag_open'] = "<ul class='pagination pagination-sm remove-margin'>";
+            $config['full_tag_close'] = '</ul>';
+            $config['num_tag_open'] = '<li>';
+            $config['num_tag_close'] = '</li>';
+            $config['cur_tag_open'] = '<li class="active"><a href="#">';
+            $config['cur_tag_close'] = '</a></li>';
+            $config['prev_tag_open'] = '<li>';
+            $config['prev_tag_close'] = '</li>';
+            $config['first_tag_open'] = '<li>';
+            $config['first_tag_close'] = '</li>';
+            $config['last_tag_open'] = '<li>';
+            $config['last_tag_close'] = '</li>';
+
+            $config['prev_link'] = '<i class="fa fa-chevron-left"></i>';
+            $config['prev_tag_open'] = '<li class="prev">';
+            $config['prev_tag_close'] = '</li>';
+
+
+            $config['next_link'] = '<i class="fa fa-chevron-right"></i>';
+            $config['next_tag_open'] = '<li class="next">';
+            $config['next_tag_close'] = '</li>';
+            // ============ End config css pagination ======================
+
+            // Initialize
+            $this->pagination->initialize($config);
+
+            // Initialize $data Array
+            $data['pagination'] = $this->pagination->create_links();
+            $data['data_mhs'] = $dataMhs;
+            $data['total_result'] = $allcount;
+            $data['row'] = $offset;
+            $data['user_loged'] = $this->session->userdata('id_user');
+        } else {
+            $data = "Invalid Request";
+        }
+        echo json_encode($data);
+    }
+
+    public function syncUpdateMhs()
+    {
+    }
+
+
     public function BiayaSpp()
     {
         $data['title'] = 'Master Data';

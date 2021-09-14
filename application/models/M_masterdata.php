@@ -33,18 +33,29 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
-    public function getDataMhs($data = null, $limit = null, $start = null)
+    public function getDataMhs($data = null)
     {
         $this->db->select('*');
         $this->db->from('mahasiswa');
         if ($data != null) {
             $this->db->where($data);
         }
+        return $this->db->get();
+    }
+
+    public function getDataMhsPagination($data = null, $limit = '', $start = '')
+    {
+        $this->db->select('*');
+        $this->db->from('mahasiswa m');
+        if ($data != null) {
+            $this->db->like('m.nipd', $data, 'after');
+        }
+
         // if limit and start provided
-        if ($limit != null) {
-            $this->db->limit($limit, '');
-        } else if ($start != null) {
-            $this->db->limit(9999999999999999999999999, $start);
+        if ($limit != "") {
+            $this->db->limit($limit, $start);
+        } else if ($start != "") {
+            $this->db->limit($limit, $start);
         }
 
         return $this->db->get();
@@ -55,6 +66,19 @@ class M_masterdata extends CI_Model
     {
         return $this->db->insert('mahasiswa', $data);
     }
+
+    // update data mahasiswa
+    public function updateDataMhs($id, $data)
+    {
+        $this->db->where('id_pd', $id);
+        $this->db->update('mahasiswa', $data);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
 
     // get semester aktif
     public function getSemesterAktif()

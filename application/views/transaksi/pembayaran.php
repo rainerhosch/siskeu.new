@@ -286,7 +286,7 @@
                 e.preventDefault();
                 let keyword = $(this).val();
                 loadFilter(keyword);
-            })
+            });
             $('#pagination').on('click', 'a', function(e) {
                 e.preventDefault();
                 let limit = $('#datatable_length').val();
