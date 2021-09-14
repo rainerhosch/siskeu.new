@@ -172,7 +172,7 @@
             url: 'sync-simak/getCountData',
             dataType: "json",
             success: function(response) {
-                console.log(response);
+                // console.log(response);
                 $('.mhs_local_label span').text(response.count_mhs_local);
                 $('.mhs_simak_label span').text(response.count_mhs_simak);
                 $('.sm_active_local_label span').text(response.semester_aktif_local);
@@ -256,7 +256,7 @@
                         url: 'sync-simak/SyncRegMhs',
                         dataType: 'json',
                         success: function(response) {
-                            console.log(response);
+                            // console.log(response);
                             if (response.status == 200) {
                                 $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync');
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
