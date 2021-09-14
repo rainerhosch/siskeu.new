@@ -33,10 +33,20 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
-    public function getDataMhs()
+    public function getDataMhs($data = null, $limit = null, $start = null)
     {
         $this->db->select('*');
         $this->db->from('mahasiswa');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        // if limit and start provided
+        if ($limit != null) {
+            $this->db->limit($limit, '');
+        } else if ($start != null) {
+            $this->db->limit(9999999999999999999999999, $start);
+        }
+
         return $this->db->get();
     }
 
@@ -226,22 +236,34 @@ class M_masterdata extends CI_Model
         }
     }
 
-    public function getRegMhs($data = null)
+    public function getRegMhs($data = null, $limit = null, $start = null)
     {
-        $this->db->select('ID_Reg, Tahun, Identitas_ID, Jurusan_ID, NIM, tgl_reg, aktif');
+        $this->db->select('ID_Reg, Tahun, Identitas_ID, Jurusan_ID, NIM, tgl_reg, aktif, keterangan, aktif_by');
         $this->db->from('reg_mhs');
-        if ($data !== null) {
+        if ($data != null) {
             $this->db->where($data);
+        }
+        // if limit and start provided
+        if ($limit != null) {
+            $this->db->limit($limit, '');
+        } else if ($start != null) {
+            $this->db->limit(9999999999999999999999999, $start);
         }
         return $this->db->get();
     }
 
-    public function getRegUjian($data = null)
+    public function getRegUjian($data = null, $limit = null, $start = null)
     {
-        $this->db->select('id_reg, tahun, nim, tgl_reg, aktif, keterangan');
+        $this->db->select('id_reg, tahun, nim, tgl_reg, aktif, keterangan, aktif_by');
         $this->db->from('reg_ujian');
-        if ($data !== null) {
+        if ($data != null) {
             $this->db->where($data);
+        }
+        // if limit and start provided
+        if ($limit != null) {
+            $this->db->limit($limit, '');
+        } else if ($start != null) {
+            $this->db->limit(9999999999999999999999999, $start);
         }
         return $this->db->get();
     }

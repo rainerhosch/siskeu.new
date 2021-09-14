@@ -247,11 +247,7 @@
                 });
 
                 if ($('.reg_mhs_local_label span').text() != $('.reg_mhs_simak_label span').text()) {
-                    if ($('.reg_mhs_local_label span').text() < $('.reg_mhs_simak_label span').text()) {
-                        $('.btn#btn_sync_reg_mhs').attr('disabled', false);
-                    }
-                } else {
-                    $('.btn#btn_sync_reg_mhs').attr('disabled', true);
+                    $('.btn#btn_sync_reg_mhs').attr('disabled', false);
                 }
                 $('.btn#btn_sync_reg_mhs').click(function() {
                     $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync fa-spin');
@@ -267,7 +263,11 @@
                                 setTimeout(function() {
                                     $('#success_message').html('');
                                 }, 5000);
-                                $('.reg_mhs_local_label span').text(response.data);
+                                if (response.tipe == 'simak') {
+                                    $('.reg_mhs_simak_label span').text(response.data);
+                                } else {
+                                    $('.reg_mhs_local_label span').text(response.data);
+                                }
                                 $('.btn#btn_sync_reg_mhs').prop('disabled', true);
                             }
                         }
@@ -276,11 +276,7 @@
 
                 // ====================== Reg Ujian ===========================
                 if ($('.reg_ujian_local_label span').text() != $('.reg_ujian_simak_label span').text()) {
-                    if ($('.reg_ujian_local_label span').text() < $('.reg_ujian_simak_label span').text()) {
-                        $('.btn#btn_sync_reg_ujian').attr('disabled', false);
-                    }
-                } else {
-                    $('.btn#btn_sync_reg_ujian').attr('disabled', true);
+                    $('.btn#btn_sync_reg_ujian').attr('disabled', false);
                 }
                 $('.btn#btn_sync_reg_ujian').click(function() {
                     $('#icon_sync_reg_ujian').attr('class', 'fa fa-sync fa-spin');
@@ -296,7 +292,11 @@
                                 setTimeout(function() {
                                     $('#success_message').html('');
                                 }, 5000);
-                                $('.reg_ujian_local_label span').text(response.data);
+                                if (response.tipe == 'simak') {
+                                    $('.reg_ujian_simak_label span').text(response.data);
+                                } else {
+                                    $('.reg_ujian_local_label span').text(response.data);
+                                }
                                 $('.btn#btn_sync_reg_ujian').prop('disabled', true);
                             }
                         }

@@ -12,12 +12,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class SyncSimak extends CI_Controller
 {
     private $getMhsFromApiSimak;
-    private $getRegMhs;
-    private $getRegUjian;
     public function __construct()
     {
         parent::__construct();
-        $token = 'semogabahagia';
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_api', 'api');
         // $this->getMhsFromApiSimak = reqData('MahasiswaForSiskeu');
@@ -35,6 +32,9 @@ class SyncSimak extends CI_Controller
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $smtAktif = $smtAktifRes['id_smt'];
+        $smtAktifSimak = $this->api->mGet('TahunAkademikAktif', [
+            'query' => []
+        ]);
         $counApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
             'query' => [
                 'type' => 'get_count'
@@ -53,7 +53,7 @@ class SyncSimak extends CI_Controller
             ]
         ]);
         $data['count_mhs_simak'] = $counApiDataMhs['mhsdata'];
-        $data['semester_aktif_simak'] = $smtAktif;
+        $data['semester_aktif_simak'] = $smtAktifSimak['semester_aktif']['id_smt'];
         $data['reg_mhs_simak'] = $countRegMhsSimak['reg_mhs'];
         $data['reg_ujian_simak'] = $countRegUjianSimak['reg_ujian'];
         // ======================= Lokal ====================================
@@ -73,43 +73,44 @@ class SyncSimak extends CI_Controller
         $dataRes = $this->getMhsFromApiSimak;
         $dataMhs = $dataRes['mhsdata'];
         $total = count($dataMhs);
-        // for ($i = 0; $i < $total; $i++) {
         $result = $this->masterdata->getDataMhs()->result_array();
         $current = count($result);
         $hasilPersen = ($current / $total) * 100;
-        // $data['valuenow'] = round($hasilPersen, 2);
         $data['current'] = $current;
         echo json_encode($data);
-        // }
     }
+
+
     public function SyncDataMhs()
     {
-        // get data from simak
-        $dataRes = $this->getMhsFromApiSimak;
-        $dataMhs = $dataRes['mhsdata'];
-        $jml_data = count($dataMhs);
-
         // data lokal
         $result = $this->masterdata->getDataMhs()->result_array();
-        $current = count($result);
-        if ($current != 0) {
-            // insert all from simak sesuai data update terakhir
-            $res = $this->api->getGetDataTerbaru($current);
-            $dataInsert = $res['mhsdata'];
+        $jmlMhsLokal = count($result);
+        if ($jmlMhsLokal > 0) {
+            // insert from simak sesuai data update terakhir
+            $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
+                'query' => [
+                    'offset' => $jmlMhsLokal
+                ]
+            ]);
         } else {
             // insert all from simak
-            $dataInsert = $dataMhs;
+            $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
+                'query' => [
+                    // 'offset' => $jmlMhsLokal
+                ]
+            ]);
         }
+        $dataInsert = $DataMhsSimak['mhsdata'];
         foreach ($dataInsert as $j => $d) {
-            $insert = $this->masterdata->insertDataMhs($d);
+            $insert[] = $this->masterdata->insertDataMhs($d);
         }
 
         if ($insert) {
-            $LocalDataMhs = $this->masterdata->getDataMhs()->result_array();
-            $countLocalDataMhs = count($LocalDataMhs);
+            $DataMhsLocalNew = count($insert) + $jmlMhsLokal;
             echo json_encode([
                 'data' => 'success',
-                'count_mhs_local_update' => $countLocalDataMhs
+                'count_mhs_local_update' => $DataMhsLocalNew
             ]);
         } else {
             echo json_encode(['data' => 'error']);
@@ -119,8 +120,10 @@ class SyncSimak extends CI_Controller
 
     public function SyncTahunAkademik()
     {
-        $smtAktif = $this->smt_aktif;
-        $dataSemesterAktifLokal = $this->masterdata->getMaxKalenderAkademik()->row_array();
+        $smtAktifSimak = $this->api->mGet('TahunAkademikAktif', [
+            'query' => []
+        ]);
+        $dataSemesterAktifLokal = $this->masterdata->getSemesterAktif()->row_array();
         $id_smt = $dataSemesterAktifLokal['id_smt'];
         $data = [
             'a_periode_aktif' => 0
@@ -132,13 +135,11 @@ class SyncSimak extends CI_Controller
                 'msg' => 'gagal ubah status aktif'
             ]);
         } else {
-            // var_dump($insert);
-            // die;
-            $insert = $this->masterdata->insertDataTahunAkademik($smtAktif);
+            $insert = $this->masterdata->insertDataTahunAkademik($smtAktifSimak['semester_aktif']);
             if ($insert) {
                 echo json_encode([
                     'data' => 'success',
-                    'semester_aktif_local_update' => $smtAktif['id_smt']
+                    'semester_aktif_local_update' => $smtAktifSimak['semester_aktif']['id_smt']
                 ]);
             } else {
                 echo json_encode([
@@ -168,6 +169,75 @@ class SyncSimak extends CI_Controller
 
             if ($jmlRegSimak < $jmlRegMhsLokal) {
                 // inser data dari lokal ke simak
+                if ($jmlRegSimak > 0) {
+                    $dataRegMhsOffset = $this->masterdata->getRegMhs(null, null, $jmlRegSimak)->result_array();
+                    for ($i = 0; $i < count($dataRegMhsOffset); $i++) {
+                        $RegMhsSimakOffset = $this->api->mPost('RegMhs', [
+                            'form_params' => [
+                                'ID_Reg'        => $dataRegMhsOffset[$i]['ID_Reg'],
+                                'Tahun'         => $dataRegMhsOffset[$i]['Tahun'],
+                                "Identitas_ID"  => $dataRegMhsOffset[$i]['Identitas_ID'],
+                                "Jurusan_ID"    => $dataRegMhsOffset[$i]['Jurusan_ID'],
+                                'NIM'           => $dataRegMhsOffset[$i]['NIM'],
+                                'tgl_reg'       => $dataRegMhsOffset[$i]['tgl_reg'],
+                                'aktif'         => $dataRegMhsOffset[$i]['aktif'],
+                                'keterangan'    => $dataRegMhsOffset[$i]['keterangan'],
+                                'aktif_by'      => $dataRegMhsOffset[$i]['aktif_by']
+                            ]
+                        ]);
+                        $insert[] = $RegMhsSimakOffset;
+                    }
+                    if (!$insert) {
+                        $data = [
+                            'status' => 500,
+                            'msg' => 'gagal insert',
+                            'tipe' => 'simak',
+                            'data' => null
+                        ];
+                    } else {
+                        $countRegMhsSimakNew = count($insert) + $jmlRegSimak;
+                        $data = [
+                            'status' => 200,
+                            'msg' => 'berhasil',
+                            'tipe' => 'simak',
+                            'data' => $countRegMhsSimakNew
+                        ];
+                    }
+                } else {
+                    // insert All data ke simak
+                    for ($i = 0; $i < count($dataRegMhs); $i++) {
+                        $RegMhsSimak = $this->api->mPost('RegMhs', [
+                            'query' => [
+                                'ID_Reg'        => $dataRegMhs[$i]['ID_Reg'],
+                                'Tahun'         => $dataRegMhs[$i]['Tahun'],
+                                "Identitas_ID"  => $dataRegMhs[$i]['Identitas_ID'],
+                                "Jurusan_ID"    => $dataRegMhs[$i]['Jurusan_ID'],
+                                'NIM'           => $dataRegMhs[$i]['NIM'],
+                                'tgl_reg'       => $dataRegMhs[$i]['tgl_reg'],
+                                'aktif'         => $dataRegMhs[$i]['aktif'],
+                                'keterangan'    => $dataRegMhs[$i]['keterangan'],
+                                'aktif_by'      => $dataRegMhs[$i]['aktif_by']
+                            ]
+                        ]);
+                        $insert[] = $RegMhsSimak;
+                    }
+                    if (!$insert) {
+                        $data = [
+                            'status' => 500,
+                            'msg' => 'gagal insert',
+                            'tipe' => 'simak',
+                            'data' => null
+                        ];
+                    } else {
+                        $countRegMhsSimakNew = count($insert) + $jmlRegSimak;
+                        $data = [
+                            'status' => 200,
+                            'msg' => 'berhasil',
+                            'tipe' => 'simak',
+                            'data' => $countRegMhsSimakNew
+                        ];
+                    }
+                }
             } elseif ($jmlRegSimak > $jmlRegMhsLokal) {
                 // insert simak ke lokal
                 if ($jmlRegMhsLokal > 0) {
@@ -184,6 +254,7 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 500,
                             'msg' => 'gagal insert',
+                            'tipe' => 'lokal',
                             'data' => null
                         ];
                     } else {
@@ -191,11 +262,12 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 200,
                             'msg' => 'berhasil',
+                            'tipe' => 'lokal',
                             'data' => $countLocalRegMhs
                         ];
                     }
                 } else {
-                    // insert semua data dari simak berdasarkan tahun akademik aktif
+                    // insert semua data dari simak 
                     $dataRegMhsSimak = $this->api->mGet('RegMhs', [
                         'query' => [
                             // 'type' => 'get_count',
@@ -209,6 +281,7 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 500,
                             'msg' => 'gagal insert',
+                            'tipe' => 'lokal',
                             'data' => null
                         ];
                     } else {
@@ -216,6 +289,7 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 200,
                             'msg' => 'berhasil',
+                            'tipe' => 'lokal',
                             'data' => $countLocalRegMhs
                         ];
                     }
@@ -245,6 +319,73 @@ class SyncSimak extends CI_Controller
 
             if ($jmlRegUjianSimak < $jmlRegUjianLokal) {
                 // inser data dari lokal ke simak
+                if ($jmlRegUjianSimak > 0) {
+                    $dataRegUjianOffset = $this->masterdata->getRegUjian(null, null, $jmlRegUjianSimak)->result_array();
+                    // var_dump($dataRegUjianOffset);
+                    // die;
+                    for ($i = 0; $i < count($dataRegUjianOffset); $i++) {
+                        $RegUjianSimakOffset = $this->api->mPost('RegUjian', [
+                            'form_params' => [
+                                'id_reg'        => $dataRegUjianOffset[$i]['id_reg'],
+                                'tahun'         => $dataRegUjianOffset[$i]['tahun'],
+                                'nim'           => $dataRegUjianOffset[$i]['nim'],
+                                'tgl_reg'       => $dataRegUjianOffset[$i]['tgl_reg'],
+                                'aktif'         => $dataRegUjianOffset[$i]['aktif'],
+                                'keterangan'    => $dataRegUjianOffset[$i]['keterangan'],
+                                'aktif_by'      => $dataRegUjianOffset[$i]['aktif_by']
+                            ]
+                        ]);
+                        $insert[] = $RegUjianSimakOffset;
+                    }
+                    if (!$insert) {
+                        $data = [
+                            'status' => 500,
+                            'msg' => 'gagal insert',
+                            'tipe' => 'simak',
+                            'data' => null
+                        ];
+                    } else {
+                        $countRegUjianSimakNew = count($insert) + $jmlRegUjianSimak;
+                        $data = [
+                            'status' => 200,
+                            'msg' => 'berhasil',
+                            'tipe' => 'simak',
+                            'data' => $countRegUjianSimakNew
+                        ];
+                    }
+                } else {
+                    // insert All data ke simak
+                    for ($i = 0; $i < count($dataRegUjian); $i++) {
+                        $RegUjianSimak = $this->api->mPost('RegUjian', [
+                            'query' => [
+                                'id_reg'        => $dataRegUjian[$i]['id_reg'],
+                                'tahun'         => $dataRegUjian[$i]['tahun'],
+                                'nim'           => $dataRegUjian[$i]['nim'],
+                                'tgl_reg'       => $dataRegUjian[$i]['tgl_reg'],
+                                'aktif'         => $dataRegUjian[$i]['aktif'],
+                                'keterangan'    => $dataRegUjian[$i]['keterangan'],
+                                'aktif_by'      => $dataRegUjian[$i]['aktif_by']
+                            ]
+                        ]);
+                        $insert[] = $RegUjianSimak;
+                    }
+                    if (!$insert) {
+                        $data = [
+                            'status' => 500,
+                            'msg' => 'gagal insert',
+                            'tipe' => 'simak',
+                            'data' => null
+                        ];
+                    } else {
+                        $countRegUjianSimakNew = count($insert) + $jmlRegUjianSimak;
+                        $data = [
+                            'status' => 200,
+                            'msg' => 'berhasil',
+                            'tipe' => 'simak',
+                            'data' => $countRegUjianSimakNew
+                        ];
+                    }
+                }
             } elseif ($jmlRegUjianSimak > $jmlRegUjianLokal) {
                 // inser data dari simak ke lokal
                 if ($jmlRegUjianLokal > 0) {
@@ -261,6 +402,7 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 500,
                             'msg' => 'gagal insert',
+                            'tipe' => 'lokal',
                             'data' => null
                         ];
                     } else {
@@ -268,11 +410,12 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 200,
                             'msg' => 'berhasil',
+                            'tipe' => 'lokal',
                             'data' => $countLocalRegUjian
                         ];
                     }
                 } else {
-                    // insert semua data dari simak berdasarkan tahun akademik aktif
+                    // insert semua data dari simak 
                     $dataRegUjianSimak = $this->api->mGet('RegUjian', [
                         'query' => [
                             // 'type' => 'get_count',
@@ -286,6 +429,7 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 500,
                             'msg' => 'gagal insert',
+                            'tipe' => 'lokal',
                             'data' => null
                         ];
                     } else {
@@ -293,6 +437,7 @@ class SyncSimak extends CI_Controller
                         $data = [
                             'status' => 200,
                             'msg' => 'berhasil',
+                            'tipe' => 'lokal',
                             'data' => $countLocalRegUjian
                         ];
                     }

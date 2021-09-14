@@ -24,19 +24,6 @@ class M_api extends CI_Model
             'headers' => ['token' => 'semogabahagia']
         ]);
     }
-    public function getGetDataTerbaru($data)
-    {
-        $url = "https://api.wastu.digital/resources/MahasiswaForSiskeu?token=semogabahagia&offset=" . $data;
-        $curl_handle = curl_init();
-        curl_setopt($curl_handle, CURLOPT_URL, "$url");
-        curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl_handle, CURLOPT_HEADER, false);
-        $response = curl_exec($curl_handle);
-        curl_close($curl_handle);
-        $data = json_decode($response, true);
-        return $data;
-    }
 
     public function mGet($end_point, $data_param)
     {
