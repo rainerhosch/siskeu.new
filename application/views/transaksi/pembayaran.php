@@ -74,6 +74,10 @@
     .modal-notify .modal-content {
         border-radius: 3px;
     }
+
+    table {
+        background-color: #ffffff;
+    }
 </style> <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">

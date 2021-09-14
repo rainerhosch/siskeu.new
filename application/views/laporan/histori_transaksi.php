@@ -51,6 +51,15 @@
     .modal_datatable {
         font-size: 8px;
     }
+
+
+    table {
+        background-color: #ffffff;
+        /* padding: 8px 0 5px;
+        width: auto;
+        border: 1px solid #eaedf1;
+        border-top-width: 0; */
+    }
 </style>
 <!-- Page content -->
 <div id="page-content">
@@ -60,7 +69,7 @@
     </ul>
 
 
-    <div class="row">
+    <div class="row table_content">
         <div class="col-sm-12">
             <div class="row data_historiTX">
                 <div class="col-sm-12">

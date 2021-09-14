@@ -172,7 +172,7 @@
             url: 'sync-simak/getCountData',
             dataType: "json",
             success: function(response) {
-                // console.log(response);
+                console.log(response);
                 $('.mhs_local_label span').text(response.count_mhs_local);
                 $('.mhs_simak_label span').text(response.count_mhs_simak);
                 $('.sm_active_local_label span').text(response.semester_aktif_local);

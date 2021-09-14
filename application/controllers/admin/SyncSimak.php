@@ -199,10 +199,11 @@ class SyncSimak extends CI_Controller
                 // inser data dari lokal ke simak
                 if ($jmlRegSimak > 0) {
                     $dataRegMhsOffset = $this->masterdata->getRegMhs(null, null, $jmlRegSimak)->result_array();
+                    // var_dump($dataRegMhsOffset);
+                    // die;
                     for ($i = 0; $i < count($dataRegMhsOffset); $i++) {
                         $RegMhsSimakOffset = $this->api->mPost('RegMhs', [
                             'form_params' => [
-                                'ID_Reg'        => $dataRegMhsOffset[$i]['ID_Reg'],
                                 'Tahun'         => $dataRegMhsOffset[$i]['Tahun'],
                                 "Identitas_ID"  => $dataRegMhsOffset[$i]['Identitas_ID'],
                                 "Jurusan_ID"    => $dataRegMhsOffset[$i]['Jurusan_ID'],
@@ -236,7 +237,6 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegMhs); $i++) {
                         $RegMhsSimak = $this->api->mPost('RegMhs', [
                             'query' => [
-                                'ID_Reg'        => $dataRegMhs[$i]['ID_Reg'],
                                 'Tahun'         => $dataRegMhs[$i]['Tahun'],
                                 "Identitas_ID"  => $dataRegMhs[$i]['Identitas_ID'],
                                 "Jurusan_ID"    => $dataRegMhs[$i]['Jurusan_ID'],
@@ -354,7 +354,6 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegUjianOffset); $i++) {
                         $RegUjianSimakOffset = $this->api->mPost('RegUjian', [
                             'form_params' => [
-                                'id_reg'        => $dataRegUjianOffset[$i]['id_reg'],
                                 'tahun'         => $dataRegUjianOffset[$i]['tahun'],
                                 'nim'           => $dataRegUjianOffset[$i]['nim'],
                                 'tgl_reg'       => $dataRegUjianOffset[$i]['tgl_reg'],
@@ -386,7 +385,6 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegUjian); $i++) {
                         $RegUjianSimak = $this->api->mPost('RegUjian', [
                             'query' => [
-                                'id_reg'        => $dataRegUjian[$i]['id_reg'],
                                 'tahun'         => $dataRegUjian[$i]['tahun'],
                                 'nim'           => $dataRegUjian[$i]['nim'],
                                 'tgl_reg'       => $dataRegUjian[$i]['tgl_reg'],
