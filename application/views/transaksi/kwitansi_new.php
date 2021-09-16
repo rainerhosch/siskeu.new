@@ -239,7 +239,7 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
     }
 } else {
     foreach ($detailTX as $j => $dtx) {
-        if ($dtx['id_jenis_pembayaran'] == "8" || $dtx['id_jenis_pembayaran'] == "9") {
+        if ($dtx['id_jenis_pembayaran'] == "6" || $dtx['id_jenis_pembayaran'] == "8" || $dtx['id_jenis_pembayaran'] == "9") {
             $kewajiban_bayar = $dtx['kewajiban_Bayar'];
         } else {
             foreach ($data_kewajiban as $x => $dk) {
