@@ -343,6 +343,34 @@ class Laporan extends CI_Controller
         echo json_encode($data);
     }
 
+    public function addTunggakan()
+    {
+        if ($this->input->is_ajax_request()) {
+            // var_dump($this->input->post());
+            // die;
+            $dataAdd = [
+                'nim' => $this->input->post('nim_add'),
+                'jenis_tunggakan' => $this->input->post('jns_tg'),
+                'jml_tunggakan' => $this->input->post('jml_tg_add')
+            ];
+            $insert = $this->tunggakan->addNewTunggakan($dataAdd);
+            if (!$insert) {
+                $response = [
+                    'status' => $insert,
+                    'msg'    => 'Data Tunggakan ' . $this->input->post('nim_add') . ' Gagal Di Tambahakan!'
+                ];
+            } else {
+                $response = [
+                    'status' => $insert,
+                    'msg'    => 'Data Tunggakan ' . $this->input->post('nim_add') . ' Berhasil Di Tambahakan!'
+                ];
+            }
+        } else {
+            $response = 'Invalid Request.';
+        }
+        echo json_encode($response);
+    }
+
     public function updateTunggakan()
     {
         $id_tg = $this->input->post('id_tunggakan');

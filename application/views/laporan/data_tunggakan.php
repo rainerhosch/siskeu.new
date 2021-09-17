@@ -16,6 +16,7 @@
                         <div class="block-title">
                             <h2><strong>Tabel</strong> <?= $page; ?></h2>
                         </div>
+                        <button class="btn btn-sm btn-primary btn_add_tg" style="margin-bottom: 5px;">Tambah Data Tunggakan</button>
                         <div class="table-responsive">
                             <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
                                 <thead>
@@ -38,6 +39,74 @@
             </div>
         </div>
     </div>
+
+    <!-- modal add -->
+    <div class="modal fade" id="addTunggakan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-warning" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Header-->
+                <div class="modal-header text-center">
+                    <h4 class="modal-title white-text w-100 font-weight-bold py-2">Tambah Tunggakan</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+                </div>
+
+                <!--Body-->
+                <div class="modal-body">
+                    <form action="#" id="form_add_tg">
+                        <div class="md-form mb-5 row" id="row_nim_add">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nim_add">Nim</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nim_add" name="nim_add" class="form-control validate">
+                                <span id="notif_search2"></span>
+                            </div>
+                        </div>
+                        <div class="md-form mb-5 row" id="row_nama_add">
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="nm_mhs_add">Nama</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="nm_mhs_add" name="nm_mhs_add" class="form-control validate" readonly>
+                                <!-- <input type="hidden" id="nim_mhs_add_hd" name="nim_mhs_add_hd" class="form-control validate"> -->
+                            </div>
+                        </div>
+                        <div class="md-form row" id="row_jns_tg" hidden>
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="jns_tg">Jenis Tunggakan</label>
+                            </div>
+                            <div class="col-md-9">
+                                <select id="jns_tg" name="jns_tg" class="select-select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                    <option value="x">-- Pilih Jenis Tunggakan --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="md-form mb-5 row" id="row_jml_tg" hidden>
+                            <div class="col-md-3">
+                                <label data-error="wrong" data-success="right" for="jml_tg_add">Jumlah Tunggakan</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" id="jml_tg_add" name="jml_tg_add" class="form-control validate">
+                            </div>
+                        </div>
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer justify-content-center text-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary btn_save_add" disabled>Simpan</button>
+                    </form>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+    <!-- end modal add -->
+
 
     <!-- modal edit -->
     <div class="modal" tabindex="-1" role="dialog" id="editTunggakan">
@@ -89,7 +158,7 @@
                                 <label data-error="wrong" data-success="right" for="jml_tunggakan">Jumlah</label>
                             </div>
                             <div class="col-md-9">
-                                <input type="text" id="jml_tunggakan" name="jml_tunggakan" class="form-control validate">
+                                <input type="text" id="jml_tunggakan" name="jml_tunggakan" class="form-control validate" placeholder="Masukan Jumlah Tunggakan">
                             </div>
                         </div>
                 </div>
@@ -107,6 +176,106 @@
             setTimeout(function() {
                 $("#alert_tg").html("");
             }, 3000);
+
+            $('.btn_add_tg').on('click', function() {
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>masterdata/getAllJenisPembayaran",
+                    dataType: "json",
+                    success: function(response) {
+                        $('#addTunggakan').modal('show');
+                        // console.log(response)
+                        $.each(response, function(i, val) {
+                            $('#jns_tg').append($('<option>', {
+                                value: val.id_jp,
+                                text: val.nm_jp
+                            }));
+                        });
+
+                    }
+                });
+            });
+
+            $('#nim_add').on("keypress", function(e) {
+                $('#nm_mhs_add').val('');
+                $('#row_jns_tg').prop('hidden', true);
+                if (e.which == 13) {
+                    let nipd = $('#nim_add').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= base_url() ?>aktivasi-mahasiswa/cari_mhs",
+                        data: {
+                            nipd: nipd,
+                        },
+                        serverside: true,
+                        dataType: "json",
+                        success: function(response) {
+                            // console.log(response)
+                            if (response.data != null) {
+                                $('#nm_mhs_add').val(response.data.nm_pd);
+                                // $('#nim_mhs_add_hd').val(response.data.nipd)
+                                $('#row_jns_tg').prop('hidden', false);
+                            } else {
+                                $("#notif_search2").html(
+                                    `<code>${response.msg}</code>`
+                                );
+                                setTimeout(function() {
+                                    $("#notif_search2").html("");
+                                }, 2000);
+                            }
+                        }
+                    });
+                }
+            });
+
+            $('#jns_tg').on('change', function() {
+                let jenis = $('#jns_tg').val();
+                if (jenis != 'x') {
+                    $('#row_jml_tg').prop('hidden', false);
+                } else {
+                    $('#row_jml_tg').prop('hidden', true);
+                }
+            });
+
+            $('#jml_tg_add').on('change', function() {
+                let jml = $('#jml_tg_add').val();
+                if (jml != '') {
+                    $('.btn_save_add').prop('disabled', false);
+                } else {
+                    $('.btn_save_add').prop('disabled', true);
+                }
+            });
+
+            $('.btn_save_add').on('click', function() {
+                // get all the inputs into an array.
+                let $inputs = $('#form_add_tg :input');
+                let values = {};
+                $inputs.each(function() {
+                    values[this.name] = $(this).val();
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "addTunggakan",
+                    data: values,
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.status == true) {
+                            swal.fire("Success!", response.msg, "success");
+                            $('.swal2-confirm').click(function() {
+                                location.reload();
+                            });
+                        } else {
+                            swal.fire("Error!", response.msg, "error");
+                            $('.swal2-confirm').click(function() {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+
+
             $.ajax({
                 type: "POST",
                 url: 'getDataTunggakan',
