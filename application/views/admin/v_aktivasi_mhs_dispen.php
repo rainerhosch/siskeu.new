@@ -24,7 +24,7 @@
             <a href="#" class="widget widget-hover-effect1" data-toggle="modal" data-target="#FormAktivasiDispen">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-pencil"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
                         Aktivasi <strong>Mahasiswa</strong><br>
@@ -40,34 +40,34 @@
                         <i class="fa fa-file-text"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
-                        Laporan Dispen<strong> Perwalian</strong><br>
-                        <small>Laporan data dispensasi perwalian</small>
+                        Buat <strong> Laporan</strong><br>
+                        <small>Export Data Dispen Ke Format Exel</small>
                     </h3>
                 </div>
             </a>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <a href="#<?php echo base_url(); ?>dosen/administrasi/dispen_list/1" class="widget widget-hover-effect1 button_not_active">
+            <a href="#" class="widget widget-hover-effect1">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-users"></i>
                     </div>
-                    <h3 class="widget-content text-right animation-pullDown">
-                        Laporan Dispen<strong> UTS</strong><br>
-                        <small>Laporan data dispensasi perwalian</small>
+                    <h3 class="widget-content text-right animation-pullDown mhs_lunas_label">
+                        <span></span><strong> Orang</strong><br>
+                        <small>Jumlah Mahasiswa Sudah Melunasi</small>
                     </h3>
                 </div>
             </a>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <a href="#<?php echo base_url(); ?>dosen/administrasi/dispen_list/1" class="widget widget-hover-effect1 button_not_active">
+            <a href="#" class="widget widget-hover-effect1">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-fire animation-fadeIn">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-users"></i>
                     </div>
-                    <h3 class="widget-content text-right animation-pullDown">
-                        Laporan Dispen<strong> UAS</strong><br>
-                        <small>Laporan data dispensasi perwalian</small>
+                    <h3 class="widget-content text-right animation-pullDown mhs_belum_lunas_label">
+                        <span></span><strong> Orang</strong><br>
+                        <small>Jumlah Mahasiswa Belum Melunasi</small>
                     </h3>
                 </div>
             </a>
@@ -83,26 +83,33 @@
                         <div class="block-title">
                             <h2><strong>Data</strong> Dispen Mahasiswa</h2>
                         </div>
-                        <div class="table-responsive">
-                            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No</th>
-                                        <th class="text-center">Tgl Pengajuan</th>
-                                        <th class="text-center">NIM</th>
-                                        <th class="text-center">Nama</th>
-                                        <th class="text-center">Rincian Tagihan</th>
-                                        <th class="text-center">Total Tagihan</th>
-                                        <th class="text-center">Tgl Perjanjian Pelunasan</th>
-                                        <th class="text-center">Semester</th>
-                                        <th class="text-center">No Tlp</th>
-                                        <th class="text-center">Pemberitahuan</th>
-                                        <th class="text-center">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="data_dispen_tbody">
-                                </tbody>
-                            </table>
+                        <!-- <div class="row" style="margin-bottom: 5px;">
+                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#FormAktivasiDispen">Buat Data Dispen Baru</button>
+                            <button class="btn btn-sm btn-success">Buat Laporan (Exel)</button>
+                        </div> -->
+
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">Tgl Pengajuan</th>
+                                            <th class="text-center">NIM</th>
+                                            <th class="text-center">Nama</th>
+                                            <th class="text-center">Rincian Tagihan</th>
+                                            <th class="text-center">Total Tagihan</th>
+                                            <th class="text-center">Tgl Perjanjian Pelunasan</th>
+                                            <th class="text-center">Semester</th>
+                                            <th class="text-center">No Tlp</th>
+                                            <th class="text-center">Pemberitahuan</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="data_dispen_tbody">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -192,7 +199,9 @@
                 url: "get_data_dispen_mhs",
                 dataType: "json",
                 success: function(response) {
-                    console.log(response.data)
+                    $('.mhs_lunas_label span').text(response.mhs_lunas);
+                    $('.mhs_belum_lunas_label span').text(response.mhs_belum_lunas);
+                    // console.log(response)
                     html = ``;
                     if (response.data != 0) {
                         $.each(response.data, function(i, value) {

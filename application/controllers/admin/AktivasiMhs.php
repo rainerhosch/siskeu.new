@@ -159,9 +159,17 @@ class AktivasiMhs extends CI_Controller
             ];
             $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->result_array();
             $countData = count($dataDispen);
+            $mhsLunas = [];
+            $mhsBelumLunas = [];
             // var_dump($countData);
             // die;
             for ($i = 0; $i < $countData; $i++) {
+                if ($dataDispen[$i]['status'] == '1') {
+                    $mhsLunas[] = $dataDispen[$i]['nipd'];
+                } else {
+                    $mhsBelumLunas[] = $dataDispen[$i]['nipd'];
+                }
+
                 $whereTG = [
                     'nim' => $dataDispen[$i]['nipd'],
                     'tg.jenis_tunggakan' => 6
@@ -209,12 +217,16 @@ class AktivasiMhs extends CI_Controller
             $response = [
                 'satatus' => true,
                 'data' => $dataDispen,
+                'mhs_lunas' => count($mhsLunas),
+                'mhs_belum_lunas' => count($mhsBelumLunas),
                 'msg' => 'Data Ditemukan.'
             ];
         } else {
             $response = [
                 'satatus' => false,
                 'data' => null,
+                'mhs_lunas' => null,
+                'mhs_belum_lunas' => null,
                 'msg' => 'Invalid Request'
             ];
         }
