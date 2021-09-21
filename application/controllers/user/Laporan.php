@@ -434,6 +434,7 @@ class Laporan extends CI_Controller
             'mjp.jenis_kas' => $jenis_kas,
             // 'SUBSTRING(t.tanggal, 1, 7) =' => $thn . '-' . $bln
             'SUBSTRING(t.tanggal, 1, 7) =' => $thn . '-0' . $bln_lalu
+            // 'SUBSTRING(t.NIM, 1, 2) =' => '21'
         ];
         $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
         $countHistoriTx = count($dataHistoriTx);

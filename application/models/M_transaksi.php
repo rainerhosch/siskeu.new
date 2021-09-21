@@ -136,6 +136,17 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
+    public function updateData($data)
+    {
+        $this->db->where($data['id']);
+        $this->db->update($data['table'], $data['dataUpdate']);
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
     public function getDataTransaksiSebelumnya($data = null)
     {
         $this->db->select('

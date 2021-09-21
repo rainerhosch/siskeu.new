@@ -234,7 +234,7 @@
                         html += `<td class="text-center">${value.nm_jenj_didik}</td>`;
                         html += `<td class="text-center">${value.tahun_masuk}</td>`;
                         html += `<td class="text-center">`;
-                        html += `<a href="#" class="badge badge-warning btn_cek_update" id="btn_cek_update_${value.id_pd}" value="${value.id_pd}"><i class="fa fa-sync" id="icon_sync_mhs_${value.id_pd}"></i></a>`;
+                        html += `<a href="#" class="badge badge-warning btn_cek_update" id="btn_cek_update_${value.id_pd}" value="${value.id_pd}" nipd="${value.nipd}"><i class="fa fa-sync" id="icon_sync_mhs_${value.id_pd}"></i></a>`;
                         html += `</td>`;
                         html += `</tr>`;
                     });
@@ -251,14 +251,16 @@
                 }
                 $("#data_mhs_tbody").html(html);
                 $('.btn_cek_update').on('click', function() {
-                    let id_pd = $(this).attr("value")
+                    let id_pd = $(this).attr("value");
+                    let nipd = $(this).attr("nipd");
                     $('#icon_sync_mhs' + id_pd).attr('class', 'fa fa-sync fa-spin');
                     // console.log(id_pd);
                     $.ajax({
                         url: '<?= base_url() ?>sync-simak/syncUpdateMhsById',
                         type: 'POST',
                         data: {
-                            id_pd: id_pd
+                            id_pd: id_pd,
+                            nipd: nipd
                         },
                         serverSide: true,
                         dataType: 'json',

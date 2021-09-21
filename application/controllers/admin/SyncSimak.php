@@ -16,6 +16,7 @@ class SyncSimak extends CI_Controller
     {
         parent::__construct();
         $this->load->model('M_masterdata', 'masterdata');
+        $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_api', 'api');
         // $this->getMhsFromApiSimak = reqData('MahasiswaForSiskeu');
     }
@@ -84,13 +85,32 @@ class SyncSimak extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             $id_pd = $this->input->post('id_pd');
+            $nipd = $this->input->post('nipd');
+            $cekTx = $this->transaksi->getDataTransaksi(['nim' => $nipd])->result_array();
+            $jml_tx = count($cekTx);
             $responseApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
                 'query' => [
                     'id' => $id_pd
                 ]
             ]);
             $dataMhs = $responseApiDataMhs['mhsdata'];
+            for ($i = 0; $i < $jml_tx; $i++) {
+                $data_update = [
+                    'id' => [
+                        'id_transaksi' => $cekTx[$i]['id_transaksi']
+                    ],
+                    'table' => 'transaksi',
+                    'dataUpdate' => [
+                        'nim' => $dataMhs['nipd']
+                    ]
+                ];
+                $this->transaksi->updateData($data_update);
+            }
+            // var_dump($data_update);
+            // die;
             $update = $this->masterdata->updateDataMhs($id_pd, $dataMhs);
+            if ($cekTx != null) {
+            }
             if ($update) {
                 $response = [
                     'status' => 200,
