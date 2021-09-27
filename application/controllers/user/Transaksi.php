@@ -1062,7 +1062,8 @@ class Transaksi extends CI_Controller
                             'angkatan' => $angkatanMhs
                         ];
                         $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
-                        $biayaPerpanjang = $dataBiaya['cicilan_semester'] / 2;
+                        $biayaPerpanjangAwal = $dataBiaya['cicilan_semester'] / 2;
+                        $biayaPerpanjang = (int)$biayaPerpanjangAwal / 3;
                         $where = [
                             't.nim' => $nimMhs,
                             't.semester' => $smtAktif,
@@ -1096,7 +1097,7 @@ class Transaksi extends CI_Controller
                                 'jml_tunggakan' => $sisabayarPerpanjang,
                             ];
                             $this->tunggakan->addNewTunggakan($dataAddTG);
-                            if (($sisabayarPerpanjang / 3) < 500000) {
+                            if ($sisabayarPerpanjang < 500000) {
                                 $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
                             }
                         } else {
