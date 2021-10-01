@@ -34,7 +34,7 @@
             </a>
         </div>
         <div class="col-sm-6 col-lg-3">
-            <a href="#<?php echo base_url(); ?>dosen/administrasi/dispen_list/1" class="widget widget-hover-effect1 button_not_active">
+            <a href="#" class="widget widget-hover-effect1 btn_cetak_laporan">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
                         <i class="fa fa-file-text"></i>
@@ -201,7 +201,7 @@
                 success: function(response) {
                     $('.mhs_lunas_label span').text(response.mhs_lunas);
                     $('.mhs_belum_lunas_label span').text(response.mhs_belum_lunas);
-                    // console.log(response)
+                    console.log(response)
                     html = ``;
                     if (response.data != 0) {
                         $.each(response.data, function(i, value) {
@@ -273,10 +273,11 @@
                     });
                 }
             });
-
-
-
-
+            $('.btn_cetak_laporan').on('click', function(e) {
+                e.preventDefault();
+                let hrf = `<?= base_url('laporan/CetakLaporanDataDispen') ?>?jenis_dispen=1`;
+                window.open(hrf, '_blank');
+            });
 
 
             $('.button_not_active').on('click', function() {

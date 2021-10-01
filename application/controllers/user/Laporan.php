@@ -39,6 +39,7 @@ class Laporan extends CI_Controller
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_tunggakan', 'tunggakan');
         $this->load->model('M_laporan', 'laporan');
+        $this->load->model('M_aktivasi_mhs', 'aktivasi');
     }
     public function loadRecord()
     {
@@ -600,6 +601,171 @@ class Laporan extends CI_Controller
         $sheet->getStyle('A6:I' . ($row_tbl + 1))->applyFromArray($styleTable); //styling header table
 
         $filename = 'Laporan_Penerimaan_Kas_Yayasan_Bunga_Bangsa(' . $bulan_laporan . ')';
+        $writer = new Xlsx($spreadsheet);
+        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Type:application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+    }
+
+    public function CetakLaporanDataDispen()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        date_default_timezone_set('Asia/Jakarta');
+        $date = date('Y-m-d');
+        $pecah_date = explode('-', $date);
+        $thn = $pecah_date[0];
+        $bln = $pecah_date[1];
+        $bln_lalu = $bln - 1;
+        $FormatTanggal = new FormatTanggal;
+        $jenis_dispen = $this->input->get('jenis_dispen');
+
+        $kondisi = [
+            'd.jenis_dispen' => $jenis_dispen,
+            'd.tahun_akademik' => $smtAktif
+
+        ];
+        $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->result_array();
+        $countData = count($dataDispen);
+        for ($i = 0; $i < $countData; $i++) {
+            $whereTG = [
+                'nim' => $dataDispen[$i]['nipd'],
+                'tg.jenis_tunggakan' => 6
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($whereTG)->row_array();
+            $tg_smt_lalu = 0;
+            if ($dataTG != null) {
+                $tg_smt_lalu = $dataTG['jml_tunggakan'];
+            }
+            if ($dataDispen[$i]['jenis_dispen'] == '1') {
+                $jenis_cicilan = 'CICILAN 1';
+                // $dataDispen[$i]['Cicilan Ke-1'] = $dataDispen[$i]['tg_dispen'];
+                $dataDispen[$i]['tg_smt_lalu'] = $tg_smt_lalu;
+            } elseif ($dataDispen[$i]['jenis_dispen'] == '3') {
+                $jenis_cicilan = 'CICILAN 2';
+                // $dataDispen[$i]['Cicilan Ke-2'] = $dataDispen[$i]['tg_dispen'];
+                $dataDispen[$i]['tg_smt_lalu'] = $tg_smt_lalu;
+            } elseif ($dataDispen[$i]['jenis_dispen'] == '4') {
+                $jenis_cicilan = 'CICILAN 3';
+                // $dataDispen[$i]['Cicilan Ke-3'] = $dataDispen[$i]['tg_dispen'];
+                $dataDispen[$i]['tg_smt_lalu'] = $tg_smt_lalu;
+            }
+        }
+        if ($smtAktifRes['smt'] == 1) {
+            $jns_smt = 'GANJIL';
+        } else {
+            $jns_smt = 'GENAP';
+        }
+        // var_dump($dataDispen);
+        // die;
+
+        $spreadsheet = new Spreadsheet();
+        $Terbilang = new FormatTerbilang();
+        $spreadsheet->setActiveSheetIndex(0);
+        $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setTitle('Data_Dispen_Semester(' . $smtAktif . ')');
+        $sheet->setTitle('Data_Dispen');
+
+
+
+        //define width of column
+        $sheet->getColumnDimension('A')->setWidth(5.43);
+        $sheet->getColumnDimension('B')->setWidth(13.00);
+        $sheet->getColumnDimension('C')->setWidth(36.00);
+        $sheet->getColumnDimension('D')->setWidth(25.00);
+        $sheet->getColumnDimension('E')->setWidth(18.00);
+        $sheet->getColumnDimension('F')->setWidth(18.00);
+        $sheet->getColumnDimension('G')->setWidth(18.00);
+        $sheet->getColumnDimension('H')->setWidth(15.00);
+        $sheet->getColumnDimension('I')->setWidth(22.00);
+        $sheet->getColumnDimension('J')->setWidth(32.00);
+
+        //Define Style table
+        $styleTitle = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+        ];
+        $styleTable = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['RGB' => '000000']
+                ]
+            ]
+        ];
+
+        // configurasi Title
+        // $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt . ' ' . $smtAktifRes['id_thn_ajaran'] . '/' . $smtAktifRes['id_thn_ajaran'] + 1);
+        $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt);
+        $sheet->mergeCells('A1:J2');
+        $sheet->setCellValue('A3', '2021/2022');
+        $sheet->mergeCells('A3:J4');
+        $sheet->getStyle('A1:J4')->getFont()->setSize(12);
+        $sheet->getStyle('A1:J4')->getFont()->setBold(true);
+        $sheet->getStyle('A1:J4')->applyFromArray($styleTitle); //styling header table
+
+        $row_tbl = 8;
+        $no = 1;
+        for ($i = 0; $i < $countData; $i++) {
+            // if ($dataDispen[$i]['id_jur'] == 1) {
+            // $sheet->setCellValue('A5', $dataDispen[$i]['nm_jur']);
+            $row_header = 6;
+            $merge_header = $row_header + 1;
+            $sheet->setCellValue('A' . $row_header, 'NO');
+            $sheet->setCellValue('B' . $row_header, 'NIM');
+            $sheet->setCellValue('C' . $row_header, 'NAMA');
+            $sheet->setCellValue('D' . $row_header, 'PRODI');
+            $sheet->setCellValue('E' . $row_header, 'RINCIAN TAGIHAN');
+            $sheet->mergeCells('E' . $row_header . ':' . 'G' . $row_header);
+            $sheet->setCellValue('E' . ($row_header + 1), 'CICILAN SMT LALU');
+            $sheet->setCellValue('F' . ($row_header + 1), $jenis_cicilan);
+            $sheet->setCellValue('G' . ($row_header + 1), 'TOTAL');
+            $sheet->setCellValue('H' . $row_header, 'TANGGAL PERJANJIAN PELUNASAN');
+            $sheet->setCellValue('I' . $row_header, 'NO HP');
+            $sheet->setCellValue('J' . $row_header, 'STATUS');
+            // merge all header
+            $sheet->mergeCells('A' . $row_header . ':A' . $merge_header);
+            $sheet->mergeCells('B' . $row_header . ':B' . $merge_header);
+            $sheet->mergeCells('C' . $row_header . ':C' . $merge_header);
+            $sheet->mergeCells('D' . $row_header . ':D' . $merge_header);
+            $sheet->mergeCells('H' . $row_header . ':H' . $merge_header);
+            $sheet->mergeCells('I' . $row_header . ':I' . $merge_header);
+            $sheet->mergeCells('J' . $row_header . ':J' . $merge_header);
+            //styling title
+            $sheet->getStyle('A' . $row_header . ':J' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A' . $row_header . ':J' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+            $sheet->getStyle('A6:J7')->getFont()->setSize(10);
+            $sheet->getStyle('H6:H7')->getAlignment()->setWrapText(true);
+
+            $sheet->setCellValue('A' . $row_tbl, $no);
+            $sheet->setCellValue('B' . $row_tbl, $dataDispen[$i]['nipd']);
+            $sheet->setCellValue('C' . $row_tbl, $dataDispen[$i]['nm_pd']);
+            $sheet->setCellValue('D' . $row_tbl, $dataDispen[$i]['nm_jur']);
+            $sheet->setCellValue('E' . $row_tbl, $dataDispen[$i]['tg_smt_lalu']);
+            $sheet->setCellValue('F' . $row_tbl, $dataDispen[$i]['tg_dispen']);
+            $sheet->setCellValue('G' . $row_tbl, ($dataDispen[$i]['tg_smt_lalu'] + $dataDispen[$i]['tg_dispen']));
+            $sheet->setCellValue('H' . $row_tbl, $dataDispen[$i]['tgl_janji_lunas']);
+            $sheet->setCellValue('I' . $row_tbl, $dataDispen[$i]['no_tlp']);
+            if ($dataDispen[$i]['tgl_pelunasan'] != null) {
+                $sheet->setCellValue('J' . $row_tbl, 'Sudah Dibayar Pada Tgl ' . $dataDispen[$i]['tgl_pelunasan']);
+            } else {
+                $sheet->setCellValue('J' . $row_tbl, 'Belum Bayar');
+            }
+            // }
+            $no++;
+            $row_tbl++;
+        }
+
+
+        $filename = 'LAPORAN DATA DISPEN MAHASISWA SEMESTER ' . $jns_smt . ' ' . $smtAktif . '';
         $writer = new Xlsx($spreadsheet);
         // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Type:application/vnd.ms-excel');

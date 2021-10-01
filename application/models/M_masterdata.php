@@ -83,7 +83,7 @@ class M_masterdata extends CI_Model
     // get semester aktif
     public function getSemesterAktif()
     {
-        $this->db->select('id_smt');
+        $this->db->select('id_smt, nm_smt, smt, id_thn_ajaran');
         $this->db->from('kalender_akademik');
         $this->db->where(['a_periode_aktif' => 1]);
         return $this->db->get();

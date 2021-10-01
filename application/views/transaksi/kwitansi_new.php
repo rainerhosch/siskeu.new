@@ -249,7 +249,11 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
             }
         }
         $pdf->SetFont('Courier', 'IB', 10);
-        $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+        if ($dtx['id_jenis_pembayaran'] == "17") {
+            $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'] . ' (' . $dtx['jml_mk'] . ' Matakuliah)', 1, 0, 'L');
+        } else {
+            $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+        }
         $pdf->SetFont('Courier', 'IB', 10);
         $pdf->Cell(40, 5, number_format($kewajiban_bayar, 0, '', '.'), 1, 0, 'R');
         $pdf->Cell(40, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'R');

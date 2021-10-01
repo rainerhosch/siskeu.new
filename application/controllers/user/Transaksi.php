@@ -1142,6 +1142,8 @@ class Transaksi extends CI_Controller
                             $this->tunggakan->addNewTunggakan($dataAddTG);
                         }
                     }
+                } else if ($pembayaran[$i] == '17') {
+                    // bayar konversi
                 } else {
                     $dataBiayaLain = $this->masterdata->getBiayaPembayaranLain()->result_array();
                     foreach ($dataBiayaLain as $y => $val) {
@@ -1304,7 +1306,6 @@ class Transaksi extends CI_Controller
 
     public function cetak_kwitansi($id_transaksi)
     {
-
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $smtAktif = $smtAktifRes['id_smt'];
         $bayarCS = false;
@@ -1640,6 +1641,21 @@ class Transaksi extends CI_Controller
                 if ($val['id_jenis_pembayaran'] == 8) {
                     $kewajibanPerpanjangSemester = $kewajibanPerpanjangSemester - $val['jml_bayar'];
                 }
+                if ($val['id_jenis_pembayaran'] == 16) {
+                    for ($j = 0; $j < count($resBiayaLain); $j++) {
+                        $resBiayaLain[$j]['biaya'] = $resBiayaLain[$j]['biaya'] - $val['jml_bayar'];
+                    }
+                }
+            }
+            foreach ($resDetailTx as $i => $dtx) {
+                if ($dtx['id_jenis_pembayaran'] == '17') {
+                    $resDetailTx[$i]['jml_mk'] = $dtx['jml_bayar'] / 100000;
+                    for ($j = 0; $j < count($resBiayaLain); $j++) {
+                        if ($resBiayaLain[$j]['id_jp'] == '17') {
+                            $resBiayaLain[$j]['biaya'] = $dtx['jml_bayar'];
+                        }
+                    }
+                }
             }
             $dataTx['data_kewajiban_lain'] = $resBiayaLain;
         } else {
@@ -1667,13 +1683,17 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanTGKMHS;
                 }
             } else {
+                // var_dump($resBiayaLain);
+                // die;
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
                     } else {
-                        $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
+                            $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        }
                     }
                 }
             }
@@ -2028,6 +2048,21 @@ class Transaksi extends CI_Controller
                 if ($val['id_jenis_pembayaran'] == 8) {
                     $kewajibanPerpanjangSemester = $kewajibanPerpanjangSemester - $val['jml_bayar'];
                 }
+                if ($val['id_jenis_pembayaran'] == 16) {
+                    for ($j = 0; $j < count($resBiayaLain); $j++) {
+                        $resBiayaLain[$j]['biaya'] = $resBiayaLain[$j]['biaya'] - $val['jml_bayar'];
+                    }
+                }
+            }
+            foreach ($resDetailTx as $i => $dtx) {
+                if ($dtx['id_jenis_pembayaran'] == '17') {
+                    $resDetailTx[$i]['jml_mk'] = $dtx['jml_bayar'] / 100000;
+                    for ($j = 0; $j < count($resBiayaLain); $j++) {
+                        if ($resBiayaLain[$j]['id_jp'] == '17') {
+                            $resBiayaLain[$j]['biaya'] = $dtx['jml_bayar'];
+                        }
+                    }
+                }
             }
             $dataTx['data_kewajiban_lain'] = $resBiayaLain;
         } else {
@@ -2055,13 +2090,17 @@ class Transaksi extends CI_Controller
                     $resDetailTx[$x]['kewajiban_Bayar'] = (int)$kewajibanTGKMHS;
                 }
             } else {
+                // var_dump($resBiayaLain);
+                // die;
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
                     } else {
-                        $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
+                            $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        }
                     }
                 }
             }
