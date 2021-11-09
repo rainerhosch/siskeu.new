@@ -68,6 +68,11 @@ class Laporan extends CI_Controller
         $countHistoriTx = count($dataHistoriTx);
         for ($i = 0; $i < $countHistoriTx; $i++) {
 
+            $dataCekTG = [
+                'nim' => $dataHistoriTx[$i]['nim'],
+                'jenis_tunggakan' => '6'
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
             $jenjangMhs = $dataHistoriTx[$i]['nm_jenj_didik'];
             $dataHistoriTx[$i]['angkatan_mhs'] = '20' . substr($dataHistoriTx[$i]['nim'], 0, 2);
             $where_tahun = [
@@ -81,7 +86,15 @@ class Laporan extends CI_Controller
             $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
             $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
             $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            $dataTGCS = 0;
             foreach ($resDetailTx as $dTX) {
+                if ($dTX['id_jenis_pembayaran'] == 6) {
+                    if ($dataTG != null) {
+                        $dataTGCS = $dTX['jml_bayar'] + $dataTG['jml_tunggakan'];
+                    } else {
+                        $dataTGCS = $dTX['jml_bayar'];
+                    }
+                }
                 if ($dTX['id_jenis_pembayaran'] == 8) {
                     $kewajiban_Semester_ini = ($biayaCS / 2);
                 } else {
@@ -89,6 +102,7 @@ class Laporan extends CI_Controller
                 }
             }
 
+            $dataHistoriTx[$i]['data_tg'] = $dataTGCS;
             $dataHistoriTx[$i]['kewajiban_Semester_ini'] = $kewajiban_Semester_ini;
         }
 

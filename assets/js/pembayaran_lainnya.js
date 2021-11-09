@@ -119,7 +119,7 @@ $("#add_rows").click(function () {
     tds += `<select name="JenisBayar[]" id="jenis_bayar${size}"  data-rowid="${size}" style="text-align: center;text-align-last: center;" class="form-control select2 select2Cus">`;
     tds += "</select>";
     tds += "</td>";
-    tds += `<td width="15%" class="text-center td_jml_mk${size}"></td>`;
+    tds += `<td width="15%" class="text-center td_for_jml${size}"></td>`;
     tds += `<td width="40%" class="text-center td_${size}"><input type="text" id="pembayaran_${size}" name="" class="form-control validate text-right input_" value="" readonly></td>`;
     tds += "</tr>";
     if ($("tbody", this).length > 0) {
@@ -159,9 +159,9 @@ $("#add_rows").click(function () {
 
       if (id_jns_bayar == "17") {
         let td = `<input id="jml_mk${size}" type="text" class="form-control validate text-right jml_mk${size}" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="60" data-slider-step="1" data-slider-value="14">`;
-        $(".td_jml_mk" + size).html(td);
+        $(".td_for_jml" + size).html(td);
         $(".div_btn_row").prop("disabled", true);
-        $(".td_jml_mk" + size).prop("hidden", false);
+        $(".td_for_jml" + size).prop("hidden", false);
         $("#pembayaran_" + size).prop("readonly", true);
         $("#jml_mk" + size).slider({
           // tooltip: "always",
@@ -169,11 +169,24 @@ $("#add_rows").click(function () {
             return "Jml Matakuliah: " + value;
           },
         });
+      } else if (id_jns_bayar == "16") {
+        let td = `<input id="jml_cuti${size}" type="text" class="form-control validate text-right jml_cuti${size}" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2">`;
+        $(".td_for_jml" + size).html(td);
+        $(".div_btn_row").prop("disabled", true);
+        $(".td_for_jml" + size).prop("hidden", false);
+        $("#pembayaran_" + size).prop("readonly", true);
+        $("#jml_cuti" + size).slider({
+          // tooltip: "always",
+          formatter: function (value) {
+            return "Jml Cuti: " + value;
+          },
+        });
       } else {
         $("#pembayaran_" + size).prop("readonly", false);
         $(".div_btn_row").prop("disabled", false);
-        $(".td_jml_mk" + size).empty();
+        $(".td_for_jml" + size).empty();
         $(".slider#jml_mk" + size).remove();
+        $(".slider#jml_cuti" + size).remove();
       }
       $.ajax({
         type: "POST",
@@ -202,6 +215,12 @@ $("#add_rows").click(function () {
           }
 
           $("#jml_mk" + size).on("change", function () {
+            let jml = this.value;
+            let kewajiban = response.biaya;
+            $("#pembayaran_" + rowid).attr("value", kewajiban * jml);
+            // console.log(kewajiban * jml);
+          });
+          $("#jml_cuti" + size).on("change", function () {
             let jml = this.value;
             let kewajiban = response.biaya;
             $("#pembayaran_" + rowid).attr("value", kewajiban * jml);

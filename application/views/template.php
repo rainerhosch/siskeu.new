@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
 
     <link rel="shortcut icon" href="<?= base_url() ?>assets/proui/img/favicon/logo.png">
-    <link href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" type="text/css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css">

@@ -291,4 +291,15 @@ class M_masterdata extends CI_Model
         }
         return $this->db->get();
     }
+
+    public function GetPembayaranPS($data = null)
+    {
+        $this->db->select('td.jml_bayar');
+        $this->db->from('transaksi t');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
 }

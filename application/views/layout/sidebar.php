@@ -1,5 +1,5 @@
 <!-- Main Sidebar -->
-<div id="sidebar">
+<div id="sidebar" class="d-sm-none">
     <div id="sidebar-scroll">
         <div class="sidebar-content">
             <a href="<?= base_url() ?>" class="sidebar-brand">

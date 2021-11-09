@@ -59,11 +59,11 @@ class Auth extends CI_Controller
                     // 'login_time' => $this->time
                 ];
                 $this->session->set_userdata($data);
-                // if ($user['role'] != 1) {
-                //     redirect('welcome');
-                // } else {
-                redirect('dashboard');
-                // }
+                if ($user['role'] != 4) {
+                    redirect('dashboard');
+                } else {
+                    redirect('transaksi');
+                }
             } else {
                 // password salah
                 $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Password Salah!</div>');
