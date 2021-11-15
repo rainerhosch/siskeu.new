@@ -101,6 +101,7 @@
                                             <th class="text-center">Total Tagihan</th>
                                             <th class="text-center">Tgl Perjanjian Pelunasan</th>
                                             <th class="text-center">Semester</th>
+                                            <th class="text-center">Jenis Dispen</th>
                                             <th class="text-center">No Tlp</th>
                                             <th class="text-center">Pemberitahuan</th>
                                             <th class="text-center">Status</th>
@@ -223,6 +224,23 @@
                             html += `<td class="text-center"><i>Rp.${parseInt(total_Tagihan).toLocaleString()}</i></td>`;
                             html += `<td class="text-center" >${value.tgl_janji_lunas}</td>`;
                             html += `<td class="text-center" >${value.tahun_akademik}</td>`;
+                            // html += `<td class="text-center" >${value.jenis_dispen}</td>`;
+                            if (value.jenis_dispen != 1) {
+                                if (value.jenis_dispen != 3) {
+                                    html += `<td class="text-center" >UAS</td>`;
+                                } else {
+                                    html += `<td class="text-center" >UTS</td>`;
+                                }
+                            } else {
+                                html += `<td class="text-center" >PERWALIAN</td>`;
+                            }
+                            // if (value.jenis_dispen = '1') {
+                            //     html += `<td class="text-center" >PERWALIAN</td>`;
+                            // } else if (value.jenis_dispen = '3') {
+                            //     html += `<td class="text-center" >UTS</td>`;
+                            // } else {
+                            //     html += `<td class="text-center" >UAS</td>`;
+                            // }
                             html += `<td class="text-center" >${format_no}</td>`;
                             html += `<td class="text-center" >`;
                             html += `<i style="font-size:1.5rem; font-weight: bold;">${value.jml_kirim_pesan}<i><br>`;

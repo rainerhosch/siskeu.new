@@ -435,6 +435,8 @@ class AktivasiMhs extends CI_Controller
 
             // data input
             $dataInput = $this->input->post();
+            // var_dump($dataInput);
+            // die;
 
             $no_tlp = $dataInput['no_tlp'];
             $format_no = substr($no_tlp, 1, 11);
@@ -452,8 +454,8 @@ class AktivasiMhs extends CI_Controller
                 'jml_kirim_pesan' => 0
             ];
             $inputPengajuanDispen = $this->aktivasi->input_data_dispen_mhs($dataPengajuanDispen);
-            if ($inputPengajuanDispen == true) {
-                if ($dataInput['jenis_dispen'] = '1') {
+            if ($inputPengajuanDispen === true) {
+                if ($dataInput['jenis_dispen'] == '1') {
                     // disepen perwalian
                     $dataAktifDispenKrs = [
                         'Tahun' => $dataInput['tahun_akademik'],
@@ -466,7 +468,7 @@ class AktivasiMhs extends CI_Controller
                         'aktif_by' =>  $id_user
                     ];
                     $active = $this->aktivasi->aktivasi_perwalian($dataAktifDispenKrs);
-                    if ($active == true) {
+                    if ($active === true) {
                         // success
                         $reponse = [
                             'status' => true,
@@ -489,8 +491,10 @@ class AktivasiMhs extends CI_Controller
                         'keterangan' => 'from siskeu_new',
                         'aktif_by' => $id_user
                     ];
+                    // var_dump($dataAktifDispenUjian);
+                    // die;
                     $active = $this->aktivasi->aktivasi_ujian($dataAktifDispenUjian);
-                    if ($active == true) {
+                    if ($active === true) {
                         // success
                         $reponse = [
                             'status' => true,

@@ -41,6 +41,7 @@ class M_aktivasi_mhs extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
+        $this->db->order_by('d.id_dispensasi', 'desc');
         return $this->db->get();
     }
 
@@ -98,6 +99,8 @@ class M_aktivasi_mhs extends CI_Model
             'aktif' => $data['aktif'],
         ]);
         $count = $exists->num_rows();
+        // var_dump($count);
+        // die;
         if ($count === 0) {
             // CODE HERE...
             $insert_local = $this->db->insert('reg_ujian', $data);
