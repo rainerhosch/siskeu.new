@@ -147,6 +147,72 @@ class AktivasiMhs extends CI_Controller
         echo json_encode($response);
     }
 
+    public function get_data_dispen_by_id()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_dispen = $this->input->post('id_dispen');
+            $kondisi = [
+                'd.id_dispensasi' => $id_dispen
+            ];
+            $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->row_array();
+            $whereTG = [
+                'nim' => $dataDispen['nipd'],
+                'tg.jenis_tunggakan' => 6
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($whereTG)->row_array();
+            if ($dataTG != null) {
+                $dataDispen['tg_dispen'] = $dataDispen['tg_dispen'] + $dataTG['jml_tunggakan'];
+            }
+            $response = [
+                'status' => true,
+                'msg' => 'Data ditemukan',
+                'data' => $dataDispen
+            ];
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'Invalid Request.',
+                'data' => null
+            ];
+        }
+        echo json_encode($response);
+    }
+
+    public function edit_dispen()
+    {
+        if ($this->input->is_ajax_request()) {
+            $dataInput = $this->input->post();
+            $id_dispen = $dataInput['id_dispen_edit'];
+            // var_dump($dataInput);
+            // die;
+
+            $dataUpdate = [
+                'no_tlp' => $dataInput['no_tlp_edit']
+            ];
+            $update = $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdate);
+            if (!$update) {
+                $response = [
+                    'status' => false,
+                    'msg' => 'Gagal edit data.',
+                    'data' => null
+                ];
+            } else {
+                $response = [
+                    'status' => true,
+                    'msg' => 'Data dispen berhasil di edit.',
+                    'data' => null
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'Invalid Request.',
+                'data' => null
+            ];
+        }
+        echo json_encode($response);
+    }
+
     public function get_data_dispen_mhs()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
