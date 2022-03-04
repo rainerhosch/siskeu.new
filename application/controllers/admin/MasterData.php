@@ -152,6 +152,17 @@ class MasterData extends CI_Controller
         echo json_encode($response);
     }
 
+    public function getAllJenisTunggakan()
+    {
+        if ($this->input->is_ajax_request()) {
+            $response = $this->masterdata->GetAllJenisPembayaranTunggakan([1,2,3,4,5])->result_array();
+            // $response = $this->db->last_query();
+        } else {
+            $response = "Invalid Request";
+        }
+        echo json_encode($response);
+    }
+
     public function GetAllBiayaLainnya()
     {
         if ($this->input->is_ajax_request()) {

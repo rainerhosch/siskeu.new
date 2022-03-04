@@ -223,7 +223,8 @@ class AktivasiMhs extends CI_Controller
                 'd.tahun_akademik' => $smtAktif
 
             ];
-            $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->result_array();
+            // $dataDispen = $this->aktivasi->getDataDispenMhs($kondisi)->result_array();
+            $dataDispen = $this->aktivasi->getDataDispenMhs()->result_array();
             $countData = count($dataDispen);
             $mhsLunas = [];
             $mhsBelumLunas = [];

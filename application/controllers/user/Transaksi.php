@@ -176,6 +176,7 @@ class Transaksi extends CI_Controller
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             $smtAktif = $smtAktifRes['id_smt'];
             $cekTahunSmt = substr($smtAktif, 0, 4);
+            $smt_jns = substr($smtAktif, 4, 1);
 
 
             // cek tunggakan
@@ -230,6 +231,7 @@ class Transaksi extends CI_Controller
                 $dataMhs['dataHistoriTX'] = $dataHistoriTx;
                 $dataMhs['jenis_pembayaran'] = $resJnsPembayaran;
                 $dataMhs['thn_smt'] = $cekTahunSmt;
+                $dataMhs['jns_smt']=$smt_jns;
             } else {
                 $dataMhs;
             }
@@ -1373,7 +1375,10 @@ class Transaksi extends CI_Controller
 
         ];
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
-        // var_dump($resBiayaLain);
+
+        // echo '<pre>';
+        // var_dump($dataTxSebelumnya);
+        // echo'</pre>';
         // die;
         $kewajibanCS = $dataBiayaAngkatan['cicilan_semester'];
         $kewajibanPerpanjangSemester = $kewajibanCS / 2;
@@ -1742,8 +1747,8 @@ class Transaksi extends CI_Controller
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
-                        if ($dataTxSebelumnya[$x]['id_jenis_pembayaran'] != null) {
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
+                        if (isset($dataTxSebelumnya[$x]['id_jenis_pembayaran']) != null) {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
                         } else {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
@@ -1831,7 +1836,10 @@ class Transaksi extends CI_Controller
 
         ];
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
-        // var_dump($resBiayaLain);
+
+        // echo '<pre>';
+        // var_dump($dataTxSebelumnya);
+        // echo'</pre>';
         // die;
         $kewajibanCS = $dataBiayaAngkatan['cicilan_semester'];
         $kewajibanPerpanjangSemester = $kewajibanCS / 2;
@@ -2200,8 +2208,8 @@ class Transaksi extends CI_Controller
                 for ($j = 0; $j < count($resBiayaLain); $j++) {
                     if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
-                        if ($dataTxSebelumnya[$x]['id_jenis_pembayaran'] != null) {
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
+                        if (isset($dataTxSebelumnya[$x]['id_jenis_pembayaran']) != null) {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
                         } else {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
@@ -2225,7 +2233,9 @@ class Transaksi extends CI_Controller
         $dataTx['admin_log']['tanggal_log'] = mdate($tgl_str, $tgl_now);
         $dataTx['admin_log']['ket_cetak'] = 'print_ulang';
         $data['data_transaksi'] = $dataTx;
+        // echo'<pre>';
         // var_dump($dataTx);
+        // echo'</pre>';
         // die;
         $this->load->view('transaksi/kwitansi_new', $data);
     }

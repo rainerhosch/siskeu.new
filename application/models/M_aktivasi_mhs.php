@@ -45,6 +45,20 @@ class M_aktivasi_mhs extends CI_Model
         return $this->db->get();
     }
 
+    public function getDataDispenMhsV2($data = null)
+    {
+        $this->db->select('d.id_dispensasi, d.jenis_dispen, d.tanggal_input, m.id_pd, m.nipd, m.nm_pd, m.id_jur, m.nm_jur, d.tgl_janji_lunas, d.no_tlp, d.tg_dispen, d.tahun_akademik, d.tgl_pelunasan, d.status, d.jml_kirim_pesan');
+        $this->db->from('dispensasi d');
+        $this->db->join('mahasiswa m', 'm.id_pd=d.id_reg_pd');
+        // $this->db->join('kalender_akademik ka', 'ka.id_smt=d.tahun_akademik');
+        if ($data != null) {
+            $this->db->where($data);
+            // $this->db->where('(jenis_dispen=1 or jenis_dispen=3)');
+        }
+        $this->db->order_by('d.id_dispensasi', 'desc');
+        return $this->db->get();
+    }
+
     public function updateDataDispenMhs($id, $data)
     {
         $this->db->where('id_dispensasi', $id);

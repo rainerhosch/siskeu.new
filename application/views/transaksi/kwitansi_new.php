@@ -107,6 +107,7 @@ if ($data_transaksi['smt'] == 1) {
 }
 
 $data_kewajiban = $data_transaksi['data_kewajiban_lain'];
+// $data_kewajiban_spp = $data_transaksi['kewajiban'];
 $detailTX = $data_transaksi['detail_transaksi'];
 $admin_log = $data_transaksi['admin_log'];
 $tahun_akademik = substr($data_transaksi['nm_smt'], 0, 9);
@@ -176,6 +177,17 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
             $total_bayar_trx = $total_bayar_trx + $dtx['jml_bayar'];
             $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
         }
+    }
+
+    if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_kmhs'] < $data_transaksi['kewajiban']['tg_kmhs']) {
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(81, 5, 'Tunggakan Kemahasiswaan', 1, 0, 'L');
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'] - $data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 1, 'R');
+        $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_tg_kmhs'];
+        $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['tg_kmhs'];
     }
 
     if ($data_transaksi['kewajiban']['kmhs'] > 0 && $data_transaksi['bayar_kmhs'] == 0) {

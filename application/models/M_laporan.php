@@ -19,7 +19,7 @@ class M_laporan extends CI_Model
         $this->db->where();
         return $this->db->get();
     }
-    public function getDataTx($data = null)
+    public function getDataTx($data = null, $limit = '', $start = '')
     {
         $this->db->select('t.id_transaksi, t.tanggal, t.id_transaksi, t.jam, t.semester, t.nim, t.user_id, t.status_transaksi, t.transaksi_ke, t.uang_masuk, m.nm_pd, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, ka.nm_smt, ka.smt, u.nama_user, u.ttd');
         $this->db->from('transaksi t');
@@ -33,6 +33,14 @@ class M_laporan extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
+        
+        // if limit and start provided
+        if ($limit != "") {
+            $this->db->limit($limit, $start);
+        } else if ($start != "") {
+            $this->db->limit($limit, $start);
+        }
+
         $this->db->group_by('t.id_transaksi');
         $this->db->order_by('t.tanggal desc');
         // $this->db->order_by('t.nim desc');

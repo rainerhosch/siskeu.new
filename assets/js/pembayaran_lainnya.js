@@ -11,7 +11,7 @@ $("#nipd_2").on("keypress", function (e) {
       serverside: true,
       dataType: "json",
       success: function (response) {
-        // console.log(response);
+        console.log(response);
         let html_form_2 = "";
         let html_tbody_2 = "";
 

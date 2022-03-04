@@ -391,7 +391,7 @@
             });
             $('.btn_cetak_laporan').on('click', function(e) {
                 e.preventDefault();
-                let hrf = `<?= base_url('laporan/CetakLaporanDataDispen') ?>?jenis_dispen=1`;
+                let hrf = `<?= base_url('laporan/CetakLaporanDataDispenV2') ?>`; //requset pak jae
                 window.open(hrf, '_blank');
             });
 

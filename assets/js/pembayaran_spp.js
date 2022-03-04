@@ -1,6 +1,7 @@
 $("#nipd").on("keypress", function (e) {
   if (e.which == 13) {
     let nipd = $("#nipd").val();
+    let stts_radio = ``;
     $.ajax({
       type: "POST",
       url: "transaksi/cari_mhs",
@@ -14,6 +15,10 @@ $("#nipd").on("keypress", function (e) {
           if ((response.totalKewajiban = 0)) {
             $(".btn#btn_proses").prop("disabled", true);
           }
+
+          // if(response.jns_smt != "1"){
+          //   stts_radio=`disabled`;
+          // }
           let html = ``;
           let html_3 = ``;
           $("#nama_mhs").val(response.nm_pd);
@@ -21,7 +26,7 @@ $("#nipd").on("keypress", function (e) {
 
           html += `<tr>`;
           html += `<td class="text-center">`;
-          html += `<input class="form-check-input" type="radio" name="smt" id="smt_1" value="${response.thn_smt}1"><br>`;
+          html += `<input class="form-check-input" type="radio" name="smt" id="smt_1" value="${response.thn_smt}1" ${stts_radio}><br>`;
           html += `<label class="form-check-label" for="smt_1"> ( ${response.thn_smt}1 )</label>`;
           html += `</td>`;
           html += `<td class="text-center">`;

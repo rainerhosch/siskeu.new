@@ -180,11 +180,11 @@
             $('.btn_add_tg').on('click', function() {
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>masterdata/getAllJenisPembayaran",
+                    url: "<?= base_url() ?>masterdata/getAllJenisTunggakan",
                     dataType: "json",
                     success: function(response) {
                         $('#addTunggakan').modal('show');
-                        // console.log(response)
+                        console.log(response)
                         $.each(response, function(i, val) {
                             $('#jns_tg').append($('<option>', {
                                 value: val.id_jp,
