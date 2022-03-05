@@ -271,7 +271,7 @@
                 success: function(response) {
                     $('.mhs_lunas_label span').text(response.mhs_lunas);
                     $('.mhs_belum_lunas_label span').text(response.mhs_belum_lunas);
-                    // console.log(response)
+                    console.log(response)
                     html = ``;
                     if (response.data != 0) {
                         $.each(response.data, function(i, value) {

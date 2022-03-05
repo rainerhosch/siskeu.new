@@ -727,7 +727,7 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
-                        'd.tahun_akademik' => $smtAktif,
+                        'd.tahun_akademik' => $smtBayar,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 3
                     ];
@@ -755,7 +755,7 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
-                        'd.tahun_akademik' => $smtAktif,
+                        'd.tahun_akademik' => $smtBayar,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 4
                     ];
@@ -791,7 +791,7 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
-                        'd.tahun_akademik' => $smtAktif,
+                        'd.tahun_akademik' => $smtBayar,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 1
                     ];
@@ -819,7 +819,7 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
-                        'd.tahun_akademik' => $smtAktif,
+                        'd.tahun_akademik' => $smtBayar,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 3
                     ];
@@ -847,7 +847,7 @@ class Transaksi extends CI_Controller
 
                     // cek dispen
                     $dataCekDispen = [
-                        'd.tahun_akademik' => $smtAktif,
+                        'd.tahun_akademik' => $smtBayar,
                         'm.nipd' => $nimMhs,
                         'd.jenis_dispen' => 4
                     ];

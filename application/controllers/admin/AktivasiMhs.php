@@ -105,6 +105,48 @@ class AktivasiMhs extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function sync_dispen()
+    {
+        $update_dispen =[];
+        // jenis dispen (1,3,4)
+        $dataCekDispen = [
+            'd.id_reg_pd <>' => '6178', //Winda Ayu Melati
+            'd.tahun_akademik' => '20211',
+            'd.status' => 0,
+            'd.jenis_dispen' => 1,
+        ];
+        $data_dispen = $this->aktivasi->getDataDispenMhs($dataCekDispen)->result_array();
+        foreach($data_dispen as $dd){
+            $id_dispen = $dd['id_dispensasi'];
+            $where = [
+                't.nim' => $dd['nipd'],
+                't.semester' => $dd['tahun_akademik']
+                
+            ];
+            $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->result_array();
+            $countHistoriTx = count($dataHistoriTx);
+            for ($i = 0; $i < $countHistoriTx; $i++) {
+                $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+                $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+                
+                foreach($resDetailTx as $rDtx){
+                    if($rDtx['id_jenis_pembayaran'] = $dd['jenis_dispen'] && $rDtx['jml_bayar'] = $dd['tg_dispen']){
+                        // update dispen
+                        $dataUpdateDispen = [
+                            'status' => 1,
+                        ];
+                        // $update_dispen = $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdateDispen);
+                    }
+                }
+            }
+            
+        }
+        echo'<pre>';
+        var_dump($data_dispen);
+        echo'</pre>';
+        die;
+    } 
+
     public function update_jml_pesan()
     {
         if ($this->input->is_ajax_request()) {

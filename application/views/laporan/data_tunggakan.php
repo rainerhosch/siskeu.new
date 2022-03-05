@@ -184,7 +184,7 @@
                     dataType: "json",
                     success: function(response) {
                         $('#addTunggakan').modal('show');
-                        console.log(response)
+                        // console.log(response)
                         $.each(response, function(i, val) {
                             $('#jns_tg').append($('<option>', {
                                 value: val.id_jp,
