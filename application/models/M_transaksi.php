@@ -84,6 +84,16 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
+    public function get_data_rekening($data = null)
+    {
+        $this->db->select('id_rek, bank, nama_rekening');
+        $this->db->from('data_rek_bank');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
     // cek min
     public function cekMinId($data = null)
     {
@@ -96,15 +106,23 @@ class M_transaksi extends CI_Model
     }
 
 
-    public function getDataTransaksiPagenation($data = null, $limit = '', $start = '')
+    public function getDataTransaksiPagenation($data = null, $limit = '', $start = '', $where = null)
     {
-        $this->db->select('t.id_transaksi, t.tanggal, t.id_transaksi, t.jam, t.semester, t.nim, t.user_id, t.status_transaksi, t.transaksi_ke, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, u.nama_user, u.ttd');
+        $this->db->select('t.id_transaksi, t.tanggal, t.id_transaksi, t.jam, t.semester, t.nim, t.user_id, t.status_transaksi, t.transaksi_ke, t.bayar_via, t.rekening_trf, t.tgl_trf, t.jam_trf, t.uang_masuk, m.nm_pd, m.nm_jur, m.nm_jenj_didik, ts.icon_status_tx, drb.bank, drb.nama_rekening, u.nama_user, u.ttd');
         $this->db->from('transaksi t');
         $this->db->join('mahasiswa m', 'm.nipd=t.nim');
         $this->db->join('transaksi_status ts', 'ts.kode_status_tx=t.status_transaksi');
+        $this->db->join('data_rek_bank drb', 't.rekening_trf=drb.id_rek', 'left');
+        $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
+        $this->db->join('master_jenis_pembayaran mjp', 'td.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
         $this->db->join('users u', 'u.id_user=t.user_id');
+        
+        if ($where != null) {
+            $this->db->where($where);
+        }
         if ($data != null) {
             $this->db->like('m.nipd', $data, 'after');
+            $this->db->or_like('m.nm_pd', $data, 'after');
         }
 
         // if limit and start provided
@@ -113,6 +131,7 @@ class M_transaksi extends CI_Model
         } else if ($start != "") {
             $this->db->limit($limit, $start);
         }
+        $this->db->group_by('t.id_transaksi');
 
         $this->db->order_by('t.id_transaksi desc');
         return $this->db->get();

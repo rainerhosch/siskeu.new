@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="row">
-                    <div class="col-sm-3 form_invoice">
+                    <div class="col-sm-4 form_invoice">
                         <div class="sm-form mb-5 row" style="margin-top: 5px;">
                             <div class="col-sm-12">
                                 <input type="text" id="nipd" name="nipd" class="form-control validate" placeholder="Cari NIM..">
@@ -29,7 +29,7 @@
                         </div>
                         <form id="form_pembayaran" enctype="multipart/form-data">
                             <br>
-                            <table id="menu-datatable" class="table table-vcenter table-condensed">
+                            <table id="table_kewajiban" class="table table-vcenter table-condensed">
 
                                 <tbody id="data_kwajiban_tbody2">
                                 </tbody>
@@ -42,7 +42,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-8">
                         <div class="table-responsive">
                             <table id="modal_datatable" class="table table-vcenter table-condensed table-bordered">
                                 <thead>

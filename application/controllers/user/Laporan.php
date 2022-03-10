@@ -43,9 +43,12 @@ class Laporan extends CI_Controller
     }
     public function loadRecord()
     {
+        $condition = [];
         $post_limit = $this->input->post('limit');
         $post_offset = $this->input->post('offset');
         $key_cari = $this->input->post('keyword');
+        $jenis_kas = $this->input->post('jenis_kas');
+        $url_pagination = $this->input->post('url_pagination');
         // var_dump($this->input->post());
         // die;
         if ($post_offset != null) {
@@ -61,10 +64,22 @@ class Laporan extends CI_Controller
         if ($offset != 0) {
             $offset = ($offset - 1) * $limit;
         }
-        // All records count
-        $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
+        if($jenis_kas != 'all'){
+            $condition = [
+                'mjp.jenis_kas' => $jenis_kas
+            ];
+        }
+        
+        // $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
         // Get records
-        $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset)->result_array();
+        if($jenis_kas != 'all'){
+            $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset, ['mjp.jenis_kas' => $jenis_kas])->result_array();
+            $allcount = $this->transaksi->getDataTransaksiPagenation(null, '', '', ['mjp.jenis_kas' => $jenis_kas])->num_rows();
+        }else{
+            // All records count
+            $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset)->result_array();
+            $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
+        }
         $countHistoriTx = count($dataHistoriTx);
         for ($i = 0; $i < $countHistoriTx; $i++) {
 
@@ -84,7 +99,18 @@ class Laporan extends CI_Controller
             $kewajiban_Semester_ini = 0;
             $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
             $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
-            $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
+            
+            if($jenis_kas != 'all'){
+                $condition = [
+                    'mjp.jenis_kas' => $jenis_kas,
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']
+                ];
+            }else{
+                $condition = [
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']
+                ];
+            }
+            $resDetailTx = $this->laporan->getDetailTx($condition)->result_array();
             $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
             $dataTGCS = 0;
             foreach ($resDetailTx as $dTX) {
@@ -107,7 +133,7 @@ class Laporan extends CI_Controller
         }
 
         // Pagination Configuration
-        $config['base_url'] = base_url() . 'laporan/HistoriTransaksi';
+        $config['base_url'] = base_url() . 'laporan/'.$url_pagination;
         $config['use_page_numbers'] = TRUE;
         $config['total_rows'] = $allcount;
         $config['per_page'] = $limit;

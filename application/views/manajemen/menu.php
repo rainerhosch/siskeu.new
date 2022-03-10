@@ -24,7 +24,7 @@
 </style>
 <!-- Page content -->
 
-<script src="<?= base_url() ?>assets/template/js/menumanage.js"></script>
+<script src="<?= base_url() ?>assets/js/menumanage.js"></script>
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
         <li>Page</li>

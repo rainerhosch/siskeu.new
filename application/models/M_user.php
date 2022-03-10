@@ -16,12 +16,14 @@ class M_user extends CI_Model
         return $this->db->insert('users', $data);
     }
 
-    public function roleUser()
+    public function roleUser($where = null)
     {
         $this->db->distinct();
-        $this->db->select('role');
-        $this->db->from('users');
-        $this->db->where('role <> 1');
+        $this->db->select('id_role, role_type');
+        $this->db->from('user_role');
+        if($where != null){
+            $this->db->where('role <> 0');
+        }
         return $this->db->get();
     }
 

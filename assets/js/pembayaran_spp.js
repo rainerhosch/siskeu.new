@@ -26,19 +26,68 @@ $("#nipd").on("keypress", function (e) {
 
           html += `<tr>`;
           html += `<td class="text-center">`;
-          html += `<input class="form-check-input" type="radio" name="smt" id="smt_1" value="${response.thn_smt}1" ${stts_radio}><br>`;
+          html += `<input class="form-check-input input_smt" type="radio" name="smt" id="smt_1" value="${response.thn_smt}1" ${stts_radio}><br>`;
           html += `<label class="form-check-label" for="smt_1"> ( ${response.thn_smt}1 )</label>`;
           html += `</td>`;
           html += `<td class="text-center">`;
-          html += `<input class="form-check-input" type="radio" name="smt" id="smt_2" value="${response.thn_smt}2"><br>`;
+          html += `<input class="form-check-input input_smt" type="radio" name="smt" id="smt_2" value="${response.thn_smt}2"><br>`;
           html += `<label class="form-check-label" for="smt_2"> ( ${response.thn_smt}2 )</label>`;
           html += `</td>`;
           html += `</tr>`;
+          // line jenis transaksi (transfer atau langsung)
+          html += `<tr>`;
+          html += `<td><label for="bayar_via">Jenis Bayar</label></td>`;
+          html += `<td class="text-center">`;
+          html +=`<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">
+                    <option value="x">-- Pilih --</option>
+                    <option value="1">Cash</option>
+                    <option value="2">Transfer</option>
+                  </select>`;
+          html += `</td>`;
+          html += `</tr>`;
           $("#data_kwajiban_tbody2").html(html);
-
-          $("input[type='radio']").click(function () {
+          $('.bayar_via').on('change',function(){
+            let bayar_via = $(".bayar_via").val();
+            let tds = ``;
+            if(bayar_via ==='2'){
+              
+              
+                tds += `<tr class="detail_trf">`;
+                tds += `<td><label for="rek_tujuan">Rekening Tujuan</label></td>`;
+                tds += `<td class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
+                tds += `<option value="1">BANK BSI</option>
+                <option value="2">BANK MANDIRI</option>
+                <option value="3">BANK BNI</option>`;
+                //  $.ajax({
+                //     type: "POST",
+                //     url: "transaksi/get_data_rekening",
+                //     dataType: "json",
+                //     success: function (res) {
+                //       console.log(res)
+                //       $.each(res.data, function (i, value) {
+                //         tds += `<option value="${value.id_rek}">${value.bank}</option>`;
+                //       });
+                //     }
+                //   });
+                tds +=`</select></td>`;
+                tds += `</tr>`;
+                tds += `<tr class="detail_trf">`;
+                tds += `<td><label for="tgl_trf">Tgl Transfer</label></td>`;
+                tds += `<td><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
+                tds += `</tr>`;
+                tds += `<tr class="detail_trf">`;
+                tds += `<td><label for="jam_trf">Jam Transfer</label></td>`;
+                tds += `<td><input type="time" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
+                tds += `</tr>`;
+              $("#data_kwajiban_tbody2").append(tds);
+            }else{
+              $('.detail_trf').remove();
+            }
+          });
+          $(".input_smt").click(function () {
             let smt = $("input[name='smt']:checked").val();
             let nipd = $("#nipd").val();
+            // console.log(smt)
             if (smt) {
               // alert("Your are a - " + smt);
 
@@ -66,6 +115,7 @@ $("#nipd").on("keypress", function (e) {
                   htmlx += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
                   htmlx += `<input type="hidden" id="angkatan_mhs_bayar" name="angkatan_mhs_bayar" value="${response.tahun_masuk}">`;
                   $.each(response.dataKewajibanSmt, function (i, value) {
+                    i++;
                     htmlx += `<tr>`;
                     htmlx += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
                     htmlx += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
@@ -74,6 +124,7 @@ $("#nipd").on("keypress", function (e) {
                     }></td>`;
                     htmlx += `</tr>`;
                   });
+                  // line potongan spp
                   htmlx += `<tr>`;
                   htmlx += `<td><label data-error="wrong" data-success="right" for="uang_masuk">Potongan SPP</label></td>`;
                   htmlx += `<td class="text-center"><input type="hidden" id="uang_masuk" name="uang_masuk" class="form-control validate text-right uang_masuk" value="1" readonly></td>`;
@@ -81,12 +132,17 @@ $("#nipd").on("keypress", function (e) {
                   htmlx += `</tr>`;
                   $("#data_kwajiban_tbody").html(htmlx);
                   $.each(response.dataKewajibanSmt, function (i, value) {
+                    i++;
                     $("#checkcox_" + i).change(function () {
+                      let bayar_via = $(".bayar_via").val();
+                      console.log(bayar_via);
                       var numberOfChecked = $("input:checkbox:checked").length;
-                      if (numberOfChecked <= 0) {
-                        $("#btn_proses").prop("disabled", true);
-                      } else {
-                        $("#btn_proses").prop("disabled", false);
+                      if (bayar_via != 'x') {
+                        if (numberOfChecked <= 0) {
+                          $("#btn_proses").prop("disabled", true);
+                        } else {
+                          $("#btn_proses").prop("disabled", false);
+                        }
                       }
                       if (this.checked === true) {
                         $("#" + value.post_id).prop("disabled", false);

@@ -111,8 +111,22 @@ $("#add_rows").click(function () {
     let tg_cs = $("#tg_cs_mhs").val();
     // console.log(tg_cs);
     $(".btn#delete_rows").prop("disabled", false);
-    // $("tbody", this).empty();
-    let tds = "<tr>";
+    let tds = "";
+
+     // line jenis transaksi (transfer atau langsung)
+    //  tds += `<tr>`;
+    //  tds += `<td width="20%">`;
+    //  tds += `<label class="form-check-label" for="jns_trf">Jenis Bayar</label>`;
+    //  tds += `</td>`;
+    //  tds += `<td width="40%">`;
+    //  tds += `<input class="form-check-input jns_trf" type="radio" name="jns_trf" id="jns_trf_1" value="1"><br><label class="form-check-label" for="jns_trf">CASH</label>`;
+    //  tds += `</td>`;
+    //  tds += `<td width="40%">`;
+    //  tds += `<input class="form-check-input jns_trf" type="radio" name="jns_trf" id="jns_trf_2" value="2"><br><label class="form-check-label" for="jns_trf">TRANSFER</label>`;
+    //  tds += `</td>`;
+    //  tds += `</tr>`;
+     
+    tds += "<tr>";
     (size = jQuery("#tabel_pembayaranLain >tbody >tr").length + 1),
       (tds += '<td width="45%">');
     $(".select2").select2({});

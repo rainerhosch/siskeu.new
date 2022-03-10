@@ -23,6 +23,7 @@
         border-radius: 3px;
     }
 </style>
+<script src="<?= base_url() ?>assets/js/usermanage.js"></script>
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
         <li>Page</li>
@@ -61,7 +62,7 @@
                         <td class="text-center"><?= $i; ?></td>
                         <td class="text-center"><?= $u['nama_user']; ?></td>
                         <td class="text-center">
-                            <?php if ($u['role'] != 1) : ?>
+                            <?php if ($u['role'] != 0) : ?>
                                 <a href="#" class="badge badge-warning" id="proses_edit" value="<?= $u['id_user']; ?>"><i class="far fa-edit"></i></a>|
                                 <a href="#" onclick="document.getElementById('id01').style.display='block'" class="badge badge-danger" id="hapus_user" value="<?= $u['id_user']; ?>"><i class="fas fa-trash-alt"></i></a>
                             <?php else : ?>
@@ -184,15 +185,9 @@
                             <div class="col-md-9">
                                 <select id="edit_role" name="edit_role" class="select-select2 select2-hidden-accessible" style="width: 100%;">
                                     <option></option>
-                                    <?php $user =  $this->user->roleUser()->result_array();
-                                    foreach ($user as $t) :
-                                        if ($t['role'] == 2) {
-                                            $r = 'Master Admin';
-                                        } else {
-                                            $r = 'Admin';
-                                        }
-                                    ?>
-                                        <option class="<?= $t['role']; ?>" value="<?= $t['role']; ?>"><?= $r ?></option>
+                                    <?php $user_role =  $this->user->roleUser()->result_array();
+                                    foreach ($user_role as $ur) :?>
+                                        <option class="<?= $ur['id_role']; ?>" value="<?= $ur['id_role']; ?>"><?= $ur['role_type'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

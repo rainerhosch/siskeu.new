@@ -1,4 +1,8 @@
 <style>
+    .table thead > tr > th {
+    font-size: 14px;
+    font-weight: 600;
+    }
     .form_invoice2 {
         /* background-color: #110d0dcf; */
         border-radius: 5px;
@@ -10,13 +14,13 @@
     }
 
     .modal-dialog {
-        width: 70%;
-        height: 70%;
+        width: 90%;
+        height: 90%;
     }
 
     .modal-content {
         height: auto;
-        min-height: 70%;
+        min-height: 90%;
         border-radius: 0;
         justify-content: center;
     }
@@ -186,6 +190,7 @@
                                                 <th class="text-center">Jumlah</th>
                                                 <!-- <th class="text-center">Sisa Bayar</th> -->
                                                 <th class="text-center">Semester</th>
+                                                <th class="text-center">Jenis Pembayaran</th>
                                                 <th class="text-center">Status</th>
                                                 <th class="text-center">Admin</th>
                                                 <th class="text-center">Tools</th>
@@ -301,11 +306,14 @@
 
             // Load pagination
             function loadFilter(keyword) {
+            let jenis_kas = 'all';
                 $.ajax({
                     url: '<?= base_url() ?>laporan/loadRecord/',
                     type: 'POST',
                     data: {
-                        keyword: keyword
+                        keyword: keyword,
+                        jenis_kas: jenis_kas,
+                        url_pagination: 'HistoriTransaksi'
                     },
                     serverSide: true,
                     dataType: 'json',
@@ -322,12 +330,15 @@
             }
             // Load pagination
             function loadPagination(limit, offset) {
+            let jenis_kas = 'all';
                 $.ajax({
                     url: '<?= base_url() ?>laporan/loadRecord/' + offset,
                     type: 'POST',
                     data: {
                         offset: offset,
-                        limit: limit
+                        limit: limit,
+                        jenis_kas:jenis_kas,
+                        url_pagination: 'HistoriTransaksi'
                     },
                     serverSide: true,
                     dataType: 'json',
@@ -376,6 +387,16 @@
                         htmlx += `</td>`;
                         htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
                         htmlx += `<td class = "text-center" >${value.semester}</td>`;
+                        if(value.bayar_via !=2){
+                            htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar Tunai</i></td>`;
+                        }else{
+                            htmlx += `<td class = "text-center" >`;
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">Rek tujuan</i> : <i style="font-size:1rem; font-weight: bold;">${value.bank} - ${value.nama_rekening}</i><br>`;
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">Tgl Trf</i> :<i style="font-size:1rem;">${value.tgl_trf}</i><br>`;
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">Jam Trf</i> :<i style="font-size:1rem;">${value.jam_trf}</i><br>`;
+                            htmlx += `</td>`;
+                        }
+
                         if (total_bayarTrx < value.kewajiban_Semester_ini) {
                             htmlx += `<td class = "text-center" >BL</td>`;
                         } else {

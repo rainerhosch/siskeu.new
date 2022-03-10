@@ -33,7 +33,7 @@ class M_laporan extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
-        
+
         // if limit and start provided
         if ($limit != "") {
             $this->db->limit($limit, $start);
@@ -47,6 +47,7 @@ class M_laporan extends CI_Model
         return $this->db->get();
     }
 
+    // get data transaksi detail
     public function getDetailTx($data = null)
     {
         $this->db->select('
@@ -58,10 +59,9 @@ class M_laporan extends CI_Model
         mjp.nm_jenis_pembayaran,
         td.jml_bayar,
         mjp.jenis_kas,
+        td.potongan
         ');
-        // $this->db->from('transaksi_detail');
         $this->db->from('transaksi t');
-        // $this->db->join('users u', 'u.id_user=t.user_id');
         $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
         $this->db->join('master_jenis_pembayaran mjp', 'td.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
         if ($data != null) {

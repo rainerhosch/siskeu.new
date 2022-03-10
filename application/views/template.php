@@ -13,6 +13,7 @@
 
     <link rel="shortcut icon" href="<?= base_url() ?>assets/proui/img/favicon/logo.png">
     <link rel="stylesheet" href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" type="text/css">
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/> -->
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css">
     <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css">
@@ -23,6 +24,7 @@
     <!-- javascript -->
     <script src="<?= base_url() ?>assets/proui/js/vendor/modernizr.min.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/vendor/jquery.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script> -->
     <script src="<?= base_url() ?>assets/proui/js/vendor/bootstrap.min.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/plugins.js"></script>
     <script src="<?= base_url() ?>assets/proui/js/app.js"></script>
@@ -234,7 +236,6 @@
                     <?php $this->load->view('layout/topbar'); ?>
                     <?php $this->load->view($content); ?>
                     <?php $this->load->view('layout/footer'); ?>
-                    <?php $this->load->view('layout/script'); ?>
                 <?php else : ?>
                     <?php $this->load->view($content); ?>
                 <?php endif ?>

@@ -44,6 +44,29 @@ class Transaksi extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function get_data_rekening()
+    {
+        if ($this->input->is_ajax_request()) {
+            $get_rek = $this->transaksi->get_data_rekening()->result_array();
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'Ok!',
+                'data'      => $get_rek
+            ];
+        }else{
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
+
+    }
+
+
     public function getDataTrxServerSide()
     {
         $list = $this->transaksi->get_datatables();
@@ -464,6 +487,16 @@ class Transaksi extends CI_Controller
             $bayarC2 = $this->input->post('bayar_C2');
             $bayarC3 = $this->input->post('bayar_C3');
             $uang_masuk = $this->input->post('uang_masuk');
+
+            $bayar_via = $this->input->post('bayar_via');
+            $rekening_trf = '';
+            $tgl_trf = '0000-00-00';
+            $jam_trf = '00:00:00';
+            if($bayar_via == 2){
+                $rekening_trf = $this->input->post('rek_tujuan');
+                $tgl_trf = $this->input->post('tgl_trf');
+                $jam_trf = $this->input->post('jam_trf').':00';
+            }
             $totalBayar = $bayarTG + $bayarTG_KMHS + $bayarC1 + $bayarC2 + $bayarC3 + $bayarKMHS;
             // $All = $this->input->post();
             // var_dump($All);
@@ -875,7 +908,11 @@ class Transaksi extends CI_Controller
                 'user_id' => $this->session->userdata('id_user'),
                 'status_transaksi' => 1,
                 'transaksi_ke' => $trx_ke,
-                'uang_masuk' => $uang_masuk
+                'uang_masuk' => $uang_masuk,
+                'bayar_via' => $bayar_via,
+                'rekening_trf'=> $rekening_trf,
+                'tgl_trf'=> $tgl_trf,
+                'jam_trf'=> $jam_trf
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
             // $insert = true;
@@ -908,6 +945,8 @@ class Transaksi extends CI_Controller
     public function get_biaya_pembayaran_lain()
     {
         if ($this->input->is_ajax_request()) {
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            $smtAktif = $smtAktifRes['id_smt'];
             $nim = $this->input->post('nim_mhs');
             $id_pembayaran =  $this->input->post('id_jns_bayar');
             $jenjangMhs =  $this->input->post('jnj_didik');
@@ -938,7 +977,7 @@ class Transaksi extends CI_Controller
                     $resJnsPembayaran = $this->masterdata->GetJenisPembayaran($where)->row_array();
                     $where_sudah_bayar = [
                         'nim' => $nim,
-                        'semester' => 20211,
+                        'semester' => $smtAktif,
                         'id_jenis_pembayaran' => $id_pembayaran
                     ];
                     $sudah_bayar = $this->masterdata->GetPembayaranPS($where_sudah_bayar)->result_array();
@@ -949,7 +988,8 @@ class Transaksi extends CI_Controller
                     $data = [
                         'id_jp' => $id_pembayaran,
                         'nm_jp' => $resJnsPembayaran['nm_jp'],
-                        'biaya' => $biayaPerpanjang - $sumJ
+                        'biaya' => $biayaPerpanjang - $sumJ,
+                        'tambahan'=> ($dataBiaya['cicilan_semester'] / 2)
                     ];
                 } else if ($id_pembayaran == 9) {
                     $where = [
@@ -993,6 +1033,16 @@ class Transaksi extends CI_Controller
             $namaMhs = $this->input->post('nama_mhs_bayar_hidden');
             $jenjangMhs = $this->input->post('jenjang_mhs_bayar_hidden');
             $angkatanMhs = $this->input->post('angkatan_mhs_bayar_hidden');
+
+            $bayar_via = $this->input->post('bayar_via');
+            $rekening_trf = '';
+            $tgl_trf = '0000-00-00';
+            $jam_trf = '00:00:00';
+            if($bayar_via == 2){
+                $rekening_trf = $this->input->post('rek_tujuan');
+                $tgl_trf = $this->input->post('tgl_trf');
+                $jam_trf = $this->input->post('jam_trf').':00';
+            }
 
             $pembayaran = $this->input->post('JenisBayar');
             $dataBiayaPembayaran = $this->input->post('biayaJenisPembayaran');
@@ -1208,7 +1258,11 @@ class Transaksi extends CI_Controller
                 'user_id' => $this->session->userdata('id_user'),
                 'status_transaksi' => 1,
                 'transaksi_ke' => $trx_ke,
-                'uang_masuk' => 1
+                'uang_masuk' => 1,
+                'bayar_via' => 1,
+                'rekening_trf'=> $rekening_trf,
+                'tgl_trf'=> $tgl_trf,
+                'jam_trf'=> $jam_trf
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
 

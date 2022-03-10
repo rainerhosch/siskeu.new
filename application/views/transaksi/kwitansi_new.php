@@ -178,8 +178,7 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
             $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
         }
     }
-
-    if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_kmhs'] < $data_transaksi['kewajiban']['tg_kmhs']) {
+    if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_kmhs'] == 0) {
         $pdf->SetFont('Courier', 'IB', 10);
         $pdf->Cell(81, 5, 'Tunggakan Kemahasiswaan', 1, 0, 'L');
         $pdf->SetFont('Courier', 'IB', 10);
@@ -189,6 +188,7 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
         $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_tg_kmhs'];
         $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['tg_kmhs'];
     }
+
 
     if ($data_transaksi['kewajiban']['kmhs'] > 0 && $data_transaksi['bayar_kmhs'] == 0) {
         $pdf->SetFont('Courier', 'IB', 10);
