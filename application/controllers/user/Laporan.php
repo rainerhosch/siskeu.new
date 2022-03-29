@@ -455,13 +455,25 @@ class Laporan extends CI_Controller
 
     public function BuatLaporanBulanan()
     {
-        date_default_timezone_set('Asia/Jakarta');
-        $date = date('Y-m-d');
+        
+
+        // parametar
+        $input_param = $this->input->get();
+        $jenis_kas = $input_param['jenis_laporan'];
+        if(isset($input_param['tgl_mulai']) != null && isset($input_param['tgl_end']) != null){
+            $date = $input_param['tgl_mulai'];
+        }else{
+            date_default_timezone_set('Asia/Jakarta');
+            $date = date('Y-m-d');
+        }
+        
+        // echo '<pre>';
+        // var_dump($date);die;
+        // echo'</pre>';
         $pecah_date = explode('-', $date);
         $thn = $pecah_date[0];
         $bln = $pecah_date[1];
         $bln_lalu = $bln - 1;
-        $jenis_kas = $this->input->get('jenis_laporan');
         $FormatTanggal = new FormatTanggal;
 
         // seting ambil bulan laporan
@@ -478,6 +490,7 @@ class Laporan extends CI_Controller
             // 'SUBSTRING(t.NIM, 1, 2) =' => '21'
         ];
         $dataHistoriTx = $this->laporan->getDataTx($where)->result_array();
+        // var_dump($this->db->last_query());die;
         $countHistoriTx = count($dataHistoriTx);
         for ($i = 0; $i < $countHistoriTx; $i++) {
             $where_DTx = [

@@ -1,7 +1,7 @@
 <style>
-        .table thead > tr > th {
-    font-size: 14px;
-    font-weight: 600;
+    .table thead > tr > th {
+        font-size: 14px;
+        font-weight: 600;
     }
 
     /* Style the horizontal ruler */
@@ -13,6 +13,18 @@
     table {
         background-color: #ffffff;
     }
+    .widget-simple
+    .widget-content {
+        font-size: 14px;
+        margin: 12px 0;
+    }
+    .widget-simple .widget-content small {
+        display: block;
+        margin-top: 7px;
+        font-size: 10px;
+        font-weight: 400;
+        font-style: oblique;
+    }
 </style>
 <!-- Page content -->
 <div id="page-content">
@@ -21,7 +33,7 @@
         <li><a href=""><?= $page; ?></a></li>
     </ul>
     <div class="row">
-        <div class="col-sm-6 col-lg-6" id="btn_cetak_laporan">
+        <div class="col-sm-4 col-lg-4" id="btn_cetak_laporan_bulan_lalu">
             <a class="widget widget-hover-effect1" data-toggle="modal">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
@@ -29,12 +41,25 @@
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
                         Buat Laporan<strong> Excel</strong><br>
-                        <small>Membuat Laporan Bulan Kas Bulan Lalu.</small>
+                        <small><strong>Laporan Bulan Kas Bulan Lalu.</strong></small>
                     </h3>
                 </div>
             </a>
         </div>
-        <div class="col-sm-6 col-lg-6">
+        <div class="col-sm-4 col-lg-4" id="btn_creat_laporan">
+            <a class="widget widget-hover-effect1" data-toggle="modal">
+                <div class="widget-simple">
+                    <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+                        <i class="gi gi-print"></i>
+                    </div>
+                    <h3 class="widget-content text-right animation-pullDown">
+                        Buat Laporan<strong> Excel</strong><br>
+                        <small><strong>Membuat Laporan Per tanggal.</strong></small>
+                    </h3>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-4 col-lg-4">
             <a class="widget widget-hover-effect1" data-toggle="modal">
                 <div class="widget-simple">
                     <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
@@ -42,7 +67,7 @@
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
                         Kas Diterima Per <?= $bln_berjalan; ?> <strong><?= 'Rp.' . number_format($total_uang_masuk_bulan_ini); ?></strong><br>
-                        <small>(Data tersebut pure uang masuk, data input potongan tidak di hitung.)</small>
+                        <small><strong>(Data tersebut pure uang masuk, data input potongan tidak di hitung.)</strong></small>
                     </h3>
                 </div>
             </a>
@@ -239,7 +264,7 @@
                 $("#data_kas_tbody").html(htmlx);
             }
 
-            $('#btn_cetak_laporan').on('click', function(e) {
+            $('#btn_cetak_laporan_bulan_lalu').on('click', function(e) {
                 e.preventDefault();
                 let hrf = `<?= base_url('laporan/BuatLaporanBulanan') ?>?jenis_laporan=1`;
                 window.open(hrf, '_blank');
