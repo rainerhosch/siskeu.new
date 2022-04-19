@@ -116,7 +116,7 @@ class M_transaksi extends CI_Model
         $this->db->join('transaksi_detail td', 't.id_transaksi=td.id_transaksi');
         $this->db->join('master_jenis_pembayaran mjp', 'td.id_jenis_pembayaran=mjp.id_jenis_pembayaran');
         $this->db->join('users u', 'u.id_user=t.user_id');
-        
+
         if ($where != null) {
             $this->db->where($where);
         }
@@ -283,6 +283,58 @@ class M_transaksi extends CI_Model
         }
     }
 
+    // get data transfer mhs
+    // public function getBuktiTransfer($data = null)
+    // {
+    //     $this->db->select('bp.*, m.nm_pd, mjp.nm_jenis_pembayaran');
+    //     $this->db->from('bukti_pembayaran bp');
+    //     $this->db->join('mahasiswa m', 'm.nipd=bp.nipd');
+    //     $this->db->join('master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+    //     if ($data != null) {
+    //         $this->db->where($data);
+    //     }
+    //     return $this->db->get();
+    // }
+
+
+    // get data transfer from simak
+    public function getDataBuktiPembayaran($where = null)
+    {
+
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
+        $dbwastudig_simak->from('bukti_pembayaran bp');
+        $dbwastudig_simak->join('master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+        if ($where != null) {
+            $dbwastudig_simak->where($where);
+        }
+        $dbwastudig_simak->order_by('id_bukti_trf', 'DESC');
+        return $dbwastudig_simak->get();
+    }
+
+    public function updateBuktiPembayaran($filter, $data)
+    {
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->where($filter);
+        $dbwastudig_simak->update('bukti_pembayaran', $data);
+        if ($dbwastudig_simak->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    // get data transfer from simak
+    public function getBuktiTransfer($data = null)
+    {
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->select('*');
+        $dbwastudig_simak->from('bukti_pembayaran');
+        if ($data != null) {
+            $dbwastudig_simak->where($data);
+        }
+        return $dbwastudig_simak->get();
+    }
 
     // get Data transaksi Hari ini
     public function getTxDateNow($data)

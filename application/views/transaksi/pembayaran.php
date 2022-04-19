@@ -1,8 +1,9 @@
 <style>
-    .table thead > tr > th {
-    font-size: 14px;
-    font-weight: 600;
+    .table thead>tr>th {
+        font-size: 14px;
+        font-weight: 600;
     }
+
     .form_invoice2 {
         /* background-color: #110d0dcf; */
         border-radius: 5px;
@@ -120,15 +121,16 @@
                     </div>
                 </a>
             </div>
-            <div class="col-sm-6 col-lg-3">
-                <a href="#" class="widget widget-hover-effect1">
+            <div class="col-sm-6 col-lg-3 btn_trf_online">
+                <a href="#data-transfer" class="widget widget-hover-effect1">
+                    <!-- <a href="#data-transfer" class="widget widget-hover-effect1" data-toggle="modal" data-target="#dataTransferMhs"> -->
                     <div class="widget-simple">
                         <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
                             <i class="gi gi-circle_info"></i>
                         </div>
                         <h3 class="widget-content text-right animation-pullDown">
-                            0 <strong>Pembayaran</strong><br>
-                            <small>Transaksi Online</small>
+                            <?= $jml_mhs_transfer ?> <strong>Pembayaran</strong><br>
+                            <small>Mahasiswa Transfer</small>
                         </h3>
                     </div>
                 </a>
@@ -282,6 +284,7 @@
     <!-- Modal Form -->
     <?php $this->load->view('transaksi/modal_form_spp'); ?>
     <?php $this->load->view('transaksi/modal_form_pembayaran_lain'); ?>
+    <?php $this->load->view('transaksi/modal_data_trf_mhs'); ?>
     <script>
         $(document).ready(function() {
             loadPagination(0);
@@ -306,7 +309,7 @@
 
             // Load pagination
             function loadFilter(keyword) {
-            let jenis_kas = 'all';
+                let jenis_kas = 'all';
                 $.ajax({
                     url: '<?= base_url() ?>laporan/loadRecord/',
                     type: 'POST',
@@ -330,14 +333,14 @@
             }
             // Load pagination
             function loadPagination(limit, offset) {
-            let jenis_kas = 'all';
+                let jenis_kas = 'all';
                 $.ajax({
                     url: '<?= base_url() ?>laporan/loadRecord/' + offset,
                     type: 'POST',
                     data: {
                         offset: offset,
                         limit: limit,
-                        jenis_kas:jenis_kas,
+                        jenis_kas: jenis_kas,
                         url_pagination: 'HistoriTransaksi'
                     },
                     serverSide: true,
@@ -387,9 +390,9 @@
                         htmlx += `</td>`;
                         htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
                         htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                        if(value.bayar_via !=2){
+                        if (value.bayar_via != 2) {
                             htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar Tunai</i></td>`;
-                        }else{
+                        } else {
                             htmlx += `<td class = "text-center" >`;
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">Rek tujuan</i> : <i style="font-size:1rem; font-weight: bold;">${value.bank} - ${value.nama_rekening}</i><br>`;
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">Tgl Trf</i> :<i style="font-size:1rem;">${value.tgl_trf}</i><br>`;
@@ -506,5 +509,6 @@
     </script>
     <script src="<?= base_url() ?>assets/js/pembayaran_lainnya.js"></script>
     <script src="<?= base_url() ?>assets/js/pembayaran_spp.js"></script>
+    <script src="<?= base_url() ?>assets/js/data_trf_mhs.js"></script>
 </div>
 <!-- END Page Content -->

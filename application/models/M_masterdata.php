@@ -170,6 +170,16 @@ class M_masterdata extends CI_Model
         $this->db->order_by('nm_jp', 'asc');
         return $this->db->get();
     }
+    // get Master Jenis Transaksi
+    public function GetAllJenisTrx($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('master_jenis_pembayaran');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
 
     public function GetAllJenisPembayaran($data = null)
     {
@@ -187,7 +197,7 @@ class M_masterdata extends CI_Model
         $this->db->select('id_jenis_pembayaran as id_jp, nm_jenis_pembayaran as nm_jp');
         $this->db->from('master_jenis_pembayaran');
         if ($data !== null) {
-            $this->db->where_not_in('id_jenis_pembayaran',$data);
+            $this->db->where_not_in('id_jenis_pembayaran', $data);
         }
         $this->db->order_by('nm_jp', 'asc');
         return $this->db->get();
