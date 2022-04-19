@@ -41,7 +41,112 @@ class Transaksi extends CI_Controller
             'tanggal' => date('Y-m-d')
         ];
         $data['jumlah_tx_hari_ini'] = $this->transaksi->getTxDateNow($where_date);
+        $data['jml_mhs_transfer'] = $this->transaksi->getBuktiTransfer(['status' => 0])->num_rows();
         $this->load->view('template', $data);
+    }
+
+    public function get_data_trf_online()
+    {
+        if ($this->input->is_ajax_request()) {
+            $res = $this->transaksi->getDataBuktiPembayaran(['status' => 0])->result_array();
+            foreach ($res as $i => $val) {
+                $jnsBayar = explode(',', $val['id_jenis_bayar']);
+                foreach ($jnsBayar as $j => $value) {
+                    $filter = ['id_jenis_pembayaran' => $value];
+                    $pembayaran[] = $this->masterdata->GetAllJenisTrx($filter)->row_array();
+                }
+                $res[$i]['pembayaran'] = $pembayaran;
+            }
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'Ok!',
+                'data'      => $res
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
+    }
+
+    public function acc_trf_online()
+    {
+        if ($this->input->is_ajax_request()) {
+            $where = [
+                'id_bukti_trf' => $this->input->post('id'),
+            ];
+            $acc = $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'OK!',
+                'data'      => $acc
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
+    }
+    public function reject_trf_online()
+    {
+        if ($this->input->is_ajax_request()) {
+            $where = [
+                'id_bukti_trf' => $this->input->post('id'),
+            ];
+            $reject = $this->transaksi->updateBuktiPembayaran($where, ['status' => 2]);
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'OK!',
+                'data'      => $reject
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
+    }
+
+    public function get_jenis_pembayaran()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data_post = $this->input->post('jns_bayar');
+            $jnsBayar = explode(',', $data_post);
+            foreach ($jnsBayar as $i => $val) {
+                $where = [
+                    'id_jenis_pembayaran' => $val
+                ];
+                $res[] = $this->masterdata->GetAllJenisTrx($where)->row_array();
+            }
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'Ok!',
+                'data'      => $res
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
     }
 
     public function get_data_rekening()
@@ -54,7 +159,7 @@ class Transaksi extends CI_Controller
                 'msg'       => 'Ok!',
                 'data'      => $get_rek
             ];
-        }else{
+        } else {
             $data = [
                 'status'    => false,
                 'code'      => 500,
@@ -63,7 +168,6 @@ class Transaksi extends CI_Controller
             ];
         }
         echo json_encode($data);
-
     }
 
 
@@ -254,7 +358,7 @@ class Transaksi extends CI_Controller
                 $dataMhs['dataHistoriTX'] = $dataHistoriTx;
                 $dataMhs['jenis_pembayaran'] = $resJnsPembayaran;
                 $dataMhs['thn_smt'] = $cekTahunSmt;
-                $dataMhs['jns_smt']=$smt_jns;
+                $dataMhs['jns_smt'] = $smt_jns;
             } else {
                 $dataMhs;
             }
@@ -492,10 +596,10 @@ class Transaksi extends CI_Controller
             $rekening_trf = '';
             $tgl_trf = '0000-00-00';
             $jam_trf = '00:00:00';
-            if($bayar_via == 2){
+            if ($bayar_via == 2) {
                 $rekening_trf = $this->input->post('rek_tujuan');
                 $tgl_trf = $this->input->post('tgl_trf');
-                $jam_trf = $this->input->post('jam_trf').':00';
+                $jam_trf = $this->input->post('jam_trf') . ':00';
             }
             $totalBayar = $bayarTG + $bayarTG_KMHS + $bayarC1 + $bayarC2 + $bayarC3 + $bayarKMHS;
             // $All = $this->input->post();
@@ -910,9 +1014,9 @@ class Transaksi extends CI_Controller
                 'transaksi_ke' => $trx_ke,
                 'uang_masuk' => $uang_masuk,
                 'bayar_via' => $bayar_via,
-                'rekening_trf'=> $rekening_trf,
-                'tgl_trf'=> $tgl_trf,
-                'jam_trf'=> $jam_trf
+                'rekening_trf' => $rekening_trf,
+                'tgl_trf' => $tgl_trf,
+                'jam_trf' => $jam_trf
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
             // $insert = true;
@@ -989,7 +1093,7 @@ class Transaksi extends CI_Controller
                         'id_jp' => $id_pembayaran,
                         'nm_jp' => $resJnsPembayaran['nm_jp'],
                         'biaya' => $biayaPerpanjang - $sumJ,
-                        'tambahan'=> ($dataBiaya['cicilan_semester'] / 2)
+                        'tambahan' => ($dataBiaya['cicilan_semester'] / 2)
                     ];
                 } else if ($id_pembayaran == 9) {
                     $where = [
@@ -1038,10 +1142,10 @@ class Transaksi extends CI_Controller
             $rekening_trf = '';
             $tgl_trf = '0000-00-00';
             $jam_trf = '00:00:00';
-            if($bayar_via == 2){
+            if ($bayar_via == 2) {
                 $rekening_trf = $this->input->post('rek_tujuan');
                 $tgl_trf = $this->input->post('tgl_trf');
-                $jam_trf = $this->input->post('jam_trf').':00';
+                $jam_trf = $this->input->post('jam_trf') . ':00';
             }
 
             $pembayaran = $this->input->post('JenisBayar');
@@ -1260,9 +1364,9 @@ class Transaksi extends CI_Controller
                 'transaksi_ke' => $trx_ke,
                 'uang_masuk' => 1,
                 'bayar_via' => 1,
-                'rekening_trf'=> $rekening_trf,
-                'tgl_trf'=> $tgl_trf,
-                'jam_trf'=> $jam_trf
+                'rekening_trf' => $rekening_trf,
+                'tgl_trf' => $tgl_trf,
+                'jam_trf' => $jam_trf
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
 
