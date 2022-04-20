@@ -17,7 +17,7 @@
                                     <tr>
                                         <th class="text-center">No</th>
                                         <th class="text-center">Tgl Transfer</th>
-                                        <th class="text-center">NIM</th>]
+                                        <th class="text-center">NIM</th>
                                         <th class="text-center">Jumlah Transfer</th>
                                         <th class="text-center">Keterangan Bayar</th>
                                         <th class="text-center">Bukti Transfer</th>

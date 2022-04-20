@@ -600,6 +600,17 @@ class Transaksi extends CI_Controller
                 $rekening_trf = $this->input->post('rek_tujuan');
                 $tgl_trf = $this->input->post('tgl_trf');
                 $jam_trf = $this->input->post('jam_trf') . ':00';
+
+                // validasi data bukti transfer mahasiswa
+                $filter = [
+                    'nipd' => $nimMhs,
+                    'status' => 0
+                ];
+                $res = $this->transaksi->getDataBuktiPembayaran($filter)->row_array();
+                $where = [
+                    'id_bukti_trf' => $res['id_bukti_trf'],
+                ];
+                $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
             }
             $totalBayar = $bayarTG + $bayarTG_KMHS + $bayarC1 + $bayarC2 + $bayarC3 + $bayarKMHS;
             // $All = $this->input->post();
