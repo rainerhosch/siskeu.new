@@ -51,9 +51,10 @@ class Transaksi extends CI_Controller
             $res = $this->transaksi->getDataBuktiPembayaran(['status' => 0])->result_array();
             foreach ($res as $i => $val) {
                 $jnsBayar = explode(',', $val['id_jenis_bayar']);
+                $pembayaran = [];
                 foreach ($jnsBayar as $j => $value) {
                     $filter = ['id_jenis_pembayaran' => $value];
-                    $pembayaran[] = $this->masterdata->GetAllJenisTrx($filter)->row_array();
+                    $pembayaran[$j] = $this->masterdata->GetAllJenisTrx($filter)->row_array();
                 }
                 $res[$i]['pembayaran'] = $pembayaran;
             }
