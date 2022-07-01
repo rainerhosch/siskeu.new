@@ -86,7 +86,7 @@ class M_transaksi extends CI_Model
 
     public function get_data_rekening($data = null)
     {
-        $this->db->select('id_rek, bank, nama_rekening');
+        $this->db->select('id_rek, bank, nama_rekening, no_rek');
         $this->db->from('data_rek_bank');
         if ($data != null) {
             $this->db->where($data);

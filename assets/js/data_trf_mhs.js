@@ -4,24 +4,31 @@ $(".btn_trf_online").click(function () {
     type: "POST",
     dataType: "JSON",
     success: function (response) {
-      // console.log(response);
+      console.log(response);
       let html = ``;
       let jenis_bayar = ``;
       if (response != null) {
         $.each(response.data, function (i, value) {
+          let bank_account = value.bank_penerima;
           let no = i + 1;
           html += `<tr>`;
           html += `<td class = "text-center" >${no}</td>`;
-          html += `<td class = "text-center" >${value.tgl_trf}</td>`;
           html += `<td class = "text-center" >${value.nipd}</td>`;
-          html += `<td class = "text-center" >${value.jumlah_bayar}</td>`;
           html += `<td class = "text-center" >`;
           $.each(value.pembayaran, function (i, val) {
             html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
           });
           html += `</td>`;
+          html += `<td class = "text-center" >${value.tgl_trf}</td>`;
+          html += `<td class = "text-center">`;
+          html += `<i style="font-size:1rem; font-weight: bold;">BANK ${bank_account.bank}</i><br>`;
+          html += `<i style="font-size:1rem; font-weight: bold;">${bank_account.no_rek}</i><br>`;
+          html += `<i style="font-size:1rem; font-weight: bold;">A/N ${bank_account.nama_rekening}</i>`;
+          html += `</td>`;
+          html += `<td class = "text-center" >Rp.${parseInt(
+            value.jumlah_bayar
+          ).toLocaleString()}</td>`;
           html += `<td class = "text-center" ><i><a href="#" data-id_trf="${value.id_bukti_trf}" class="btn btn-xs btn-info btn_show_bukti_trf" data-trf="${value.img_trf}" data-smt="${value.smt}" data-nipd="${value.nipd}" data-jns="${value.nm_jenis_pembayaran}">${value.img_trf}</a></i></td>`;
-          html += `<td class = "text-center">xxxx</td>`;
           html += `</tr>`;
         });
         $("#tbody_data_trf").html(html);
