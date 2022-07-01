@@ -50,6 +50,11 @@ class Transaksi extends CI_Controller
         if ($this->input->is_ajax_request()) {
             $res = $this->transaksi->getDataBuktiPembayaran(['status' => 0])->result_array();
             foreach ($res as $i => $val) {
+                $data_rek_tujuan = $this->transaksi->get_data_rekening(['id_rek' => $val['rek_tujuan_trf']])->row_array();
+                $res[$i]['bank_penerima'] = $data_rek_tujuan;
+                // $res[$i]['nm_bank'] = $data_rek_tujuan['bank'];
+                // $res[$i]['an_bank'] = $data_rek_tujuan['nama_rekening'];
+
                 $jnsBayar = explode(',', $val['id_jenis_bayar']);
                 $pembayaran = [];
                 foreach ($jnsBayar as $j => $value) {
