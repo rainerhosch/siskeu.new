@@ -303,8 +303,8 @@ class M_transaksi extends CI_Model
 
         $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
         $dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
-        $dbwastudig_simak->from('bukti_pembayaran bp');
-        $dbwastudig_simak->join('master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+        $dbwastudig_simak->from('adm_bukti_pembayaran bp');
+        $dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
         if ($where != null) {
             $dbwastudig_simak->where($where);
         }
@@ -329,7 +329,7 @@ class M_transaksi extends CI_Model
     {
         $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
         $dbwastudig_simak->select('*');
-        $dbwastudig_simak->from('bukti_pembayaran');
+        $dbwastudig_simak->from('adm_bukti_pembayaran');
         if ($data != null) {
             $dbwastudig_simak->where($data);
         }
