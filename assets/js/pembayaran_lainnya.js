@@ -265,6 +265,7 @@ $("#form_pembayaran_lain").submit(function (e) {
     type: "POST",
     url: "transaksi/proses_bayar_lainnya", // where you wanna post
     data: form.serialize(), // serializes form input,
+    dataType: "JSON",
     success: function (response) {
       console.log(response);
       let id_transaksi = response;
