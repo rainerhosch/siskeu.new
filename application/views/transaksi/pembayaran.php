@@ -293,6 +293,7 @@
             $(".data_kwajiban").hide();
             setTimeout(function() {
                 $("#alert_tx").html("");
+                <?php $this->session->unset_userdata('message'); ?>;
             }, 2000);
 
             $("#form_cari").on("keyup change", function(e) {
@@ -363,7 +364,7 @@
 
                 if (data_transaksi != 0) {
 
-                    console.log(data_transaksi)
+                    // console.log(data_transaksi)
                     let numEnd = offset + 10;
                     $('#datatable_info').html(`<strong>${offset+1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
                     no = offset;
@@ -475,7 +476,7 @@
                         });
                     });
 
-                    console.log(response);
+                    // console.log(response);
 
                 }
             });
