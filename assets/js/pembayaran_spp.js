@@ -50,8 +50,6 @@ $("#nipd").on("keypress", function (e) {
             let bayar_via = $(".bayar_via").val();
             let tds = ``;
             if(bayar_via ==='2'){
-              
-              
                 tds += `<tr class="detail_trf">`;
                 tds += `<td><label for="rek_tujuan">Rekening Tujuan</label></td>`;
                 tds += `<td class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
@@ -77,7 +75,7 @@ $("#nipd").on("keypress", function (e) {
                 tds += `</tr>`;
                 tds += `<tr class="detail_trf">`;
                 tds += `<td><label for="jam_trf">Jam Transfer</label></td>`;
-                tds += `<td><input type="time" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
+                tds += `<td><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
                 tds += `</tr>`;
               $("#data_kwajiban_tbody2").append(tds);
             }else{
@@ -135,7 +133,7 @@ $("#nipd").on("keypress", function (e) {
                     i++;
                     $("#checkcox_" + i).change(function () {
                       let bayar_via = $(".bayar_via").val();
-                      console.log(bayar_via);
+                      // console.log(bayar_via);
                       var numberOfChecked = $("input:checkbox:checked").length;
                       if (bayar_via != 'x') {
                         if (numberOfChecked <= 0) {
@@ -245,7 +243,9 @@ $("#form_pembayaran").submit(function (e) {
     type: "POST",
     url: "transaksi/proses_bayar_spp", // where you wanna post
     data: form.serialize(), // serializes form input,
+    dataType: "JSON",
     success: function (response) {
+      console.log(response)
       if (response != 0) {
         let id_transaksi = response;
         Swal.fire({

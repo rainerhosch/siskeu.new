@@ -75,18 +75,60 @@ class Transaksi extends CI_Controller
         echo json_encode($data);
     }
 
+    public function insert_trx_from_trf()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data_post = $this->input->post();
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'OK!',
+                'data'      => $data_post
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
+    }
+
     public function acc_trf_online()
     {
         if ($this->input->is_ajax_request()) {
             $where = [
                 'id_bukti_trf' => $this->input->post('id'),
             ];
-            $acc = $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+
+            $res = $this->transaksi->getDataBuktiPembayaran($where)->row_array();
+            $jnsBayar = explode(',', $res['id_jenis_bayar']);
+            $totalBayar = $res['jumlah_bayar'];
+            $jml_bayar = 0;
+            $bayarKMHS = 0;
+
+
+
+            $response = $this->masterdata->getMahasiswaByNim(['nipd' => $res['nipd']])->row_array();
+            $dataMhs = $response;
+            $dataMhs['smt'] = $res['smt'];
+            $dataMhs['data_trf'] = $res;
+
+            $where_tahun = [
+                'angkatan' => $dataMhs['tahun_masuk']
+            ];
+            $jenjangMhs = $dataMhs['nm_jenj_didik'];
+            $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+            $biayaCS = $dataBiaya['cicilan_semester'] / 3;
+            $biayaKMHS = $dataBiaya['kemahasiswaan'];
+            // $dataMhs['data_biaya'] = $dataBiaya;
             $data = [
                 'status'    => true,
                 'code'      => 200,
                 'msg'       => 'OK!',
-                'data'      => $acc
+                'data'      => $dataMhs
             ];
         } else {
             $data = [
@@ -483,7 +525,7 @@ class Transaksi extends CI_Controller
                 // die;
 
                 $biayaCS = $dataBiaya['cicilan_semester'] / 3;
-                $biayaKMHS = $dataBiaya['kemahasiswaan'];
+                $biayaKMHS = (int)$dataBiaya['kemahasiswaan'];
                 if ($cekBayarSppdanKmhs != null) {
                     // ada histori transaksi
                     $biayaC1 = $biayaCS;
