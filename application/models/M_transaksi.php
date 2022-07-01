@@ -316,7 +316,7 @@ class M_transaksi extends CI_Model
     {
         $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
         $dbwastudig_simak->where($filter);
-        $dbwastudig_simak->update('bukti_pembayaran', $data);
+        $dbwastudig_simak->update('adm_bukti_pembayaran', $data);
         if ($dbwastudig_simak->affected_rows() > 0) {
             return TRUE;
         } else {
