@@ -655,7 +655,7 @@ class Transaksi extends CI_Controller
                     'status' => 0
                 ];
                 $res = $this->transaksi->getDataBuktiPembayaran($filter)->row_array();
-                if($res != null){
+                if ($res != null) {
                     $where = [
                         'id_bukti_trf' => $res['id_bukti_trf'],
                     ];
@@ -1207,6 +1207,19 @@ class Transaksi extends CI_Controller
                 $rekening_trf = $this->input->post('rek_tujuan');
                 $tgl_trf = $this->input->post('tgl_trf');
                 $jam_trf = $this->input->post('jam_trf') . ':00';
+
+                // validasi data bukti transfer mahasiswa
+                $filter = [
+                    'nipd' => $nimMhs,
+                    'status' => 0
+                ];
+                $res = $this->transaksi->getDataBuktiPembayaran($filter)->row_array();
+                if ($res != null) {
+                    $where = [
+                        'id_bukti_trf' => $res['id_bukti_trf'],
+                    ];
+                    $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+                }
             }
 
             $pembayaran = $this->input->post('JenisBayar');
@@ -1424,7 +1437,7 @@ class Transaksi extends CI_Controller
                 'status_transaksi' => 1,
                 'transaksi_ke' => $trx_ke,
                 'uang_masuk' => 1,
-                'bayar_via' => 1,
+                'bayar_via' => $bayar_via,
                 'rekening_trf' => $rekening_trf,
                 'tgl_trf' => $tgl_trf,
                 'jam_trf' => $jam_trf

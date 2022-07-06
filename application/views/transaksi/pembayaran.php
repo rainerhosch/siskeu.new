@@ -508,8 +508,8 @@
             });
         }
     </script>
+    <script src="<?= base_url() ?>assets/js/data_trf_mhs.js"></script>
     <script src="<?= base_url() ?>assets/js/pembayaran_lainnya.js"></script>
     <script src="<?= base_url() ?>assets/js/pembayaran_spp.js"></script>
-    <script src="<?= base_url() ?>assets/js/data_trf_mhs.js"></script>
 </div>
 <!-- END Page Content -->

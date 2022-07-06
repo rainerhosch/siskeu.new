@@ -101,33 +101,64 @@ $("#nipd_2").on("keypress", function (e) {
         html_tbody_2 += `</tr>`;
 
         $("#riwayat_transaksi_modal_2").html(html_tbody_2);
+        // $("#tbody_pembayaran_lain2").prop("hidden", false);
       },
+    });
+
+    let htmlzz = ``;
+    htmlzz += `<tr>`;
+    htmlzz += `<td width="45%"><label for="bayar_via">Jenis Bayar</label></td>`;
+    htmlzz += `<td width="15%" class="text-center"></td>`;
+    htmlzz += `<td width="40%" class="text-center">`;
+    htmlzz += `<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">`;
+    htmlzz += `<option value="x">-- Pilih --</option>`;
+    htmlzz += `<option value="1">Cash</option>`;
+    htmlzz += `<option value="2">Transfer</option>`;
+    htmlzz += `</select>`;
+    htmlzz += `</td>`;
+    htmlzz += `</tr>`;
+    $("#tbody_pembayaran_lain2").append(htmlzz);
+
+    $(".bayar_via").on("change", function () {
+      let bayar_via = $(".bayar_via").val();
+      console.log(bayar_via);
+      let tds = ``;
+      if (bayar_via === "2") {
+        tds += `<tr class="detail_trf">`;
+        tds += `<td width="45%"><label for="rek_tujuan">Rekening Tujuan</label></td>`;
+        tds += `<td width="15%"></td>`;
+        tds += `<td width="40%" class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
+        tds += `<option value="1">BANK BSI</option>
+          <option value="2">BANK MANDIRI</option>
+          <option value="3">BANK BNI</option>`;
+        tds += `</select></td>`;
+        tds += `</tr>`;
+        tds += `<tr class="detail_trf">`;
+        tds += `<td width="45%"><label for="tgl_trf">Tgl Transfer</label></td>`;
+        tds += `<td width="15%"></td>`;
+        tds += `<td width="40%"><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
+        tds += `</tr>`;
+        tds += `<tr class="detail_trf">`;
+        tds += `<td width="45%"><label for="jam_trf">Jam Transfer</label></td>`;
+        tds += `<td width="15%"></td>`;
+        tds += `<td width="40%"><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
+        tds += `</tr>`;
+        $("#tbody_pembayaran_lain2").append(tds);
+      } else {
+        $(".detail_trf").remove();
+      }
     });
   }
 });
 
 $("#add_rows").click(function () {
-  $("#tabel_pembayaranLain").each(function () {
+  $("#tbody_pembayaran_lain").each(function () {
     let tg_cs = $("#tg_cs_mhs").val();
     // console.log(tg_cs);
     $(".btn#delete_rows").prop("disabled", false);
     let tds = "";
-
-     // line jenis transaksi (transfer atau langsung)
-    //  tds += `<tr>`;
-    //  tds += `<td width="20%">`;
-    //  tds += `<label class="form-check-label" for="jns_trf">Jenis Bayar</label>`;
-    //  tds += `</td>`;
-    //  tds += `<td width="40%">`;
-    //  tds += `<input class="form-check-input jns_trf" type="radio" name="jns_trf" id="jns_trf_1" value="1"><br><label class="form-check-label" for="jns_trf">CASH</label>`;
-    //  tds += `</td>`;
-    //  tds += `<td width="40%">`;
-    //  tds += `<input class="form-check-input jns_trf" type="radio" name="jns_trf" id="jns_trf_2" value="2"><br><label class="form-check-label" for="jns_trf">TRANSFER</label>`;
-    //  tds += `</td>`;
-    //  tds += `</tr>`;
-     
     tds += "<tr>";
-    (size = jQuery("#tabel_pembayaranLain >tbody >tr").length + 1),
+    (size = jQuery("#tbody_pembayaran_lain >tr").length + 1),
       (tds += '<td width="45%">');
     $(".select2").select2({});
     tds += `<select name="JenisBayar[]" id="jenis_bayar${size}"  data-rowid="${size}" style="text-align: center;text-align-last: center;" class="form-control select2 select2Cus">`;
@@ -136,8 +167,8 @@ $("#add_rows").click(function () {
     tds += `<td width="15%" class="text-center td_for_jml${size}"></td>`;
     tds += `<td width="40%" class="text-center td_${size}"><input type="text" id="pembayaran_${size}" name="" class="form-control validate text-right input_" value="" readonly></td>`;
     tds += "</tr>";
-    if ($("tbody", this).length > 0) {
-      $("tbody", this).append(tds);
+    if ($("tbody#tbody_pembayaran_lain", this).length > 0) {
+      $("tbody#tbody_pembayaran_lain", this).append(tds);
     } else {
       $(this).append(tds);
     }
@@ -247,7 +278,7 @@ $("#add_rows").click(function () {
 });
 
 $("#delete_rows").on("click", function () {
-  let jml_trx = size;
+  let jml_trx = jQuery("#tbody_pembayaran_lain >tr").length;
   let last = $("#tbody_pembayaran_lain").find("tr:last");
   if (last.is(":first-child")) {
     alert("Harus ada setidaknya satu transaksi");

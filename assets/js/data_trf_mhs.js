@@ -69,10 +69,6 @@ $(".btn_trf_online").click(function () {
   });
 });
 
-function accTest(id, type_bayar) {
-  console.log(type_bayar);
-}
-
 function accTRF(id, type_bayar) {
   $("#dataTransferMhs").modal("hide");
   // $('#formPembayaran').modal('hide');
@@ -85,6 +81,8 @@ function accTRF(id, type_bayar) {
       let data_mhs = response.data;
       let data_trf = data_mhs.data_trf;
       let rek_tujuan = data_trf.rek_tujuan_trf;
+      let id_jenis_bayar = data_trf.id_jenis_bayar;
+      var array_jenis_bayar = id_jenis_bayar.split(", ");
       console.log(data_trf);
       let nipd = data_mhs.nipd;
       let smt = data_mhs.smt;
@@ -97,7 +95,6 @@ function accTRF(id, type_bayar) {
         },
         dataType: "json",
         success: function (response) {
-          console.log(response);
           if (response != null) {
             if (type_bayar === "1") {
               $("#formPembayaran").modal("show");
@@ -339,6 +336,7 @@ function accTRF(id, type_bayar) {
               // bayar lainnya
               $("#formPembayaranLain").modal("show");
               $(".div_btn_row").show();
+              $("#tbody_pembayaran_lain2").prop("hidden", false);
               $("#add_rows").prop("disabled", false);
 
               $("#nipd_2").val(response.nipd);
@@ -351,154 +349,258 @@ function accTRF(id, type_bayar) {
               $("#tg_cs_mhs").val(response.tg_CS);
               $("#angkatan_mhs_bayar_hidden").val(response.tahun_masuk);
 
+              let htmlzz = ``;
+              htmlzz += `<tr>`;
+              htmlzz += `<td width="45%"><label for="bayar_via">Jenis Bayar</label></td>`;
+              htmlzz += `<td width="15%" class="text-center"></td>`;
+              htmlzz += `<td width="40%" class="text-center">`;
+              htmlzz += `<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">`;
+              htmlzz += `<option value="x">-- Pilih --</option>`;
+              htmlzz += `<option value="1">Cash</option>`;
+              htmlzz += `<option value="2" selected>Transfer</option>`;
+              htmlzz += `</select>`;
+              htmlzz += `</td>`;
+              htmlzz += `</tr>`;
+              $("#tbody_pembayaran_lain2").append(htmlzz);
+              let bayar_via = $(".bayar_via").val();
+              let htmlzx = ``;
+              if (bayar_via === "2") {
+                htmlzx += `<tr class="detail_trf">`;
+                htmlzx += `<td width="45%"><label for="rek_tujuan">Rekening Tujuan</label></td>`;
+                htmlzx += `<td width="15%"></td>`;
+                htmlzx += `<td width="40%" class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
+                htmlzx += `<option value="1">BANK BSI</option>
+                  <option value="2">BANK MANDIRI</option>
+                  <option value="3">BANK BNI</option>`;
+                htmlzx += `</select></td>`;
+                htmlzx += `</tr>`;
+                htmlzx += `<tr class="detail_trf">`;
+                htmlzx += `<td width="45%"><label for="tgl_trf">Tgl Transfer</label></td>`;
+                htmlzx += `<td width="15%"></td>`;
+                htmlzx += `<td width="40%"><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
+                htmlzx += `</tr>`;
+                htmlzx += `<tr class="detail_trf">`;
+                htmlzx += `<td width="45%"><label for="jam_trf">Jam Transfer</label></td>`;
+                htmlzx += `<td width="15%"></td>`;
+                htmlzx += `<td width="40%"><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
+                htmlzx += `</tr>`;
+                $("#tbody_pembayaran_lain2").append(htmlzx);
+                $(`.rek_tujuan option[value="${rek_tujuan}"]`).attr(
+                  "selected",
+                  "selected"
+                );
+
+                $(`#tgl_trf`).val(data_trf.tgl_trf);
+                $(`#jam_trf`).val(data_trf.jam_konfir);
+              } else {
+                $(".detail_trf").remove();
+              }
+
               // tag new
-              $("#tabel_pembayaranLain").each(function () {
-                let tg_cs = $("#tg_cs_mhs").val();
-                // console.log(tg_cs);
-                $(".btn#delete_rows").prop("disabled", false);
-                let tds = "";
-
-                // line jenis transaksi (transfer atau langsung)
-                //  tds += `<tr>`;
-                //  tds += `<td width="20%">`;
-                //  tds += `<label class="form-check-label" for="jns_trf">Jenis Bayar</label>`;
-                //  tds += `</td>`;
-                //  tds += `<td width="40%">`;
-                //  tds += `<input class="form-check-input jns_trf" type="radio" name="jns_trf" id="jns_trf_1" value="1"><br><label class="form-check-label" for="jns_trf">CASH</label>`;
-                //  tds += `</td>`;
-                //  tds += `<td width="40%">`;
-                //  tds += `<input class="form-check-input jns_trf" type="radio" name="jns_trf" id="jns_trf_2" value="2"><br><label class="form-check-label" for="jns_trf">TRANSFER</label>`;
-                //  tds += `</td>`;
-                //  tds += `</tr>`;
-
-                tds += "<tr>";
-                (size = jQuery("#tabel_pembayaranLain >tbody >tr").length + 1),
-                  (tds += '<td width="45%">');
-                $(".select2").select2({});
-                tds += `<select name="JenisBayar[]" id="jenis_bayar${size}"  data-rowid="${size}" style="text-align: center;text-align-last: center;" class="form-control select2 select2Cus">`;
-                tds += "</select>";
-                tds += "</td>";
-                tds += `<td width="15%" class="text-center td_for_jml${size}"></td>`;
-                tds += `<td width="40%" class="text-center td_${size}"><input type="text" id="pembayaran_${size}" name="" class="form-control validate text-right input_" value="" readonly></td>`;
-                tds += "</tr>";
-                if ($("tbody", this).length > 0) {
-                  $("tbody", this).append(tds);
-                } else {
-                  $(this).append(tds);
-                }
-                $(".select2").select2({});
-                let tdr = "";
-                tdr +=
-                  '<option value="x" align="center">-- Pilih Pembayaran --</option>';
-                let jnj_didikku = $("#jenjang_mhs_bayar_hidden").val();
-                $.ajax({
-                  type: "POST",
-                  url: "transaksi/Cari_Pembayaran_lain",
-                  data: {
-                    nm_jenj_didik: jnj_didikku,
-                    tg_cs: tg_cs,
-                  },
-                  serverside: true,
-                  dataType: "json",
-                  success: function (response) {
-                    // console.log(response);
-                    $.each(response.jenis_pembayaran, function (i, item) {
-                      tdr += `<option value="${item.id_jp}">${item.nm_jp}</option>`;
-                    });
-
-                    $("#jenis_bayar" + size).append(tdr);
-                  },
-                });
-
-                $(".select2Cus").on("change", function () {
-                  let id_jns_bayar = this.value;
-                  let nim_mhs = $("#nim_mhs_bayar_hidden").val();
-                  let jnj_didik = $("#jenjang_mhs_bayar_hidden").val();
-                  let thn_masuk = $("#angkatan_mhs_bayar_hidden").val();
-                  let rowid = $(this).attr("data-rowid");
-
-                  if (id_jns_bayar == "17") {
-                    let td = `<input id="jml_mk${size}" type="text" class="form-control validate text-right jml_mk${size}" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="60" data-slider-step="1" data-slider-value="14">`;
-                    $(".td_for_jml" + size).html(td);
-                    $(".div_btn_row").prop("disabled", true);
-                    $(".td_for_jml" + size).prop("hidden", false);
-                    $("#pembayaran_" + size).prop("readonly", true);
-                    $("#jml_mk" + size).slider({
-                      // tooltip: "always",
-                      formatter: function (value) {
-                        return "Jml Matakuliah: " + value;
-                      },
-                    });
-                  } else if (id_jns_bayar == "16") {
-                    let td = `<input id="jml_cuti${size}" type="text" class="form-control validate text-right jml_cuti${size}" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2">`;
-                    $(".td_for_jml" + size).html(td);
-                    $(".div_btn_row").prop("disabled", true);
-                    $(".td_for_jml" + size).prop("hidden", false);
-                    $("#pembayaran_" + size).prop("readonly", true);
-                    $("#jml_cuti" + size).slider({
-                      // tooltip: "always",
-                      formatter: function (value) {
-                        return "Jml Cuti: " + value;
-                      },
-                    });
-                  } else {
-                    $("#pembayaran_" + size).prop("readonly", false);
-                    $(".div_btn_row").prop("disabled", false);
-                    $(".td_for_jml" + size).empty();
-                    $(".slider#jml_mk" + size).remove();
-                    $(".slider#jml_cuti" + size).remove();
-                  }
-                  $.ajax({
-                    type: "POST",
-                    url: "transaksi/get_biaya_pembayaran_lain",
-                    data: {
-                      nim_mhs: nim_mhs,
-                      id_jns_bayar: id_jns_bayar,
-                      jnj_didik: jnj_didik,
-                      thn_masuk: thn_masuk,
-                    },
-                    serverside: true,
-                    dataType: "json",
-                    success: function (response) {
-                      const jp = response.id_jp;
-                      const kewajiban = response.biaya;
-                      console.log(response);
-                      // console.log(kewajiban);
-                      $("#pembayaran_" + rowid).attr("value", kewajiban);
-                      $("#pembayaran_" + rowid).attr(
-                        "name",
-                        `biayaJenisPembayaran[${jp}]`
-                      );
-                      if (tg_cs === "0") {
-                        $(".btn#btn_proses_2").prop("disabled", false);
+              var size = 1;
+              let tg_cs = $("#tg_cs_mhs").val();
+              let tds = ``;
+              let jnj_didikku = $("#jenjang_mhs_bayar_hidden").val();
+              $(".btn#delete_rows").prop("disabled", false);
+              $.ajax({
+                type: "POST",
+                url: "transaksi/Cari_Pembayaran_lain",
+                data: {
+                  nm_jenj_didik: jnj_didikku,
+                  tg_cs: tg_cs,
+                },
+                serverside: true,
+                dataType: "json",
+                success: function (response) {
+                  // console.log(response);
+                  $.each(array_jenis_bayar, function (i, value) {
+                    tds += `<tr>`;
+                    tds += `<td width="45%">`;
+                    tds += `<select name="JenisBayar[]" id="jenis_bayar${size}" data-rowid="${size}" class="form-control select2 selectJenisBayar">`;
+                    tds += `<option value="x" align="center">-- Pilih Pembayaran --</option>`;
+                    $.each(response.jenis_pembayaran, function (j, item) {
+                      if (value === item.id_jp) {
+                        tds += `<option value="${item.id_jp}" selected>${item.nm_jp}</option>`;
                       } else {
-                        if (jp === "6") {
-                          $(".btn#btn_proses_2").prop("disabled", false);
-                        }
+                        tds += `<option value="${item.id_jp}">${item.nm_jp}</option>`;
                       }
-
-                      $("#jml_mk" + size).on("change", function () {
-                        let jml = this.value;
-                        let kewajiban = response.biaya;
-                        $("#pembayaran_" + rowid).attr(
-                          "value",
-                          kewajiban * jml
-                        );
-                        // console.log(kewajiban * jml);
-                      });
-                      $("#jml_cuti" + size).on("change", function () {
-                        let jml = this.value;
-                        let kewajiban = response.biaya;
-                        $("#pembayaran_" + rowid).attr(
-                          "value",
-                          kewajiban * jml
-                        );
-                        // console.log(kewajiban * jml);
-                      });
-                    },
+                    });
+                    tds += `</select>`;
+                    tds += `</td>`;
+                    tds += `<td width="15%" class="text-center td_for_jml${size}"></td>`;
+                    tds += `<td width="40%" class="text-center td_${size}"><input type="text" id="pembayaran_${size}" name="" class="form-control validate text-right input_" value=""></td>`;
+                    tds += `</tr>`;
+                    size++;
                   });
-                });
+                  $("#tbody_pembayaran_lain").html(tds);
+                  $(".btn#btn_proses_2").prop("disabled", false);
+
+                  let total_trf = parseInt(data_trf.jumlah_bayar);
+                  let sisa_trf = 0;
+                  $.each(array_jenis_bayar, function (i, value) {
+                    i++;
+                    console.log(i);
+                    let id_jns_bayar = value;
+                    let nim_mhs = $("#nim_mhs_bayar_hidden").val();
+                    let jnj_didik = $("#jenjang_mhs_bayar_hidden").val();
+                    let thn_masuk = $("#angkatan_mhs_bayar_hidden").val();
+                    $.ajax({
+                      type: "POST",
+                      url: "transaksi/get_biaya_pembayaran_lain",
+                      data: {
+                        nim_mhs: nim_mhs,
+                        id_jns_bayar: id_jns_bayar,
+                        jnj_didik: jnj_didik,
+                        thn_masuk: thn_masuk,
+                      },
+                      serverside: true,
+                      dataType: "json",
+                      success: function (response) {
+                        // console.log(total_trf);
+                        // total_trf = total_trf - response.biaya;
+                        if (parseInt(response.biaya) > 0) {
+                          sisa_trf = response.biaya;
+                        }
+                        if (total_trf < parseInt(response.biaya)) {
+                          sisa_trf = total_trf;
+                          total_trf = 0;
+                        } else {
+                          total_trf = total_trf - response.biaya;
+                          sisa_trf = response.biaya;
+                        }
+                        console.log(i + " " + sisa_trf + " " + total_trf);
+                        $("#pembayaran_" + i).attr("value", sisa_trf);
+                        $("#pembayaran_" + i).attr(
+                          "name",
+                          `biayaJenisPembayaran[${id_jns_bayar}]`
+                        );
+                      },
+                    });
+                  });
+
+                  $(".selectJenisBayar").on("change", function () {
+                    let id_jns_bayar = this.value;
+                    console.log(id_jns_bayar);
+                    let nim_mhs = $("#nim_mhs_bayar_hidden").val();
+                    let jnj_didik = $("#jenjang_mhs_bayar_hidden").val();
+                    let thn_masuk = $("#angkatan_mhs_bayar_hidden").val();
+                    let rowid = $(this).attr("data-rowid");
+
+                    if (id_jns_bayar == "17") {
+                      let td = `<input id="jml_mk${size}" type="text" class="form-control validate text-right jml_mk${size}" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="60" data-slider-step="1" data-slider-value="14">`;
+                      $(".td_for_jml" + size).html(td);
+                      $(".div_btn_row").prop("disabled", true);
+                      $(".td_for_jml" + size).prop("hidden", false);
+                      $("#pembayaran_" + size).prop("readonly", true);
+                      $("#jml_mk" + size).slider({
+                        // tooltip: "always",
+                        formatter: function (value) {
+                          return "Jml Matakuliah: " + value;
+                        },
+                      });
+                    } else if (id_jns_bayar == "16") {
+                      let td = `<input id="jml_cuti${size}" type="text" class="form-control validate text-right jml_cuti${size}" data-slider-id='ex1Slider' data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="2">`;
+                      $(".td_for_jml" + size).html(td);
+                      $(".div_btn_row").prop("disabled", true);
+                      $(".td_for_jml" + size).prop("hidden", false);
+                      $("#pembayaran_" + size).prop("readonly", true);
+                      $("#jml_cuti" + size).slider({
+                        // tooltip: "always",
+                        formatter: function (value) {
+                          return "Jml Cuti: " + value;
+                        },
+                      });
+                    } else {
+                      $("#pembayaran_" + size).prop("readonly", false);
+                      $(".div_btn_row").prop("disabled", false);
+                      $(".td_for_jml" + size).empty();
+                      $(".slider#jml_mk" + size).remove();
+                      $(".slider#jml_cuti" + size).remove();
+                    }
+                    $.ajax({
+                      type: "POST",
+                      url: "transaksi/get_biaya_pembayaran_lain",
+                      data: {
+                        nim_mhs: nim_mhs,
+                        id_jns_bayar: id_jns_bayar,
+                        jnj_didik: jnj_didik,
+                        thn_masuk: thn_masuk,
+                      },
+                      serverside: true,
+                      dataType: "json",
+                      success: function (response) {
+                        const jp = response.id_jp;
+                        const kewajiban = response.biaya;
+                        // console.log(response);
+                        // console.log(kewajiban);
+                        $("#pembayaran_" + rowid).attr("value", kewajiban);
+                        $("#pembayaran_" + rowid).attr(
+                          "name",
+                          `biayaJenisPembayaran[${jp}]`
+                        );
+                        if (tg_cs === "0") {
+                          $(".btn#btn_proses_2").prop("disabled", false);
+                        } else {
+                          if (jp === "6") {
+                            $(".btn#btn_proses_2").prop("disabled", false);
+                          }
+                        }
+
+                        $("#jml_mk" + size).on("change", function () {
+                          let jml = this.value;
+                          let kewajiban = response.biaya;
+                          $("#pembayaran_" + rowid).attr(
+                            "value",
+                            kewajiban * jml
+                          );
+                          // console.log(kewajiban * jml);
+                        });
+                        $("#jml_cuti" + size).on("change", function () {
+                          let jml = this.value;
+                          let kewajiban = response.biaya;
+                          $("#pembayaran_" + rowid).attr(
+                            "value",
+                            kewajiban * jml
+                          );
+                          // console.log(kewajiban * jml);
+                        });
+                      },
+                    });
+                  });
+                },
               });
+              $(".selectJenisBayar").select2();
+
+              // $(".selectJenisBayar").select2({});
+              // $("#tabel_pembayaranLain >tbody").html(tds);
+              // if ($("tbody", this).length > 0) {
+              //   $("tbody", this).append(tds);
+              // } else {
+              //   $(this).append(tds);
+              // }
+              // let tdr = "";
+              // tdr +=
+              //   '<option value="x" align="center">-- Pilih Pembayaran --</option>';
+              // let jnj_didikku = $("#jenjang_mhs_bayar_hidden").val();
+              // $.ajax({
+              //   type: "POST",
+              //   url: "transaksi/Cari_Pembayaran_lain",
+              //   data: {
+              //     nm_jenj_didik: jnj_didikku,
+              //     tg_cs: tg_cs,
+              //   },
+              //   serverside: true,
+              //   dataType: "json",
+              //   success: function (response) {
+              //     console.log(response);
+              //     $.each(response.jenis_pembayaran, function (i, item) {
+              //       tdr += `<option value="${item.id_jp}">${item.nm_jp}</option>`;
+              //     });
+
+              //     $("#jenis_bayar" + size).append(tdr);
+              //   },
+              // });
+              // });
             }
           } else {
             $("#notif_search").html(
