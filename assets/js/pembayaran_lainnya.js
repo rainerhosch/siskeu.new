@@ -25,7 +25,50 @@ $("#nipd_2").on("keypress", function (e) {
         $("#angkatan_mhs_bayar_hidden").val(response.tahun_masuk);
 
         if (response != null) {
-          $("#add_rows").prop("disabled", false);
+          let htmlzz = ``;
+          htmlzz += `<tr>`;
+          htmlzz += `<td width="45%"><label for="bayar_via">Jenis Bayar</label></td>`;
+          htmlzz += `<td width="15%" class="text-center"></td>`;
+          htmlzz += `<td width="40%" class="text-center">`;
+          htmlzz += `<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">`;
+          htmlzz += `<option value="x">-- Pilih --</option>`;
+          htmlzz += `<option value="1">Cash</option>`;
+          htmlzz += `<option value="2">Transfer</option>`;
+          htmlzz += `</select>`;
+          htmlzz += `</td>`;
+          htmlzz += `</tr>`;
+          $("#tbody_pembayaran_lain2").append(htmlzz);
+
+          $(".bayar_via").on("change", function () {
+            $("#add_rows").prop("disabled", false);
+            let bayar_via = $(".bayar_via").val();
+            console.log(bayar_via);
+            let tds = ``;
+            if (bayar_via === "2") {
+              tds += `<tr class="detail_trf">`;
+              tds += `<td width="45%"><label for="rek_tujuan">Rekening Tujuan</label></td>`;
+              tds += `<td width="15%"></td>`;
+              tds += `<td width="40%" class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
+              tds += `<option value="1">BANK BSI</option>
+          <option value="2">BANK MANDIRI</option>
+          <option value="3">BANK BNI</option>`;
+              tds += `</select></td>`;
+              tds += `</tr>`;
+              tds += `<tr class="detail_trf">`;
+              tds += `<td width="45%"><label for="tgl_trf">Tgl Transfer</label></td>`;
+              tds += `<td width="15%"></td>`;
+              tds += `<td width="40%"><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
+              tds += `</tr>`;
+              tds += `<tr class="detail_trf">`;
+              tds += `<td width="45%"><label for="jam_trf">Jam Transfer</label></td>`;
+              tds += `<td width="15%"></td>`;
+              tds += `<td width="40%"><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
+              tds += `</tr>`;
+              $("#tbody_pembayaran_lain2").append(tds);
+            } else {
+              $(".detail_trf").remove();
+            }
+          });
         } else {
           $("#notif_search2").html(
             "<code>Tidak ada mahasiswa dengan nim : " + nipd + "</code>"
@@ -103,50 +146,6 @@ $("#nipd_2").on("keypress", function (e) {
         $("#riwayat_transaksi_modal_2").html(html_tbody_2);
         // $("#tbody_pembayaran_lain2").prop("hidden", false);
       },
-    });
-
-    let htmlzz = ``;
-    htmlzz += `<tr>`;
-    htmlzz += `<td width="45%"><label for="bayar_via">Jenis Bayar</label></td>`;
-    htmlzz += `<td width="15%" class="text-center"></td>`;
-    htmlzz += `<td width="40%" class="text-center">`;
-    htmlzz += `<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">`;
-    htmlzz += `<option value="x">-- Pilih --</option>`;
-    htmlzz += `<option value="1">Cash</option>`;
-    htmlzz += `<option value="2">Transfer</option>`;
-    htmlzz += `</select>`;
-    htmlzz += `</td>`;
-    htmlzz += `</tr>`;
-    $("#tbody_pembayaran_lain2").append(htmlzz);
-
-    $(".bayar_via").on("change", function () {
-      let bayar_via = $(".bayar_via").val();
-      console.log(bayar_via);
-      let tds = ``;
-      if (bayar_via === "2") {
-        tds += `<tr class="detail_trf">`;
-        tds += `<td width="45%"><label for="rek_tujuan">Rekening Tujuan</label></td>`;
-        tds += `<td width="15%"></td>`;
-        tds += `<td width="40%" class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
-        tds += `<option value="1">BANK BSI</option>
-          <option value="2">BANK MANDIRI</option>
-          <option value="3">BANK BNI</option>`;
-        tds += `</select></td>`;
-        tds += `</tr>`;
-        tds += `<tr class="detail_trf">`;
-        tds += `<td width="45%"><label for="tgl_trf">Tgl Transfer</label></td>`;
-        tds += `<td width="15%"></td>`;
-        tds += `<td width="40%"><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
-        tds += `</tr>`;
-        tds += `<tr class="detail_trf">`;
-        tds += `<td width="45%"><label for="jam_trf">Jam Transfer</label></td>`;
-        tds += `<td width="15%"></td>`;
-        tds += `<td width="40%"><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
-        tds += `</tr>`;
-        $("#tbody_pembayaran_lain2").append(tds);
-      } else {
-        $(".detail_trf").remove();
-      }
     });
   }
 });
