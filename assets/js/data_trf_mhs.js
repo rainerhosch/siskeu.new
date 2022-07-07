@@ -55,12 +55,9 @@ $(".btn_trf_online").click(function () {
             denyButtonColor: "#d33",
           }).then((result) => {
             if (result.isConfirmed) {
-              // Swal.fire('Saved!', '', 'success')
               accTRF(id_bukti_trf, type_bayar);
-              // accTest(id_bukti_trf, type_bayar);
             } else if (result.isDenied) {
               rejectTRF(id_bukti_trf);
-              // Swal.fire('Changes are not saved', '', 'info')
             }
           });
         });
@@ -71,7 +68,7 @@ $(".btn_trf_online").click(function () {
 
 function accTRF(id, type_bayar) {
   $("#dataTransferMhs").modal("hide");
-  // $('#formPembayaran').modal('hide');
+  // console.log(type_bayar)
   $.ajax({
     url: "transaksi/acc_trf_online",
     type: "POST",
@@ -96,7 +93,7 @@ function accTRF(id, type_bayar) {
         dataType: "json",
         success: function (response) {
           if (response != null) {
-            if (type_bayar === "1") {
+            if (type_bayar === 1) {
               $("#formPembayaran").modal("show");
               if ((response.totalKewajiban = 0)) {
                 $(".btn#btn_proses").prop("disabled", true);
@@ -183,6 +180,8 @@ function accTRF(id, type_bayar) {
                       $("#riwayat_transaksi").show();
                       $("#nama_mhs").val(response.nm_pd);
                       $("#jurusan").val(response.nm_jur);
+                      // console.log(id)
+                      htmlx += `<input type="hidden" id="id_konfirm_trf" name="id_konfirm_trf" value="${id}">`;
                       htmlx += `<input type="hidden" id="nim_mhs_bayar" name="nim_mhs_bayar" value="${response.nipd}">`;
                       htmlx += `<input type="hidden" id="nama_mhs_bayar" name="nama_mhs_bayar" value="${response.nm_pd}">`;
                       htmlx += `<input type="hidden" id="jenjang_mhs_bayar" name="jenjang_mhs_bayar" value="${response.nm_jenj_didik}">`;
@@ -343,6 +342,7 @@ function accTRF(id, type_bayar) {
               $("#nama_mhs_2").val(response.nm_pd);
               $("#jurusan_2").val(response.nm_jur);
 
+              $("#id_konfirm_trf").val(id);
               $("#nim_mhs_bayar_hidden").val(response.nipd);
               $("#nama_mhs_bayar_hidden").val(response.nm_pd);
               $("#jenjang_mhs_bayar_hidden").val(response.nm_jenj_didik);

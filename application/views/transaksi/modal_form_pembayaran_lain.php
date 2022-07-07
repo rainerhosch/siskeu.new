@@ -31,6 +31,7 @@
                                     <input type="hidden" id="nama_mhs_bayar_hidden" name="nama_mhs_bayar_hidden" class="form-control validate" readonly>
                                     <input type="hidden" id="jenjang_mhs_bayar_hidden" name="jenjang_mhs_bayar_hidden" class="form-control validate" readonly>
                                     <input type="hidden" id="angkatan_mhs_bayar_hidden" name="angkatan_mhs_bayar_hidden" class="form-control validate" readonly>
+                                    <input type="hidden" id="id_konfirm_trf" name="id_konfirm_trf" class="form-control validate" readonly>
                                     <input type="hidden" id="tg_cs_mhs" name="tg_cs_mhs" class="form-control validate" readonly>
 
                                 </div>
@@ -39,17 +40,6 @@
 
                             <table id="tabel_pembayaranLain" class="table table-vcenter table-condensed">
                                 <tbody id="tbody_pembayaran_lain2">
-                                    <!-- <tr>
-                                        <td width="45%"><label for="bayar_via">Jenis Bayar</label></td>
-                                        <td width="15%" class="text-center"></td>
-                                        <td width="40%" class="text-center">
-                                            <select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">
-                                                <option value="x">-- Pilih --</option>
-                                                <option value="1">Cash</option>
-                                                <option value="2">Transfer</option>
-                                            </select>
-                                        </td>
-                                    </tr> -->
                                 </tbody>
                                 <tbody id="tbody_pembayaran_lain">
                                 </tbody>

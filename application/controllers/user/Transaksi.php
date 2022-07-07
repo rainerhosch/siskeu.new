@@ -650,16 +650,19 @@ class Transaksi extends CI_Controller
                 $jam_trf = $this->input->post('jam_trf') . ':00';
 
                 // validasi data bukti transfer mahasiswa
-                $filter = [
-                    'nipd' => $nimMhs,
-                    'status' => 0
-                ];
-                $res = $this->transaksi->getDataBuktiPembayaran($filter)->row_array();
-                if ($res != null) {
+
+                $id_bukti_trf = $this->input->post('id_konfirm_trf');
+                if (!empty($id_bukti_trf)) {
                     $where = [
-                        'id_bukti_trf' => $res['id_bukti_trf'],
+                        'id_bukti_trf' => $id_bukti_trf
                     ];
+                    // $res = $this->transaksi->getDataBuktiPembayaran($where)->row_array();
+                    // if ($res != null) {
+                    //     $where = [
+                    //         'id_bukti_trf' => $res['id_bukti_trf'],
+                    //     ];
                     $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+                    // }
                 }
             }
             $totalBayar = $bayarTG + $bayarTG_KMHS + $bayarC1 + $bayarC2 + $bayarC3 + $bayarKMHS;
@@ -1209,14 +1212,10 @@ class Transaksi extends CI_Controller
                 $jam_trf = $this->input->post('jam_trf') . ':00';
 
                 // validasi data bukti transfer mahasiswa
-                $filter = [
-                    'nipd' => $nimMhs,
-                    'status' => 0
-                ];
-                $res = $this->transaksi->getDataBuktiPembayaran($filter)->row_array();
-                if ($res != null) {
+                $id_bukti_trf = $this->input->post('id_konfirm_trf');
+                if (!empty($id_bukti_trf)) {
                     $where = [
-                        'id_bukti_trf' => $res['id_bukti_trf'],
+                        'id_bukti_trf' => $id_bukti_trf
                     ];
                     $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
                 }
