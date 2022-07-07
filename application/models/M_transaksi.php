@@ -296,7 +296,11 @@ class M_transaksi extends CI_Model
     //     return $this->db->get();
     // }
 
-
+    // isert bukti transfer to siskeu
+    public function insertBuktiTrfToSiskeu($data)
+    {
+        return $this->db->insert('adm_bukti_pembayaran', $data);
+    }
     // get data transfer from simak
     public function getDataBuktiPembayaran($where = null)
     {

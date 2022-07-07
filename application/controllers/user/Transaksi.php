@@ -656,13 +656,28 @@ class Transaksi extends CI_Controller
                     $where = [
                         'id_bukti_trf' => $id_bukti_trf
                     ];
-                    // $res = $this->transaksi->getDataBuktiPembayaran($where)->row_array();
-                    // if ($res != null) {
-                    //     $where = [
-                    //         'id_bukti_trf' => $res['id_bukti_trf'],
-                    //     ];
-                    $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
-                    // }
+                    $update = $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+                    if ($update) {
+                        $res = $this->transaksi->getDataBuktiPembayaran($where)->row_array();
+                        if ($res != null) {
+                            $data_insert = [
+                                'id_bukti_trf' => $res['id_bukti_trf'],
+                                'smt' => $res['smt'],
+                                'jenis_bayar' => $res['jenis_bayar'],
+                                'tgl_trf' => $res['tgl_trf'],
+                                'jam_trf' => $res['jam_trf'],
+                                'rek_tujuan_trf' => $res['rek_tujuan_trf'],
+                                'tgl_konfir' => $res['tgl_konfir'],
+                                'jam_konfir' => $res['jam_konfir'],
+                                'nipd' => $res['nipd'],
+                                'id_jenis_bayar' => $res['id_jenis_bayar'],
+                                'jumlah_bayar' => $res['jumlah_bayar'],
+                                'img_trf' => $res['img_trf'],
+                                'status' => $res['status'],
+                            ];
+                            $this->transaksi->insertBuktiTrfToSiskeu($data_insert);
+                        }
+                    }
                 }
             }
             $totalBayar = $bayarTG + $bayarTG_KMHS + $bayarC1 + $bayarC2 + $bayarC3 + $bayarKMHS;
@@ -1217,7 +1232,28 @@ class Transaksi extends CI_Controller
                     $where = [
                         'id_bukti_trf' => $id_bukti_trf
                     ];
-                    $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+                    $update = $this->transaksi->updateBuktiPembayaran($where, ['status' => 1]);
+                    if ($update) {
+                        $res = $this->transaksi->getDataBuktiPembayaran($where)->row_array();
+                        if ($res != null) {
+                            $data_insert = [
+                                'id_bukti_trf' => $res['id_bukti_trf'],
+                                'smt' => $res['smt'],
+                                'jenis_bayar' => $res['jenis_bayar'],
+                                'tgl_trf' => $res['tgl_trf'],
+                                'jam_trf' => $res['jam_trf'],
+                                'rek_tujuan_trf' => $res['rek_tujuan_trf'],
+                                'tgl_konfir' => $res['tgl_konfir'],
+                                'jam_konfir' => $res['jam_konfir'],
+                                'nipd' => $res['nipd'],
+                                'id_jenis_bayar' => $res['id_jenis_bayar'],
+                                'jumlah_bayar' => $res['jumlah_bayar'],
+                                'img_trf' => $res['img_trf'],
+                                'status' => $res['status'],
+                            ];
+                            $this->transaksi->insertBuktiTrfToSiskeu($data_insert);
+                        }
+                    }
                 }
             }
 
