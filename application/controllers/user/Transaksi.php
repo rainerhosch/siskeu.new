@@ -41,8 +41,28 @@ class Transaksi extends CI_Controller
             'tanggal' => date('Y-m-d')
         ];
         $data['jumlah_tx_hari_ini'] = $this->transaksi->getTxDateNow($where_date);
-        $data['jml_mhs_transfer'] = $this->transaksi->getBuktiTransfer(['status' => 0])->num_rows();
         $this->load->view('template', $data);
+    }
+
+    public function getDataTrfMahasiswa()
+    {
+        if ($this->input->is_ajax_request()) {
+            $res = $this->transaksi->getBuktiTransfer(['status' => 0])->num_rows();
+            $data = [
+                'status'    => true,
+                'code'      => 200,
+                'msg'       => 'Ok!',
+                'data'      => $res
+            ];
+        } else {
+            $data = [
+                'status'    => false,
+                'code'      => 500,
+                'msg'       => 'Invalid Request!',
+                'data'      => null
+            ];
+        }
+        echo json_encode($data);
     }
 
     public function get_data_trf_online()

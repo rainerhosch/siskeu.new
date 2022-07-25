@@ -129,7 +129,7 @@
                             <i class="gi gi-circle_info"></i>
                         </div>
                         <h3 class="widget-content text-right animation-pullDown">
-                            <?= $jml_mhs_transfer ?> <strong>Pembayaran</strong><br>
+                            <strong id="label-jmlpembayaran">Pembayaran</strong><br>
                             <small>Mahasiswa Transfer</small>
                         </h3>
                     </div>
@@ -287,6 +287,16 @@
     <?php $this->load->view('transaksi/modal_data_trf_mhs'); ?>
     <script>
         $(document).ready(function() {
+            $.ajax({
+                url: '<?= base_url() ?>user/Transaksi/getDataTrfMahasiswa/',
+                type: 'POST',
+                serverSide: true,
+                dataType: 'json',
+                success: function(response) {
+                    $(`<i>${response.data} </i>`).insertBefore("#label-jmlpembayaran");
+                    // console.log(response)
+                }
+            });
             loadPagination(0);
             $('.div_btn_row').hide();
             $("#riwayat_transaksi").hide();
