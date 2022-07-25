@@ -1922,10 +1922,11 @@ class Transaksi extends CI_Controller
             }
 
             $dataTx['kewajiban']['tg_kmhs'] = $kewajibanTGKMHS;
+            $dataTx['bayar_tg_kmhs'] = 0;
             $dataTx['dataTx'] = 0;
         }
 
-        // var_dump( $dataTx['kewajiban']['tg_kmhs']);die;
+        // var_dump( $dataTx['bayar_tg_kmhs']);die;
 
 
         if ($bayarKMHS == true) {
@@ -2393,6 +2394,7 @@ class Transaksi extends CI_Controller
             }
 
             $dataTx['kewajiban']['tg_kmhs'] = $kewajibanTGKMHS;
+            $dataTx['bayar_tg_kmhs'] = 0;
             $dataTx['dataTx'] = 0;
         }
 

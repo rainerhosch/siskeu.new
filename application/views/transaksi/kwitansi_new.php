@@ -164,7 +164,10 @@ $pdf->Cell(40, 5, 'Sisa Bayar', 1, 1, 'C');
 $total_kewajiban = 0;
 $total_bayar_trx = 0;
 
+// if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) || $data_transaksi['bayar_cs'] != 0 ||  $data_transaksi['bayar_kmhs'] != 0 || isset($data_transaksi['bayar_tg_kmhs']) != 0 || (isset($data_transaksi['bayar_tg_cs']) == 1 && $data_transaksi['data_kewajiban_lain'] == null)) {
+    
 if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) || $data_transaksi['bayar_cs'] != 0 || $data_transaksi['bayar_kmhs'] != 0 || $data_transaksi['bayar_tg_kmhs'] != 0 || ($data_transaksi['bayar_tg_cs'] == 1 && $data_transaksi['data_kewajiban_lain'] == null)) {
+   
     // echo 1;
     foreach ($detailTX as $j => $dtx) {
         if ($dtx['id_jenis_pembayaran'] == 5 || $dtx['id_jenis_pembayaran'] == 7 || $dtx['id_jenis_pembayaran'] == 6) {
