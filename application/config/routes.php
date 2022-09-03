@@ -61,6 +61,7 @@ $route['transaksi/(:any)'] = 'user/transaksi/$1';
 $route['transaksi/hapus_transaksi/(:num)'] = 'user/transaksi/hapus_transaksi/$1';
 $route['transaksi/cetak_kwitansi/(:num)'] = 'user/transaksi/cetak_kwitansi/$1';
 $route['transaksi/cetak_ulang_kwitansi/(:num)'] = 'user/transaksi/cetak_ulang_kwitansi/$1';
+$route['transaksi/cetak_kwitansi_dev/(:num)'] = 'user/transaksi/cetak_kwitansi_dev/$1';
 
 // for admin access manajemen 
 $route['sync-simak'] = 'admin/SyncSimak';
