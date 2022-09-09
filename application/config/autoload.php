@@ -63,9 +63,10 @@ $autoload['libraries'] = array(
     'email',
     'session',
     'form_validation',
-    'formattanggal',
-    'formattanggal2',
-    'createtxid',
+    'FormatTanggal',
+    'FormatTanggal2',
+    'FormatTerbilang',
+    'CreateTxId',
     'PHPExcel'
 );
 

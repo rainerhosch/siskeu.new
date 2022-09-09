@@ -31,7 +31,6 @@ class Laporan extends CI_Controller
         // $token = 'semogabahagia';
         // $this->smt_aktif = getSemesterAktif($token);
         date_default_timezone_set('Asia/Jakarta');
-        $this->load->library('formatterbilang');
         $this->load->library('pagination');
 
         $this->load->model('M_cetak_kwitansi', 'cetak');

@@ -43,7 +43,7 @@ class Helpers
         if ($namedRange !== null) {
             $workSheet = $namedRange->getWorkSheet();
             $sheetTitle = ($workSheet === null) ? '' : $workSheet->getTitle();
-            $value = preg_replace('/^=/', '', $namedRange->getValue());
+            $value = (string) preg_replace('/^=/', '', $namedRange->getValue());
             self::adjustSheetTitle($sheetTitle, $value);
             $cellAddress1 = $sheetTitle . $value;
             $cellAddress = $cellAddress1;
@@ -57,7 +57,7 @@ class Helpers
         return [$cellAddress1, $cellAddress2, $cellAddress];
     }
 
-    public static function extractWorksheet(string $cellAddress, Cell $pCell): array
+    public static function extractWorksheet(string $cellAddress, Cell $cell): array
     {
         $sheetName = '';
         if (strpos($cellAddress, '!') !== false) {
@@ -65,10 +65,10 @@ class Helpers
             $sheetName = trim($sheetName, "'");
         }
 
-        $pSheet = ($sheetName !== '')
-            ? $pCell->getWorksheet()->getParent()->getSheetByName($sheetName)
-            : $pCell->getWorksheet();
+        $worksheet = ($sheetName !== '')
+            ? $cell->getWorksheet()->getParent()->getSheetByName($sheetName)
+            : $cell->getWorksheet();
 
-        return [$cellAddress, $pSheet, $sheetName];
+        return [$cellAddress, $worksheet, $sheetName];
     }
 }

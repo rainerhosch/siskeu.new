@@ -14,14 +14,22 @@ namespace org\bovigo\vfs;
  * @since  0.9.0
  * @group  issue_3
  */
-class vfsStreamWrapperSelectStreamTestCase extends \PHPUnit_Framework_TestCase
+class vfsStreamWrapperSelectStreamTestCase extends \BC_PHPUnit_Framework_TestCase
 {
     /**
      * @test
-     * @expectedException \PHPUnit_Framework_Error
      */
     public function selectStream()
     {
+        if (PHP_VERSION_ID >= 80000)
+        {
+            $this->bc_expectException('\ValueError');
+        }
+        else
+        {
+            $this->bc_expectException('\PHPUnit_Framework_Error');
+        }
+
         $root = vfsStream::setup();
         $file = vfsStream::newFile('foo.txt')->at($root)->withContent('testContent');
 
@@ -32,4 +40,3 @@ class vfsStreamWrapperSelectStreamTestCase extends \PHPUnit_Framework_TestCase
         stream_select($readarray, $writearray, $exceptarray, 1);
     }
 }
-?>
