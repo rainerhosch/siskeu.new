@@ -23,8 +23,43 @@ class M_masterdata extends CI_Model
     //     curl_close($curl_handle);
     //     return $data;
     // }
+    public function getDataAngkatan($where = null)
+    {
+        $this->db->distinct();
+        $this->db->select('tahun_masuk');
+        $this->db->from('mahasiswa');
+        if($where != null){
+            $this->db->where($where);
+        }
+        $this->db->group_by('tahun_masuk');
+        $this->db->order_by('tahun_masuk', 'DESC');
 
+        return $this->db->get();
+    }
+    public function getDataListMhs($where = null)
+    {
+        $this->db->distinct();
+        $this->db->select('*');
+        $this->db->from('mahasiswa');
+        if($where != null){
+            $this->db->where($where);
+        }
+        return $this->db->get();
+    }
 
+    public function getDataPembayaranChart($where = null)
+    {
+        // $this->db->distinct();
+        $this->db->select('t.*');
+        $this->db->from('transaksi t');
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
+        if($where != null){
+            $this->db->where($where);
+        }
+        $this->db->group_by('m.nipd');
+        return $this->db->get();
+    }
     public function getMahasiswaByNim($data)
     {
         $this->db->select('*');

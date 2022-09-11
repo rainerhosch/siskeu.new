@@ -22,6 +22,32 @@ class MasterData extends CI_Controller
         $this->load->model('M_masterdata', 'masterdata');
     }
 
+    public function getDataPembayaranDashboard()
+    {
+        if ($this->input->is_ajax_request()) {
+            
+            $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
+            foreach($res['data'] as $i => $val){
+                $where = [
+                    'tahun_masuk'=> $val['tahun_masuk'],
+                ];
+                $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
+                
+                $where1 = [
+                    'm.tahun_masuk'=> $val['tahun_masuk'],
+                    'td.id_jenis_pembayaran'=>'2',
+                    't.semester'=>'20221'
+                ];
+                $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
+            }
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            $res['smt_aktif'] = $smtAktifRes['id_smt'];
+            echo json_encode($res);
+        }else{
+            show_404();
+        }
+    }
+
     public function Mahasiswa()
     {
         $data['title'] = 'Master Data';
