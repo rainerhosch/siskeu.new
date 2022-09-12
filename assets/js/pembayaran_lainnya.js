@@ -82,9 +82,9 @@ $("#nipd_2").on("keypress", function (e) {
           $("#notif_search2").html(
             "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
           );
-          setTimeout(function () {
-            $("#notif_search2").html("");
-          }, 5000);
+          // setTimeout(function () {
+          //   $("#notif_search2").html("");
+          // }, 10000);
         }
 
         // vier table history transaksi
@@ -225,7 +225,13 @@ $("#add_rows").click(function () {
             return "Jml Cuti: " + value;
           },
         });
-      } else {
+      } else if(id_jns_bayar == "6"){
+        $("#pembayaran_" + size).prop("readonly", false);
+        $(".div_btn_row").prop("disabled", true);
+        $(".td_for_jml" + size).empty();
+        $(".slider#jml_mk" + size).remove();
+        $(".slider#jml_cuti" + size).remove();
+      }else {
         $("#pembayaran_" + size).prop("readonly", false);
         $(".div_btn_row").prop("disabled", false);
         $(".td_for_jml" + size).empty();
