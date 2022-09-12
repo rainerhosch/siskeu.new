@@ -25,25 +25,25 @@ class MasterData extends CI_Controller
     public function getDataPembayaranDashboard()
     {
         if ($this->input->is_ajax_request()) {
-            
+
             $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
-            foreach($res['data'] as $i => $val){
+            foreach ($res['data'] as $i => $val) {
                 $where = [
-                    'tahun_masuk'=> $val['tahun_masuk'],
+                    'tahun_masuk' => $val['tahun_masuk'],
                 ];
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
-                
+
                 $where1 = [
-                    'm.tahun_masuk'=> $val['tahun_masuk'],
-                    'td.id_jenis_pembayaran'=>'2',
-                    't.semester'=>'20221'
+                    'm.tahun_masuk' => $val['tahun_masuk'],
+                    'td.id_jenis_pembayaran' => '2',
+                    't.semester' => '20221'
                 ];
                 $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
             }
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
             echo json_encode($res);
-        }else{
+        } else {
             show_404();
         }
     }
@@ -181,7 +181,7 @@ class MasterData extends CI_Controller
     public function getAllJenisTunggakan()
     {
         if ($this->input->is_ajax_request()) {
-            $response = $this->masterdata->GetAllJenisPembayaranTunggakan([1,2,3,4,5])->result_array();
+            $response = $this->masterdata->GetAllJenisPembayaranTunggakan([1, 2, 3, 4, 5])->result_array();
             // $response = $this->db->last_query();
         } else {
             $response = "Invalid Request";
