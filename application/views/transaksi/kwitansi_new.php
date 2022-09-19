@@ -263,6 +263,19 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
                 }
             }
         }
+        if ($dtx['id_jenis_pembayaran'] == "5" && $data_transaksi['kewajiban']['tg_kmhs'] > 0) {
+            if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_cs'] == 0) {
+                $pdf->SetFont('Courier', 'IB', 10);
+                $pdf->Cell(81, 5, 'Tunggakan Kemahasiswaan', 1, 0, 'L');
+                $pdf->SetFont('Courier', 'IB', 10);
+                $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'], 0, '', '.'), 1, 0, 'R');
+                $pdf->Cell(40, 5, number_format($data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 0, 'R');
+                $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'] - $data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 1, 'R');
+                $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_tg_kmhs'];
+                $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['tg_kmhs'];
+            }
+        }
+
         $pdf->SetFont('Courier', 'IB', 10);
         if ($dtx['id_jenis_pembayaran'] == "17") {
             $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'] . ' (' . $dtx['jml_mk'] . ' Matakuliah)', 1, 0, 'L');

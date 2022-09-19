@@ -22,6 +22,7 @@ $("#nipd_2").on("keypress", function (e) {
         $("#nama_mhs_bayar_hidden").val(response.nm_pd);
         $("#jenjang_mhs_bayar_hidden").val(response.nm_jenj_didik);
         $("#tg_cs_mhs").val(response.tg_CS);
+        $("#tg_kmhs").val(response.tg_Kmhs);
         $("#angkatan_mhs_bayar_hidden").val(response.tahun_masuk);
 
         if (response != null) {
@@ -77,14 +78,24 @@ $("#nipd_2").on("keypress", function (e) {
             $("#notif_search2").html("");
           }, 2000);
         }
-
-        if (response.tg_CS != "0") {
+        if (response.tg_CS != "0" && response.tg_Kmhs != "0") {
           $("#notif_search2").html(
-            "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
+            "<code>Mahasiswa Tersebut Mempunyai Tunggakan SPP dan Kemahasiswaan.</code>"
           );
-          // setTimeout(function () {
-          //   $("#notif_search2").html("");
-          // }, 10000);
+        }else{
+          if (response.tg_CS != "0") {
+            $("#notif_search2").html(
+              "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
+            );
+            // setTimeout(function () {
+            //   $("#notif_search2").html("");
+            // }, 10000);
+          }
+          if (response.tg_Kmhs != "0") {
+            $("#notif_search2").html(
+              "<code>Mahasiswa Tersebut Mempunyai Tunggakan Kemahasiswaan.</code>"
+            );
+          }
         }
 
         // vier table history transaksi
@@ -153,6 +164,7 @@ $("#nipd_2").on("keypress", function (e) {
 $("#add_rows").click(function () {
   $("#tbody_pembayaran_lain").each(function () {
     let tg_cs = $("#tg_cs_mhs").val();
+    let tg_kmhs = $("#tg_kmhs").val();
     // console.log(tg_cs);
     $(".btn#delete_rows").prop("disabled", false);
     let tds = "";

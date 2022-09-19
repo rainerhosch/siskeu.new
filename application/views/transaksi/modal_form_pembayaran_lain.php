@@ -33,6 +33,7 @@
                                     <input type="hidden" id="angkatan_mhs_bayar_hidden" name="angkatan_mhs_bayar_hidden" class="form-control validate" readonly>
                                     <input type="hidden" id="id_konfirm_trf" name="id_konfirm_trf" class="form-control validate" readonly>
                                     <input type="hidden" id="tg_cs_mhs" name="tg_cs_mhs" class="form-control validate" readonly>
+                                    <input type="hidden" id="tg_kmhs" name="tg_kmhs" class="form-control validate" readonly>
 
                                 </div>
                             </div>
