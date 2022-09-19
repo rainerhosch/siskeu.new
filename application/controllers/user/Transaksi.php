@@ -2263,7 +2263,9 @@ class Transaksi extends CI_Controller
                     $kewajibanCS = $kewajibanCS - $val['jml_bayar'];
                 }
                 if ($val['id_jenis_pembayaran'] == 6) {
-                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    if ($dataTG != null) {
+                        $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    }
                 }
             }
 
@@ -2279,7 +2281,6 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_cs'] = 0;
             $dataTx['kewajibanCS'] = $kewajibanCS;
         }
-
         if ($bayarTG_CS == true) {
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
@@ -2311,7 +2312,6 @@ class Transaksi extends CI_Controller
                     }
                 }
             }
-
             $bayar_tg_cs = 0;
             foreach ($resDetailTx as $i => $Dtx) {
                 if ($Dtx['id_jenis_pembayaran'] == 6) {
@@ -2340,12 +2340,18 @@ class Transaksi extends CI_Controller
                     }
                 }
             }
+
+            // echo '<pre>';
+            // var_dump($kewajibanTGCS);
+            // echo '</pre>';
+            // die;
             foreach ($dataTxSebelumnya as $a => $val) {
                 if ($val['id_jenis_pembayaran'] == 6) {
-                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    if ($kewajibanTGCS > 0) {
+                        $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    }
                 }
             }
-
             $bayar_tg_cs = 0;
             foreach ($resDetailTx as $i => $Dtx) {
                 if ($Dtx['id_jenis_pembayaran'] == 6) {
@@ -2355,7 +2361,10 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
         }
-
+        // echo '<pre>';
+        // var_dump($dataTx);
+        // echo '</pre>';
+        // die;
         if ($bayarTG_KMHS == true) {
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
@@ -2730,7 +2739,9 @@ class Transaksi extends CI_Controller
                     $kewajibanCS = $kewajibanCS - $val['jml_bayar'];
                 }
                 if ($val['id_jenis_pembayaran'] == 6) {
-                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    if ($dataTG != null) {
+                        $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    }
                 }
             }
 
@@ -2746,7 +2757,6 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_cs'] = 0;
             $dataTx['kewajibanCS'] = $kewajibanCS;
         }
-
         if ($bayarTG_CS == true) {
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
@@ -2778,7 +2788,6 @@ class Transaksi extends CI_Controller
                     }
                 }
             }
-
             $bayar_tg_cs = 0;
             foreach ($resDetailTx as $i => $Dtx) {
                 if ($Dtx['id_jenis_pembayaran'] == 6) {
@@ -2807,12 +2816,18 @@ class Transaksi extends CI_Controller
                     }
                 }
             }
+
+            // echo '<pre>';
+            // var_dump($kewajibanTGCS);
+            // echo '</pre>';
+            // die;
             foreach ($dataTxSebelumnya as $a => $val) {
                 if ($val['id_jenis_pembayaran'] == 6) {
-                    $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    if ($kewajibanTGCS > 0) {
+                        $kewajibanTGCS = $kewajibanTGCS - $val['jml_bayar'];
+                    }
                 }
             }
-
             $bayar_tg_cs = 0;
             foreach ($resDetailTx as $i => $Dtx) {
                 if ($Dtx['id_jenis_pembayaran'] == 6) {
@@ -2822,7 +2837,10 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_tg_cs'] = $bayar_tg_cs;
             $dataTx['kewajiban']['tg_cs'] = $kewajibanTGCS;
         }
-
+        // echo '<pre>';
+        // var_dump($dataTx);
+        // echo '</pre>';
+        // die;
         if ($bayarTG_KMHS == true) {
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
