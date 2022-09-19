@@ -78,12 +78,12 @@ $("#nipd_2").on("keypress", function (e) {
             $("#notif_search2").html("");
           }, 2000);
         }
-        if (response.tg_CS != "0" && response.tg_Kmhs != "0") {
+        if (response.tg_CS != 0 && response.tg_Kmhs != 0) {
           $("#notif_search2").html(
             "<code>Mahasiswa Tersebut Mempunyai Tunggakan SPP dan Kemahasiswaan.</code>"
           );
         }else{
-          if (response.tg_CS != "0") {
+          if (response.tg_CS != 0) {
             $("#notif_search2").html(
               "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
             );
@@ -91,7 +91,7 @@ $("#nipd_2").on("keypress", function (e) {
             //   $("#notif_search2").html("");
             // }, 10000);
           }
-          if (response.tg_Kmhs != "0") {
+          if (response.tg_Kmhs != 0) {
             $("#notif_search2").html(
               "<code>Mahasiswa Tersebut Mempunyai Tunggakan Kemahasiswaan.</code>"
             );
