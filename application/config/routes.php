@@ -54,6 +54,10 @@ $route['default_controller'] = 'auth';
 $route['404_override'] = 'My404';
 $route['translate_uri_dashes'] = FALSE;
 
+
+// $route['api'] = 'user/api';
+// $route['api/(:any)'] = 'user/api/$1';
+
 // for menu
 $route['dashboard'] = 'user/dashboard';
 $route['transaksi'] = 'user/transaksi';

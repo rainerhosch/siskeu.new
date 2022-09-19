@@ -20,7 +20,7 @@ class M_api extends CI_Model
     {
         parent::__construct();
         $this->_client = new Client([
-            'base_uri' => 'https://api.wastu.digital/resources/',
+            'base_uri' => 'https://api.wastu.digital/resources/v1/',
             'headers' => ['token' => 'semogabahagia']
         ]);
     }
