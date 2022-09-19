@@ -87,8 +87,7 @@ $("#nipd_2").on("keypress", function (e) {
             $("#notif_search2").html(
               "<code>Mahasiswa Tersebut Mempunyai Tunggakan Kemahasiswaan.</code>"
             );
-          }
-          if (response.tg_CS != 0) {
+          }else if(response.tg_CS != 0) {
             $("#notif_search2").html(
               "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
             );
