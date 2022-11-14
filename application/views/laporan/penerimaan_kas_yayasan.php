@@ -111,6 +111,7 @@
                                                 <th class="text-center">Total</th>
                                                 <!-- <th class="text-center">Sisa Tagihan</th> -->
                                                 <th class="text-center">Semester</th>
+                                                <th class="text-center">Jenis Pembayaran</th>
                                                 <th class="text-center">Keterangan</th>
                                                 <th class="text-center">Admin</th>
                                             </tr>
@@ -236,6 +237,16 @@
                         const total = sum;
                         htmlx += `</td><td class = "text-center"><i>Rp.${parseInt(total).toLocaleString()}</i></td>`;
                         htmlx += `<td class = "text-center" >${value.semester}</td>`;
+                        
+                        if (value.bayar_via != 2) {
+                            htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar Tunai</i></td>`;
+                        } else {
+                            htmlx += `<td class = "text-center" >`;
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">Rek tujuan</i> : <i style="font-size:1rem; font-weight: bold;">${value.bank} - ${value.nama_rekening}</i><br>`;
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">Tgl Trf</i> :<i style="font-size:1rem;">${value.tgl_trf}</i><br>`;
+                            htmlx += `<i style="font-size:1rem; font-weight: bold;">Jam Trf</i> :<i style="font-size:1rem;">${value.jam_trf}</i><br>`;
+                            htmlx += `</td>`;
+                        }
                         if(value.uang_masuk != 1){
                             uang_masuk = `Potongan SPP/Beasiswa`;
                         }else{
