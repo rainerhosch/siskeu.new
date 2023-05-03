@@ -63,7 +63,7 @@ class PDF extends FPDF
         $this->Image($file, $x, $y, $w, $h);
         $this->Rotate(0);
     }
-    //END ROTATE TEXT, IMAGE
+//END ROTATE TEXT, IMAGE
 }
 
 $pdf = new PDF('P', 'mm', 'A4');
@@ -234,12 +234,12 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
     if ($data_transaksi['bayar_cs'] != null) {
         $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['cs'];
         $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['cs'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(40, 5,  number_format($total_bayar_cs_tx, 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($total_bayar_cs_tx, 0, '', '.'), 1, 0, 'R');
         $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['cs'] - $total_bayar_cs_tx, 0, '', '.'), 1, 1, 'R');
     } else {
         $total_kewajiban = $total_kewajiban + $data_transaksi['kewajibanCS'];
         $pdf->Cell(40, 5, number_format($data_transaksi['kewajibanCS'], 0, '', '.'), 1, 0, 'R');
-        $pdf->Cell(40, 5,  number_format($total_bayar_cs_tx, 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($total_bayar_cs_tx, 0, '', '.'), 1, 0, 'R');
         $pdf->Cell(40, 5, number_format($data_transaksi['kewajibanCS'] - $total_bayar_cs_tx, 0, '', '.'), 1, 1, 'R');
     }
 
@@ -263,7 +263,8 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
                 }
             }
         }
-        if ($dtx['id_jenis_pembayaran'] == "5" && $data_transaksi['kewajiban']['tg_kmhs'] > 0) {
+        // if ($dtx['id_jenis_pembayaran'] == "5" && $data_transaksi['kewajiban']['tg_kmhs'] > 0) {
+        if ($dtx['id_jenis_pembayaran'] == "5" && $data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_kmhs'] == 0) {
             if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_cs'] == 0) {
                 $pdf->SetFont('Courier', 'IB', 10);
                 $pdf->Cell(81, 5, 'Tunggakan Kemahasiswaan', 1, 0, 'L');
