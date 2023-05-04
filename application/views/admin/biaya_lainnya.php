@@ -87,7 +87,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?= base_url('admin/masterdata'); ?>/UpdateBiayaLainnya" method="post" enctype="multipart/form-data">
+                    <form action="<?= base_url('masterdata'); ?>/UpdateBiayaLainnya" method="post" enctype="multipart/form-data">
                         <div class="md-form mb-5 row">
                             <div class="col-md-5">
                                 <label data-error="wrong" data-success="right" for="edit_nm_jp">Nama Pembayaran</label>
