@@ -1,0 +1,8 @@
+# robots.txt create at 2023-05-04
+#User-agent: Googlebot
+#Disallow: 
+#User-agent: googlebot-mobile
+#Disallow: 
+#User-agent: *
+#Disallow: 
+#Disallow: /cgi-bin/
