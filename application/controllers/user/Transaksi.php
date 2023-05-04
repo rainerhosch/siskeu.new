@@ -68,7 +68,12 @@ class Transaksi extends CI_Controller
     public function get_data_trf_online()
     {
         if ($this->input->is_ajax_request()) {
-            $res = $this->transaksi->getDataBuktiPembayaran(['status' => 0])->result_array();
+            $data_post = $this->input->post();
+            if ($data_post['filter'] != null) {
+                $res = $this->transaksi->getDataBuktiPembayaran($data_post['filter'])->result_array();
+            } else {
+                $res = $this->transaksi->getDataBuktiPembayaran()->result_array();
+            }
             foreach ($res as $i => $val) {
                 $data_rek_tujuan = $this->transaksi->get_data_rekening(['id_rek' => $val['rek_tujuan_trf']])->row_array();
                 $res[$i]['bank_penerima'] = $data_rek_tujuan;

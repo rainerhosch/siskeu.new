@@ -63,18 +63,18 @@ class Laporan extends CI_Controller
         if ($offset != 0) {
             $offset = ($offset - 1) * $limit;
         }
-        if($jenis_kas != 'all'){
+        if ($jenis_kas != 'all') {
             $condition = [
                 'mjp.jenis_kas' => $jenis_kas
             ];
         }
-        
+
         // $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
         // Get records
-        if($jenis_kas != 'all'){
+        if ($jenis_kas != 'all') {
             $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset, ['mjp.jenis_kas' => $jenis_kas])->result_array();
             $allcount = $this->transaksi->getDataTransaksiPagenation(null, '', '', ['mjp.jenis_kas' => $jenis_kas])->num_rows();
-        }else{
+        } else {
             // All records count
             $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset)->result_array();
             $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
@@ -98,13 +98,13 @@ class Laporan extends CI_Controller
             $kewajiban_Semester_ini = 0;
             $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
             $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
-            
-            if($jenis_kas != 'all'){
+
+            if ($jenis_kas != 'all') {
                 $condition = [
                     'mjp.jenis_kas' => $jenis_kas,
                     't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']
                 ];
-            }else{
+            } else {
                 $condition = [
                     't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']
                 ];
@@ -132,7 +132,7 @@ class Laporan extends CI_Controller
         }
 
         // Pagination Configuration
-        $config['base_url'] = base_url() . 'laporan/'.$url_pagination;
+        $config['base_url'] = base_url() . 'laporan/' . $url_pagination;
         $config['use_page_numbers'] = TRUE;
         $config['total_rows'] = $allcount;
         $config['per_page'] = $limit;
@@ -359,6 +359,55 @@ class Laporan extends CI_Controller
         echo json_encode($data);
     }
 
+    public function DataTransferPembayaran()
+    {
+        $data['title'] = 'SiskeuNEW';
+        $data['page'] = 'Laporan Transfer Pembayaran';
+        $data['content'] = 'laporan/data_transfer_pembayaran';
+        $this->load->view('template', $data);
+    }
+
+    // public function getDataTrfPembayaran()
+    // {
+    //     if ($this->input->is_ajax_request()) {
+    //         $data_post = $this->input->post();
+    //         if ($data_post['filter'] != null) {
+    //             $res = $this->transaksi->getDataBuktiPembayaran($data_post['filter'])->result_array();
+    //         } else {
+    //             $res = $this->transaksi->getDataBuktiPembayaran()->result_array();
+    //         }
+    //         foreach ($res as $i => $val) {
+    //             $data_rek_tujuan = $this->transaksi->get_data_rekening(['id_rek' => $val['rek_tujuan_trf']])->row_array();
+    //             $res[$i]['bank_penerima'] = $data_rek_tujuan;
+    //             // $res[$i]['nm_bank'] = $data_rek_tujuan['bank'];
+    //             // $res[$i]['an_bank'] = $data_rek_tujuan['nama_rekening'];
+
+    //             $jnsBayar = explode(',', $val['id_jenis_bayar']);
+    //             $pembayaran = [];
+    //             foreach ($jnsBayar as $j => $value) {
+    //                 $filter = ['id_jenis_pembayaran' => $value];
+    //                 $pembayaran[$j] = $this->masterdata->GetAllJenisTrx($filter)->row_array();
+    //             }
+    //             $res[$i]['pembayaran'] = $pembayaran;
+    //         }
+    //         $data = [
+    //             'status' => true,
+    //             'code' => 200,
+    //             'msg' => 'Ok!',
+    //             'data' => $res
+    //         ];
+    //     } else {
+    //         $data = [
+    //             'status' => false,
+    //             'code' => 500,
+    //             'msg' => 'Invalid Request!',
+    //             'data' => null
+    //         ];
+    //     }
+    //     echo json_encode($data);
+    // }
+
+
     public function DataTunggakan()
     {
         $data['title'] = 'SiskeuNEW';
@@ -397,12 +446,12 @@ class Laporan extends CI_Controller
             if (!$insert) {
                 $response = [
                     'status' => $insert,
-                    'msg'    => 'Data Tunggakan ' . $this->input->post('nim_add') . ' Gagal Di Tambahakan!'
+                    'msg' => 'Data Tunggakan ' . $this->input->post('nim_add') . ' Gagal Di Tambahakan!'
                 ];
             } else {
                 $response = [
                     'status' => $insert,
-                    'msg'    => 'Data Tunggakan ' . $this->input->post('nim_add') . ' Berhasil Di Tambahakan!'
+                    'msg' => 'Data Tunggakan ' . $this->input->post('nim_add') . ' Berhasil Di Tambahakan!'
                 ];
             }
         } else {
@@ -454,18 +503,18 @@ class Laporan extends CI_Controller
 
     public function BuatLaporanBulanan()
     {
-        
+
 
         // parametar
         $input_param = $this->input->get();
         $jenis_kas = $input_param['jenis_laporan'];
-        if(isset($input_param['tgl_mulai']) != null && isset($input_param['tgl_end']) != null){
+        if (isset($input_param['tgl_mulai']) != null && isset($input_param['tgl_end']) != null) {
             $date = $input_param['tgl_mulai'];
-        }else{
+        } else {
             date_default_timezone_set('Asia/Jakarta');
             $date = date('Y-m-d');
         }
-        
+
         // echo '<pre>';
         // var_dump($date);die;
         // echo'</pre>';
@@ -596,10 +645,10 @@ class Laporan extends CI_Controller
             $sheet->setCellValue('C' . $row_min, $val['nim']);
             if (count($val['detail_transaksi']) > 0) {
 
-                $sheet->mergeCells('A' . $row_min  . ':' . 'A' . $row_tbl);
+                $sheet->mergeCells('A' . $row_min . ':' . 'A' . $row_tbl);
                 $sheet->mergeCells('B' . $row_min . ':' . 'B' . $row_tbl);
                 $sheet->mergeCells('C' . $row_min . ':' . 'C' . $row_tbl);
-                $sheet->mergeCells('F' . $row_min  . ':' . 'F' . $row_tbl);
+                $sheet->mergeCells('F' . $row_min . ':' . 'F' . $row_tbl);
                 $sheet->mergeCells('G' . $row_min . ':' . 'G' . $row_tbl);
                 $sheet->mergeCells('H' . $row_min . ':' . 'H' . $row_tbl);
                 $sheet->mergeCells('I' . $row_min . ':' . 'I' . $row_tbl);
@@ -1015,51 +1064,51 @@ class Laporan extends CI_Controller
         foreach ($dataDispenAll as $k => $v) {
             $TOTAL = 0;
             // if (isset($v['dispen'][4])) {
-                foreach ($v['dispen'] as $ka => $va) {
-                    $row_tbl = 8 + $va['nomor'];
-                    if ($va['jenis_dispen'] == 1) {
-                        $js = 'PERWALIAN';
-                    } else if ($va['jenis_dispen'] == 2) {
-                        $js = 'DISPEN UAS';
-                    } else if ($va['jenis_dispen'] == 3) {
-                        $js = 'DISPEN UTS';
-                    } else if ($va['jenis_dispen'] == 4) {
-                        $js = 'DISPEN UAS';
-                    }
-                    // $sheet->setCellValue('A' . $row_tbl, $k);
-                    $sheet->setCellValue('B' . $row_tbl, $va['nipd']);
-                    $sheet->setCellValue('C' . $row_tbl, $va['nm_pd']);
-                    $sheet->setCellValue('D' . $row_tbl, $va['nm_jur']);
-                    $sheet->setCellValue('E' . $row_tbl,  $js);
-                    $sheet->setCellValue('F' . $row_tbl, $va['tg_dispen']);
-                    // $sheet->setCellValue('G' . $row_tbl, '');
-                    $sheet->setCellValue('G' . $row_tbl, $va['tgl_janji_lunas']);
-                    $sheet->setCellValue('H' . $row_tbl, $va['no_tlp']);
-                    // if ($dataDispen[$i]['tgl_pelunasan'] != null) {
-                    //     $sheet->setCellValue('J' . $row_tbl, 'Sudah Dibayar Pada Tgl ' . $dataDispen[$i]['tgl_pelunasan']);
-                    // } else {
-                    //     $sheet->setCellValue('J' . $row_tbl, 'Belum Bayar');
-                    // }
-                    $TOTAL +=  $va['tg_dispen'];
-                    $TT[$k] = $TOTAL;
+            foreach ($v['dispen'] as $ka => $va) {
+                $row_tbl = 8 + $va['nomor'];
+                if ($va['jenis_dispen'] == 1) {
+                    $js = 'PERWALIAN';
+                } else if ($va['jenis_dispen'] == 2) {
+                    $js = 'DISPEN UAS';
+                } else if ($va['jenis_dispen'] == 3) {
+                    $js = 'DISPEN UTS';
+                } else if ($va['jenis_dispen'] == 4) {
+                    $js = 'DISPEN UAS';
                 }
+                // $sheet->setCellValue('A' . $row_tbl, $k);
+                $sheet->setCellValue('B' . $row_tbl, $va['nipd']);
+                $sheet->setCellValue('C' . $row_tbl, $va['nm_pd']);
+                $sheet->setCellValue('D' . $row_tbl, $va['nm_jur']);
+                $sheet->setCellValue('E' . $row_tbl, $js);
+                $sheet->setCellValue('F' . $row_tbl, $va['tg_dispen']);
+                // $sheet->setCellValue('G' . $row_tbl, '');
+                $sheet->setCellValue('G' . $row_tbl, $va['tgl_janji_lunas']);
+                $sheet->setCellValue('H' . $row_tbl, $va['no_tlp']);
+                // if ($dataDispen[$i]['tgl_pelunasan'] != null) {
+                //     $sheet->setCellValue('J' . $row_tbl, 'Sudah Dibayar Pada Tgl ' . $dataDispen[$i]['tgl_pelunasan']);
+                // } else {
+                //     $sheet->setCellValue('J' . $row_tbl, 'Belum Bayar');
+                // }
+                $TOTAL += $va['tg_dispen'];
+                $TT[$k] = $TOTAL;
+            }
 
-                // echo '<pre>';
-                // echo print_r(array_sum($TOTAL[$k]));
-                // echo '</pre>';
-                // die;
-                $row_tbl1 = 8 + $v['nomor'];
-                $sheet->setCellValue('A' . $row_tbl, $no);
-                $sheet->setCellValue('B' . $row_tbl1, '');
-                $sheet->setCellValue('C' . $row_tbl1, '');
-                $sheet->setCellValue('D' . $row_tbl1, '');
-                $sheet->setCellValue('E' . $row_tbl1, 'TOTAL');
-                $sheet->setCellValue('F' . $row_tbl1, $TT[$k]);
-                $sheet->setCellValue('G' . $row_tbl1, '');
-                $sheet->setCellValue('H' . $row_tbl1, '');
-                $sheet->setCellValue('I' . $row_tbl1, '');
+            // echo '<pre>';
+            // echo print_r(array_sum($TOTAL[$k]));
+            // echo '</pre>';
+            // die;
+            $row_tbl1 = 8 + $v['nomor'];
+            $sheet->setCellValue('A' . $row_tbl, $no);
+            $sheet->setCellValue('B' . $row_tbl1, '');
+            $sheet->setCellValue('C' . $row_tbl1, '');
+            $sheet->setCellValue('D' . $row_tbl1, '');
+            $sheet->setCellValue('E' . $row_tbl1, 'TOTAL');
+            $sheet->setCellValue('F' . $row_tbl1, $TT[$k]);
+            $sheet->setCellValue('G' . $row_tbl1, '');
+            $sheet->setCellValue('H' . $row_tbl1, '');
+            $sheet->setCellValue('I' . $row_tbl1, '');
 
-                $no++;
+            $no++;
             // }
         }
 

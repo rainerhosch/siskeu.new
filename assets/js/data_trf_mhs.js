@@ -2,6 +2,11 @@ $(".btn_trf_online").click(function () {
   $.ajax({
     url: "transaksi/get_data_trf_online",
     type: "POST",
+    data: {
+      filter: {
+        status: 0,
+      },
+    },
     dataType: "JSON",
     success: function (response) {
       // console.log(response);
