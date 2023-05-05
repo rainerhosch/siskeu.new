@@ -25,6 +25,7 @@
                                         <th class="text-center">Jumlah Transfer</th>
                                         <th class="text-center">Bukti Transfer</th>
                                         <th class="text-center">Status</th>
+                                        <!-- <th class="text-center">Status</th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="tbody_data_trf">
@@ -38,6 +39,11 @@
     </div>
     <script>
         $(document).ready(function() {
+            var cekLogUser = '<?php echo $_SESSION['username'] ?>';
+            var authority = '';
+            if (cekLogUser != 'devstt'){
+                authority = 'disabled';
+            }
             $.ajax({
                 url: "<?= base_url() ?>transaksi/get_data_trf_online",
                 type: "POST",
@@ -46,25 +52,37 @@
                     filter:null
                 },
                 success: function (response) {
-                console.log(response);
                 let html = ``;
                 let jenis_bayar = ``;
                 let status=``;
+                let optionSelect = ``;
                 let colorBG=``;
+                let dataStatus = [
+                    {
+                        'status': 0,
+                        'data': 'BELUM DIVALIDASI'
+                    },
+                    {
+                        'status': 1,
+                        'data'  : 'SUDAH DIVALIDASI'
+                    },
+                    {
+                        'status': "2",
+                        'data'  : 'DITOLAK'
+                    }
+                ];
+                // console.log(response);
                 if (response != null) {
                     $.each(response.data, function (i, value) {
                     let bank_account = value.bank_penerima;
                     let no = i + 1;
                     if(value.status != 0){
                         if(value.status != 1){
-                            status = 'DITOLAK';
                             colorBG = 'bg-danger';
                         }else{
-                            status = 'SUDAH DIVALIDASI';
                             colorBG = 'bg-success';
                         }
                     }else{
-                        status = 'BELUM DIVALIDASI';
                         colorBG = 'bg-info';
                     }
                     html += `<tr>`;
@@ -85,7 +103,18 @@
                         value.jumlah_bayar
                     ).toLocaleString()}</td>`;
                     html += `<td class="text-center ${colorBG}"><i><a href="#" data-id_trf="${value.id_bukti_trf}" data-type_bayar="${value.jenis_bayar}" class="btn btn-xs btn-info btn_show_bukti_trf" data-trf="${value.img_trf}" data-smt="${value.smt}" data-nipd="${value.nipd}" data-jns="${value.nm_jenis_pembayaran}"><i class="fa fa-fw fa-eye"></i></a></i></td>`;
-                    html += `<td class="text-center ${colorBG} text-white" style="font-size:1rem; font-weight: bold;">${status}</td>`;
+                    // html += `<td class="text-center ${colorBG} text-white" style="font-size:1rem; font-weight: bold;">${status}</td>`;
+                    html += `<td class="text-center ${colorBG} text-white" style="font-size:1rem; font-weight: bold;">
+                    <select class="form-control select2" ${authority} style="font-size:1rem; font-weight: bold;" data-trf="${value.id_bukti_trf}">`;
+                    $.each(dataStatus, function (j, ds) {
+                        if(value.status != ds.status){
+                            html += `<option value="${ds.status}">${ds.data}</option>`;
+                        }else{
+                            html += `<option selected="selected" value="${ds.status}">${ds.data}</option>`;
+                        }
+                    });
+                    html += `</select>
+                    </td>`;
                     html += `</tr>`;
                     });
                     $("#tbody_data_trf").html(html);
@@ -115,10 +144,35 @@
                     $(function() {
                         TablesDatatables.init();
                     });
+                    $(".select2").on("change", function () {
+                        let data = this.value;
+                        let idTrf = $(this).data("trf");
+                        $.ajax({
+                            url: "<?= base_url() ?>transaksi/updateStatusTrf",
+                            type: "POST",
+                            dataType: "JSON",
+                            data:{
+                                data_id:idTrf,
+                                data_update:data
+                            },
+                            success: function (response) {
+                                console.log(response)
+                                Swal.fire({
+                                    icon: `${response.status}`,
+                                    title: `${response.msg}`,
+                                    html: `<span>id:${idTrf}</span></br><span>data:${data}</span>`,
+                                    showConfirmButton: false,
+                                    timer: 1500,
+                                }).then(function(){
+                                    location.reload();
+                                });
+                            }
+                        });
+                    });
                 }
-                },
-            });
+            },
         });
+    });
     </script>
 </div>
 <!-- END Page Content -->

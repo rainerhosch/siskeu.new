@@ -194,6 +194,28 @@ class Transaksi extends CI_Controller
         echo json_encode($data);
     }
 
+    public function updateStatusTrf()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data = $this->input->post();
+            $update = $this->transaksi->updateBuktiPembayaran(['id_bukti_trf' => $data['data_id']], ['status' => $data['data_update']]);
+            $data = [
+                'status' => 'success',
+                'code' => 200,
+                'msg' => 'OK!',
+                'data' => $update
+            ];
+        } else {
+            $data = [
+                'status' => 'error',
+                'code' => 500,
+                'msg' => 'Invalid Request!',
+                'data' => null
+            ];
+        }
+        echo json_encode($data);
+    }
+
     public function get_jenis_pembayaran()
     {
         if ($this->input->is_ajax_request()) {
