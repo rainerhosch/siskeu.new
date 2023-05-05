@@ -694,6 +694,7 @@ class Transaksi extends CI_Controller
 
             $bayar_via = $this->input->post('bayar_via');
             $rekening_trf = '';
+            $id_bukti_trf = null;
             $tgl_trf = '0000-00-00';
             $jam_trf = '00:00:00';
             if ($bayar_via == 2) {
@@ -1145,7 +1146,8 @@ class Transaksi extends CI_Controller
                 'bayar_via' => $bayar_via,
                 'rekening_trf' => $rekening_trf,
                 'tgl_trf' => $tgl_trf,
-                'jam_trf' => $jam_trf
+                'jam_trf' => $jam_trf,
+                'id_trf' => $id_bukti_trf
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
             // $insert = true;
@@ -1280,6 +1282,7 @@ class Transaksi extends CI_Controller
 
             $bayar_via = $this->input->post('bayar_via');
             $rekening_trf = '';
+            $id_bukti_trf = null;
             $tgl_trf = '0000-00-00';
             $jam_trf = '00:00:00';
             if ($bayar_via == 2) {
@@ -1537,7 +1540,8 @@ class Transaksi extends CI_Controller
                 'bayar_via' => $bayar_via,
                 'rekening_trf' => $rekening_trf,
                 'tgl_trf' => $tgl_trf,
-                'jam_trf' => $jam_trf
+                'jam_trf' => $jam_trf,
+                'id_trf' => $id_bukti_trf
             ];
             $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
 

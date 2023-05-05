@@ -1,17 +1,17 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 /*
-* file name     : M_transaksi
-* file type     : models
-* file packages : CodeIgniter 3
-* author        : rizky ardiansyah
-* date-create   : 14 Dec 2020
-*/
+ * file name     : M_transaksi
+ * file type     : models
+ * file packages : CodeIgniter 3
+ * author        : rizky ardiansyah
+ * date-create   : 14 Dec 2020
+ */
 
 class M_transaksi extends CI_Model
 {
     var $column_order = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim', 't.user_id', 't.status_transaksi', 't.transaksi_ke', 'm.nm_pd', 'm.nm_jur', 'm.nm_jenj_didik', 'ts.icon_status_tx', 'u.nama_user', 'u.ttd'); //set column field database for datatable orderable
-    var $column_search = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim',); //set column field database for datatable searchable 
+    var $column_search = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim', ); //set column field database for datatable searchable 
     var $order = array('t.id_transaksi' => 'desc'); // default order 
 
     private function _get_datatables_query()
@@ -249,13 +249,35 @@ class M_transaksi extends CI_Model
     // Add New Tx
     public function addNewTransaksi($data)
     {
-        return $this->db->insert('transaksi', $data);
+        $insertSiske = $this->db->insert('transaksi', $data);
+        if (!$insertSiske) {
+            return FALSE;
+        } else {
+            $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+            $dbwastudig_simak->insert('adm_transaksi', $data);
+            if (!$dbwastudig_simak) {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
+        }
     }
 
     // add Detail TX
     public function addNewDetailTransaksi($data)
     {
-        return $this->db->insert('transaksi_detail', $data);
+        $insertSiske = $this->db->insert('transaksi_detail', $data);
+        if (!$insertSiske) {
+            return FALSE;
+        } else {
+            $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+            $dbwastudig_simak->insert('adm_transaksi_detail', $data);
+            if (!$dbwastudig_simak) {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
+        }
     }
 
     // Delete Transaksi
@@ -370,8 +392,8 @@ class M_transaksi extends CI_Model
     public function getMonthTX($data = null)
     {
         /*
-        * SELECT DISTINCT(SUBSTRING(tanggal, 1, 7)) AS bulan FROM `transaksi`
-        */
+         * SELECT DISTINCT(SUBSTRING(tanggal, 1, 7)) AS bulan FROM `transaksi`
+         */
         $this->db->distinct();
         $this->db->select('SUBSTRING(tanggal, 1, 7) AS bulan_tx');
         $this->db->from('transaksi');
@@ -384,13 +406,13 @@ class M_transaksi extends CI_Model
     public function getTxPerMonth($data = null)
     {
         /*
-        *    SELECT SUBSTRING(B.tanggal, 1, 7) AS bulan,A.id_jenis_pembayaran AS id_jp, mjp.nm_jenis_pembayaran AS nm_JP,COUNT(A.id_jenis_pembayaran) AS Total_TX
-        *    FROM transaksi_detail A 
-        *    LEFT JOIN transaksi B ON A.id_transaksi = B.id_transaksi
-        *    JOIN master_jenis_pembayaran mjp ON mjp.id_jenis_pembayaran=A.id_jenis_pembayaran
-        *    WHERE SUBSTRING(B.tanggal, 1, 7)='2021-07'
-        *    GROUP BY A.id_jenis_pembayaran
-        */
+         *    SELECT SUBSTRING(B.tanggal, 1, 7) AS bulan,A.id_jenis_pembayaran AS id_jp, mjp.nm_jenis_pembayaran AS nm_JP,COUNT(A.id_jenis_pembayaran) AS Total_TX
+         *    FROM transaksi_detail A 
+         *    LEFT JOIN transaksi B ON A.id_transaksi = B.id_transaksi
+         *    JOIN master_jenis_pembayaran mjp ON mjp.id_jenis_pembayaran=A.id_jenis_pembayaran
+         *    WHERE SUBSTRING(B.tanggal, 1, 7)='2021-07'
+         *    GROUP BY A.id_jenis_pembayaran
+         */
         $this->db->select('SUBSTRING(tanggal, 1, 7) AS bulan_tx, td.id_jenis_pembayaran AS id_jp, mjp.nm_jenis_pembayaran AS nm_JP, COUNT(td.id_jenis_pembayaran) AS Total_TX');
         $this->db->from('transaksi_detail td');
         $this->db->join('transaksi t', 't.id_transaksi=td.id_transaksi');
