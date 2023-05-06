@@ -281,6 +281,9 @@ class M_transaksi extends CI_Model
         $this->db->where($data);
         $this->db->delete('transaksi');
         if ($this->db->affected_rows() > 0) {
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $dbwastudig_siskeu->where($data);
+            $dbwastudig_siskeu->delete('transaksi');
             return TRUE;
         } else {
             return FALSE;
@@ -294,6 +297,9 @@ class M_transaksi extends CI_Model
         $this->db->where($data);
         $this->db->delete('transaksi_detail');
         if ($this->db->affected_rows() > 0) {
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $dbwastudig_siskeu->where($data);
+            $dbwastudig_siskeu->delete('transaksi_detail');
             return TRUE;
         } else {
             return FALSE;
