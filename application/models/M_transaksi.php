@@ -71,11 +71,6 @@ class M_transaksi extends CI_Model
         return $this->db->count_all_results();
     }
 
-
-
-
-
-
     // cex id tx : untuk pembuatan id transaksi
     public function cekTxId()
     {
@@ -253,9 +248,9 @@ class M_transaksi extends CI_Model
         if (!$insertSiske) {
             return FALSE;
         } else {
-            $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
-            $dbwastudig_simak->insert('adm_transaksi', $data);
-            if (!$dbwastudig_simak) {
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $dbwastudig_siskeu->insert('transaksi', $data);
+            if (!$dbwastudig_siskeu) {
                 return FALSE;
             } else {
                 return TRUE;
@@ -270,9 +265,9 @@ class M_transaksi extends CI_Model
         if (!$insertSiske) {
             return FALSE;
         } else {
-            $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
-            $dbwastudig_simak->insert('adm_transaksi_detail', $data);
-            if (!$dbwastudig_simak) {
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $dbwastudig_siskeu->insert('transaksi_detail', $data);
+            if (!$dbwastudig_siskeu) {
                 return FALSE;
             } else {
                 return TRUE;

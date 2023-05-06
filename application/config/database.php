@@ -74,7 +74,7 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
+	'dsn' => '',
 	'hostname' => 'localhost',
 	// 'username' => 'dev',
 	// 'password' => 'toor',
@@ -117,3 +117,25 @@ $db['wastudig_simak'] = [
 	'failover' => array(),
 	'save_queries' => TRUE
 ];
+
+$db['wastudig_siskeu'] = array(
+	'dsn' => '',
+	'hostname' => 'localhost',
+	'username' => 'wastudig_simak',
+	'password' => 'Inovasi2025DIGITAL',
+	'database' => 'wastudig_siskeu',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'development'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
