@@ -259,7 +259,9 @@ class AktivasiMhs extends CI_Controller
             // die;
 
             $dataUpdate = [
-                'no_tlp' => $dataInput['no_tlp_edit']
+                'no_tlp' => $dataInput['no_tlp_edit'],
+                'tgl_janji_lunas' => $dataInput['tgl_pelunasan_edit'],
+
             ];
             $update = $this->aktivasi->updateDataDispenMhs($id_dispen, $dataUpdate);
             if (!$update) {
