@@ -189,6 +189,36 @@ class AktivasiMhs extends CI_Controller
         echo json_encode($response);
     }
 
+
+    public function delete_data_dispen()
+    {
+        if ($this->input->is_ajax_request()) {
+            $id_dispen = $this->input->post('id_dispen');
+            $actionDelete = $this->aktivasi->deleteDataDispen(['id_dispensasi' => $id_dispen]);
+            if ($actionDelete != TRUE) {
+                // error
+                $response = [
+                    'status' => false,
+                    'msg' => 'Gagal hapus data.',
+                    'data' => null
+                ];
+            } else {
+                $response = [
+                    'status' => true,
+                    'msg' => 'Data berhasil dihapus.',
+                    'data' => ['id_dispensasi' => $id_dispen]
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'Invalid Request.',
+                'data' => null
+            ];
+        }
+        echo json_encode($response);
+    }
+
     public function get_data_dispen_by_id()
     {
         if ($this->input->is_ajax_request()) {

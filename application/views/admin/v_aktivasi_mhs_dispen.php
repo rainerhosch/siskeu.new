@@ -317,7 +317,7 @@
                                 html += `<td class="text-center" >`;
                                 html += `<a target="blank" id-dispen="${value.id_dispensasi}" class="btn btn-xs btn-success btn_WA" onclick="window.open('https://wa.me/${value.no_tlp}?text=Yth%20Saudara,%0ANAMA%20:%20${value.nm_pd}%0ANIM%20:%20${value.nipd}%0AProdi%20:%20${value.nm_jur}%0AMohon%20untuk%20segera%20menyelesaikan%20administrasi%20pembayaran%20semester%20perkuliahan.%0AKarena%20sudah%20melawati%20tanggal%20perjanjian%20pelunasan%20yaitu%20%28${value.tanggal_lunas}%29.%0AAdapun%20nominal%20pembayarannya%20Rp.${parseInt(total_Tagihan).toLocaleString()}.%0ATerima%20Kasih%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20STT%20WASTUKANCANA', '_blank');">Chat WA</a> | `;
                                 html += `<a class="btn btn-xs btn-warning btn_edit" id-Edit="${value.id_dispensasi}">Edit</a> | `;
-                                html += `<a class="btn btn-xs btn-danger btn_delete" id-Delete="${value.id_dispensasi}">Hapus</a>`;
+                                html += `<a class="btn btn-xs btn-danger btn_delete" id-Delete="${value.id_dispensasi}" data-nama="${value.nm_pd}">Hapus</a>`;
                                 html += `</td>`;
                             }
 
@@ -369,9 +369,53 @@
                     });
                     $('.btn_delete').on('click', function() {
                         let id_dispen_delete = $(this).attr("id-Delete")
-                        console.log(id_dispen_delete);
+                        let nm_pd = $(this).data("nama")
+                        // console.log(id_dispen_delete);
+                        Swal.fire({
+                            title: 'Hapus data dispen?',
+                            text:`data dispen ${nm_pd} akan dihapus.`,
+                            showCancelButton: true,
+                            confirmButtonText: 'Delete',
+                            confirmButtonColor: '#d30000',
+                            }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                // Swal.fire('Saved!', '', 'success')
+                                $.ajax({
+                                    type: "POST",
+                                    url: "delete_data_dispen",
+                                    dataType: "json",
+                                    data: {
+                                        id_dispen: id_dispen_delete
+                                    },
+                                    success: function(response) {
+                                        if (response.status===true){
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title:  response.msg,
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            }).then(
+                                                location.reload()
+                                            );
+                                        }else{
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: response.msg,
+                                                showConfirmButton: false,
+                                                timer: 1500
+                                            }).then(
+                                                location.reload()
+                                            );
+                                        }
+                                    }
+                                });
+                            } else {
+                                Swal.fire('Data tidak dihapus', '', 'info')
+                                // location.reload();
+                            }
+                        })
                     });
-                    btn_delete
                     $('.btn_WA').on('click', function() {
                         let id_dispen = $(this).attr("id-dispen")
                         // console.log(id_dispen);
