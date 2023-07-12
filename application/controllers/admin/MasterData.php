@@ -25,22 +25,31 @@ class MasterData extends CI_Controller
     public function getDataPembayaranDashboard()
     {
         if ($this->input->is_ajax_request()) {
-
+            $data_post = $this->input->post();
             $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             foreach ($res['data'] as $i => $val) {
                 $where = [
                     'tahun_masuk' => $val['tahun_masuk'],
                 ];
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
+                if ($data_post['filter'] != '0') {
+                    $where1 = [
+                        'm.tahun_masuk' => $val['tahun_masuk'],
+                        'td.id_jenis_pembayaran' => $data_post['filter'],
+                        't.semester' => $smtAktifRes['id_smt']
+                    ];
+                    $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
+                } else {
+                    $where1 = [
+                        'm.tahun_masuk' => $val['tahun_masuk'],
+                        't.semester' => $smtAktifRes['id_smt']
+                    ];
 
-                $where1 = [
-                    'm.tahun_masuk' => $val['tahun_masuk'],
-                    'td.id_jenis_pembayaran' => '2',
-                    't.semester' => '20221'
-                ];
+                    $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
+                }
                 $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
             }
-            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
             echo json_encode($res);
         } else {

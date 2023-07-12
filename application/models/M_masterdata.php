@@ -60,6 +60,20 @@ class M_masterdata extends CI_Model
         $this->db->group_by('m.nipd');
         return $this->db->get();
     }
+    public function getDataPembayaranChartNoFIlter($where = null)
+    {
+        // $this->db->distinct();
+        $this->db->select('t.*');
+        $this->db->from('transaksi t');
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
+        if ($where != null) {
+            $this->db->where($where);
+        }
+        $this->db->where_in('td.id_jenis_pembayaran', [1, 2, 3]);
+        $this->db->group_by('m.nipd');
+        return $this->db->get();
+    }
     public function getMahasiswaByNim($data)
     {
         $this->db->select('*');
