@@ -55,8 +55,9 @@
                     <tr>
                         <th class="text-center">No</th>
                         <th class="text-center">TAHUN ANGKATAN</th>
-                        <th class="text-center">TOTAL MAHSISWA</th>
-                        <th class="text-center">SUDAH MELAKUKAN PEMBAYARAN SPP</th>
+                        <th class="text-center">TOTAL MAHASISWA</th>
+                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">SUDAH MELAKUKAN PEMBAYARAN SPP</small></th>
+                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">BELUM MELAKUKAN PEMBAYARAN SPP</small></th>
                         <th class="text-center">PERSENTASE</th>
                     </tr>
                 </thead>
@@ -90,15 +91,19 @@
                 let no = 1;
                 let total_mhs=0;
                 let total_all_trx=0;
+                let ttl_belum_bayar_spp=0;
                 $.each(response.data, function(i, val) {
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
+                    let jml_belum_bayar_spp = (val.jml_mhs-total_trx);
+                    ttl_belum_bayar_spp += jml_belum_bayar_spp;
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk}</td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
+                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
@@ -113,6 +118,7 @@
                     html += `<td class="text-center"></td>`;
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
+                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
                     $("#data_pembayaran_angkatan_modal").html(html);
@@ -134,15 +140,19 @@
                 let no = 1;
                 let total_mhs=0;
                 let total_all_trx=0;
+                let ttl_belum_bayar_spp=0;
                 $.each(response.data, function(i, val) {
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
+                    let jml_belum_bayar_spp = (val.jml_mhs-total_trx);
+                    ttl_belum_bayar_spp += jml_belum_bayar_spp;
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk}</td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
+                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
@@ -157,6 +167,7 @@
                     html += `<td class="text-center"></td>`;
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
+                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
                 $("#data_pembayaran_angkatan_modal").html(html);
