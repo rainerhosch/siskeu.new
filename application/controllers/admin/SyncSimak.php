@@ -53,18 +53,27 @@ class SyncSimak extends CI_Controller
                 // 'thn_akademik' => $smtAktif,
             ]
         ]);
+        $countTotalTrx = $this->api->mGet('siskeu/TrxCount', [
+            'query' => [
+                'type' => 'get_count',
+                // 'thn_akademik' => $smtAktif,
+            ]
+        ]);
         $data['count_mhs_simak'] = $counApiDataMhs['mhsdata'];
         $data['semester_aktif_simak'] = $smtAktifSimak['semester_aktif']['id_smt'];
         $data['reg_mhs_simak'] = $countRegMhsSimak['reg_mhs'];
         $data['reg_ujian_simak'] = $countRegUjianSimak['reg_ujian'];
+        $data['siskeu_trx_simak'] = $countTotalTrx['total_trx'];
         // ======================= Lokal ====================================
         $LocalDataMhs = $this->masterdata->getDataMhs()->num_rows();
         $dataRegMhs = $this->masterdata->getRegMhs()->num_rows();
         $dataRegUjian = $this->masterdata->getRegUjian()->num_rows();
+        $dataTotalTrx = $this->transaksi->getDataTransaksi()->num_rows();
         $data['semester_aktif_local'] = $smtAktif;
         $data['count_mhs_local'] = $LocalDataMhs;
         $data['reg_mhs_local'] = $dataRegMhs;
         $data['reg_ujian_local'] = $dataRegUjian;
+        $data['siskeu_trx_local'] = $dataTotalTrx;
         // ===========================================================
         echo json_encode($data);
     }
@@ -196,6 +205,82 @@ class SyncSimak extends CI_Controller
                 ]);
             }
         }
+    }
+
+    public function DataTrxSiskeu()
+    {
+        if ($this->input->is_ajax_request()) {
+            $table = 'transaksi';
+            $dataForInsert = [];
+            $countTotalTrx = $this->api->mGet('siskeu/TrxCount', [
+                'query' => [
+                    'type' => 'get_count',
+                    // 'thn_akademik' => $smtAktif,
+                ]
+            ]);
+            $dataTotalTrxLokal = $this->transaksi->getDataTransaksi()->num_rows();
+            if ($countTotalTrx['total_trx'] < $dataTotalTrxLokal) {
+                // inser data dari lokal ke simak
+                $res = [
+                    'statu' => true,
+                    'action' => 'simak',
+                    'data' => [
+                        'trxSimak' => $countTotalTrx['total_trx'],
+                        'trxLocal' => $dataTotalTrxLokal,
+                        'diff' => ($dataTotalTrxLokal - $countTotalTrx['total_trx']),
+                    ],
+                    'msg' => 'Success.'
+                ];
+            } elseif ($countTotalTrx['total_trx'] > $dataTotalTrxLokal) {
+
+
+                $dataTrxSimakOffset = $this->api->mGet('siskeu/TrxCount', [
+                    'query' => [
+                        'offset' => $dataTotalTrxLokal
+                    ]
+                ]);
+                $dataTrxSimakOffset = $dataTrxSimakOffset['total_trx'];
+                // foreach ($dataTrxSimakOffset as $i => $val) {
+                //     $insert[] = $this->masterdata->insertData($table, $val);
+                // }
+                // if (!$insert) {
+                //     $res = [
+                //         'status' => false,
+                //         'msg' => 'gagal insert',
+                //         'action' => 'lokal',
+                //         'data' => null
+                //     ];
+                // } else {
+                // $countLocalTotalTrx = count($insert) + $dataTotalTrxLokal;
+                $res = [
+                    'status' => 200,
+                    'msg' => 'berhasil',
+                    'tipe' => 'lokal',
+                    'diff' => ($countTotalTrx['total_trx'] - $dataTotalTrxLokal),
+                    'data' => $dataTrxSimakOffset
+                ];
+                // }
+
+                // $res = [
+                //     'statu' => true,
+                //     'action' => 'lokal',
+                //     'data' => [
+                //         'trxSimak' => $countTotalTrx['total_trx'],
+                //         'trxLocal' => $dataTotalTrxLokal,
+                //         'diff' => ($countTotalTrx['total_trx'] - $dataTotalTrxLokal),
+                //     ],
+                //     'msg' => 'Success.'
+                // ];
+            }
+        } else {
+            $res = [
+                'statu' => false,
+                'data' => null,
+                'msg' => 'Invalid Request.'
+            ];
+        }
+        echo json_encode($res);
+
     }
 
 

@@ -163,10 +163,101 @@
             </div>
         </a>
     </div>
+
+
+    <!-- Data Transaksi -->
+    <div class="col-sm-6 col-lg-3">
+        <!-- Widget -->
+        <a href="#" class="widget widget-hover-effect1">
+            <div class="widget-simple">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <h4><strong>Data Transaksi</strong></h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-5">
+                            <h3 class="widget-content text-center animation-pullDown dataTrx_local_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
+                            </h3>
+                        </div>
+                        <div class="col-sm-2">
+                            <h2><i class="fa fa-arrow-circle-right"></i></h2>
+                        </div>
+                        <div class="col-sm-5">
+                            <h3 class="widget-content text-center animation-pullDown dataTrx_simak_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Simak</small>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <button class="btn btn-primary" id="btn_sync_dataTrx" disabled><i class="fa fa-sync" id="icon_sync_dataTrx"></i> Sinkron Data</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Dashboard Simak -->
+    <div class="col-sm-6 col-lg-3">
+        <!-- Widget -->
+        <a href="#" class="widget widget-hover-effect1">
+            <div class="widget-simple">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <h4><strong>Dashboard SIMAK</strong></h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- <div class="col-sm-5">
+                            <h3 class="widget-content text-center animation-pullDown dashboardSimak_local_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
+                            </h3>
+                        </div>
+                        <div class="col-sm-2">
+                            <h2><i class="fa fa-arrow-circle-right"></i></h2>
+                        </div>
+                        <div class="col-sm-5">
+                            <h3 class="widget-content text-center animation-pullDown dashboardSimak_simak_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Simak</small>
+                            </h3>
+                        </div> -->
+                        <small>Portal untuk melihat data laporan keuangan SIMAK</small>
+                        <ul>
+                            <li>Data 1</li>
+                            <li>Data 2</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <button class="btn btn-primary" id="btn_sync_dashboardSimak">Go to DASHBOARD</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
     <!-- end widget -->
 </div>
 <script>
     $(document).ready(function() {
+        $('#btn_sync_dashboardSimak').on('click', function(){
+            // var data = `<?= $this->session->userdata('username'); ?>`
+            let url = `https://simak.wastu.digital/admin/DashboardSiskeu/Auth?token=tehpoci`;
+            window.open(url);
+        });
         $.ajax({
             type: "GET",
             url: 'sync-simak/getCountData',
@@ -181,6 +272,8 @@
                 $('.reg_mhs_simak_label span').text(response.reg_mhs_simak);
                 $('.reg_ujian_local_label span').text(response.reg_ujian_local);
                 $('.reg_ujian_simak_label span').text(response.reg_ujian_simak);
+                $('.dataTrx_simak_label span').text(response.siskeu_trx_simak);
+                $('.dataTrx_local_label span').text(response.siskeu_trx_local);
                 // console.log($('.mhs_simak_label span').text());
                 if ($('.mhs_local_label span').text() != $('.mhs_simak_label span').text()) {
                     if ($('.mhs_local_label span').text() < $('.mhs_simak_label span').text()) {
@@ -302,6 +395,37 @@
                         }
                     });
                 });
+
+                // ====================== Data Trx ===========================
+                if ($('.dataTrx_local_label span').text() != $('.dataTrx_simak_label span').text()) {
+                    $('.btn#btn_sync_dataTrx').attr('disabled', false);
+                }
+                $('.btn#btn_sync_dataTrx').click(function() {
+                    $('#icon_sync_dataTrx').attr('class', 'fa fa-sync fa-spin');
+                    $.ajax({
+                        type: 'POST', //Method type
+                        url: 'sync-simak/DataTrxSiskeu',
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                            if (response.status == true) {
+                                $('#icon_sync_dataTrx').attr('class', 'fa fa-sync');
+                                $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                                setTimeout(function() {
+                                    $('#success_message').html('');
+                                }, 5000);
+                                if (response.action == 'simak') {
+                                    $('.dataTrx_simak_label span').text(response.data);
+                                } else {
+                                    $('.dataTrx_local_label span').text(response.data);
+                                }
+                                $('.btn#btn_sync_dataTrx').prop('disabled', true);
+                            }
+                        }
+                    });
+                });
+
+
             }
         });
     });
