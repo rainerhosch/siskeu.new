@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 /*
-* file name     : M_masterdata
-* file type     : models
-* file packages : CodeIgniter 3
-* author        : rizky ardiansyah
-* date-create   : 14 Dec 2020
-*/
+ * file name     : M_masterdata
+ * file type     : models
+ * file packages : CodeIgniter 3
+ * author        : rizky ardiansyah
+ * date-create   : 14 Dec 2020
+ */
 
 class M_masterdata extends CI_Model
 {
@@ -28,7 +28,7 @@ class M_masterdata extends CI_Model
         $this->db->distinct();
         $this->db->select('tahun_masuk');
         $this->db->from('mahasiswa');
-        if($where != null){
+        if ($where != null) {
             $this->db->where($where);
         }
         $this->db->group_by('tahun_masuk');
@@ -41,7 +41,7 @@ class M_masterdata extends CI_Model
         $this->db->distinct();
         $this->db->select('*');
         $this->db->from('mahasiswa');
-        if($where != null){
+        if ($where != null) {
             $this->db->where($where);
         }
         return $this->db->get();
@@ -54,7 +54,7 @@ class M_masterdata extends CI_Model
         $this->db->from('transaksi t');
         $this->db->join('mahasiswa m', 'm.nipd=t.nim');
         $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
-        if($where != null){
+        if ($where != null) {
             $this->db->where($where);
         }
         $this->db->group_by('m.nipd');
@@ -135,6 +135,14 @@ class M_masterdata extends CI_Model
         $this->db->select('id_smt, nm_smt, smt, id_thn_ajaran');
         $this->db->from('kalender_akademik');
         $this->db->where(['a_periode_aktif' => 1]);
+        return $this->db->get();
+    }
+    // get semester aktif
+    public function getDataSemester()
+    {
+        $this->db->select('id_smt, nm_smt, smt, id_thn_ajaran');
+        $this->db->from('kalender_akademik');
+        $this->db->order_by('id_smt', 'desc');
         return $this->db->get();
     }
 
@@ -270,7 +278,7 @@ class M_masterdata extends CI_Model
     {
         $this->db->insert($table, $data);
         $insert_id = $this->db->insert_id();
-        return  $insert_id;
+        return $insert_id;
     }
 
     // Update Biaya Spp

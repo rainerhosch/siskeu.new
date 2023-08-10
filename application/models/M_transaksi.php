@@ -100,6 +100,25 @@ class M_transaksi extends CI_Model
         return $this->db->get();
     }
 
+    public function getDataTransaksiOnly($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('transaksi');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
+    public function getDataDetailTransaksiOnly($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('transaksi_detail');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
 
     public function getDataTransaksiPagenation($data = null, $limit = '', $start = '', $where = null)
     {

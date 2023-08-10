@@ -21,7 +21,7 @@
         $(document).ready(function() {
             $.ajax({
                 type: "POST",
-                url: '<?= base_url() ?>transaksi/getDataTransaksi',
+                url: '<?= base_url() ?>migrasitrxtotg/getTrxLastSmt',
                 dataType: "json",
                 success: function(response) {
                     console.log(response)

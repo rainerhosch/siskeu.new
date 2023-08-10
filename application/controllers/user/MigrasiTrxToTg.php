@@ -40,6 +40,25 @@ class MigrasiTrxToTg extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function getTrxLastSmt()
+    {
+        $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
+        $smtSebelumnya = $smtAktifRes[1];
+
+        $data = [];
+
+        $where = [
+            'semester =' => $smtSebelumnya['id_smt']
+        ];
+        $dataHistoriTx = $this->transaksi->getDataTransaksiOnly($where)->result_array();
+        $data = $dataHistoriTx;
+        foreach ($dataHistoriTx as $i => $val) {
+            $data[$i]['detail'] = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $val['id_transaksi']])->result_array();
+        }
+        echo json_encode($data);
+
+    }
+
     public function migrate_to_tg()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
