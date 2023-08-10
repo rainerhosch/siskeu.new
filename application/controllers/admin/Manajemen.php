@@ -23,6 +23,32 @@ class Manajemen extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function data_user_access_menu()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data = [];
+            $data_role = $this->user->roleUser()->result_array();
+            foreach ($data_role as $i => $role) {
+                $role['menu_access'] = $this->menu->getUserMenu(['uam.role_id' => $role['id_role']])->result_array();
+                $data[$i] = $role;
+            }
+            $res = [
+                'status' => true,
+                'code' => 200,
+                'data' => $data,
+                'msg' => 'success.'
+            ];
+        } else {
+            $res = [
+                'status' => false,
+                'code' => 403,
+                'data' => null,
+                'msg' => 'Invalid request.'
+            ];
+        }
+        echo json_encode($res);
+    }
+
     // ===================== Menu Manajemen ==================================
     public function ManajemenMenu()
     {
@@ -35,16 +61,16 @@ class Manajemen extends CI_Controller
     public function AddNewMenu()
     {
         // code here ...
-        $nama       = $this->input->post('nama_menu');
-        $link       = $this->input->post('link_menu');
-        $icon       = $this->input->post('icon_menu');
-        $type       = $this->input->post('type_menu');
-        $is_active  = $this->input->post('is_active');
-        $dataPost   = [
+        $nama = $this->input->post('nama_menu');
+        $link = $this->input->post('link_menu');
+        $icon = $this->input->post('icon_menu');
+        $type = $this->input->post('type_menu');
+        $is_active = $this->input->post('is_active');
+        $dataPost = [
             'nama_menu' => $nama,
             'link_menu' => $link,
-            'type'      => $type,
-            'icon'      => $icon,
+            'type' => $type,
+            'icon' => $icon,
             'is_active' => $is_active,
             'editable' => 'YES'
         ];
@@ -84,16 +110,16 @@ class Manajemen extends CI_Controller
     public function UpdateMenu()
     {
         // code here
-        $id_menu    = $this->input->post('id_menu_edit');
-        $nama       = $this->input->post('nama_menu_edit');
-        $link       = $this->input->post('link_menu_edit');
-        $icon       = $this->input->post('icon_menu_edit');
-        $type       = $this->input->post('type_menu_edit');
-        $dataUpdate   = [
+        $id_menu = $this->input->post('id_menu_edit');
+        $nama = $this->input->post('nama_menu_edit');
+        $link = $this->input->post('link_menu_edit');
+        $icon = $this->input->post('icon_menu_edit');
+        $type = $this->input->post('type_menu_edit');
+        $dataUpdate = [
             'nama_menu' => $nama,
             'link_menu' => $link,
-            'type'      => $type,
-            'icon'      => $icon
+            'type' => $type,
+            'icon' => $icon
         ];
         $update = $this->menu->updateMenu($id_menu, $dataUpdate);
         if (!$update) {
@@ -154,11 +180,11 @@ class Manajemen extends CI_Controller
 
     public function AddNewSubmenu()
     {
-        $dataPost   = [
+        $dataPost = [
             'id_menu' => $this->input->post('menu_parent'),
             'nama_submenu' => $this->input->post('nama_submenu'),
             'url' => $this->input->post('url_submenu'),
-            'icon'      => $this->input->post('icon_submenu'),
+            'icon' => $this->input->post('icon_submenu'),
             'is_active' => 0,
         ];
         $add = $this->menu->addNewSubmenu($dataPost);
@@ -211,16 +237,16 @@ class Manajemen extends CI_Controller
     public function UpdateSubmenu()
     {
         // code here
-        $id_submenu     = $this->input->post('id_submenu_edit');
-        $nama           = $this->input->post('nama_submenu_edit');
-        $link           = $this->input->post('link_submenu_edit');
-        $icon           = $this->input->post('icon_submenu_edit');
-        $id_menu        = $this->input->post('menu_parent_edit');
-        $dataUpdate   = [
-            'id_menu'       => $id_menu,
-            'nama_submenu'  => $nama,
-            'url'           => $link,
-            'icon'          => $icon
+        $id_submenu = $this->input->post('id_submenu_edit');
+        $nama = $this->input->post('nama_submenu_edit');
+        $link = $this->input->post('link_submenu_edit');
+        $icon = $this->input->post('icon_submenu_edit');
+        $id_menu = $this->input->post('menu_parent_edit');
+        $dataUpdate = [
+            'id_menu' => $id_menu,
+            'nama_submenu' => $nama,
+            'url' => $link,
+            'icon' => $icon
         ];
         $update = $this->menu->updateSubmenu($id_submenu, $dataUpdate);
         if (!$update) {
@@ -274,15 +300,15 @@ class Manajemen extends CI_Controller
     public function AddUser()
     {
         // code here
-        $nama       = $this->input->post('nama_user');
-        $username   = $this->input->post('username');
-        $pass       = $this->input->post('add_password');
-        $role       = $this->input->post('add_role');
-        $dataPost   = [
+        $nama = $this->input->post('nama_user');
+        $username = $this->input->post('username');
+        $pass = $this->input->post('add_password');
+        $role = $this->input->post('add_role');
+        $dataPost = [
             'nama_user' => $nama,
             'username' => $username,
             'password' => md5($pass),
-            'role'     => $role
+            'role' => $role
         ];
         $add = $this->user->addUser($dataPost);
         if (!$add) {
@@ -311,16 +337,16 @@ class Manajemen extends CI_Controller
     public function UpdateUser()
     {
         // code here
-        $id_user    = $this->input->post('edit_id_user');
-        $nama       = $this->input->post('edit_nama');
-        $username   = $this->input->post('edit_username');
-        $pass       = $this->input->post('edit_password');
-        $role       = $this->input->post('edit_role');
-        $dataUpdate   = [
+        $id_user = $this->input->post('edit_id_user');
+        $nama = $this->input->post('edit_nama');
+        $username = $this->input->post('edit_username');
+        $pass = $this->input->post('edit_password');
+        $role = $this->input->post('edit_role');
+        $dataUpdate = [
             'nama_user' => $nama,
             'username' => $username,
             'password' => md5($pass),
-            'role'     => $role
+            'role' => $role
         ];
         $update = $this->user->updateUser($id_user, $dataUpdate);
         if (!$update) {
