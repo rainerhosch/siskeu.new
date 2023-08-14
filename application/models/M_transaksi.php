@@ -57,13 +57,17 @@ class M_transaksi extends CI_Model
         LEFT JOIN master_jenis_pembayaran mjp ON mjp.id_jenis_pembayaran=td.id_jenis_pembayaran 
         WHERE trx.semester=20222 AND mjp.jenis_kas=1 ORDER BY `id_transaksi` DESC;
         */
-        $this->db->select('trx.id_transaksi');
+        // $this->db->select('trx.*, td.jml_bayar, td.id_jenis_pembayaran, mjp.nm_jenis_pembayaran, mjp.jenis_kas ');
+        $this->db->select('trx.*');
         $this->db->from('transaksi trx');
         $this->db->join('transaksi_detail td', 'td.id_transaksi=trx.id_transaksi', 'left');
         $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=td.id_jenis_pembayaran', 'left');
         $this->db->where($data['where']);
+        $this->db->group_by('trx.id_transaksi');
         return $this->db->get();
     }
+
+
     function get_datatables()
     {
         $this->_get_datatables_query();
