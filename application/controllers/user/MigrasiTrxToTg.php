@@ -47,14 +47,16 @@ class MigrasiTrxToTg extends CI_Controller
 
         $data = [];
 
-        $where = [
-            'semester =' => $smtSebelumnya['id_smt']
+        $condition = [
+            'trx.semester =' => $smtSebelumnya['id_smt'],
+            'mjp.jenis_kas' => 1
         ];
-        $dataHistoriTx = $this->transaksi->getDataTransaksiOnly($where)->result_array();
+        // $dataHistoriTx = $this->transaksi->getDataTransaksiOnly($where)->result_array();
+        $dataHistoriTx = $this->transaksi->getIdTrx(['where' => $condition])->result_array();
         $data = $dataHistoriTx;
-        foreach ($dataHistoriTx as $i => $val) {
-            $data[$i]['detail'] = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $val['id_transaksi']])->result_array();
-        }
+        // foreach ($dataHistoriTx as $i => $val) {
+        //     $data[$i]['detail'] = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $val['id_transaksi']])->result_array();
+        // }
         echo json_encode($data);
 
     }

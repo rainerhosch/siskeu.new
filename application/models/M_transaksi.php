@@ -49,6 +49,21 @@ class M_transaksi extends CI_Model
         }
     }
 
+    function getIdTrx($data)
+    {
+        /*
+        SELECT trx.*, td.jml_bayar, td.id_jenis_pembayaran, mjp.nm_jenis_pembayaran, mjp.jenis_kas 
+        FROM transaksi trx JOIN transaksi_detail td ON td.id_transaksi=trx.id_transaksi 
+        LEFT JOIN master_jenis_pembayaran mjp ON mjp.id_jenis_pembayaran=td.id_jenis_pembayaran 
+        WHERE trx.semester=20222 AND mjp.jenis_kas=1 ORDER BY `id_transaksi` DESC;
+        */
+        $this->db->select('trx.id_transaksi');
+        $this->db->from('transaksi trx');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=trx.id_transaksi', 'left');
+        $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=td.id_jenis_pembayaran', 'left');
+        $this->db->where($data['where']);
+        return $this->db->get();
+    }
     function get_datatables()
     {
         $this->_get_datatables_query();
