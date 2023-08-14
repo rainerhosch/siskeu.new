@@ -35,7 +35,7 @@ class MigrasiTrxToTg extends CI_Controller
     public function index()
     {
         $data['title'] = 'Utility';
-        $data['page'] = 'Test Page';
+        $data['page'] = 'Test Page (Belum Fix, harus ambil data mhs diwal jangan di akhir)';
         $data['content'] = 'layout/test_page';
         $this->load->view('template', $data);
     }
