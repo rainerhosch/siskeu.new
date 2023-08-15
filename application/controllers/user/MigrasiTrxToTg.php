@@ -40,7 +40,7 @@ class MigrasiTrxToTg extends CI_Controller
         $this->load->view('template', $data);
     }
 
-    public function getTrxLastSmt()
+    public function getTrxLastSmtById()
     {
         $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
         $smtSebelumnya = $smtAktifRes[1];
@@ -132,6 +132,48 @@ class MigrasiTrxToTg extends CI_Controller
         // echo json_encode($dataBelumLunasTrx);
         echo json_encode($data);
 
+    }
+
+    public function getTrxLastSmt()
+    {
+        $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
+        $smtSebelumnya = $smtAktifRes[1];
+
+        $data = [];
+        $condition = [
+            'trx.semester =' => $smtSebelumnya['id_smt'],
+            // 'mjp.jenis_kas' => 1
+        ];
+        $dataHistoriTx = $this->transaksi->getTrxByNim(['where' => $condition])->result_array();
+        // $data = $dataHistoriTx;
+        foreach ($dataHistoriTx as $i => $val) {
+            $data[$i]['total_bayar_cs'] = 0;
+            $data[$i]['total_bayar_ps'] = 0;
+            $data[$i]['total_bayar_kmhs'] = 0;
+            // get data mhs
+            $dataMhs = $this->masterdata->getDataMhs(['nipd' => $val['nim']])->row_array();
+            $data[$i]['nim'] = $dataMhs['nipd'];
+            $data[$i]['nama'] = $dataMhs['nm_pd'];
+            $data[$i]['prodi'] = $dataMhs['nm_jur'];
+            $data[$i]['tahun_masuk'] = $dataMhs['tahun_masuk'];
+            $data[$i]['jnj_didik'] = $dataMhs['nm_jenj_didik'];
+
+            // get data biaya
+            $where_tahun = [
+                'angkatan' => $dataMhs['tahun_masuk']
+            ];
+            $jenjangMhs = $dataMhs['nm_jenj_didik'];
+            $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+            $data[$i]['kewajiban_cs'] = $dataBiaya['cicilan_semester'];
+            $data[$i]['kewajiban_ps'] = ($dataBiaya['cicilan_semester'] / 2);
+            $data[$i]['kewajiban_kmhs'] = $dataBiaya['kemahasiswaan'];
+            $data[$i]['kewajiban_pangkal'] = $dataBiaya['uang_bangunan'];
+
+            // cek data trx mhs 
+            $data[$i]['histori_trx'] = $this->transaksi->getDataTransaksiOnly(['nim' => $val['nim']])->result_array();
+            // $dataDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $val['id_transaksi']])->result_array();
+        }
+        echo json_encode($data);
     }
 
     public function migrate_to_tg()
