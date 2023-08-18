@@ -71,8 +71,8 @@ class M_transaksi extends CI_Model
     {
         $this->db->select('trx.*');
         $this->db->from('transaksi trx');
-        // $this->db->join('transaksi_detail td', 'td.id_transaksi=trx.id_transaksi', 'left');
-        // $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=td.id_jenis_pembayaran', 'left');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=trx.id_transaksi', 'left');
+        $this->db->join('master_jenis_pembayaran mjp', 'mjp.id_jenis_pembayaran=td.id_jenis_pembayaran', 'left');
         $this->db->where($data['where']);
         $this->db->group_by('trx.nim');
         return $this->db->get();

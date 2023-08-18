@@ -142,7 +142,7 @@ class MigrasiTrxToTg extends CI_Controller
         $data = [];
         $condition = [
             'trx.semester =' => $smtSebelumnya['id_smt'],
-            // 'mjp.jenis_kas' => 1
+            'mjp.jenis_kas' => 1
         ];
         $dataHistoriTxByNim = $this->transaksi->getTrxByNim(['where' => $condition])->result_array();
         // $data = $dataHistoriTxByNim;
