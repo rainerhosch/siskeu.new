@@ -144,12 +144,16 @@ class MigrasiTrxToTg extends CI_Controller
             'trx.semester =' => $smtSebelumnya['id_smt'],
             // 'mjp.jenis_kas' => 1
         ];
-        $dataHistoriTx = $this->transaksi->getTrxByNim(['where' => $condition])->result_array();
-        // $data = $dataHistoriTx;
-        foreach ($dataHistoriTx as $i => $val) {
+        $dataHistoriTxByNim = $this->transaksi->getTrxByNim(['where' => $condition])->result_array();
+        // $data = $dataHistoriTxByNim;
+        $data['total_lunas'] = 0;
+        $data['total_belum_lunas'] = 0;
+        foreach ($dataHistoriTxByNim as $i => $val) {
+            $data[$i]['status_pembayaran'] = 'Belum Lunas';
             $data[$i]['total_bayar_cs'] = 0;
             $data[$i]['total_bayar_ps'] = 0;
             $data[$i]['total_bayar_kmhs'] = 0;
+            $data[$i]['total_bayar_pangkal'] = 0;
             // get data mhs
             $dataMhs = $this->masterdata->getDataMhs(['nipd' => $val['nim']])->row_array();
             $data[$i]['nim'] = $dataMhs['nipd'];
@@ -164,13 +168,42 @@ class MigrasiTrxToTg extends CI_Controller
             ];
             $jenjangMhs = $dataMhs['nm_jenj_didik'];
             $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
-            $data[$i]['kewajiban_cs'] = $dataBiaya['cicilan_semester'];
-            $data[$i]['kewajiban_ps'] = ($dataBiaya['cicilan_semester'] / 2);
-            $data[$i]['kewajiban_kmhs'] = $dataBiaya['kemahasiswaan'];
-            $data[$i]['kewajiban_pangkal'] = $dataBiaya['uang_bangunan'];
+            $data[$i]['kewajiban_cs'] = (int) $dataBiaya['cicilan_semester'];
+            $data[$i]['kewajiban_ps'] = (int) ($dataBiaya['cicilan_semester'] / 2);
+            $data[$i]['kewajiban_kmhs'] = (int) $dataBiaya['kemahasiswaan'];
+            $data[$i]['kewajiban_pangkal'] = (int) $dataBiaya['uang_bangunan'];
 
             // cek data trx mhs 
-            $data[$i]['histori_trx'] = $this->transaksi->getDataTransaksiOnly(['nim' => $val['nim']])->result_array();
+            $histori_trx = $this->transaksi->getDataTransaksiOnly(['nim' => $val['nim'], 'semester =' => $smtSebelumnya['id_smt']])->result_array();
+            $data[$i]['histori_trx'] = $histori_trx;
+            foreach ($histori_trx as $j => $trx) {
+                $dataDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $trx['id_transaksi']])->result_array();
+                $data[$i]['histori_trx'][$j]['detail_trx'] = $dataDetailTrx;
+                foreach ($dataDetailTrx as $x => $dtx) {
+                    if ($dtx['id_jenis_pembayaran'] === '2' || $dtx['id_jenis_pembayaran'] === '3' || $dtx['id_jenis_pembayaran'] === '4') {
+                        $data[$i]['total_bayar_cs'] = $data[$i]['total_bayar_cs'] + $dtx['jml_bayar'];
+                        $data[$i]['histori_trx'][$j]['detail_trx'][$x]['sisa_bayar_cs'] = $data[$i]['kewajiban_cs'] - $data[$i]['total_bayar_cs'];
+                    }
+
+                    if ($dtx['id_jenis_pembayaran'] === '8') {
+                        $data[$i]['total_bayar_ps'] = $data[$i]['total_bayar_ps'] + $dtx['jml_bayar'];
+                        $data[$i]['histori_trx'][$j]['detail_trx'][$x]['sisa_bayar_ps'] = $data[$i]['kewajiban_ps'] - $dtx['jml_bayar'];
+                    }
+                    if ($dtx['id_jenis_pembayaran'] === '5') {
+                        $data[$i]['total_bayar_kmhs'] = $data[$i]['total_bayar_kmhs'] + $dtx['jml_bayar'];
+                        $data[$i]['histori_trx'][$j]['detail_trx'][$x]['sisa_bayar_kmhs'] = $data[$i]['kewajiban_kmhs'] - $dtx['jml_bayar'];
+                    }
+                }
+
+            }
+            if ($data[$i]['kewajiban_cs'] - $data[$i]['total_bayar_cs'] <= 0) {
+                $data[$i]['status_pembayaran'] = 'Lunas';
+                $data['total_lunas'] = $data['total_lunas'] + 1;
+            }
+            if ($data[$i]['kewajiban_cs'] - $data[$i]['total_bayar_cs'] > 0) {
+                $data['total_belum_lunas'] = $data['total_belum_lunas'] + 1;
+            }
+
             // $dataDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $val['id_transaksi']])->result_array();
         }
         echo json_encode($data);
