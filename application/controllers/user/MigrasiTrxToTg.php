@@ -202,7 +202,7 @@ class MigrasiTrxToTg extends CI_Controller
 
             }
 
-            if ($data[$i]['kewajiban_cs'] - $data[$i]['total_bayar_cs'] <= 0) {
+            if ($data[$i]['kewajiban_cs'] - $data[$i]['total_bayar_cs'] <= 0 || $data[$i]['kewajiban_ps'] - $data[$i]['total_bayar_ps'] <= 0) {
                 $data[$i]['status_pembayaran'] = 'Lunas';
                 $data['total_lunas'] = $data['total_lunas'] + 1;
             }
