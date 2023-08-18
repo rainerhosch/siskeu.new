@@ -149,7 +149,7 @@ class MigrasiTrxToTg extends CI_Controller
         $data['total_lunas'] = 0;
         $data['total_belum_lunas'] = 0;
         foreach ($dataHistoriTxByNim as $i => $val) {
-            $data[$i]['bayar_lainnya'] = false;
+            // $data[$i]['bayar_lainnya'] = true;
             $data[$i]['status_pembayaran'] = 'Belum Lunas';
             $data[$i]['total_bayar_cs'] = 0;
             $data[$i]['total_bayar_ps'] = 0;
