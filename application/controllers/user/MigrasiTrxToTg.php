@@ -149,7 +149,7 @@ class MigrasiTrxToTg extends CI_Controller
         $data['total_lunas'] = 0;
         $data['total_belum_lunas'] = 0;
         foreach ($dataHistoriTxByNim as $i => $val) {
-            // $data[$i]['bayar_lainnya'] = true;
+            $data[$i]['bayar_lainnya'] = true;
             $data[$i]['status_pembayaran'] = 'Belum Lunas';
             $data[$i]['total_bayar_cs'] = 0;
             $data[$i]['total_bayar_ps'] = 0;
@@ -182,7 +182,7 @@ class MigrasiTrxToTg extends CI_Controller
                 $data[$i]['histori_trx'][$j]['detail_trx'] = $dataDetailTrx;
                 foreach ($dataDetailTrx as $x => $dtx) {
                     if ($dtx['id_jenis_pembayaran'] != '2' || $dtx['id_jenis_pembayaran'] != '3' || $dtx['id_jenis_pembayaran'] != '4') {
-                        $data[$i]['bayar_lainya'] = false;
+                        $data[$i]['bayar_lainya'] = true;
                     }
                     if ($dtx['id_jenis_pembayaran'] === '2' || $dtx['id_jenis_pembayaran'] === '3' || $dtx['id_jenis_pembayaran'] === '4') {
                         $data[$i]['total_bayar_cs'] = $data[$i]['total_bayar_cs'] + $dtx['jml_bayar'];
@@ -190,7 +190,7 @@ class MigrasiTrxToTg extends CI_Controller
                     }
 
                     if ($dtx['id_jenis_pembayaran'] === '8') {
-                        $data[$i]['bayar_lainya'] = true;
+                        // $data[$i]['bayar_lainya'] = true;
                         $data[$i]['total_bayar_ps'] = $data[$i]['total_bayar_ps'] + $dtx['jml_bayar'];
                         $data[$i]['histori_trx'][$j]['detail_trx'][$x]['sisa_bayar_ps'] = $data[$i]['kewajiban_ps'] - $dtx['jml_bayar'];
                     }
