@@ -33,7 +33,11 @@ class Dashboard extends CI_Controller
         foreach ($response as $tg) {
             $total_tg[] = $tg['jml_tunggakan'];
         }
-        $data['total_tg'] = array_sum($total_tg);
+        if (count($response) > 0) {
+            $data['total_tg'] = array_sum($total_tg);
+        } else {
+            $data['total_tg'] = 0;
+        }
 
         $this->load->view('template', $data);
         // $this->load->view('app');

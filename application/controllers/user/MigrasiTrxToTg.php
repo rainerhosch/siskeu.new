@@ -134,7 +134,7 @@ class MigrasiTrxToTg extends CI_Controller
 
     }
 
-    public function getTrxLastSmt()
+    public function getTrxLastSmtV1()
     {
         $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
         $smtSebelumnya = $smtAktifRes[1];
@@ -213,6 +213,136 @@ class MigrasiTrxToTg extends CI_Controller
             // $dataDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $val['id_transaksi']])->result_array();
         }
         echo json_encode($data);
+    }
+
+    public function getTrxLastSmt()
+    {
+        $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
+        $smtSebelumnya = $smtAktifRes[1];
+
+        $data = [];
+        foreach ($smtAktifRes as $i => $smt) {
+            // $condition = [
+            //     'trx.semester =' => $smtSebelumnya['id_smt'],
+            //     'mjp.jenis_kas' => 1
+            // ];
+            // $dataHistoriTxByNim = $this->transaksi->getDataTransaksiOnly(['semester' => $smt['id_smt']])->result_array();
+            // $dataTrx = $this->getDataTransaksi(['semester' => $smt['id_smt']]);
+            $condition = [
+                'trx.semester =' => $smt['id_smt'],
+                // 'mjp.jenis_kas' => 1
+            ];
+            $dataTrx = $this->transaksi->getTrxByNim(['where' => $condition])->result_array();
+            $data[$i]['total_lunas'] = 0;
+            $data[$i]['total_belum_lunas'] = 0;
+            $ResdataTrx = [];
+            foreach ($dataTrx as $j => $val) {
+                $ResdataTrx[$j]['status_pembayaran'] = 'Belum Lunas';
+                $ResdataTrx[$j]['total_bayar_cs'] = 0;
+                $ResdataTrx[$j]['total_bayar_ps'] = 0;
+                $ResdataTrx[$j]['total_bayar_kmhs'] = 0;
+                $ResdataTrx[$j]['total_bayar_pangkal'] = 0;
+                // get data mhs
+                $dataMhs = $this->masterdata->getDataMhs(['nipd' => $val['nim']])->row_array();
+                if (!is_null($dataMhs)) {
+                    $ResdataTrx[$j]['nim'] = $dataMhs['nipd'];
+                    $ResdataTrx[$j]['nama'] = $dataMhs['nm_pd'];
+                    $ResdataTrx[$j]['prodi'] = $dataMhs['nm_jur'];
+                    $ResdataTrx[$j]['tahun_masuk'] = $dataMhs['tahun_masuk'];
+                    $ResdataTrx[$j]['jnj_didik'] = $dataMhs['nm_jenj_didik'];
+
+                    // get data biaya
+                    $where_tahun = [
+                        'angkatan' => $dataMhs['tahun_masuk']
+                    ];
+                    $jenjangMhs = $dataMhs['nm_jenj_didik'];
+                    $dataBiaya = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+                    $ResdataTrx[$j]['kewajiban_cs'] = (int) $dataBiaya['cicilan_semester'];
+                    $ResdataTrx[$j]['kewajiban_ps'] = (int) ($dataBiaya['cicilan_semester'] / 2);
+                    $ResdataTrx[$j]['kewajiban_kmhs'] = (int) $dataBiaya['kemahasiswaan'];
+                    $ResdataTrx[$j]['kewajiban_pangkal'] = (int) $dataBiaya['uang_bangunan'];
+                    // cek data trx mhs 
+                    $histori_trx = $this->transaksi->getDataTransaksiOnly(['nim' => $val['nim']])->result_array();
+                    $ResdataTrx[$j]['histori_trx'] = $histori_trx;
+                    foreach ($histori_trx as $k => $trx) {
+                        $dataDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $trx['id_transaksi']])->result_array();
+                        $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'] = $dataDetailTrx;
+                        foreach ($dataDetailTrx as $x => $dtx) {
+                            if ($dtx['id_jenis_pembayaran'] > 8) {
+                                $data_kewajiban = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $dtx['id_jenis_pembayaran']])->row_array();
+                                $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $data_kewajiban['biaya'];
+                                $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = $data_kewajiban['nm_jp'];
+                            } else {
+                                if ($dtx['id_jenis_pembayaran'] === '2') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Cicilan Ke 1';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $ResdataTrx[$j]['kewajiban_cs'] / 3;
+                                }
+                                if ($dtx['id_jenis_pembayaran'] === '3') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Cicilan Ke 2';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $ResdataTrx[$j]['kewajiban_cs'] / 3;
+                                }
+                                if ($dtx['id_jenis_pembayaran'] === '4') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Cicilan Ke 3';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $ResdataTrx[$j]['kewajiban_cs'] / 3;
+                                }
+                                if ($dtx['id_jenis_pembayaran'] === '5') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Kemahasiswaan';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $ResdataTrx[$j]['kewajiban_kmhs'];
+                                }
+                                if ($dtx['id_jenis_pembayaran'] === '6') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Tunggakan CS';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $dtx['jml_bayar'];
+                                }
+                                if ($dtx['id_jenis_pembayaran'] === '7') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Tunggakan Kmhs';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $dtx['jml_bayar'];
+                                }
+                                if ($dtx['id_jenis_pembayaran'] === '8') {
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Perpanjang Semester';
+                                    $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $ResdataTrx[$j]['kewajiban_ps'];
+                                }
+                            }
+                            // if ($dtx['id_jenis_pembayaran'] != '2' || $dtx['id_jenis_pembayaran'] != '3' || $dtx['id_jenis_pembayaran'] != '4') {
+                            //     $ResdataTrx[$j]['bayar_lainya'] = true;
+                            // }
+                            if ($dtx['id_jenis_pembayaran'] === '2' || $dtx['id_jenis_pembayaran'] === '3' || $dtx['id_jenis_pembayaran'] === '4') {
+                                $ResdataTrx[$j]['total_bayar_cs'] = $ResdataTrx[$j]['total_bayar_cs'] + $dtx['jml_bayar'];
+                                $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['sisa_bayar_cs'] = $ResdataTrx[$j]['kewajiban_cs'] - $ResdataTrx[$j]['total_bayar_cs'];
+                            }
+
+                            if ($dtx['id_jenis_pembayaran'] === '8') {
+                                // $ResdataTrx[$j]['bayar_lainya'] = true;
+                                $ResdataTrx[$j]['total_bayar_ps'] = $ResdataTrx[$j]['total_bayar_ps'] + $dtx['jml_bayar'];
+                                $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['sisa_bayar_ps'] = $ResdataTrx[$j]['kewajiban_ps'] - $dtx['jml_bayar'];
+                            }
+                            if ($dtx['id_jenis_pembayaran'] === '5') {
+                                $ResdataTrx[$j]['total_bayar_kmhs'] = $ResdataTrx[$j]['total_bayar_kmhs'] + $dtx['jml_bayar'];
+                                $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['sisa_bayar_kmhs'] = $ResdataTrx[$j]['kewajiban_kmhs'] - $dtx['jml_bayar'];
+                            }
+                        }
+
+                    }
+
+                    if ($ResdataTrx[$j]['kewajiban_cs'] - $ResdataTrx[$j]['total_bayar_cs'] <= 0 || $ResdataTrx[$j]['kewajiban_ps'] - $ResdataTrx[$j]['total_bayar_ps'] <= 0) {
+                        $ResdataTrx[$j]['status_pembayaran'] = 'Lunas';
+                        $data[$i]['total_lunas'] = $data[$i]['total_lunas'] + 1;
+                    }
+                    if ($ResdataTrx[$j]['kewajiban_cs'] - $ResdataTrx[$j]['total_bayar_cs'] > 0) {
+                        $data[$i]['total_belum_lunas'] = $data[$i]['total_belum_lunas'] + 1;
+                    }
+                }
+
+            }
+            $data[$i][$smt['id_smt']] = $ResdataTrx;
+        }
+        // $data = $smtAktifRes;
+        echo json_encode($data);
+    }
+
+    public function getDataTransaksi($data = null)
+    {
+        $res = $this->transaksi->getDataTransaksiOnly($data)->result_array();
+        return $res;
     }
 
     public function migrate_to_tg()
