@@ -218,7 +218,8 @@ class MigrasiTrxToTg extends CI_Controller
     public function getTrxLastSmt()
     {
         $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
-        $smtSebelumnya = $smtAktifRes[1];
+        // $smtSebelumnya = $smtAktifRes[1];
+        // $smtAktifRes = ['id_smt' => 20222];
 
         $data = [];
         foreach ($smtAktifRes as $i => $smt) {
