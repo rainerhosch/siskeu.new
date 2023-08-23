@@ -93,63 +93,63 @@
     <div class="row" id="alert_tx">
         <?= $this->session->flashdata('message'); ?>
     </div>
-    <?php if ($this->session->userdata('role') != 4) : ?>
-        <div class="row">
-            <div class="col-sm-6 col-lg-3">
-                <a href="#pembayaran-spp" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaran">
-                    <div class="widget-simple">
-                        <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
-                            <i class="fa fa-bitcoin"></i>
+    <?php if ($this->session->userdata('role') != 4): ?>
+                        <div class="row">
+                            <div class="col-sm-6 col-lg-3">
+                                <a href="#pembayaran-spp" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaran">
+                                    <div class="widget-simple">
+                                        <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
+                                            <i class="fa fa-bitcoin"></i>
+                                        </div>
+                                        <h3 class="widget-content text-right animation-pullDown">
+                                            Pembayaran <strong>SPP</strong><br>
+                                            <small>Buat Transaksi Baru</small>
+                                        </h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <a href="#pembayaran-lain" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaranLain">
+                                    <div class="widget-simple">
+                                        <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+                                            <i class="fa fa-dollar"></i>
+                                        </div>
+                                        <h3 class="widget-content text-right animation-pullDown">
+                                            Pembayaran <strong>Lain</strong><br>
+                                            <small>Buat Transaksi Baru</small>
+                                        </h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-lg-3 btn_trf_online">
+                                <a href="#data-transfer" class="widget widget-hover-effect1">
+                                    <!-- <a href="#data-transfer" class="widget widget-hover-effect1" data-toggle="modal" data-target="#dataTransferMhs"> -->
+                                    <div class="widget-simple">
+                                        <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
+                                            <i class="gi gi-circle_info"></i>
+                                        </div>
+                                        <h3 class="widget-content text-right animation-pullDown">
+                                            <strong id="label-jmlpembayaran">Pembayaran</strong><br>
+                                            <small>Mahasiswa Transfer</small>
+                                        </h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <a href="#" class="widget widget-hover-effect1">
+                                    <div class="widget-simple">
+                                        <div class="widget-icon pull-left themed-background animation-fadeIn">
+                                            <!-- <i class="gi gi-wallet"></i> -->
+                                            <i class="fa fa-file-text-o"></i>
+                                        </div>
+                                        <h3 class="widget-content text-right animation-pullDown">
+                                            <?= $jumlah_tx_hari_ini; ?> <strong>Transaksi</strong><br>
+                                            <small>Transaksi Hari Ini</small>
+                                        </h3>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
-                        <h3 class="widget-content text-right animation-pullDown">
-                            Pembayaran <strong>SPP</strong><br>
-                            <small>Buat Transaksi Baru</small>
-                        </h3>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a href="#pembayaran-lain" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaranLain">
-                    <div class="widget-simple">
-                        <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
-                            <i class="fa fa-dollar"></i>
-                        </div>
-                        <h3 class="widget-content text-right animation-pullDown">
-                            Pembayaran <strong>Lain</strong><br>
-                            <small>Buat Transaksi Baru</small>
-                        </h3>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3 btn_trf_online">
-                <a href="#data-transfer" class="widget widget-hover-effect1">
-                    <!-- <a href="#data-transfer" class="widget widget-hover-effect1" data-toggle="modal" data-target="#dataTransferMhs"> -->
-                    <div class="widget-simple">
-                        <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
-                            <i class="gi gi-circle_info"></i>
-                        </div>
-                        <h3 class="widget-content text-right animation-pullDown">
-                            <strong id="label-jmlpembayaran">Pembayaran</strong><br>
-                            <small>Mahasiswa Transfer</small>
-                        </h3>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a href="#" class="widget widget-hover-effect1">
-                    <div class="widget-simple">
-                        <div class="widget-icon pull-left themed-background animation-fadeIn">
-                            <!-- <i class="gi gi-wallet"></i> -->
-                            <i class="fa fa-file-text-o"></i>
-                        </div>
-                        <h3 class="widget-content text-right animation-pullDown">
-                            <?= $jumlah_tx_hari_ini; ?> <strong>Transaksi</strong><br>
-                            <small>Transaksi Hari Ini</small>
-                        </h3>
-                    </div>
-                </a>
-            </div>
-        </div>
     <?php endif; ?>
 
     <div class="row">
@@ -374,7 +374,7 @@
 
                 if (data_transaksi != 0) {
 
-                    // console.log(data_transaksi)
+                    console.log(data_transaksi)
                     let numEnd = offset + 10;
                     $('#datatable_info').html(`<strong>${offset+1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
                     no = offset;
@@ -411,7 +411,7 @@
                             htmlx += `</td>`;
                         }
 
-                        if (total_bayarTrx < value.kewajiban_Semester_ini) {
+                        if (value.total_bayar < value.kewajiban_bayar) {
                             htmlx += `<td class = "text-center" >BL</td>`;
                         } else {
                             htmlx += `<td class = "text-center" >L</td>`;

@@ -40,7 +40,8 @@ class Laporan extends CI_Controller
         $this->load->model('M_laporan', 'laporan');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
     }
-    public function loadRecord()
+
+    public function loadRecordV1()
     {
         $condition = [];
         $post_limit = $this->input->post('limit');
@@ -129,6 +130,172 @@ class Laporan extends CI_Controller
 
             $dataHistoriTx[$i]['data_tg'] = $dataTGCS;
             $dataHistoriTx[$i]['kewajiban_Semester_ini'] = $kewajiban_Semester_ini;
+        }
+
+        // Pagination Configuration
+        $config['base_url'] = base_url() . 'laporan/' . $url_pagination;
+        $config['use_page_numbers'] = TRUE;
+        $config['total_rows'] = $allcount;
+        $config['per_page'] = $limit;
+
+        // ============ config css pagination ======================
+        $config['full_tag_open'] = "<ul class='pagination pagination-sm remove-margin'>";
+        $config['full_tag_close'] = '</ul>';
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="active"><a href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+
+        $config['prev_link'] = '<i class="fa fa-chevron-left"></i>';
+        $config['prev_tag_open'] = '<li class="prev">';
+        $config['prev_tag_close'] = '</li>';
+
+
+        $config['next_link'] = '<i class="fa fa-chevron-right"></i>';
+        $config['next_tag_open'] = '<li class="next">';
+        $config['next_tag_close'] = '</li>';
+        // ============ End config css pagination ======================
+
+
+        // Initialize
+        $this->pagination->initialize($config);
+
+        // Initialize $data Array
+        $data['pagination'] = $this->pagination->create_links();
+        $data['data_transaksi'] = $dataHistoriTx;
+        $data['total_result'] = $allcount;
+        $data['row'] = $offset;
+        $data['user_loged'] = $this->session->userdata('id_user');
+
+        echo json_encode($data);
+    }
+    public function loadRecord()
+    {
+        $condition = [];
+        $post_limit = $this->input->post('limit');
+        $post_offset = $this->input->post('offset');
+        $key_cari = $this->input->post('keyword');
+        $jenis_kas = $this->input->post('jenis_kas');
+        $url_pagination = $this->input->post('url_pagination');
+        // var_dump($this->input->post());
+        // die;
+        if ($post_offset != null) {
+            $offset = $post_offset;
+        } else {
+            $offset = 0;
+        }
+        if ($post_limit != 0) {
+            $limit = $post_limit;
+        } else {
+            $limit = 10;
+        }
+        if ($offset != 0) {
+            $offset = ($offset - 1) * $limit;
+        }
+        if ($jenis_kas != 'all') {
+            $condition = [
+                'mjp.jenis_kas' => $jenis_kas
+            ];
+        }
+
+        // $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
+        // Get records
+        if ($jenis_kas != 'all') {
+            $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset, ['mjp.jenis_kas' => $jenis_kas])->result_array();
+            $allcount = $this->transaksi->getDataTransaksiPagenation(null, '', '', ['mjp.jenis_kas' => $jenis_kas])->num_rows();
+        } else {
+            // All records count
+            $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset)->result_array();
+            $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
+        }
+        $countHistoriTx = count($dataHistoriTx);
+        for ($i = 0; $i < $countHistoriTx; $i++) {
+
+            $dataCekTG = [
+                'nim' => $dataHistoriTx[$i]['nim'],
+                'jenis_tunggakan' => '6'
+            ];
+            $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+            $jenjangMhs = $dataHistoriTx[$i]['nm_jenj_didik'];
+            $dataMhs = $this->masterdata->getDataMhs(['nipd' => $dataHistoriTx[$i]['nim']])->row_array();
+            $dataHistoriTx[$i]['angkatan_mhs'] = $dataMhs['tahun_masuk'];
+            // $dataHistoriTx[$i]['angkatan_mhs'] = '20' . substr($dataHistoriTx[$i]['nim'], 0, 2);
+            $where_tahun = [
+                'angkatan' => $dataHistoriTx[$i]['angkatan_mhs']
+            ];
+            $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
+            // var_dump($dataBiayaAngkatan);
+            // die;
+            $kewajiban_bayar = 0;
+            $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
+            $biayaKMHS = $dataBiayaAngkatan['kemahasiswaan'];
+
+            if ($jenis_kas != 'all') {
+                $condition = [
+                    'mjp.jenis_kas' => $jenis_kas,
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']
+                ];
+            } else {
+                $condition = [
+                    't.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']
+                ];
+            }
+            $resDetailTx = $this->laporan->getDetailTx($condition)->result_array();
+            $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
+            $dataTGCS = 0;
+
+            // $dataTrxMhs = $this->transaksi->getDataTransaksiOnly(['semester =' => $dataHistoriTx[$i]['semester'], 'nim' => $dataHistoriTx[$i]['nim']])->result_array();
+            // foreach ($dataTrxMhs as $j => $dtm) {
+            //     $dataResultDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $dtm['id_transaksi']])->result_array();
+            //     $dataTrxMhs[$j]['detail'] = $dataResultDetailTrx;
+            // }
+            // $dataHistoriTx[$i]['data_tx_mhs'] = $dataTrxMhs;
+
+            foreach ($resDetailTx as $z => $dTX) {
+                $dataHistoriTx[$i]['pembayran'][$z] = [];
+                $dataHistoriTx[$i]['total_bayar'] = 0;
+                $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] = 0;
+                if ($dTX['id_jenis_pembayaran'] <= 8) {
+                    if ($dTX['id_jenis_pembayaran'] = 2 || $dTX['id_jenis_pembayaran'] = 3 || $dTX['id_jenis_pembayaran'] = 4) {
+                        $kewajiban_bayar = $biayaCS;
+                    }
+                    if ($dTX['id_jenis_pembayaran'] = 5) {
+                        $kewajiban_bayar = $biayaKMHS;
+                    }
+                    if ($dTX['id_jenis_pembayaran'] = 6) {
+                        if ($dataTG != null) {
+                            $dataTGCS = $dTX['jml_bayar'] + $dataTG['jml_tunggakan'];
+                        } else {
+                            $dataTGCS = $dTX['jml_bayar'];
+                        }
+                    }
+                    if ($dTX['id_jenis_pembayaran'] = 8) {
+                        $kewajiban_bayar = ($biayaCS / 2);
+                    }
+
+                } else {
+                    $dataBiaya = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $dTX['id_jenis_pembayaran']])->row_array();
+                    $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] = $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] + $dataBiaya['biaya'];
+                    $kewajiban_bayar = $kewajiban_bayar + $dataBiaya['biaya'];
+                }
+
+                $dataCekTrxBefor = $this->transaksi->getDataTransaksiSebelumnya(['t.semester =' => $dataHistoriTx[$i]['semester'], 't.nim' => $dataHistoriTx[$i]['nim'], 'mjp.id_jenis_pembayaran' => $dTX['id_jenis_pembayaran']])->result_array();
+                // $dataHistoriTx[$i]['detail_transaksi'][$z]['all_history'] = $dataCekTrxBefor;
+                foreach ($dataCekTrxBefor as $y => $ctb) {
+                    $dataHistoriTx[$i]['pembayran'][$z] = $dataCekTrxBefor[$y]['jml_bayar'];
+                    // $dataHistoriTx[$i]['detail_transaksi'][$z]['all_history'][$y]['sisa_bayar'] = $kewajiban_bayar - $ctb['jml_bayar'];
+                    $dataHistoriTx[$i]['total_bayar'] = $dataHistoriTx[$i]['total_bayar'] + $dataHistoriTx[$i]['pembayran'][$z];
+                }
+            }
+
+            $dataHistoriTx[$i]['data_tg'] = $dataTGCS;
+            $dataHistoriTx[$i]['kewajiban_bayar'] = $kewajiban_bayar;
         }
 
         // Pagination Configuration
