@@ -232,6 +232,8 @@ class MigrasiTrxToTg extends CI_Controller
                 'trx.semester =' => $smt['id_smt'],
                 // 'mjp.jenis_kas' => 1
             ];
+            $dataDispen = $this->aktivasi->getDataDispenMhs(['tahun_akademik' => $smt['id_smt'], 'status' => 0])->result_array();
+            $data[$i]['dispen_mhs_bl'] = count($dataDispen);
             $dataTrx = $this->transaksi->getTrxByNim(['where' => $condition])->result_array();
             $data[$i]['total_lunas'] = 0;
             $data[$i]['total_belum_lunas'] = 0;
@@ -348,6 +350,7 @@ class MigrasiTrxToTg extends CI_Controller
                 }
 
             }
+            $data[$i]['selisih_bl_dispen'] = $data[$i]['total_belum_lunas'] - count($dataDispen);
             $data[$i][$smt['id_smt']] = $ResdataTrx;
         }
         // $data = $smtAktifRes;
