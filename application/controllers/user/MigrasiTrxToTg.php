@@ -242,6 +242,8 @@ class MigrasiTrxToTg extends CI_Controller
                 $ResdataTrx[$j]['total_bayar_ps'] = 0;
                 $ResdataTrx[$j]['total_bayar_kmhs'] = 0;
                 $ResdataTrx[$j]['total_bayar_pangkal'] = 0;
+                $ResdataTrx[$j]['total_bayar_lainnya'] = 0;
+                $ResdataTrx[$j]['kewajiban_lainnya'] = 0;
                 // get data mhs
                 $dataMhs = $this->masterdata->getDataMhs(['nipd' => $val['nim']])->row_array();
                 if (!is_null($dataMhs)) {
@@ -262,7 +264,7 @@ class MigrasiTrxToTg extends CI_Controller
                     $ResdataTrx[$j]['kewajiban_kmhs'] = (int) $dataBiaya['kemahasiswaan'];
                     $ResdataTrx[$j]['kewajiban_pangkal'] = (int) $dataBiaya['uang_bangunan'];
                     // cek data trx mhs 
-                    $histori_trx = $this->transaksi->getDataTransaksiOnly(['nim' => $val['nim']])->result_array();
+                    $histori_trx = $this->transaksi->getDataTransaksiOnly(['nim' => $val['nim'], 'semester' => $smt['id_smt']])->result_array();
                     $ResdataTrx[$j]['histori_trx'] = $histori_trx;
                     foreach ($histori_trx as $k => $trx) {
                         $dataDetailTrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $trx['id_transaksi']])->result_array();
@@ -272,6 +274,8 @@ class MigrasiTrxToTg extends CI_Controller
                                 $data_kewajiban = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $dtx['id_jenis_pembayaran']])->row_array();
                                 $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['biaya'] = $data_kewajiban['biaya'];
                                 $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = $data_kewajiban['nm_jp'];
+                                $ResdataTrx[$j]['kewajiban_lainnya'] = $ResdataTrx[$j]['kewajiban_lainnya'] + $data_kewajiban['biaya'];
+                                $ResdataTrx[$j]['total_bayar_lainnya'] = $ResdataTrx[$j]['total_bayar_lainnya'] + $dtx['jml_bayar'];
                             } else {
                                 if ($dtx['id_jenis_pembayaran'] === '2') {
                                     $ResdataTrx[$j]['histori_trx'][$k]['detail_trx'][$x]['nama_pembayaran'] = 'Cicilan Ke 1';
@@ -323,7 +327,18 @@ class MigrasiTrxToTg extends CI_Controller
 
                     }
 
-                    if ($ResdataTrx[$j]['kewajiban_cs'] - $ResdataTrx[$j]['total_bayar_cs'] <= 0 || $ResdataTrx[$j]['kewajiban_ps'] - $ResdataTrx[$j]['total_bayar_ps'] <= 0) {
+
+                    if ($ResdataTrx[$j]['total_bayar_lainnya'] != 0) {
+                        if ($ResdataTrx[$j]['kewajiban_lainnya'] - $ResdataTrx[$j]['total_bayar_lainnya'] <= 0) {
+                            $ResdataTrx[$j]['status_pembayaran'] = 'Lunas';
+                            $data[$i]['total_lunas'] = $data[$i]['total_lunas'] + 1;
+                        } else {
+                            $data[$i]['total_belum_lunas'] = $data[$i]['total_belum_lunas'] + 1;
+                        }
+                    }
+
+                    // if (($ResdataTrx[$j]['kewajiban_cs'] - $ResdataTrx[$j]['total_bayar_cs'] <= 0 && $ResdataTrx[$j]['total_bayar_cs'] != 0) || ($ResdataTrx[$j]['kewajiban_ps'] - $ResdataTrx[$j]['total_bayar_ps'] <= 0 && $ResdataTrx[$j]['total_bayar_ps'] != 0) || ($ResdataTrx[$j]['kewajiban_lainnya'] - $ResdataTrx[$j]['total_bayar_lainnya'] <= 0 && $ResdataTrx[$j]['total_bayar_lainnya'] != 0)) {
+                    if (($ResdataTrx[$j]['kewajiban_cs'] - $ResdataTrx[$j]['total_bayar_cs'] <= 0 && $ResdataTrx[$j]['total_bayar_cs'] != 0) || ($ResdataTrx[$j]['kewajiban_ps'] - $ResdataTrx[$j]['total_bayar_ps'] <= 0 && $ResdataTrx[$j]['total_bayar_ps'] != 0)) {
                         $ResdataTrx[$j]['status_pembayaran'] = 'Lunas';
                         $data[$i]['total_lunas'] = $data[$i]['total_lunas'] + 1;
                     }
