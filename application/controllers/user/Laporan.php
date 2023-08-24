@@ -257,40 +257,53 @@ class Laporan extends CI_Controller
             // }
             // $dataHistoriTx[$i]['data_tx_mhs'] = $dataTrxMhs;
 
+            $dataHistoriTx[$i]['total_bayar'] = 0;
             foreach ($resDetailTx as $z => $dTX) {
-                $dataHistoriTx[$i]['pembayran'][$z] = [];
-                $dataHistoriTx[$i]['total_bayar'] = 0;
+                // $dataHistoriTx[$i]['pembayran'][$z] = [];
                 $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] = 0;
                 if ($dTX['id_jenis_pembayaran'] <= 8) {
-                    if ($dTX['id_jenis_pembayaran'] = 2 || $dTX['id_jenis_pembayaran'] = 3 || $dTX['id_jenis_pembayaran'] = 4) {
+                    if ($dTX['id_jenis_pembayaran'] == 2 || $dTX['id_jenis_pembayaran'] == 3 || $dTX['id_jenis_pembayaran'] == 4) {
+                        // $dataHistoriTx[$i]['detail_transaksi'][$z]['keterangan_bayar'] = 'Bayar CS';
+                        // $kewajiban_bayar = $biayaCS / 3;
                         $kewajiban_bayar = $biayaCS;
                     }
-                    if ($dTX['id_jenis_pembayaran'] = 5) {
+                    if ($dTX['id_jenis_pembayaran'] == 5) {
+                        // $dataHistoriTx[$i]['detail_transaksi'][$z]['keterangan_bayar'] = 'Bayar KMHS';
                         $kewajiban_bayar = $biayaKMHS;
                     }
-                    if ($dTX['id_jenis_pembayaran'] = 6) {
+                    if ($dTX['id_jenis_pembayaran'] == 6) {
                         if ($dataTG != null) {
+                            // $dataHistoriTx[$i]['detail_transaksi'][$z]['keterangan_bayar'] = 'Bayar TG';
                             $dataTGCS = $dTX['jml_bayar'] + $dataTG['jml_tunggakan'];
                         } else {
+                            // $dataHistoriTx[$i]['detail_transaksi'][$z]['keterangan_bayar'] = 'Bayar TG';
                             $dataTGCS = $dTX['jml_bayar'];
                         }
                     }
-                    if ($dTX['id_jenis_pembayaran'] = 8) {
+                    if ($dTX['id_jenis_pembayaran'] == 8) {
+                        // $dataHistoriTx[$i]['detail_transaksi'][$z]['keterangan_bayar'] = 'Bayar PS';
                         $kewajiban_bayar = ($biayaCS / 2);
                     }
 
                 } else {
                     $dataBiaya = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $dTX['id_jenis_pembayaran']])->row_array();
-                    $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] = $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] + $dataBiaya['biaya'];
+                    // $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] = $dataHistoriTx[$i]['detail_transaksi'][$z]['biaya'] + $dataBiaya['biaya'];
                     $kewajiban_bayar = $kewajiban_bayar + $dataBiaya['biaya'];
                 }
-
-                $dataCekTrxBefor = $this->transaksi->getDataTransaksiSebelumnya(['t.semester =' => $dataHistoriTx[$i]['semester'], 't.nim' => $dataHistoriTx[$i]['nim'], 'mjp.id_jenis_pembayaran' => $dTX['id_jenis_pembayaran']])->result_array();
-                // $dataHistoriTx[$i]['detail_transaksi'][$z]['all_history'] = $dataCekTrxBefor;
-                foreach ($dataCekTrxBefor as $y => $ctb) {
-                    $dataHistoriTx[$i]['pembayran'][$z] = $dataCekTrxBefor[$y]['jml_bayar'];
-                    // $dataHistoriTx[$i]['detail_transaksi'][$z]['all_history'][$y]['sisa_bayar'] = $kewajiban_bayar - $ctb['jml_bayar'];
-                    $dataHistoriTx[$i]['total_bayar'] = $dataHistoriTx[$i]['total_bayar'] + $dataHistoriTx[$i]['pembayran'][$z];
+                if ($dTX['id_jenis_pembayaran'] == 2 || $dTX['id_jenis_pembayaran'] == 3 || $dTX['id_jenis_pembayaran'] == 4) {
+                    $dataCekTrxBefor = $this->transaksi->getDataTransaksiSebelumnya(['t.id_transaksi <' => $dataHistoriTx[$i]['id_transaksi'], 't.semester =' => $dataHistoriTx[$i]['semester'], 't.nim' => $dataHistoriTx[$i]['nim'], 'mjp.id_jenis_pembayaran <' => '5'])->result_array();
+                } else {
+                    $dataCekTrxBefor = $this->transaksi->getDataTransaksiSebelumnya(['t.id_transaksi <' => $dataHistoriTx[$i]['id_transaksi'], 't.semester =' => $dataHistoriTx[$i]['semester'], 't.nim' => $dataHistoriTx[$i]['nim'], 'mjp.id_jenis_pembayaran' => $dTX['id_jenis_pembayaran']])->result_array();
+                }
+                $dataHistoriTx[$i]['detail_transaksi'][$z]['all_history'] = $dataCekTrxBefor;
+                if (count($dataCekTrxBefor) <= 0) {
+                    $dataHistoriTx[$i]['total_bayar'] = $dataHistoriTx[$i]['total_bayar'] + $dTX['jml_bayar'];
+                } else {
+                    foreach ($dataCekTrxBefor as $y => $ctb) {
+                        // $kewajiban_bayar = $kewajiban_bayar - $ctb['jml_bayar'];
+                        $dataHistoriTx[$i]['total_bayar'] = $dataHistoriTx[$i]['total_bayar'] + $ctb['jml_bayar'];
+                    }
+                    $dataHistoriTx[$i]['total_bayar'] = $dataHistoriTx[$i]['total_bayar'] + $dTX['jml_bayar'];
                 }
             }
 
