@@ -86,6 +86,14 @@ class MasterData extends CI_Controller
             }
             $allcount = $this->masterdata->getDataMhsPagination()->num_rows();
             $dataMhs = $this->masterdata->getDataMhsPagination($key_cari, $limit, $offset)->result_array();
+            foreach ($dataMhs as $i => $mhs) {
+                $data_homebase = $this->masterdata->getDataKelas(['id_kelas' => $mhs['id_kelas']])->row_array();
+                if ($data_homebase != null) {
+                    $dataMhs[$i]['homebase'] = $data_homebase['nama_kelas'];
+                } else {
+                    $dataMhs[$i]['homebase'] = '';
+                }
+            }
             // Pagination Configuration
             $config['base_url'] = base_url() . 'masterdata/Mahasiswa';
             $config['use_page_numbers'] = TRUE;
@@ -218,21 +226,21 @@ class MasterData extends CI_Controller
     public function insertBiayaSpp()
     {
         $tahun_angkatan = $this->input->post('tahun_angkatan');
-        $PK             = $this->input->post('biaya_bangunan');
-        $PK_D3          = $this->input->post('biaya_bangunan_D3');
-        $CS             = $this->input->post('biaya_CS');
-        $CS_D3          = $this->input->post('biaya_CS_D3');
-        $kmhs           = $this->input->post('biaya_kmhs');
+        $PK = $this->input->post('biaya_bangunan');
+        $PK_D3 = $this->input->post('biaya_bangunan_D3');
+        $CS = $this->input->post('biaya_CS');
+        $CS_D3 = $this->input->post('biaya_CS_D3');
+        $kmhs = $this->input->post('biaya_kmhs');
         // $kmhs_D3        = $this->input->post('biaya_kmhs_D3');
 
         $table = 'biaya_angkatan';
-        $dataInsert   = [
-            'angkatan'  => $tahun_angkatan,
-            'PK'        => $PK,
-            'PK_D3'     => $PK_D3,
-            'kmhs'      => $kmhs,
-            'CS'        => $CS,
-            'CS_D3'     => $CS_D3,
+        $dataInsert = [
+            'angkatan' => $tahun_angkatan,
+            'PK' => $PK,
+            'PK_D3' => $PK_D3,
+            'kmhs' => $kmhs,
+            'CS' => $CS,
+            'CS_D3' => $CS_D3,
             // 'potongan_CS' => 0
         ];
         $insert = $this->masterdata->insertData($table, $dataInsert);
@@ -249,8 +257,8 @@ class MasterData extends CI_Controller
 
     public function insertBiayaLainnya()
     {
-        $nm_jp          = $this->input->post('nm_jp');
-        $biaya          = $this->input->post('biaya');
+        $nm_jp = $this->input->post('nm_jp');
+        $biaya = $this->input->post('biaya');
         $dataInsertJP = ['nm_jenis_pembayaran' => $nm_jp];
         $table_jp = 'master_jenis_pembayaran';
         $table_bt = 'biaya_tambahan';
@@ -276,21 +284,21 @@ class MasterData extends CI_Controller
     public function UpdateBiayaSpp()
     {
         // code here
-        $id             = $this->input->post('id_biaya');
+        $id = $this->input->post('id_biaya');
         $tahun_angkatan = $this->input->post('edit_tahun_angkatan');
-        $PK             = $this->input->post('edit_biaya_bangunan');
-        $PK_D3          = $this->input->post('edit_biaya_bangunan_D3');
-        $CS             = $this->input->post('edit_biaya_CS');
-        $CS_D3          = $this->input->post('edit_biaya_CS_D3');
-        $kmhs           = $this->input->post('edit_biaya_kmhs');
+        $PK = $this->input->post('edit_biaya_bangunan');
+        $PK_D3 = $this->input->post('edit_biaya_bangunan_D3');
+        $CS = $this->input->post('edit_biaya_CS');
+        $CS_D3 = $this->input->post('edit_biaya_CS_D3');
+        $kmhs = $this->input->post('edit_biaya_kmhs');
         // $potongan_CS    = $this->input->post('edit_biaya_potongan_cs');
-        $dataUpdate   = [
-            'angkatan'      => $tahun_angkatan,
-            'PK'            => $PK,
-            'PK_D3'         => $PK_D3,
-            'kmhs'          => $kmhs,
-            'CS'            => $CS,
-            'CS_D3'         => $CS_D3
+        $dataUpdate = [
+            'angkatan' => $tahun_angkatan,
+            'PK' => $PK,
+            'PK_D3' => $PK_D3,
+            'kmhs' => $kmhs,
+            'CS' => $CS,
+            'CS_D3' => $CS_D3
             // 'potongan_CS'   => $potongan_CS
         ];
         $update = $this->masterdata->updateBiayaSpp($id, $dataUpdate);
@@ -307,10 +315,10 @@ class MasterData extends CI_Controller
     public function UpdatePotonganBiayaCS()
     {
         $id = 1;
-        $dataUpdate   = [
-            'potongan_C1'   => $this->input->post('edit_pot_c1'),
-            'potongan_C2'   => $this->input->post('edit_pot_c2'),
-            'potongan_C3'   => $this->input->post('edit_pot_c3')
+        $dataUpdate = [
+            'potongan_C1' => $this->input->post('edit_pot_c1'),
+            'potongan_C2' => $this->input->post('edit_pot_c2'),
+            'potongan_C3' => $this->input->post('edit_pot_c3')
         ];
         $update = $this->masterdata->updatePotonganBiayaCS($id, $dataUpdate);
         if (!$update) {
@@ -327,10 +335,10 @@ class MasterData extends CI_Controller
     {
         // var_dump($this->input->post());
         // die;
-        $id             = $this->input->post('edit_id_jp');
-        $nm_jp          = $this->input->post('edit_nm_jp');
-        $biaya          = $this->input->post('edit_biaya');
-        $potongan       = $this->input->post('edit_potongan_biaya');
+        $id = $this->input->post('edit_id_jp');
+        $nm_jp = $this->input->post('edit_nm_jp');
+        $biaya = $this->input->post('edit_biaya');
+        $potongan = $this->input->post('edit_potongan_biaya');
         $dataUpdateBiaya = [
             'biaya' => $biaya,
             'potongan_biaya' => $potongan
@@ -353,9 +361,9 @@ class MasterData extends CI_Controller
 
     public function deleteDataSpp()
     {
-        $id             = $this->input->post('hapus_id_biaya');
-        $table          = 'biaya_angkatan';
-        $where          = [
+        $id = $this->input->post('hapus_id_biaya');
+        $table = 'biaya_angkatan';
+        $where = [
             'id_biaya' => $id
         ];
         $deleted = $this->masterdata->deleteData($table, $where);
@@ -371,8 +379,8 @@ class MasterData extends CI_Controller
 
     public function deleteDataPembayaranLain()
     {
-        $id             = $this->input->post('hapus_id_biaya');
-        $where          = [
+        $id = $this->input->post('hapus_id_biaya');
+        $where = [
             'id_jenis_pembayaran' => $id
         ];
         $table_jp = 'master_jenis_pembayaran';

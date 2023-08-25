@@ -92,6 +92,16 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
+    public function getDataKelas($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('wastu_kelas');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
     public function getDataMhsPagination($data = null, $limit = '', $start = '')
     {
         $this->db->select('*');

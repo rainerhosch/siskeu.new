@@ -925,23 +925,24 @@ class Transaksi extends CI_Controller
             ];
 
             // ===============================  Fungsi aktifasi perwalian dan ujian ==============
-            if ($sisa_BayarC1 < 500000 && $sisa_BayarC2 < 500000 && $sisa_BayarC3 < 500000) {
+            // penghapusan toleransi sisa 500000
+            if ($sisa_BayarC1 <= 0 && $sisa_BayarC2 <= 0 && $sisa_BayarC3 <= 0) {
                 // Aktifasi Perwalian, UTS, UAS
                 $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
                 $this->aktivasi->aktivasi_ujian($dataAktifUTS);
                 $this->aktivasi->aktivasi_ujian($dataAktifUAS);
-            } else if ($sisa_BayarC1 < 500000 && $sisa_BayarC2 < 500000) {
+            } else if ($sisa_BayarC1 <= 0 && $sisa_BayarC2 <= 0) {
                 // Aktifasi Perwalian, UTS
                 $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
                 $this->aktivasi->aktivasi_ujian($dataAktifUTS);
-            } else if ($sisa_BayarC1 < 500000) {
+            } else if ($sisa_BayarC1 <= 0) {
                 // Aktifasi Perwalian
                 $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
             } else {
-                if ($sisa_BayarC2 < 500000) {
+                if ($sisa_BayarC2 <= 0) {
                     // Aktifasi UTS
                     $this->aktivasi->aktivasi_ujian($dataAktifUTS);
-                } else if ($sisa_BayarC3 < 500000) {
+                } else if ($sisa_BayarC3 <= 0) {
                     // Aktifasi UAS
                     $this->aktivasi->aktivasi_ujian($dataAktifUAS);
                 }
@@ -1149,22 +1150,53 @@ class Transaksi extends CI_Controller
                 'jam_trf' => $jam_trf,
                 'id_trf' => $id_bukti_trf
             ];
-            $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
-            // $insert = true;
-            if (!$insertTx) {
-                $response = 'gagal insert transaksi!';
-            } else {
-                $inputDetailTx = count($dataTxDetail);
-                for ($i = 0; $i < $inputDetailTx; $i++) {
-                    $this->transaksi->addNewDetailTransaksi($dataTxDetail[$i]);
+            // control for duplikasi trx
+            $condition_dup = [
+                'tanggal' => $tgl,
+                'nim' => $nimMhs,
+                'semester' => $smtBayar
+            ];
+            $trx_duplicate = 0;
+            $validasi_trx = $this->transaksi->getDataTransaksiOnly($condition_dup)->row_array();
+            if ($validasi_trx != null) {
+                $validasi_dtrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $validasi_trx['id_transaksi']])->result_array();
+                foreach ($validasi_dtrx as $i => $vdtx) {
+                    if ($vdtx['id_jenis_pembayaran'] == $dataTxDetail[$i]['id_jenis_pembayaran'] && $vdtx['jml_bayar'] == $dataTxDetail[$i]['jml_bayar']) {
+                        $trx_duplicate = $trx_duplicate + 1;
+                    }
                 }
-                $response = $id_transaksi;
             }
-            if ($uang_masuk == 1) {
-                echo json_encode($response);
+            // var_dump($trx_duplicate);
+            // die;
+            if ($trx_duplicate > 0) {
+                $response = 'transaksi duplikat!';
+                if ($uang_masuk == 1) {
+                    echo json_encode($response);
+                } else {
+                    $data = 0;
+                    echo json_encode($data);
+                }
             } else {
-                $data = 0;
-                echo json_encode($data);
+                // var_dump($trx_duplicate);
+                // die;
+                $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
+                // $insert = true;
+                if (!$insertTx) {
+                    $response = 'gagal insert transaksi!';
+                } else {
+                    $inputDetailTx = count($dataTxDetail);
+                    for ($i = 0; $i < $inputDetailTx; $i++) {
+                        $this->transaksi->addNewDetailTransaksi($dataTxDetail[$i]);
+                    }
+                    $response = $id_transaksi;
+                }
+                if ($uang_masuk == 1) {
+                    echo json_encode($response);
+                } else {
+                    $data = 0;
+                    echo json_encode($data);
+                }
+
             }
         } else {
             echo "Invalid request!";
@@ -1437,7 +1469,7 @@ class Transaksi extends CI_Controller
                                 'jml_tunggakan' => $sisabayarPerpanjang,
                             ];
                             $this->tunggakan->addNewTunggakan($dataAddTG);
-                            if ($sisabayarPerpanjang < 500000) {
+                            if ($sisabayarPerpanjang <= 0) {
                                 $this->aktivasi->aktivasi_perwalian($dataAktifKRS);
                             }
                         } else {
@@ -1543,22 +1575,61 @@ class Transaksi extends CI_Controller
                 'jam_trf' => $jam_trf,
                 'id_trf' => $id_bukti_trf
             ];
-            $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
 
-            if (!$insertTx) {
-                $response = 'gagal insert transaksi!';
-            } else {
-                foreach ($pembayaran as $i => $v) {
-                    $dataDetailTX = [
-                        'id_transaksi' => $id_transaksi,
-                        'id_jenis_pembayaran' => $v,
-                        'jml_bayar' => $dataBiayaPembayaran[$v],
-                        'potongan' => 0,
-                        // 'sisa_bayar' => $sisaBayar
-                    ];
-                    $this->transaksi->addNewDetailTransaksi($dataDetailTX);
+            // control for duplikasi trx
+            $condition_dup = [
+                'tanggal' => $tgl,
+                'nim' => $nimMhs,
+                'semester' => $smtAktif
+            ];
+            $trx_duplicate = 0;
+            $validasi_trx = $this->transaksi->getDataTransaksiOnly($condition_dup)->row_array();
+            if ($validasi_trx != null) {
+                $validasi_dtrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $validasi_trx['id_transaksi']])->result_array();
+                // var_dump($dataBiayaPembayaran[$pembayaran[0]]);
+                // die;
+                foreach ($validasi_dtrx as $i => $vdtx) {
+                    if ($vdtx['id_jenis_pembayaran'] == $pembayaran[$i] && $vdtx['jml_bayar'] == $dataBiayaPembayaran[$pembayaran[$i]]) {
+                        $trx_duplicate = $trx_duplicate + 1;
+                    }
                 }
-                $response = $id_transaksi;
+            }
+            // var_dump($trx_duplicate);
+            // die;
+            if ($trx_duplicate > 0) {
+                $response = [
+                    'status' => false,
+                    'msg' => 'transaksi duplikat!',
+                    'data' => null
+                ];
+
+            } else {
+                $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
+
+                if (!$insertTx) {
+                    $response = [
+                        'status' => false,
+                        'msg' => 'gagal insert transaksi!',
+                        'data' => null
+                    ];
+                } else {
+                    foreach ($pembayaran as $i => $v) {
+                        $dataDetailTX = [
+                            'id_transaksi' => $id_transaksi,
+                            'id_jenis_pembayaran' => $v,
+                            'jml_bayar' => $dataBiayaPembayaran[$v],
+                            'potongan' => 0,
+                            // 'sisa_bayar' => $sisaBayar
+                        ];
+                        $this->transaksi->addNewDetailTransaksi($dataDetailTX);
+                    }
+                    $response = [
+                        'status' => true,
+                        'msg' => 'transaksi duplikat!',
+                        'data' => $id_transaksi
+                    ];
+                    // $response = $id_transaksi;
+                }
             }
             echo json_encode($response);
         } else {

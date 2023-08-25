@@ -90,6 +90,26 @@ class SyncSimak extends CI_Controller
         echo json_encode($data);
     }
 
+    public function updateStructurMhs()
+    {
+        $dataMhs = [];
+        $data_update = [];
+
+        // for ($i = 0; $i < $data_offset; $i++) {
+        $responseApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
+        ]);
+        // }
+        $dataMhs = $responseApiDataMhs['mhsdata'];
+        foreach ($dataMhs as $i => $mhs) {
+            $data_update[$i] = $this->masterdata->updateDataMhs($mhs['id_pd'], $mhs);
+        }
+        // $dataMhs = $responseApiDataMhs['mhsdata'];
+        echo '<pre>';
+        var_dump($data_update);
+        echo '</pre';
+        die;
+    }
+
     public function syncUpdateMhsById()
     {
         if ($this->input->is_ajax_request()) {
@@ -115,9 +135,10 @@ class SyncSimak extends CI_Controller
                 ];
                 $this->transaksi->updateData($data_update);
             }
-            // var_dump($data_update);
-            // die;
             $update = $this->masterdata->updateDataMhs($id_pd, $dataMhs);
+            // var_dump($dataMhs);
+            // die;
+
             if ($cekTx != null) {
             }
             if ($update) {
@@ -136,7 +157,6 @@ class SyncSimak extends CI_Controller
         }
         echo json_encode($response);
     }
-
 
     public function SyncDataMhs()
     {
@@ -309,14 +329,14 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegMhsOffset); $i++) {
                         $RegMhsSimakOffset = $this->api->mPost('RegMhs', [
                             'form_params' => [
-                                'Tahun'         => $dataRegMhsOffset[$i]['Tahun'],
-                                "Identitas_ID"  => $dataRegMhsOffset[$i]['Identitas_ID'],
-                                "Jurusan_ID"    => $dataRegMhsOffset[$i]['Jurusan_ID'],
-                                'NIM'           => $dataRegMhsOffset[$i]['NIM'],
-                                'tgl_reg'       => $dataRegMhsOffset[$i]['tgl_reg'],
-                                'aktif'         => $dataRegMhsOffset[$i]['aktif'],
-                                'keterangan'    => $dataRegMhsOffset[$i]['keterangan'],
-                                'aktif_by'      => $dataRegMhsOffset[$i]['aktif_by']
+                                'Tahun' => $dataRegMhsOffset[$i]['Tahun'],
+                                "Identitas_ID" => $dataRegMhsOffset[$i]['Identitas_ID'],
+                                "Jurusan_ID" => $dataRegMhsOffset[$i]['Jurusan_ID'],
+                                'NIM' => $dataRegMhsOffset[$i]['NIM'],
+                                'tgl_reg' => $dataRegMhsOffset[$i]['tgl_reg'],
+                                'aktif' => $dataRegMhsOffset[$i]['aktif'],
+                                'keterangan' => $dataRegMhsOffset[$i]['keterangan'],
+                                'aktif_by' => $dataRegMhsOffset[$i]['aktif_by']
                             ]
                         ]);
                         $insert[] = $RegMhsSimakOffset;
@@ -342,14 +362,14 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegMhs); $i++) {
                         $RegMhsSimak = $this->api->mPost('RegMhs', [
                             'query' => [
-                                'Tahun'         => $dataRegMhs[$i]['Tahun'],
-                                "Identitas_ID"  => $dataRegMhs[$i]['Identitas_ID'],
-                                "Jurusan_ID"    => $dataRegMhs[$i]['Jurusan_ID'],
-                                'NIM'           => $dataRegMhs[$i]['NIM'],
-                                'tgl_reg'       => $dataRegMhs[$i]['tgl_reg'],
-                                'aktif'         => $dataRegMhs[$i]['aktif'],
-                                'keterangan'    => $dataRegMhs[$i]['keterangan'],
-                                'aktif_by'      => $dataRegMhs[$i]['aktif_by']
+                                'Tahun' => $dataRegMhs[$i]['Tahun'],
+                                "Identitas_ID" => $dataRegMhs[$i]['Identitas_ID'],
+                                "Jurusan_ID" => $dataRegMhs[$i]['Jurusan_ID'],
+                                'NIM' => $dataRegMhs[$i]['NIM'],
+                                'tgl_reg' => $dataRegMhs[$i]['tgl_reg'],
+                                'aktif' => $dataRegMhs[$i]['aktif'],
+                                'keterangan' => $dataRegMhs[$i]['keterangan'],
+                                'aktif_by' => $dataRegMhs[$i]['aktif_by']
                             ]
                         ]);
                         $insert[] = $RegMhsSimak;
@@ -376,7 +396,7 @@ class SyncSimak extends CI_Controller
                 if ($jmlRegMhsLokal > 0) {
                     $dataRegMhsSimakOffset = $this->api->mGet('RegMhs', [
                         'query' => [
-                            'offset' =>  $jmlRegMhsLokal
+                            'offset' => $jmlRegMhsLokal
                         ]
                     ]);
                     $dataRegMhsSimakOffset = $dataRegMhsSimakOffset['reg_mhs'];
@@ -459,12 +479,12 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegUjianOffset); $i++) {
                         $RegUjianSimakOffset = $this->api->mPost('RegUjian', [
                             'form_params' => [
-                                'tahun'         => $dataRegUjianOffset[$i]['tahun'],
-                                'nim'           => $dataRegUjianOffset[$i]['nim'],
-                                'tgl_reg'       => $dataRegUjianOffset[$i]['tgl_reg'],
-                                'aktif'         => $dataRegUjianOffset[$i]['aktif'],
-                                'keterangan'    => $dataRegUjianOffset[$i]['keterangan'],
-                                'aktif_by'      => $dataRegUjianOffset[$i]['aktif_by']
+                                'tahun' => $dataRegUjianOffset[$i]['tahun'],
+                                'nim' => $dataRegUjianOffset[$i]['nim'],
+                                'tgl_reg' => $dataRegUjianOffset[$i]['tgl_reg'],
+                                'aktif' => $dataRegUjianOffset[$i]['aktif'],
+                                'keterangan' => $dataRegUjianOffset[$i]['keterangan'],
+                                'aktif_by' => $dataRegUjianOffset[$i]['aktif_by']
                             ]
                         ]);
                         $insert[] = $RegUjianSimakOffset;
@@ -490,12 +510,12 @@ class SyncSimak extends CI_Controller
                     for ($i = 0; $i < count($dataRegUjian); $i++) {
                         $RegUjianSimak = $this->api->mPost('RegUjian', [
                             'query' => [
-                                'tahun'         => $dataRegUjian[$i]['tahun'],
-                                'nim'           => $dataRegUjian[$i]['nim'],
-                                'tgl_reg'       => $dataRegUjian[$i]['tgl_reg'],
-                                'aktif'         => $dataRegUjian[$i]['aktif'],
-                                'keterangan'    => $dataRegUjian[$i]['keterangan'],
-                                'aktif_by'      => $dataRegUjian[$i]['aktif_by']
+                                'tahun' => $dataRegUjian[$i]['tahun'],
+                                'nim' => $dataRegUjian[$i]['nim'],
+                                'tgl_reg' => $dataRegUjian[$i]['tgl_reg'],
+                                'aktif' => $dataRegUjian[$i]['aktif'],
+                                'keterangan' => $dataRegUjian[$i]['keterangan'],
+                                'aktif_by' => $dataRegUjian[$i]['aktif_by']
                             ]
                         ]);
                         $insert[] = $RegUjianSimak;
@@ -522,7 +542,7 @@ class SyncSimak extends CI_Controller
                 if ($jmlRegUjianLokal > 0) {
                     $RegUjianSimakOffset = $this->api->mGet('RegUjian', [
                         'query' => [
-                            'offset' =>  $jmlRegUjianLokal
+                            'offset' => $jmlRegUjianLokal
                         ]
                     ]);
                     $dataRegUjianSimakOffset = $RegUjianSimakOffset['reg_ujian'];

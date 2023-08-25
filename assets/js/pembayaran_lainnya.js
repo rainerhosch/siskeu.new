@@ -82,12 +82,12 @@ $("#nipd_2").on("keypress", function (e) {
           $("#notif_search2").html(
             "<code>Mahasiswa Tersebut Mempunyai Tunggakan SPP dan Kemahasiswaan.</code>"
           );
-        }else{
+        } else {
           if (response.tg_Kmhs != 0) {
             $("#notif_search2").html(
               "<code>Mahasiswa Tersebut Mempunyai Tunggakan Kemahasiswaan.</code>"
             );
-          }else if(response.tg_CS != 0) {
+          } else if (response.tg_CS != 0) {
             $("#notif_search2").html(
               "<code>Mahasiswa Tersebut Mempunyai Tunggakan Semester Lalu</code>"
             );
@@ -236,13 +236,13 @@ $("#add_rows").click(function () {
             return "Jml Cuti: " + value;
           },
         });
-      } else if(id_jns_bayar == "6"){
+      } else if (id_jns_bayar == "6") {
         $("#pembayaran_" + size).prop("readonly", false);
         $(".div_btn_row").prop("disabled", true);
         $(".td_for_jml" + size).empty();
         $(".slider#jml_mk" + size).remove();
         $(".slider#jml_cuti" + size).remove();
-      }else {
+      } else {
         $("#pembayaran_" + size).prop("readonly", false);
         $(".div_btn_row").prop("disabled", false);
         $(".td_for_jml" + size).empty();
@@ -315,29 +315,49 @@ $("#form_pembayaran_lain").submit(function (e) {
     dataType: "JSON",
     success: function (response) {
       console.log(response);
-      let id_transaksi = response;
-      Swal.fire({
-        title: "Transaksi Berhasil!",
-        text: `Transaksi ${id_transaksi} telah berhasil di input, apakah ingin mencetak kwitansi?`,
-        icon: "info",
-        showCancelButton: true,
-        confirmButtonColor: "##d33",
-        confirmButtonText: "Cetak",
-        cancelButtonText: "Tutup",
-        closeOnConfirm: false,
-        closeOnCancel: false,
-      }).then(function (isConfirm) {
-        if (isConfirm) {
-          // cetak
-          window.open(`transaksi/cetak_kwitansi/${id_transaksi}`, "_blank");
-          window.focus();
+      let id_transaksi = response.data;
+      if (response.status === true) {
+        Swal.fire({
+          title: "Transaksi Berhasil!",
+          text: `Transaksi ${id_transaksi} telah berhasil di input, apakah ingin mencetak kwitansi?`,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "##d33",
+          confirmButtonText: "Cetak",
+          cancelButtonText: "Tutup",
+          closeOnConfirm: false,
+          closeOnCancel: false,
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            // cetak
+            window.open(`transaksi/cetak_kwitansi/${id_transaksi}`, "_blank");
+            window.focus();
 
-          location.reload();
-        } else {
-          // refresh page
-          location.reload();
-        }
-      });
+            location.reload();
+          } else {
+            // refresh page
+            location.reload();
+          }
+        });
+      } else {
+        Swal.fire({
+          title: "Transaksi gagal",
+          text: response.msg,
+          icon: "warning",
+          showCancelButton: false,
+          confirmButtonText: "Ok",
+          closeOnConfirm: false,
+          closeOnCancel: false,
+        }).then(function (isConfirm) {
+          if (isConfirm) {
+            // cetak
+            location.reload();
+          } else {
+            // refresh page
+            location.reload();
+          }
+        });
+      }
     },
   });
 });

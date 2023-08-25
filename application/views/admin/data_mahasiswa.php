@@ -122,6 +122,7 @@
                                                 <th class="text-center">No</th>
                                                 <th class="text-center">NIM</th>
                                                 <th class="text-center">Nama</th>
+                                                <th class="text-center">Kelas</th>
                                                 <th class="text-center">Jurusan</th>
                                                 <th class="text-center">Jenjang Didik</th>
                                                 <th class="text-center">Tahun Masuk</th>
@@ -219,6 +220,7 @@
                 let html = ``;
                 offset = Number(offset);
                 $('#example-datatable tbody').empty();
+                // console.log(data_mhs)
 
                 if (data_mhs != 0) {
                     let numEnd = offset + 10;
@@ -230,6 +232,7 @@
                         html += `<td class = "text-center" >${no}</td>`;
                         html += `<td class="text-center">${value.nipd}</td>`;
                         html += `<td class="text-center">${value.nm_pd}</td>`;
+                        html += `<td class="text-center">${value.homebase}</td>`;
                         html += `<td class="text-center">${value.nm_jur}</td>`;
                         html += `<td class="text-center">${value.nm_jenj_didik}</td>`;
                         html += `<td class="text-center">${value.tahun_masuk}</td>`;
