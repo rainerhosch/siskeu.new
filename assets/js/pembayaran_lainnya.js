@@ -304,7 +304,11 @@ $("#delete_rows").on("click", function () {
   }
 });
 
+// $("#btn_proses_2").on("click", function () {
+//   $("#btn_proses_2").prop("disabled", true);
+// });
 $("#form_pembayaran_lain").submit(function (e) {
+  $("#btn_proses_2").prop("disabled", true);
   e.preventDefault();
   let form = $(this);
 

@@ -1166,8 +1166,6 @@ class Transaksi extends CI_Controller
                     }
                 }
             }
-            // var_dump($trx_duplicate);
-            // die;
             if ($trx_duplicate > 0) {
                 $response = 'transaksi duplikat!';
                 if ($uang_masuk == 1) {

@@ -38,7 +38,7 @@ $("#nipd").on("keypress", function (e) {
           html += `<tr>`;
           html += `<td><label for="bayar_via">Jenis Bayar</label></td>`;
           html += `<td class="text-center">`;
-          html +=`<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">
+          html += `<select class="form-control form-control-sm bayar_via" id="bayar_via" name="bayar_via">
                     <option value="x">-- Pilih --</option>
                     <option value="1">Cash</option>
                     <option value="2">Transfer</option>
@@ -46,40 +46,40 @@ $("#nipd").on("keypress", function (e) {
           html += `</td>`;
           html += `</tr>`;
           $("#data_kwajiban_tbody2").html(html);
-          $('.bayar_via').on('change',function(){
+          $(".bayar_via").on("change", function () {
             let bayar_via = $(".bayar_via").val();
             let tds = ``;
-            if(bayar_via ==='2'){
-                tds += `<tr class="detail_trf">`;
-                tds += `<td><label for="rek_tujuan">Rekening Tujuan</label></td>`;
-                tds += `<td class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
-                tds += `<option value="1">BANK BSI</option>
+            if (bayar_via === "2") {
+              tds += `<tr class="detail_trf">`;
+              tds += `<td><label for="rek_tujuan">Rekening Tujuan</label></td>`;
+              tds += `<td class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
+              tds += `<option value="1">BANK BSI</option>
                 <option value="2">BANK MANDIRI</option>
                 <option value="3">BANK BNI</option>`;
-                //  $.ajax({
-                //     type: "POST",
-                //     url: "transaksi/get_data_rekening",
-                //     dataType: "json",
-                //     success: function (res) {
-                //       console.log(res)
-                //       $.each(res.data, function (i, value) {
-                //         tds += `<option value="${value.id_rek}">${value.bank}</option>`;
-                //       });
-                //     }
-                //   });
-                tds +=`</select></td>`;
-                tds += `</tr>`;
-                tds += `<tr class="detail_trf">`;
-                tds += `<td><label for="tgl_trf">Tgl Transfer</label></td>`;
-                tds += `<td><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
-                tds += `</tr>`;
-                tds += `<tr class="detail_trf">`;
-                tds += `<td><label for="jam_trf">Jam Transfer</label></td>`;
-                tds += `<td><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
-                tds += `</tr>`;
+              //  $.ajax({
+              //     type: "POST",
+              //     url: "transaksi/get_data_rekening",
+              //     dataType: "json",
+              //     success: function (res) {
+              //       console.log(res)
+              //       $.each(res.data, function (i, value) {
+              //         tds += `<option value="${value.id_rek}">${value.bank}</option>`;
+              //       });
+              //     }
+              //   });
+              tds += `</select></td>`;
+              tds += `</tr>`;
+              tds += `<tr class="detail_trf">`;
+              tds += `<td><label for="tgl_trf">Tgl Transfer</label></td>`;
+              tds += `<td><input type="date" id="tgl_trf" name="tgl_trf" class="form-control validate text-right input_" value=""></td>`;
+              tds += `</tr>`;
+              tds += `<tr class="detail_trf">`;
+              tds += `<td><label for="jam_trf">Jam Transfer</label></td>`;
+              tds += `<td><input type="time" step="1" id="jam_trf" name="jam_trf" class="form-control validate text-right input_" value=""></td>`;
+              tds += `</tr>`;
               $("#data_kwajiban_tbody2").append(tds);
-            }else{
-              $('.detail_trf').remove();
+            } else {
+              $(".detail_trf").remove();
             }
           });
           $(".input_smt").click(function () {
@@ -135,7 +135,7 @@ $("#nipd").on("keypress", function (e) {
                       let bayar_via = $(".bayar_via").val();
                       // console.log(bayar_via);
                       var numberOfChecked = $("input:checkbox:checked").length;
-                      if (bayar_via != 'x') {
+                      if (bayar_via != "x") {
                         if (numberOfChecked <= 0) {
                           $("#btn_proses").prop("disabled", true);
                         } else {
@@ -234,8 +234,11 @@ $("#nipd").on("keypress", function (e) {
     });
   }
 });
-
+// $("#btn_proses").on("click", function () {
+//   $("#btn_proses").prop("disabled", true);
+// });
 $("#form_pembayaran").submit(function (e) {
+  $("#btn_proses").prop("disabled", true);
   e.preventDefault();
   let form = $(this);
   // let url = form.attr('action');
@@ -245,7 +248,7 @@ $("#form_pembayaran").submit(function (e) {
     data: form.serialize(), // serializes form input,
     dataType: "JSON",
     success: function (response) {
-      console.log(response)
+      console.log(response);
       if (response != 0) {
         let id_transaksi = response;
         Swal.fire({

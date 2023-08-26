@@ -217,9 +217,9 @@ class MigrasiTrxToTg extends CI_Controller
 
     public function getTrxLastSmt()
     {
-        $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
+        // $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
         // $smtSebelumnya = $smtAktifRes[1];
-        // $smtAktifRes = ['id_smt' => 20222];
+        $smtAktifRes = [0 => ['id_smt' => 20222]];
 
         $data = [];
         foreach ($smtAktifRes as $i => $smt) {
@@ -355,7 +355,18 @@ class MigrasiTrxToTg extends CI_Controller
             $data[$i][$smt['id_smt']] = $ResdataTrx;
         }
         // $data = $smtAktifRes;
-        echo json_encode($data);
+        $dataBL = [];
+        foreach ($data as $i => $dt) {
+            $indexBL = 0;
+            foreach ($dt[$smtAktifRes[$i]['id_smt']] as $j => $val) {
+                if ($val['status_pembayaran'] == 'Belum Lunas') {
+                    $dataBL[$smtAktifRes[$i]['id_smt']][$indexBL] = $val;
+                    // $dataBL[$indexBL][$smtAktifRes[$i]['id_smt']][$j] = $val;
+                    $indexBL++;
+                }
+            }
+        }
+        echo json_encode($dataBL);
     }
 
     public function getDataTransaksi($data = null)
