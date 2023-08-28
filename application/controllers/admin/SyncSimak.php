@@ -29,6 +29,36 @@ class SyncSimak extends CI_Controller
         // ===============================
         $this->load->view('template', $data);
     }
+
+    public function compareMhsData()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+        // $smtAktifSimak = $this->api->mGet('TahunAkademikAktif', [
+        //     'query' => []
+        // ]);
+        $dataDiff = [];
+        $dataMhsLocal = $this->masterdata->getDataMhs()->result_array();
+
+        $ApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
+            'query' => [
+                'type' => null
+            ]
+        ]);
+        foreach ($dataMhsLocal as $i => $mhs) {
+            if ($ApiDataMhs['mhsdata'][$i]['nipd'] == $mhs['nipd']) {
+                $dataDiff[$i] = 'OK';
+            } else {
+                $dataDiff[$i] = $mhs;
+            }
+
+        }
+        echo '<pre>';
+        var_dump($dataDiff);
+        echo '</pre>';
+        die;
+
+    }
     public function getCountData()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
