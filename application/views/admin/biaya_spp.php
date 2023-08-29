@@ -3,6 +3,10 @@
     .dataTables_wrapper {
         margin-bottom: 10px;
     }
+    table.dataTable thead > tr > th {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
 </style>
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
@@ -278,7 +282,7 @@
                 url: 'GetBiayaSPP',
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     let html = ``;
                     let last_biaya = '';
                     $.each(response, function(i, value) {
