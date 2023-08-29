@@ -1194,7 +1194,6 @@ class Transaksi extends CI_Controller
                     $data = 0;
                     echo json_encode($data);
                 }
-
             }
         } else {
             echo "Invalid request!";

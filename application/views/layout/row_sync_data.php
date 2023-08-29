@@ -1,7 +1,28 @@
+<style>
+    .widget-simple, h4{
+        font-size: 14px;
+    }
+    .widegt-box {
+        border-radius: 5px;
+    }
+    .widget-simple .widget-content {
+        font-size: 14px;
+    }
+    .widget-simple .widget-content small {
+        display: block;
+        margin-top: 7px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .widget-content > h1, h2, h3 {
+        text-align: center;
+        margin-bottom: 0px;
+    }
+</style>
 <div class="row">
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
             <div class="widget-simple">
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -34,7 +55,7 @@
                         <div class="progress progress-striped active" id="progress_sync_mhs" style="display: none;">
                             <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style=""></div>
                         </div>
-                        <button class="btn btn-primary" id="btn_sync_mhs" disabled><i class="fa fa-sync" id="icon_sync_mhs"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_mhs" disabled><i class="fa fa-sync" id="icon_sync_mhs"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -45,7 +66,7 @@
 
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
             <div class="widget-simple">
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -79,7 +100,7 @@
                                 <div class="bar"></div>
                                 <div class="percent">0%</div>
                             </div> -->
-                        <button class="btn btn-primary" id="btn_sync_smt_aktif" disabled><i class="fa fa-sync" id="icon_sync_smt_aktif"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_smt_aktif" disabled><i class="fa fa-sync" id="icon_sync_smt_aktif"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -88,7 +109,7 @@
     <!-- end widget -->
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
             <div class="widget-simple">
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -118,7 +139,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary" id="btn_sync_reg_mhs" disabled><i class="fa fa-sync" id="icon_sync_reg_mhs"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_reg_mhs" disabled><i class="fa fa-sync" id="icon_sync_reg_mhs"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -127,7 +148,7 @@
     <!-- end widget -->
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
             <div class="widget-simple">
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -157,7 +178,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary" id="btn_sync_reg_ujian" disabled><i class="fa fa-sync" id="icon_sync_reg_ujian"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_reg_ujian" disabled><i class="fa fa-sync" id="icon_sync_reg_ujian"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -168,7 +189,7 @@
     <!-- Data Transaksi -->
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
             <div class="widget-simple">
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -198,7 +219,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary" id="btn_sync_dataTrx" disabled><i class="fa fa-sync" id="icon_sync_dataTrx"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_dataTrx" disabled><i class="fa fa-sync" id="icon_sync_dataTrx"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -208,7 +229,7 @@
     <!-- Dashboard Simak -->
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
-        <a href="#" class="widget widget-hover-effect1">
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
             <div class="widget-simple">
                 <div class="row">
                     <div class="col-sm-12 text-center">
@@ -243,7 +264,7 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary" id="btn_sync_dashboardSimak">Go to DASHBOARD</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_dashboardSimak">Go to DASHBOARD</button>
                     </div>
                 </div>
             </div>

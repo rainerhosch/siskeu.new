@@ -223,6 +223,54 @@ class MasterData extends CI_Controller
         echo json_encode($data);
     }
 
+
+    public function duplicateBiayaSPP()
+    {
+        $response = [];
+        if ($this->input->is_ajax_request()) {
+            $data_post = $this->input->post();
+            $id = $data_post['id_biaya'];
+            $data = $this->masterdata->getAllBiayaAngkatan($id);
+
+            $table = 'biaya_angkatan';
+            $dataInsert = [
+                'angkatan' => $data['angkatan'] + 1,
+                'PK' => $data['PK'],
+                'PK_D3' => $data['PK_D3'],
+                'kmhs' => $data['kmhs'],
+                'CS' => $data['CS'],
+                'CS_D3' => $data['CS_D3'],
+                // 'potongan_CS' => 0
+            ];
+            $insert = $this->masterdata->insertData($table, $dataInsert);
+            if (!$insert) {
+                // error
+                $response = [
+                    'status' => false,
+                    'msg' => 'Gagal duplikasi data!',
+                    'data' => null
+                ];
+                // $this->session->set_flashdata('error', 'Gagal duplikasi data!');
+                // redirect('masterdata/BiayaSpp');
+            } else {
+                $response = [
+                    'status' => true,
+                    'msg' => 'Success, insert ' . $data['angkatan'] + 1 . '!',
+                    'data' => $data
+                ];
+                // $this->session->set_flashdata('success', 'Sukses, insert ' . $data['angkatan'] + 1 . '!');
+                // redirect('masterdata/BiayaSpp');
+            }
+        } else {
+            $response = [
+                'code' => false,
+                'msg' => 'Invalid Request!',
+                'data' => null
+            ];
+        }
+        echo json_encode($response);
+    }
+
     public function insertBiayaSpp()
     {
         $tahun_angkatan = $this->input->post('tahun_angkatan');

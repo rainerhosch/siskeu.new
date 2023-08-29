@@ -28,23 +28,26 @@
             Potongan Biaya
         </button> -->
         <!-- Example Content -->
-        <table id="example-datatable" class="table table-vcenter table-condensed table-bordered mb-5">
-            <thead>
-                <tr>
-                    <th class="text-center">No</th>
-                    <th class="text-center">Angkatan</th>
-                    <th class="text-center">Biaya Bangunan S1</th>
-                    <th class="text-center">Biaya Bangunan D3</th>
-                    <th class="text-center">Biaya Kemahasiswaan</th>
-                    <th class="text-center">Biaya Semester S1</th>
-                    <th class="text-center">Biaya Semester D3</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="biayaspp_tbody">
-                <!-- Load Data by Ajax -->
-            </tbody>
-        </table>
+        <!-- <div class="table-responsive"> -->
+            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered mb-5">
+                <thead>
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Angkatan</th>
+                        <th class="text-center">Biaya Bangunan S1</th>
+                        <th class="text-center">Biaya Bangunan D3</th>
+                        <th class="text-center">Biaya Kemahasiswaan</th>
+                        <th class="text-center">Biaya Semester S1</th>
+                        <th class="text-center">Biaya Semester D3</th>
+                        <th class="text-center">Aksi</th>
+                        <!-- <th class="text-center">Tools</th> -->
+                    </tr>
+                </thead>
+                <tbody id="biayaspp_tbody">
+                    <!-- Load Data by Ajax -->
+                </tbody>
+            </table>
+        <!-- </div> -->
     </div>
     <!-- modal -->
     <div class="modal fade" id="addData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -275,9 +278,13 @@
                 url: 'GetBiayaSPP',
                 dataType: "json",
                 success: function(response) {
-                    // console.log(response);
+                    console.log(response);
                     let html = ``;
+                    let last_biaya = '';
                     $.each(response, function(i, value) {
+                        if(last_biaya < value.angkatan){
+                            last_biaya = value.angkatan;
+                        }
                         i++;
                         html += `<tr>`;
                         html += `<td class="text-center">${i}</td>`;
@@ -288,14 +295,60 @@
                         html += `<td class="text-center"><i>Rp.${parseInt(value.CS).toLocaleString()}</i></td>`;
                         html += `<td class="text-center"><i>Rp.${parseInt(value.CS_D3).toLocaleString()}</i></td>`;
                         html += `<td class="text-center">` +
-                            `<a href="#" class="badge badge-warning edit-biaya" id="btn_edit_biaya" value="${value.id_biaya}"><i class="far fa-edit"></i></a>|` +
-                            `<a href="#" onclick="document.getElementById('hapusDataSpp').style.display='block'" class="badge badge-danger btn-hapus" id="btn_hapus_biaya" value="${value.id_biaya}"><i class="fas fa-trash-alt"></i></a>` +
+                            `<a href="#" class="btn btn-xs btn-warning edit-biaya" id="btn_edit_biaya" value="${value.id_biaya}"><i class="far fa-edit"></i></a></br>` +
+                            `<a href="#" onclick="document.getElementById('hapusDataSpp').style.display='block'" class="btn btn-xs btn-danger btn-hapus" id="btn_hapus_biaya" value="${value.id_biaya}"><i class="fas fa-trash-alt"></i></a></br>` +
+                            `<a href="#" class="btn btn-xs btn-info copy-biaya" id="btn_copy-${value.angkatan}" value="${value.id_biaya}"><i class="fa fa-clone"></i></a>` +
                             `</td>`;
                         html += `</tr>`;
-                    })
+                    });
                     $("#biayaspp_tbody").html(html);
                     $(function() {
                         TablesDatatables.init();
+                    });
+                    $.each(response, function(j, item) {
+                        if(item.angkatan < last_biaya){
+                            $(`#btn_copy-${item.angkatan}`).attr('disabled', true)
+                        }
+                    });
+                }
+            });
+
+            $(this).on("click", ".copy-biaya", function(e) {
+                let id_biaya = $(this).attr("value");
+                // console.log(id_biaya)
+                if (id_biaya == "") {
+                    alert("Error in id");
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "duplicateBiayaSPP",
+                        data: {
+                            id_biaya: id_biaya,
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            console.log(response);
+                            if(response.status === true){
+                                // Swal.fire('Saved!', '', 'success')
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: response.msg,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then((result) => {
+                                    location.reload()
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: response.msg,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then((result) => {
+                                    location.reload()
+                                })
+                            }
+                        }
                     });
                 }
             });
