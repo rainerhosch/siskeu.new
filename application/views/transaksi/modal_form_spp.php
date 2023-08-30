@@ -1,4 +1,16 @@
 <!-- Modal Pembayaran SPP-->
+<style>
+    a.widget {
+        border-radius: 10px;
+    }
+    .widget-simple .widget-content {
+        font-size: 15px;
+    }
+    .widget-simple .widget-content small {
+        font-size: 11px;
+        font-weight: 400;
+    }
+</style>
 <div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

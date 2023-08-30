@@ -2162,7 +2162,7 @@ class Transaksi extends CI_Controller
                         $resDetailTx[$x]['kewajiban_Bayar'] = (int) $kewajibanTGKMHS;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == isset($dataTxSebelumnya[$x]['id_jenis_pembayaran'])) {
                         if (isset($dataTxSebelumnya[$x]['id_jenis_pembayaran']) != null) {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
                         } else {
@@ -2666,7 +2666,7 @@ class Transaksi extends CI_Controller
                         $resDetailTx[$x]['kewajiban_Bayar'] = (int) $kewajibanTGKMHS;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == isset($dataTxSebelumnya[$x]['id_jenis_pembayaran'])) {
                         if (isset($dataTxSebelumnya[$x]['id_jenis_pembayaran']) != null) {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
                         } else {
@@ -3156,7 +3156,7 @@ class Transaksi extends CI_Controller
             $dataTx['data_kewajiban_lain'] = null;
         }
         // echo '<pre>';
-        // var_dump($resBiayaLain);
+        // var_dump($dataTxSebelumnya[0]);
         // echo '</pre>';
         // die;
         for ($x = 0; $x < $countDetailTX; $x++) {
@@ -3181,7 +3181,7 @@ class Transaksi extends CI_Controller
                         $resDetailTx[$x]['kewajiban_Bayar'] = (int) $kewajibanTGKMHS;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
-                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
+                    } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9 && $resDetailTx[$x]['id_jenis_pembayaran'] == isset($dataTxSebelumnya[$x]['id_jenis_pembayaran'])) {
                         if (isset($dataTxSebelumnya[$x]['id_jenis_pembayaran']) != null) {
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
                         } else {

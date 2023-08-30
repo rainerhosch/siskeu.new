@@ -23,6 +23,7 @@ class M_masterdata extends CI_Model
     //     curl_close($curl_handle);
     //     return $data;
     // }
+
     public function getDataAngkatan($where = null)
     {
         $this->db->distinct();
@@ -116,14 +117,25 @@ class M_masterdata extends CI_Model
         } else if ($start != "") {
             $this->db->limit($limit, $start);
         }
-
         return $this->db->get();
     }
 
     // insert data mahasiswa
     public function insertDataMhs($data)
     {
-        return $this->db->insert('mahasiswa', $data);
+        $insert_mhs = $this->db->insert('mahasiswa', $data);
+        if ($insert_mhs) {
+            // insert to siskeu online
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $insert_online = $dbwastudig_siskeu->insert('mahasiswa', $data);
+            if ($insert_online) {
+                return $insert_online;
+            } else {
+                return 'gagal insert online';
+            }
+        } else {
+            return 'gagal insert lokal';
+        }
     }
 
     // update data mahasiswa

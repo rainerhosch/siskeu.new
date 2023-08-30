@@ -119,7 +119,6 @@ $db['wastudig_simak'] = [
 ];
 
 $db['wastudig_siskeu'] = array(
-	'dsn' => '',
 	'hostname' => 'wastu.digital',
 	'username' => 'wastudig_simak',
 	'password' => 'Inovasi2025DIGITAL',
