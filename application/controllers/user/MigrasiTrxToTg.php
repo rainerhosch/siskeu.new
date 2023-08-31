@@ -254,6 +254,7 @@ class MigrasiTrxToTg extends CI_Controller
                 if (!is_null($dataMhs)) {
                     $ResdataTrx[$j]['nim'] = $dataMhs['nipd'];
                     $ResdataTrx[$j]['nama'] = $dataMhs['nm_pd'];
+                    $ResdataTrx[$j]['id_jurusan'] = $dataMhs['id_jur'];
                     $ResdataTrx[$j]['prodi'] = $dataMhs['nm_jur'];
                     $ResdataTrx[$j]['tahun_masuk'] = $dataMhs['tahun_masuk'];
                     $ResdataTrx[$j]['jnj_didik'] = $dataMhs['nm_jenj_didik'];
@@ -378,24 +379,34 @@ class MigrasiTrxToTg extends CI_Controller
                     //     $data[$i]['total_belum_lunas'] = $data[$i]['total_belum_lunas'] + 1;
                     // }
                 }
-
+                // if($ResdataTrx[$j]['id_jurusan'])
             }
             $data[$i]['selisih_bl_dispen'] = $data[$i]['total_belum_lunas'] - count($dataDispen);
-            $data[$i][$smt['id_smt']] = $ResdataTrx;
-        }
-        // $data = $smtAktifRes;
-        $dataBL = [];
-        foreach ($data as $i => $dt) {
-            $indexBL = 0;
-            foreach ($dt[$smtAktifRes[$i]['id_smt']] as $j => $val) {
-                if ($val['status_pembayaran'] == 'Belum Lunas') {
+            // $data[$i][$smt['id_smt']] = $ResdataTrx;
 
-                    $dataBL[$smtAktifRes[$i]['id_smt']][$indexBL] = $val;
-                    // $dataBL[$indexBL][$smtAktifRes[$i]['id_smt']][$j] = $val;
-                    $indexBL++;
+            // $groupingData = [];
+            $dataPrody = $this->masterdata->getDataMhsByPrody()->result_array();
+            foreach ($ResdataTrx as $r => $rtx) {
+                foreach ($dataPrody as $p => $prody) {
+                    if ($rtx['id_jurusan'] == $prody['id_jur']) {
+                        $data[$i][$smt['id_smt']][$prody['nm_jur']] = $rtx;
+                    }
                 }
             }
         }
+        // $data = $smtAktifRes;
+        // $dataBL = [];
+        // foreach ($data as $i => $dt) {
+        //     $indexBL = 0;
+        //     foreach ($dt[$smtAktifRes[$i]['id_smt']] as $j => $val) {
+        //         if ($val['status_pembayaran'] == 'Belum Lunas') {
+
+        //             $dataBL[$smtAktifRes[$i]['id_smt']][$indexBL] = $val;
+        //             // $dataBL[$indexBL][$smtAktifRes[$i]['id_smt']][$j] = $val;
+        //             $indexBL++;
+        //         }
+        //     }
+        // }
         echo json_encode($data);
     }
 

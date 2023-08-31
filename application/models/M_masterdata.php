@@ -93,6 +93,17 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
+    public function getDataMhsByPrody($data = null)
+    {
+        $this->db->select('id_jur, nm_jur');
+        $this->db->from('mahasiswa');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        $this->db->group_by('id_jur');
+        return $this->db->get();
+    }
+
     public function getDataKelas($data = null)
     {
         $this->db->select('*');
