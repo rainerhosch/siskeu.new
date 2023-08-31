@@ -1765,6 +1765,8 @@ class Transaksi extends CI_Controller
                 $bayarKMHS = true;
             }
             if ($Dtx['id_jenis_pembayaran'] == 6) {
+                $data_bayar_wisuda = $this->transaksi->getDataTransaksiSebelumnya(['td.id_jenis_pembayaran' => '13', 't.nim' => $dataTx['nim']])->result_array();
+                $dataTx['bayar_skripsi'] = count($data_bayar_wisuda);
                 $bayarTG_CS = true;
             }
             if ($Dtx['id_jenis_pembayaran'] == 7) {
@@ -2181,6 +2183,12 @@ class Transaksi extends CI_Controller
             }
         }
 
+        if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
+            $dataTx['kewajiban']['cs'] = 0;
+            $dataTx['kewajiban']['kmhs'] = 0;
+            $dataTx['kewajibanCS'] = 0;
+        }
+
         // var_dump($resBiayaLain);
         // die;
 
@@ -2246,6 +2254,8 @@ class Transaksi extends CI_Controller
                 $bayarKMHS = true;
             }
             if ($Dtx['id_jenis_pembayaran'] == 6) {
+                $data_bayar_wisuda = $this->transaksi->getDataTransaksiSebelumnya(['td.id_jenis_pembayaran' => '13', 't.nim' => $dataTx['nim']])->result_array();
+                $dataTx['bayar_skripsi'] = count($data_bayar_wisuda);
                 $bayarTG_CS = true;
             }
             if ($Dtx['id_jenis_pembayaran'] == 7) {
@@ -2689,6 +2699,12 @@ class Transaksi extends CI_Controller
             }
         }
 
+        if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
+            $dataTx['kewajiban']['cs'] = 0;
+            $dataTx['kewajiban']['kmhs'] = 0;
+            $dataTx['kewajibanCS'] = 0;
+        }
+
         // var_dump($resBiayaLain);
         // die;
 
@@ -2754,6 +2770,8 @@ class Transaksi extends CI_Controller
                 $bayarKMHS = true;
             }
             if ($Dtx['id_jenis_pembayaran'] == 6) {
+                $data_bayar_wisuda = $this->transaksi->getDataTransaksiSebelumnya(['td.id_jenis_pembayaran' => '13', 't.nim' => $dataTx['nim']])->result_array();
+                $dataTx['bayar_skripsi'] = count($data_bayar_wisuda);
                 $bayarTG_CS = true;
             }
             if ($Dtx['id_jenis_pembayaran'] == 7) {
@@ -3163,10 +3181,10 @@ class Transaksi extends CI_Controller
         } else {
             $dataTx['data_kewajiban_lain'] = null;
         }
-        echo '<pre>';
-        var_dump(count($dataTxSebelumnya));
-        echo '</pre>';
-        die;
+        // echo '<pre>';
+        // var_dump($dataTx);
+        // echo '</pre>';
+        // die;
         for ($x = 0; $x < $countDetailTX; $x++) {
             if ($resDetailTx[$x]['id_jenis_pembayaran'] == 2 || $resDetailTx[$x]['id_jenis_pembayaran'] == 3 || $resDetailTx[$x]['id_jenis_pembayaran'] == 4 || $resDetailTx[$x]['id_jenis_pembayaran'] == 6) {
                 if ($resDetailTx[$x]['id_jenis_pembayaran'] == 2) {
@@ -3215,6 +3233,12 @@ class Transaksi extends CI_Controller
                     }
                 }
             }
+        }
+
+        if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
+            $dataTx['kewajiban']['cs'] = 0;
+            $dataTx['kewajiban']['kmhs'] = 0;
+            $dataTx['kewajibanCS'] = 0;
         }
 
         // var_dump($resBiayaLain);
