@@ -106,8 +106,8 @@
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
-                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
@@ -123,8 +123,8 @@
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
-                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
                     $("#data_pembayaran_angkatan_modal").html(html);
@@ -159,8 +159,8 @@
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
-                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
@@ -176,8 +176,8 @@
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
-                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
                 $("#data_pembayaran_angkatan_modal").html(html);
