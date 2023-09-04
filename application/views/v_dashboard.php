@@ -86,7 +86,7 @@
                 },
                 dataType: "json",
                 success: function(response) {
-                // console.log(response);
+                console.log(response);
                 $('#smt_aktif').html(response.smt_aktif);
                 html = ``;
                 let no = 1;
