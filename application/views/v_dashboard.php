@@ -55,7 +55,8 @@
                     <tr>
                         <th class="text-center">No</th>
                         <th class="text-center">TAHUN ANGKATAN</th>
-                        <th class="text-center">TOTAL MAHASISWA</th>
+                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">MAHSISWA YANG DITERIMA</small></th>
+                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">MAHSISWA AKTIF</small></th>
                         <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">SUDAH MELAKUKAN PEMBAYARAN SPP</small></th>
                         <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">BELUM MELAKUKAN PEMBAYARAN SPP</small></th>
                         <th class="text-center">PERSENTASE</th>
@@ -102,6 +103,7 @@
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk}</td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
+                    html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
                     html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
@@ -134,7 +136,7 @@
             },
             dataType: "json",
             success: function(response) {
-                // console.log(response);
+                console.log(response);
                 $('#smt_aktif').html(response.smt_aktif);
                 html = ``;
                 let no = 1;
