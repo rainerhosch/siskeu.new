@@ -153,6 +153,7 @@
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk}</td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
+                    html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
                     html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
