@@ -58,6 +58,7 @@
                         <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">MAHSISWA YANG DITERIMA</small></th>
                         <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">MAHSISWA AKTIF</small></th>
                         <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">SUDAH MELAKUKAN PEMBAYARAN SPP</small></th>
+                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">DISPENSASI</small></th>
                         <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">BELUM MELAKUKAN PEMBAYARAN SPP</small></th>
                         <th class="text-center">PERSENTASE</th>
                     </tr>
@@ -106,6 +107,7 @@
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
                     html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
+                    html += `<td class="text-center">-</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
@@ -121,6 +123,7 @@
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
                     html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
+                    html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
                     $("#data_pembayaran_angkatan_modal").html(html);
