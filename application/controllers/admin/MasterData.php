@@ -29,26 +29,32 @@ class MasterData extends CI_Controller
             $data_post = $this->input->post();
             $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+
             foreach ($res['data'] as $i => $val) {
                 $where = [
                     'tahun_masuk' => $val['tahun_masuk'],
                 ];
-
-                // $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['m.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0])->num_rows();
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
                 if ($data_post['filter'] != '0') {
-                    if ($data_post['filter'] = '2') {
-                        $data_post['filter'] = '1';
-                    }
-                    $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0, 'd.jenis_dispen' => $data_post['filter']])->num_rows();
 
-                    $res['data'][$i]['last_query'] = $this->db->last_query();
+                    if ($data_post['filter'] == '2') {
+                        $jenis_dispen = '1';
+                    }
+                    if ($data_post['filter'] == '3') {
+                        $jenis_dispen = '3';
+                    }
+                    if ($data_post['filter'] == '4') {
+                        $jenis_dispen = '4';
+                    }
+                    $res['data'][$i]['jenis_dispen'] = $jenis_dispen;
+                    $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0, 'd.jenis_dispen' => $jenis_dispen])->num_rows();
                     $where1 = [
                         'm.tahun_masuk' => $val['tahun_masuk'],
                         'td.id_jenis_pembayaran' => $data_post['filter'],
                         't.semester' => $smtAktifRes['id_smt']
                     ];
                     $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
+                    $res['data'][$i]['last_query'] = $this->db->last_query();
                 } else {
                     $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0])->num_rows();
                     $where1 = [
