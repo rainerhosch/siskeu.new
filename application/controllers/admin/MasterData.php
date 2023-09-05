@@ -29,12 +29,18 @@ class MasterData extends CI_Controller
             $data_post = $this->input->post();
             $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            $res['list_simak'] = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
 
             foreach ($res['data'] as $i => $val) {
                 $where = [
                     'tahun_masuk' => $val['tahun_masuk'],
                 ];
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
+                $list_mhs = $this->masterdata->getDataListMhs($where)->result_array();
+                $res['data'][$i]['list_mhs'] = $list_mhs;
+                // foreach ($list_mhs as $m => $mhs) {
+                //     $res['data'][$i]['list_mhs'][$m]['simak_data'] = $this->aktivasi->cekStatusKelulusanMhs(['id_pd' => $mhs['id_pd']])->row_array();
+                // }
                 if ($data_post['filter'] != '0') {
 
                     if ($data_post['filter'] == '2') {

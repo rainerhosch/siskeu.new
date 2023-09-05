@@ -11,6 +11,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
  */
 class M_aktivasi_mhs extends CI_Model
 {
+
+    public function cekStatusKelulusanMhs($data = null)
+    {
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->select('*');
+        $dbwastudig_simak->from('mahasiswa_pt');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $dbwastudig_simak->get();
+
+    }
     public function input_data_dispen_mhs($data)
     {
         return $this->db->insert('dispensasi', $data);
