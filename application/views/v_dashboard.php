@@ -42,6 +42,7 @@
                 <div class="leftHeader">
                     <select class="form-select" id="single-select-field" data-placeholder="Choose one thing">
                         <option value="">-- Pilih --</option>
+                        <option value="0" selected>Select All</option>
                         <option value="2">Cicilan 1</option>
                         <option value="3">Cicilan 2</option>
                         <option value="4">Cicilan 3</option>
@@ -54,12 +55,12 @@
                 <thead>
                     <tr>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">No</th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN ANGKATAN</th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN</br>ANGKATAN</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DITERIMA</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN PEMBAYARAN SPP</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN PEMBAYARAN SPP</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN</br>PEMBAYARAN SPP</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">PERSENTASE</th>
                     </tr>
                 </thead>
@@ -71,6 +72,9 @@
     </div>
 
     <script>
+        let year_now = new Date().getFullYear();
+        // console.log(year_now)
+
         $('#single-select-field' ).select2({
             // theme: "bootstrap-3",
             width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
@@ -95,13 +99,17 @@
                 let total_all_trx=0;
                 let ttl_belum_bayar_spp=0;
                 let ttl_dispen = 0;
+                let cek_max_year = 0;
                 $.each(response.data, function(i, val) {
+                    let jml_belum_bayar_spp=0;
                     ttl_dispen += val.data_dispen;
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
-                    let jml_belum_bayar_spp = (val.jml_mhs-total_trx);
-                    ttl_belum_bayar_spp += jml_belum_bayar_spp;
+                    if((year_now-val.tahun_masuk) < 7){
+                        jml_belum_bayar_spp = (val.jml_mhs-total_trx);
+                        ttl_belum_bayar_spp += jml_belum_bayar_spp;
+                    }
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk}</td>`;
@@ -151,15 +159,23 @@
                 let ttl_belum_bayar_spp=0;
                 let ttl_dispen = 0;
                 $.each(response.data, function(i, val) {
+                    let status = '(LULUS)';
+                    // console.log(val.tahun_masuk)
+                    // console.log(year_now-val.tahun_masuk)
+                    let jml_belum_bayar_spp=0;
                     ttl_dispen += val.data_dispen;
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
-                    let jml_belum_bayar_spp = (val.jml_mhs-total_trx);
-                    ttl_belum_bayar_spp += jml_belum_bayar_spp;
+                    
+                    if((year_now-val.tahun_masuk) < 7){
+                        jml_belum_bayar_spp = (val.jml_mhs-total_trx);
+                        ttl_belum_bayar_spp += jml_belum_bayar_spp;
+                        status = '';
+                    }
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
-                    html += `<td class="text-center">${val.tahun_masuk}</td>`;
+                    html += `<td class="text-center">${val.tahun_masuk} <br><small style="font-size:0.85rem;;">${status}</small></td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
