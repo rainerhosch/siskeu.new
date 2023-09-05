@@ -20,6 +20,7 @@ class MasterData extends CI_Controller
 
         $this->load->library('pagination');
         $this->load->model('M_masterdata', 'masterdata');
+        $this->load->model('M_aktivasi_mhs', 'aktivasi');
     }
 
     public function getDataPembayaranDashboard()
@@ -32,8 +33,16 @@ class MasterData extends CI_Controller
                 $where = [
                     'tahun_masuk' => $val['tahun_masuk'],
                 ];
+
+                // $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['m.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0])->num_rows();
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
                 if ($data_post['filter'] != '0') {
+                    if ($data_post['filter'] = '2') {
+                        $data_post['filter'] = '1';
+                    }
+                    $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0, 'd.jenis_dispen' => $data_post['filter']])->num_rows();
+
+                    $res['data'][$i]['last_query'] = $this->db->last_query();
                     $where1 = [
                         'm.tahun_masuk' => $val['tahun_masuk'],
                         'td.id_jenis_pembayaran' => $data_post['filter'],
@@ -41,12 +50,15 @@ class MasterData extends CI_Controller
                     ];
                     $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
                 } else {
+                    $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0])->num_rows();
                     $where1 = [
                         'm.tahun_masuk' => $val['tahun_masuk'],
+                        'td.id_jenis_pembayaran <' => 5,
                         't.semester' => $smtAktifRes['id_smt']
                     ];
 
                     $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
+
                 }
                 $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
             }

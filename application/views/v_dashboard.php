@@ -53,14 +53,14 @@
             <table id="modal_datatable" class="table table-vcenter table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">No</th>
-                        <th class="text-center">TAHUN ANGKATAN</th>
-                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">MAHSISWA YANG DITERIMA</small></th>
-                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">MAHSISWA AKTIF</small></th>
-                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">SUDAH MELAKUKAN PEMBAYARAN SPP</small></th>
-                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">DISPENSASI</small></th>
-                        <th class="text-center">TOTAL</br><small style="font-size:1rem; font-weight: bold;">BELUM MELAKUKAN PEMBAYARAN SPP</small></th>
-                        <th class="text-center">PERSENTASE</th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">No</th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN ANGKATAN</th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DITERIMA</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN PEMBAYARAN SPP</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN PEMBAYARAN SPP</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">PERSENTASE</th>
                     </tr>
                 </thead>
                 <tbody id="data_pembayaran_angkatan_modal">
@@ -94,7 +94,9 @@
                 let total_mhs=0;
                 let total_all_trx=0;
                 let ttl_belum_bayar_spp=0;
+                let ttl_dispen = 0;
                 $.each(response.data, function(i, val) {
+                    ttl_dispen += val.data_dispen;
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
@@ -106,7 +108,7 @@
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
-                    html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${val.data_dispen}</td>`;
                     html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
@@ -123,7 +125,7 @@
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
-                    html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${ttl_dispen}</td>`;
                     html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
@@ -147,7 +149,9 @@
                 let total_mhs=0;
                 let total_all_trx=0;
                 let ttl_belum_bayar_spp=0;
+                let ttl_dispen = 0;
                 $.each(response.data, function(i, val) {
+                    ttl_dispen += val.data_dispen;
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
@@ -159,7 +163,7 @@
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
-                    html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${val.data_dispen}</td>`;
                     html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
@@ -176,7 +180,7 @@
                     html += `<td class="text-center">${total_mhs}</td>`;
                     html += `<td class="text-center">-</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
-                    html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${ttl_dispen}</td>`;
                     html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `</tr>`;
