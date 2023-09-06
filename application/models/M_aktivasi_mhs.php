@@ -23,6 +23,19 @@ class M_aktivasi_mhs extends CI_Model
         return $dbwastudig_simak->get();
 
     }
+
+    public function cekKrsMhsSimak($data = null)
+    {
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->select('*');
+        $dbwastudig_simak->from('krs_new');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        $dbwastudig_simak->group_by('nipd');
+        return $dbwastudig_simak->get();
+    }
+
     public function input_data_dispen_mhs($data)
     {
         return $this->db->insert('dispensasi', $data);

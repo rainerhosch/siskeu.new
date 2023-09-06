@@ -57,7 +57,8 @@
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">No</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN</br>ANGKATAN</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DITERIMA</small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DAFTAR ULANG</br>(Aktif KRS)</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN</br>PEMBAYARAN SPP</small></th>
@@ -99,66 +100,11 @@
                 let total_all_trx=0;
                 let ttl_belum_bayar_spp=0;
                 let ttl_dispen = 0;
-                let cek_max_year = 0;
+                let ttl_mhs_daftar_ulang = 0;
+                let ttl_mhs_lulus = 0;
                 $.each(response.data, function(i, val) {
-                    let jml_belum_bayar_spp=0;
-                    ttl_dispen += val.data_dispen;
-                    let total_trx = val.data_trx.length;
-                    total_mhs += val.jml_mhs;
-                    total_all_trx += total_trx;
-                    if((year_now-val.tahun_masuk) < 7){
-                        jml_belum_bayar_spp = (val.jml_mhs-total_trx);
-                        ttl_belum_bayar_spp += jml_belum_bayar_spp;
-                    }
-                    html += `<tr>`;
-                    html += `<td class="text-center">${no}</td>`;
-                    html += `<td class="text-center">${val.tahun_masuk}</td>`;
-                    html += `<td class="text-center">${val.jml_mhs}</td>`;
-                    html += `<td class="text-center">-</td>`;
-                    html += `<td class="text-center">${total_trx}</td>`;
-                    html += `<td class="text-center">${val.data_dispen}</td>`;
-                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
-                    //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
-                    html += `<td class="text-center">`;
-                    html += `<div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_trx / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%</div>
-            </div>`;
-                    html += `</td>`;
-                    html += `</tr>`;
-                    no++;
-                });
-                html += `<tr>`;
-                html += `<td class="text-center">Total</td>`;
-                    html += `<td class="text-center"></td>`;
-                    html += `<td class="text-center">${total_mhs}</td>`;
-                    html += `<td class="text-center">-</td>`;
-                    html += `<td class="text-center">${total_all_trx}</td>`;
-                    html += `<td class="text-center">${ttl_dispen}</td>`;
-                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
-                    html += `<td class="text-center"></td>`;
-                    html += `</tr>`;
-                    $("#data_pembayaran_angkatan_modal").html(html);
-
-                }
-            })
-        })
-        $.ajax({
-            type: "POST",
-            url: "masterdata/getDataPembayaranDashboard",
-            data:{
-                filter: 0
-            },
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-                $('#smt_aktif').html(response.smt_aktif);
-                html = ``;
-                let no = 1;
-                let total_mhs=0;
-                let total_all_trx=0;
-                let ttl_belum_bayar_spp=0;
-                let ttl_dispen = 0;
-                $.each(response.data, function(i, val) {
+                    let jml_mhs_lulus = val.jml_mhs;
+                    let jml_mhs_aktif = 0;
                     let status = '(LULUS)';
                     // console.log(val.tahun_masuk)
                     // console.log(year_now-val.tahun_masuk)
@@ -167,17 +113,34 @@
                     let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
                     total_all_trx += total_trx;
-                    
+
+                    $.each(val.list_mhs, function(j, lm){
+                        if(lm.no_seri_ijazah!='' || lm.no_transkip_nilai!=''||lm.pin != ''){
+                            jml_mhs_lulus -= 1;
+                        }
+                        if(lm.krs != null){
+                            jml_mhs_aktif += 1;
+                        }
+                    });
+                    // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_aktif);
+                    // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     if((year_now-val.tahun_masuk) < 7){
-                        jml_belum_bayar_spp = (val.jml_mhs-total_trx);
+                        jml_belum_bayar_spp = ((val.jml_mhs-jml_mhs_lulus)-total_trx);
                         ttl_belum_bayar_spp += jml_belum_bayar_spp;
                         status = '';
                     }
+                    if((year_now-val.tahun_masuk) <= 0){
+                            jml_mhs_aktif=total_trx;
+                    }
+                    ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang+jml_mhs_aktif;
+                    ttl_mhs_lulus = ttl_mhs_lulus+jml_mhs_lulus;
+
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk} <br><small style="font-size:0.85rem;;">${status}</small></td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
-                    html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${jml_mhs_aktif}</td>`;
+                    html += `<td class="text-center">${jml_mhs_lulus}</td>`;
                     html += `<td class="text-center">${total_trx}</td>`;
                     html += `<td class="text-center">${val.data_dispen}</td>`;
                     html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
@@ -194,7 +157,93 @@
                 html += `<td class="text-center">Total</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `<td class="text-center">${total_mhs}</td>`;
-                    html += `<td class="text-center">-</td>`;
+                    html += `<td class="text-center">${ttl_mhs_daftar_ulang}</td>`;
+                    html += `<td class="text-center">${ttl_mhs_lulus}</td>`;
+                    html += `<td class="text-center">${total_all_trx}</td>`;
+                    html += `<td class="text-center">${ttl_dispen}</td>`;
+                    html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;
+                    html += `<td class="text-center"></td>`;
+                    html += `</tr>`;
+                $("#data_pembayaran_angkatan_modal").html(html);
+                }
+            })
+        })
+        $.ajax({
+            type: "POST",
+            // url: "masterdata/getDataMhsPerangkatan",
+            url: "masterdata/getDataPembayaranDashboard",
+            data:{
+                filter: 0
+            },
+            dataType: "json",
+            success: function(response) {
+                // console.log(response);
+                $('#smt_aktif').html(response.smt_aktif);
+                html = ``;
+                let no = 1;
+                let total_mhs=0;
+                let total_all_trx=0;
+                let ttl_belum_bayar_spp=0;
+                let ttl_dispen = 0;
+                let ttl_mhs_daftar_ulang = 0;
+                let ttl_mhs_lulus = 0;
+                $.each(response.data, function(i, val) {
+                    let jml_mhs_lulus = val.jml_mhs;
+                    let jml_mhs_aktif = 0;
+                    let status = '(LULUS)';
+                    // console.log(val.tahun_masuk)
+                    // console.log(year_now-val.tahun_masuk)
+                    let jml_belum_bayar_spp=0;
+                    ttl_dispen += val.data_dispen;
+                    let total_trx = val.data_trx.length;
+                    total_mhs += val.jml_mhs;
+                    total_all_trx += total_trx;
+
+                    $.each(val.list_mhs, function(j, lm){
+                        if(lm.no_seri_ijazah!='' || lm.no_transkip_nilai!=''||lm.pin != ''){
+                            jml_mhs_lulus -= 1;
+                        }
+                        if(lm.krs != null){
+                            jml_mhs_aktif += 1;
+                        }
+                    });
+                    // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_aktif);
+                    // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
+                    if((year_now-val.tahun_masuk) < 7){
+                        jml_belum_bayar_spp = ((val.jml_mhs-jml_mhs_lulus)-total_trx);
+                        ttl_belum_bayar_spp += jml_belum_bayar_spp;
+                        status = '';
+                    }
+                    if((year_now-val.tahun_masuk) <= 0){
+                            jml_mhs_aktif=total_trx;
+                    }
+                    ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang+jml_mhs_aktif;
+                    ttl_mhs_lulus = ttl_mhs_lulus+jml_mhs_lulus;
+
+                    html += `<tr>`;
+                    html += `<td class="text-center">${no}</td>`;
+                    html += `<td class="text-center">${val.tahun_masuk} <br><small style="font-size:0.85rem;;">${status}</small></td>`;
+                    html += `<td class="text-center">${val.jml_mhs}</td>`;
+                    html += `<td class="text-center">${jml_mhs_aktif}</td>`;
+                    html += `<td class="text-center">${jml_mhs_lulus}</td>`;
+                    html += `<td class="text-center">${total_trx}</td>`;
+                    html += `<td class="text-center">${val.data_dispen}</td>`;
+                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
+                    //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
+                    html += `<td class="text-center">`;
+                    html += `<div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_trx / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%</div>
+            </div>`;
+                    html += `</td>`;
+                    html += `</tr>`;
+                    no++;
+                });
+                html += `<tr>`;
+                html += `<td class="text-center">Total</td>`;
+                    html += `<td class="text-center"></td>`;
+                    html += `<td class="text-center">${total_mhs}</td>`;
+                    html += `<td class="text-center">${ttl_mhs_daftar_ulang}</td>`;
+                    html += `<td class="text-center">${ttl_mhs_lulus}</td>`;
                     html += `<td class="text-center">${total_all_trx}</td>`;
                     html += `<td class="text-center">${ttl_dispen}</td>`;
                     html += `<td class="text-center">${ttl_belum_bayar_spp}</td>`;

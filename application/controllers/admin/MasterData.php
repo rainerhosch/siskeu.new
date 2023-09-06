@@ -29,7 +29,8 @@ class MasterData extends CI_Controller
             $data_post = $this->input->post();
             $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
-            $res['list_simak'] = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
+            $list_simak = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
+            $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
 
             foreach ($res['data'] as $i => $val) {
                 $where = [
@@ -38,6 +39,26 @@ class MasterData extends CI_Controller
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
                 $list_mhs = $this->masterdata->getDataListMhs($where)->result_array();
                 $res['data'][$i]['list_mhs'] = $list_mhs;
+
+                foreach ($list_mhs as $l => $mhs) {
+                    $res['data'][$i]['list_mhs'][$l]['krs'] = null;
+                    foreach ($list_simak as $ls => $simak) {
+                        if ($simak['id_pd'] == $mhs['id_pd']) {
+                            // $res['data'][$i]['list_mhs'][$l]['data_mhs_pt'] = $list_simak[$ls];
+                            $res['data'][$i]['list_mhs'][$l]['pin'] = $list_simak[$ls]['pin'];
+                            $res['data'][$i]['list_mhs'][$l]['judul_skripsi'] = $list_simak[$ls]['judul_skripsi'];
+                            $res['data'][$i]['list_mhs'][$l]['no_seri_ijazah'] = $list_simak[$ls]['no_seri_ijazah'];
+                            $res['data'][$i]['list_mhs'][$l]['no_transkip_nilai'] = $list_simak[$ls]['no_transkip_nilai'];
+                        }
+                    }
+
+                    foreach ($cek_krs as $c => $krs) {
+                        if ($krs['nipd'] == $mhs['nipd']) {
+                            $res['data'][$i]['list_mhs'][$l]['krs'] = $cek_krs[$c];
+                            // $res['data'][$i]['list_mhs'][$l]['pernah_krs'] = 1;
+                        }
+                    }
+                }
                 // foreach ($list_mhs as $m => $mhs) {
                 //     $res['data'][$i]['list_mhs'][$m]['simak_data'] = $this->aktivasi->cekStatusKelulusanMhs(['id_pd' => $mhs['id_pd']])->row_array();
                 // }
@@ -75,6 +96,33 @@ class MasterData extends CI_Controller
                 $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
             }
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
+            echo json_encode($res);
+        } else {
+            show_404();
+        }
+    }
+
+
+    public function getDataMhsPerangkatan()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data_post = $this->input->post();
+            // $index = 0;
+            // $year_now = date('Y');
+            // $res['data'] = [];
+            // $data_angkatan = $this->masterdata->getDataAngkatan()->result_array();
+            // foreach ($data_angkatan as $i => $da) {
+            //     if ($year_now - $da['tahun_masuk'] < 7) {
+            //         $res['data'][$index] = $da;
+            //         $index++;
+            //     }
+            // }
+
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            $list_simak = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
+            $cek_krs = $this->aktivasi->cekKrsMhsSimak(['nipd !=' => ''])->result_array();
+
+            $res = $cek_krs;
             echo json_encode($res);
         } else {
             show_404();
