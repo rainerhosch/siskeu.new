@@ -1,4 +1,11 @@
 <style>
+    .progress {
+        overflow: hidden;
+        height: 20px;
+        margin-bottom: 0px;
+        background-color: #cdcdcd;
+        border-radius: 4px;
+    }
     .table thead>tr>th {
         font-size: 14px;
         font-weight: 600;
@@ -197,7 +204,10 @@
                         html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
                         html += `<td class="text-center" style="font-weight: 700;">${ttl_dispen}</td>`;
                         html += `<td class="text-center" style="font-weight: 700;">${ttl_belum_bayar_spp}</td>`;
-                        html += `<td class="text-center"></td>`;
+                        html += `<td class="text-center">`;
+                        html += `<div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / ttl_mhs_aktif) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx/ ttl_mhs_aktif) * 100) + `%</div></div>`;
+                        html += `</td>`;
                         html += `</tr>`;
                     $("#data_pembayaran_angkatan_modal").html(html);
                 }
@@ -264,11 +274,6 @@
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     console.log('jml_lulus_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_lulus_smt_lalu);
-                    if((year_now-val.tahun_masuk) < 7){
-                        jml_belum_bayar_spp = ((val.jml_mhs-jml_mhs_lulus)-total_trx);
-                        ttl_belum_bayar_spp += jml_belum_bayar_spp;
-                        status = '';
-                    }
                     
                     ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_aktif;
                     ttl_mhs_aktif_smtlalu = ttl_mhs_aktif_smtlalu + jml_mhs_aktif_smt_lalu;
@@ -280,6 +285,13 @@
                             jml_mhs_aktif=total_trx;
                             jml_mhs_tanpa_keterangan = 0;
                             jml_mhs_aktif_now = total_trx;
+                    }
+
+                    
+                    if((year_now-val.tahun_masuk) < 7){
+                        jml_belum_bayar_spp = (jml_mhs_aktif_now-total_trx);
+                        ttl_belum_bayar_spp += jml_belum_bayar_spp;
+                        status = '';
                     }
 
                     html += `<tr>`;
@@ -314,7 +326,10 @@
                     html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_dispen}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_belum_bayar_spp}</td>`;
-                    html += `<td class="text-center"></td>`;
+                    html += `<td class="text-center">`;
+                    html += `<div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / ttl_mhs_aktif) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx/ ttl_mhs_aktif) * 100) + `%</div></div>`;
+                    html += `</td>`;
                     html += `</tr>`;
                 $("#data_pembayaran_angkatan_modal").html(html);
             }
