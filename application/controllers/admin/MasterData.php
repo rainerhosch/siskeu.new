@@ -21,8 +21,23 @@ class MasterData extends CI_Controller
         $this->load->library('pagination');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
+        $this->load->model('M_api', 'api');
     }
 
+
+    public function getDataKrs()
+    {
+        $ApiDataKrs = $this->api->mGet('KrsNew', [
+            'query' => [
+                'type' => null
+            ]
+        ]);
+        echo '<pre>';
+        var_dump($ApiDataKrs);
+        echo '</pre>';
+        die;
+        // return $ApiDataKrs['krs_new'];
+    }
     public function getDataPembayaranDashboard()
     {
         if ($this->input->is_ajax_request()) {
@@ -32,17 +47,41 @@ class MasterData extends CI_Controller
             $list_simak = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
             $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
 
+
+            $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
+            $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
+            $smt_befor = '';
+            if ($cek_ganjil_genap == '1') {
+                $smt_befor = ($tahun_smt_befor - 1) . '2';
+            } else {
+                $smt_befor = ($tahun_smt_befor - 1) . '1';
+            }
+
+
+            // $cek_krs_befor = $this->getDataKrs();
+            $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
+            $index = 0;
             foreach ($res['data'] as $i => $val) {
-                $where = [
-                    'tahun_masuk' => $val['tahun_masuk'],
-                ];
-                $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs($where)->num_rows();
-                $list_mhs = $this->masterdata->getDataListMhs($where)->result_array();
+                $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk']])->num_rows();
+                $list_mhs = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk']])->result_array();
                 $res['data'][$i]['list_mhs'] = $list_mhs;
 
                 foreach ($list_mhs as $l => $mhs) {
+                    $res['data'][$i]['list_mhs'][$l]['krs_befor'] = null;
                     $res['data'][$i]['list_mhs'][$l]['krs'] = null;
                     foreach ($list_simak as $ls => $simak) {
+                        if ($list_simak[$ls]['pin'] == '') {
+                            $list_simak[$ls]['pin'] = null;
+                        }
+                        if ($list_simak[$ls]['judul_skripsi'] == '') {
+                            $list_simak[$ls]['judul_skripsi'] = null;
+                        }
+                        if ($list_simak[$ls]['no_seri_ijazah'] == '') {
+                            $list_simak[$ls]['no_seri_ijazah'] = null;
+                        }
+                        if ($list_simak[$ls]['no_transkip_nilai'] == '') {
+                            $list_simak[$ls]['no_transkip_nilai'] = null;
+                        }
                         if ($simak['id_pd'] == $mhs['id_pd']) {
                             // $res['data'][$i]['list_mhs'][$l]['data_mhs_pt'] = $list_simak[$ls];
                             $res['data'][$i]['list_mhs'][$l]['pin'] = $list_simak[$ls]['pin'];
@@ -58,6 +97,12 @@ class MasterData extends CI_Controller
                             // $res['data'][$i]['list_mhs'][$l]['pernah_krs'] = 1;
                         }
                     }
+                    foreach ($cek_krs_befor as $kb => $ckb) {
+                        if ($ckb['nipd'] == $mhs['nipd']) {
+                            $res['data'][$i]['list_mhs'][$l]['krs_befor'] = $cek_krs_befor[$kb];
+                        }
+                    }
+
                 }
                 // foreach ($list_mhs as $m => $mhs) {
                 //     $res['data'][$i]['list_mhs'][$m]['simak_data'] = $this->aktivasi->cekStatusKelulusanMhs(['id_pd' => $mhs['id_pd']])->row_array();
@@ -96,6 +141,7 @@ class MasterData extends CI_Controller
                 $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
             }
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
+            $res['smt_befor'] = $smt_befor;
             echo json_encode($res);
         } else {
             show_404();

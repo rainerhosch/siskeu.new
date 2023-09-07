@@ -18,7 +18,7 @@ class M_aktivasi_mhs extends CI_Model
         $dbwastudig_simak->select('*');
         $dbwastudig_simak->from('mahasiswa_pt');
         if ($data != null) {
-            $this->db->where($data);
+            $dbwastudig_simak->where($data);
         }
         return $dbwastudig_simak->get();
 
@@ -30,9 +30,20 @@ class M_aktivasi_mhs extends CI_Model
         $dbwastudig_simak->select('*');
         $dbwastudig_simak->from('krs_new');
         if ($data != null) {
-            $this->db->where($data);
+            $dbwastudig_simak->where($data);
         }
         $dbwastudig_simak->group_by('nipd');
+        return $dbwastudig_simak->get();
+    }
+
+    public function cekKrsMhsSimakBefor($data = null)
+    {
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->select('*');
+        $dbwastudig_simak->from('krs_new');
+        if ($data != null) {
+            $dbwastudig_simak->where($data);
+        }
         return $dbwastudig_simak->get();
     }
 
