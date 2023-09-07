@@ -47,6 +47,26 @@ class M_aktivasi_mhs extends CI_Model
         return $dbwastudig_simak->get();
     }
 
+    public function cekKrsMhsLokal($data = null)
+    {
+        $this->db->select('id_krs, nipd, id_tahun_ajaran');
+        $this->db->from('krs_new');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        // $this->db->group_by('nipd');
+        return $this->db->get();
+    }
+    public function cekKrsMhsSebelumnyaLokal($data = null)
+    {
+        $this->db->select('id_krs, nipd, id_tahun_ajaran');
+        $this->db->from('krs_new');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
     public function input_data_dispen_mhs($data)
     {
         return $this->db->insert('dispensasi', $data);
