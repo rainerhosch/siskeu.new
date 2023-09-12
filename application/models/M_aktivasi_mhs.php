@@ -49,7 +49,7 @@ class M_aktivasi_mhs extends CI_Model
 
     public function cekKrsMhsLokal($data = null)
     {
-        $this->db->select('id_krs, nipd, id_tahun_ajaran');
+        $this->db->select('*');
         $this->db->from('krs_new');
         if ($data != null) {
             $this->db->where($data);

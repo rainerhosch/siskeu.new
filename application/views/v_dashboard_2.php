@@ -37,6 +37,7 @@
     </ul>
     <!-- Example Block -->
     <div class="block">
+        <!-- <img id="loading-image" src="https://www.boasnotas.com/img/loading2.gif" style="display:none;"/> -->
         <div class="block-title">
             <div class="heder-table">
                 <h2>Data Semester <span id="smt_aktif"></span></h2>
@@ -79,6 +80,8 @@
 
     <script>
         let year_now = new Date().getFullYear();
+        var getUrl = window.location;
+        var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
         // console.log(year_now)
 
         $('#single-select-field' ).select2({
@@ -91,13 +94,42 @@
             // console.log( data );
             $.ajax({
                 type: "POST",
-                url: "masterdata/getDataPembayaranDashboard",
+                url: "dashboard_chart/getDataPembayaran",
+                // url: "dashboard_chart/getDataPembayaranV2",
                 data:{
                     filter: data
                 },
                 dataType: "json",
+                beforeSend: function() {
+                    // Swal.fire({
+                    //     title: '',
+                    //     text:"Loading...",
+                    //     imageUrl: 'https://www.boasnotas.com/img/loading2.gif',
+                    //     imageWidth: 300,
+                    //     imageHeight: 300,
+                    //     allowOutsideClick: false,
+                    //     showConfirmButton: false,    
+                    //     imageAlt: 'Custom image',
+                    // })
+                    Swal.fire({
+                        title: 'Antosan sakedap . . .',
+                        position: 'top',
+                        width: 300,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,  
+                        color: '#716add',
+                        // background: `#fff url(${baseUrl}/assets/images/trees.png)`,
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            url('${baseUrl}/assets/img/nyan-cat-2.gif')
+                            center
+                            no-repeat
+                        `
+                    })
+                },
                 success: function(response) {
                     console.log(response);
+                    swal.close()
                 $('#smt_aktif').html(response.smt_aktif);
                 $('#smt_befor').html(response.smt_befor);
                 html = ``;
@@ -220,14 +252,43 @@
         })
         $.ajax({
             type: "POST",
-            // url: "masterdata/getDataMhsPerangkatan",
-            url: "masterdata/getDataPembayaranDashboard",
+            // url: "dashboard_chart/getDataMhsPerangkatan",
+            url: "dashboard_chart/getDataPembayaran",
+            // url: "dashboard_chart/getDataPembayaranV2",
             data:{
                 filter: 0
             },
             dataType: "json",
+            beforeSend: function() {
+                // Swal.fire({
+                //     title: '',
+                //     text:"Loading...",
+                //     imageUrl: 'https://www.boasnotas.com/img/loading2.gif',
+                //     imageWidth: 300,
+                //     imageHeight: 300,
+                //     allowOutsideClick: false,
+                //     showConfirmButton: false,    
+                //     imageAlt: 'Custom image',
+                // })
+                Swal.fire({
+                    title: 'Antosan sakedap . . .',
+                    position: 'top',
+                    width: 300,
+                    allowOutsideClick: false,
+                    showConfirmButton: false,  
+                    color: '#716add',
+                    // background: `#fff url(${baseUrl}/assets/images/trees.png)`,
+                    backdrop: `
+                        rgba(0,0,123,0.4)
+                        url('${baseUrl}/assets/img/nyan-cat-2.gif')
+                        center
+                        no-repeat
+                    `
+                })
+            },
             success: function(response) {
                 console.log(response);
+                swal.close()
                 $('#smt_aktif').html(response.smt_aktif);
                 $('#smt_befor').html(response.smt_befor);
                 html = ``;

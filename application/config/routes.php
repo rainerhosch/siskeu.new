@@ -13,6 +13,7 @@ $route['translate_uri_dashes'] = FALSE;
 // for menu
 $route['dashboard'] = 'user/dashboard';
 $route['dashboard_chart'] = 'user/DashboardChart';
+$route['dashboard_chart/(:any)'] = 'user/DashboardChart/$1';
 $route['migrasitrxtotg'] = 'user/MigrasiTrxToTg';
 $route['migrasitrxtotg/(:any)'] = 'user/MigrasiTrxToTg/$1';
 
