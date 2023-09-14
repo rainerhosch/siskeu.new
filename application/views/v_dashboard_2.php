@@ -62,7 +62,8 @@
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DAFTAR ULANG</br>(Aktif KRS)</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS</br>CUTI/PINDAH/DO</small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</br><span id="smt_befor"></span></small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</br><span class="smt_befor"></span></small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</br><span class="smt_befor"></span></small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</br></small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
@@ -131,7 +132,7 @@
                     console.log(response);
                     swal.close()
                 $('#smt_aktif').html(response.smt_aktif);
-                $('#smt_befor').html(response.smt_befor);
+                $('.smt_befor').html(response.smt_befor);
                 html = ``;
                 let no = 1;
                 let total_mhs=0;
@@ -290,11 +291,12 @@
                 console.log(response);
                 swal.close()
                 $('#smt_aktif').html(response.smt_aktif);
-                $('#smt_befor').html(response.smt_befor);
+                $('.smt_befor').html(response.smt_befor);
                 html = ``;
                 let no = 1;
                 let total_mhs=0;
                 let total_all_trx=0;
+                let total_trx = 0;
                 let ttl_belum_bayar_spp=0;
                 let ttl_dispen = 0;
                 let ttl_mhs_daftar_ulang = 0;
@@ -302,19 +304,21 @@
                 let ttl_mhs_lulus = 0;
                 let ttl_mhs_tanpa_keterangan = 0;
                 let ttl_mhs_aktif = 0;
+                let ttl_lulus_smt_lalu = 0;
                 $.each(response.data, function(i, val) {
                     let jml_mhs_lulus = val.jml_mhs;
                     let jml_mhs_aktif = 0;
                     let jml_mhs_aktif_smt_lalu = 0;
                     let jml_mhs_lulus_smt_lalu = 0;
                     let status = '(LULUS)';
+                    let jml_belum_bayar_spp=0;
                     // console.log(val.tahun_masuk)
                     // console.log(year_now-val.tahun_masuk)
-                    let jml_belum_bayar_spp=0;
+                    // total_trx = val.data_trx.length;
+                    total_trx = val.trx;
                     ttl_dispen += val.data_dispen;
-                    let total_trx = val.data_trx.length;
                     total_mhs += val.jml_mhs;
-                    total_all_trx += total_trx;
+                    total_all_trx = total_all_trx + total_trx;
 
                     $.each(val.list_mhs, function(j, lm){
                         if(lm.no_transkip_nilai == null){
@@ -334,12 +338,13 @@
                         //     jml_mhs_lulus_smt_lalu ++;
                         // }
                     });
+                    ttl_lulus_smt_lalu = ttl_lulus_smt_lalu + jml_mhs_lulus_smt_lalu;
                     
                     let jml_mhs_tanpa_keterangan = (jml_mhs_aktif-jml_mhs_lulus-jml_mhs_aktif_smt_lalu);
                     // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_aktif);
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
-                    console.log('jml_lulus_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_lulus_smt_lalu);
+                    // console.log('jml_lulus_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_lulus_smt_lalu);
                     
                     ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_aktif;
                     ttl_mhs_aktif_smtlalu = ttl_mhs_aktif_smtlalu + jml_mhs_aktif_smt_lalu;
@@ -348,6 +353,7 @@
                     jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                     ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
                     if((year_now-val.tahun_masuk) <= 0){
+                            ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                             jml_mhs_aktif=total_trx;
                             jml_mhs_tanpa_keterangan = 0;
                             jml_mhs_aktif_now = total_trx;
@@ -368,10 +374,11 @@
                     html += `<td class="text-center">${jml_mhs_lulus}</td>`;
                     html += `<td class="text-center">${jml_mhs_tanpa_keterangan}</td>`;
                     html += `<td class="text-center">${jml_mhs_aktif_smt_lalu}</td>`;
+                    html += `<td class="text-center">${jml_mhs_lulus_smt_lalu}</td>`;
                     html += `<td class="text-center">${jml_mhs_aktif_now}</td>`;
-                    html += `<td class="text-center">${total_trx}</td>`;
-                    html += `<td class="text-center">${val.data_dispen}</td>`;
-                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`;
+                    html += `<td class="text-center">${total_trx}</td>`; //betul
+                    html += `<td class="text-center">${val.data_dispen}</td>`; //betul
+                    html += `<td class="text-center">${jml_belum_bayar_spp}</td>`; //betul
                     //   html += `<td class="text-center">${Math.ceil((val.trx / val.jml_mhs)*100) }%</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
@@ -392,10 +399,11 @@
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_mhs_lulus}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_mhs_tanpa_keterangan}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_mhs_aktif_smtlalu}</td>`;
+                    html += `<td class="text-center" style="font-weight: 700;">${ttl_lulus_smt_lalu}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_mhs_aktif}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${ttl_dispen}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${ttl_belum_bayar_spp}</td>`;
+                    html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;//betul
+                    html += `<td class="text-center" style="font-weight: 700;">${ttl_dispen}</td>`;//betul
+                    html += `<td class="text-center" style="font-weight: 700;">${ttl_belum_bayar_spp}</td>`;//betul
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / ttl_mhs_aktif) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx/ ttl_mhs_aktif) * 100) + `%</div></div>`;
