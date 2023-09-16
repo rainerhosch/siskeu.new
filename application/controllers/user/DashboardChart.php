@@ -65,11 +65,47 @@ class DashboardChart extends CI_Controller
                 $smt_befor = ($tahun_smt_befor - 1) . '1';
             }
 
-
             // $cek_krs_befor = $this->getDataKrs();
             $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
             $index = 0;
             foreach ($res['data'] as $i => $val) {
+                if ($data_post['filter'] != '0') {
+                    if ($data_post['filter'] == '2') {
+                        $jenis_dispen = '1';
+                    }
+                    if ($data_post['filter'] == '3') {
+                        $jenis_dispen = '3';
+                    }
+                    if ($data_post['filter'] == '4') {
+                        $jenis_dispen = '4';
+                    }
+                    $res['data'][$i]['jenis_dispen'] = $jenis_dispen;
+                    $param_dispen = [
+                        'd.tahun_akademik' => $smtAktifRes['id_smt'],
+                        'm.tahun_masuk' => $val['tahun_masuk'],
+                        'd.tg_dispen >' => 0,
+                        'd.jenis_dispen' => $jenis_dispen
+                    ];
+                    $param_tx = [
+                        'm.tahun_masuk' => $val['tahun_masuk'],
+                        'td.id_jenis_pembayaran' => $data_post['filter'],
+                        't.semester' => $smtAktifRes['id_smt']
+                    ];
+                } else {
+                    $res['data'][$i]['jenis_dispen'] = 'all';
+                    $param_dispen = [
+                        'd.tahun_akademik' => $smtAktifRes['id_smt'],
+                        'm.tahun_masuk' => $val['tahun_masuk'],
+                        'd.tg_dispen >' => 0
+                    ];
+
+                    $param_tx = [
+                        'm.tahun_masuk' => $val['tahun_masuk'],
+                        'td.id_jenis_pembayaran <' => 5,
+                        't.semester' => $smtAktifRes['id_smt']
+                    ];
+                }
+
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk']])->num_rows();
                 $list_mhs = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk']])->result_array();
                 $res['data'][$i]['list_mhs'] = $list_mhs;
@@ -111,42 +147,45 @@ class DashboardChart extends CI_Controller
                         }
                     }
 
+
+                    $res['data'][$i]['list_mhs'][$l]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0])->num_rows();
+
                 }
                 // foreach ($list_mhs as $m => $mhs) {
                 //     $res['data'][$i]['list_mhs'][$m]['simak_data'] = $this->aktivasi->cekStatusKelulusanMhs(['id_pd' => $mhs['id_pd']])->row_array();
                 // }
-                if ($data_post['filter'] != '0') {
+                // if ($data_post['filter'] != '0') {
 
-                    if ($data_post['filter'] == '2') {
-                        $jenis_dispen = '1';
-                    }
-                    if ($data_post['filter'] == '3') {
-                        $jenis_dispen = '3';
-                    }
-                    if ($data_post['filter'] == '4') {
-                        $jenis_dispen = '4';
-                    }
-                    $res['data'][$i]['jenis_dispen'] = $jenis_dispen;
-                    $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0, 'd.jenis_dispen' => $jenis_dispen])->num_rows();
-                    $where1 = [
-                        'm.tahun_masuk' => $val['tahun_masuk'],
-                        'td.id_jenis_pembayaran' => $data_post['filter'],
-                        't.semester' => $smtAktifRes['id_smt']
-                    ];
-                    $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
-                    $res['data'][$i]['last_query'] = $this->db->last_query();
-                } else {
-                    $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0])->num_rows();
-                    $where1 = [
-                        'm.tahun_masuk' => $val['tahun_masuk'],
-                        'td.id_jenis_pembayaran <' => 5,
-                        't.semester' => $smtAktifRes['id_smt']
-                    ];
+                //     if ($data_post['filter'] == '2') {
+                //         $jenis_dispen = '1';
+                //     }
+                //     if ($data_post['filter'] == '3') {
+                //         $jenis_dispen = '3';
+                //     }
+                //     if ($data_post['filter'] == '4') {
+                //         $jenis_dispen = '4';
+                //     }
+                //     $res['data'][$i]['jenis_dispen'] = $jenis_dispen;
+                $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs($param_dispen)->num_rows();
+                // $where1 = [
+                //     'm.tahun_masuk' => $val['tahun_masuk'],
+                //     'td.id_jenis_pembayaran' => $data_post['filter'],
+                //     't.semester' => $smtAktifRes['id_smt']
+                // ];
+                $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($param_tx)->result_array();
+                $res['data'][$i]['last_query'] = $this->db->last_query();
+                // } else {
+                // $res['data'][$i]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.tahun_masuk' => $val['tahun_masuk'], 'd.tg_dispen >' => 0])->num_rows();
+                // $where1 = [
+                //     'm.tahun_masuk' => $val['tahun_masuk'],
+                //     'td.id_jenis_pembayaran <' => 5,
+                //     't.semester' => $smtAktifRes['id_smt']
+                // ];
 
-                    $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
+                // $res['data'][$i]['data_trx'] = $this->masterdata->getDataPembayaranChart($where1)->result_array();
 
-                }
-                $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($where1)->num_rows();
+                // }
+                $res['data'][$i]['trx'] = $this->masterdata->getDataPembayaranChart($param_tx)->num_rows();
             }
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
             $res['smt_befor'] = $smt_befor;
