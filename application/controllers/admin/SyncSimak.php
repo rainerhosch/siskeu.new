@@ -130,7 +130,15 @@ class SyncSimak extends CI_Controller
         ]);
         // }
         $dataMhs = $responseApiDataMhs['mhsdata'];
+        // echo '<pre>';
+        // var_dump($responseApiDataMhs);
+        // echo '</pre';
+        // die;
+
         foreach ($dataMhs as $i => $mhs) {
+            if ($mhs['no_transkip_nilai'] == '') {
+                $mhs['no_transkip_nilai'] = null;
+            }
             $data_update[$i] = $this->masterdata->updateDataMhs($mhs['id_pd'], $mhs);
         }
         // $dataMhs = $responseApiDataMhs['mhsdata'];

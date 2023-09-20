@@ -175,7 +175,7 @@ function accTRF(id, type_bayar) {
                     },
                     dataType: "json",
                     success: function (response) {
-                      // console.log(response);
+                      console.log(response);
 
                       if ((response.totalKewajiban = 0)) {
                         $(".btn#btn_proses").prop("disabled", true);
@@ -197,19 +197,20 @@ function accTRF(id, type_bayar) {
                       let attr_checked = ``;
                       let vBiaya = 0;
                       $.each(response.dataKewajibanSmt, function (i, value) {
+                        console.log(value);
                         let jml_bayar = jml_trf;
 
-                        if (value.biaya > 0) {
-                          vBiaya = value.biaya;
+                        if (parseInt(value.biaya) > 0) {
+                          vBiaya = parseInt(value.biaya);
                         }
-                        if (jml_trf < value.biaya) {
+                        if (jml_trf < parseInt(value.biaya)) {
                           vBiaya = jml_trf;
                           jml_trf = 0;
                         } else {
-                          jml_trf = jml_trf - value.biaya;
-                          vBiaya = value.biaya;
+                          jml_trf = jml_trf - parseInt(value.biaya);
+                          vBiaya = parseInt(value.biaya);
                         }
-                        // console.log(`${i}_` + vBiaya + " - " + jml_trf);
+                        console.log(`${i}_` + vBiaya + " - " + jml_trf);
                         if (jml_trf >= 0 && vBiaya != 0) {
                           attr_disable = ``;
                           attr_checked = `checked`;

@@ -37,6 +37,37 @@ class M_masterdata extends CI_Model
 
         return $this->db->get();
     }
+
+    public function getProdi($where = null)
+    {
+        $this->db->distinct();
+        $this->db->select('nm_jur');
+        $this->db->from('mahasiswa');
+        if ($where != null) {
+            $this->db->where($where);
+        }
+        $this->db->group_by('nm_jur');
+        $this->db->order_by('id_jur', 'ASC');
+
+        return $this->db->get();
+    }
+
+    public function getKelas($where = null)
+    {
+        $this->db->distinct();
+        $this->db->select('m.id_kelas as id_kelas,wk.nama_kelas as nama_kelas');
+        $this->db->from('mahasiswa m');
+        $this->db->join('wastu_kelas wk', 'wk.id_kelas=m.id_kelas');
+        if ($where != null) {
+            $this->db->where($where);
+        }
+        $this->db->group_by('m.id_kelas');
+        $this->db->order_by('m.id_kelas', 'ASC');
+
+        return $this->db->get();
+    }
+
+
     public function getDataListMhs($where = null)
     {
         $this->db->distinct();
