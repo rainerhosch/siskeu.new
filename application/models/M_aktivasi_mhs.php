@@ -57,6 +57,16 @@ class M_aktivasi_mhs extends CI_Model
         // $this->db->group_by('nipd');
         return $this->db->get();
     }
+
+    public function insertKrsToLocal($data)
+    {
+        $insert_mhs = $this->db->insert('krs_new', $data);
+        if ($insert_mhs) {
+            return $insert_mhs;
+        } else {
+            return 'gagal insert lokal';
+        }
+    }
     public function cekKrsMhsSebelumnyaLokal($data = null)
     {
         $this->db->select('id_krs, nipd, id_tahun_ajaran');

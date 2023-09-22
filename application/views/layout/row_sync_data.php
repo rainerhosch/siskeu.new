@@ -61,6 +61,48 @@
             </div>
         </a>
     </div>
+    
+    <div class="col-sm-6 col-lg-3">
+        <!-- Widget -->
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
+            <div class="widget-simple">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <h4><strong>Data KRS</strong></h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-5">
+                            <h3 class="widget-content text-center animation-pullDown krs_local_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Lokal</small>
+                            </h3>
+                        </div>
+                        <div class="col-sm-2">
+                            <h2><i class="fa fa-arrow-circle-left"></i></h2>
+                        </div>
+                        <div class="col-sm-5">
+                            <h3 class="widget-content text-center animation-pullDown krs_simak_label">
+                                <strong><span></span></strong> Data<br>
+                                <small>Data Simak</small>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <div class="progress progress-striped active" id="progress_sync_krs" style="display: none;">
+                            <div class="progress-bar progress-bar-info" id="bar_sync_krs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style=""></div>
+                        </div>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_krs" disabled><i class="fa fa-sync" id="icon_sync_krs"></i> Sinkron Data</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
     <!-- end widget -->
 
 
@@ -287,6 +329,8 @@
                 console.log(response);
                 $('.mhs_local_label span').text(response.count_mhs_local);
                 $('.mhs_simak_label span').text(response.count_mhs_simak);
+                $('.krs_local_label span').text(response.count_krs_local);
+                $('.krs_simak_label span').text(response.count_krs_simak);
                 $('.sm_active_local_label span').text(response.semester_aktif_local);
                 $('.sm_active_simak_label span').text(response.semester_aktif_simak);
                 $('.reg_mhs_local_label span').text(response.reg_mhs_local);
@@ -303,6 +347,46 @@
                 } else {
                     $('.btn#btn_sync_mhs').attr('disabled', true);
                 }
+
+
+                if ($('.krs_local_label span').text() != $('.krs_simak_label span').text()) {
+                    if ($('.krs_local_label span').text() < $('.krs_simak_label span').text()) {
+                        $('.btn#btn_sync_krs').attr('disabled', false);
+                    }
+                } else {
+                    $('.btn#btn_sync_krs').attr('disabled', true);
+                }
+
+                $('.btn#btn_sync_krs').click(function(){
+                    $('#icon_sync_krs').attr('class', 'fa fa-sync fa-spin');
+                    let awal = $('.krs_local_label span').text();
+                    let total = $('.krs_simak_label span').text();
+                    let percentage = (awal / total) * 100;
+
+                    $.ajax({
+                        type: 'POST', //Method type
+                        url: 'sync-simak/SyncDataKrs',
+                        dataType: 'json',
+                        success: function(data) {
+                            // console.log(data);
+                            if (data.data == 'success') {
+                                $('#icon_sync_krs').attr('class', 'fa fa-sync');
+                                // $('#progress_sync_krs').css('display', 'none');
+                                // $('.btn#btn_sync_krs').show();
+                                $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
+                                setTimeout(function() {
+                                    $('#success_message').html('');
+                                }, 5000);
+                                $('.krs_local_label span').text(data.count_krs_local_update);
+                                if ($('.mhs_local_label span').text() === $('.mhs_simak_label span').text()) {
+                                    $('.btn#btn_sync_krs').prop('disabled', true);
+                                }
+                            }
+                        }
+                    });
+                });
+
+
                 $('.btn#btn_sync_mhs').click(function() {
                     $('#icon_sync_mhs').attr('class', 'fa fa-sync fa-spin');
 

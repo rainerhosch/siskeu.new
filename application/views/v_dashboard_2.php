@@ -111,7 +111,7 @@
         <!-- <img id="loading-image" src="https://www.boasnotas.com/img/loading2.gif" style="display:none;"/> -->
         <div class="block-title">
             <div class="heder-table">
-                <h2>Data Chart Pembayaran SPP<span class="smt_aktif"></span></h2>
+                <h2>Data Mahasiswa Belum Melakukan Pembayaran<span class="smt_aktif"></span></h2>
                 <div class="leftHeader">
                     <button class="btn btn-xs btn-success btn_print_excel" disabled>EXCEL</button>
                 </div>
@@ -126,14 +126,13 @@
                     <tr>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">No</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN</br>ANGKATAN</th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">DETAIL</br><small style="font-size:1rem; font-weight: 700;">MHS DITERIMA</small></th>
-                        <!-- <th class="text-center" style="font-size:1.2rem; font-weight: 700;">KELAS</th> -->
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DITERIMA</small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DAFTAR ULANG</br>(Aktif KRS)</small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">DETAIL</br><small style="font-size:1rem; font-weight: 700;">DATA</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">PER ANGKATAN</small></th>
+                        <!-- <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DAFTAR ULANG</br>(Aktif KRS)</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</small></th> -->
                         <!-- <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS</br>CUTI/PINDAH/DO</small></th> -->
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</br><span class="smt_befor"></span></small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</br><span class="smt_befor"></span></small></th>
+                        <!-- <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</br><span class="smt_befor"></span></small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS LULUS</br><span class="smt_befor"></span></small></th> -->
                         <!-- <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS AKTIF</br></small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TOTAL</br><small style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
@@ -180,7 +179,7 @@
                     let ttl_jml_mhs_lulus = 0;
                     let ttl_jml_mhs_aktif_smt_lalu = 0;
                     let ttl_jml_mhs_lulus_smt_lalu = 0;
-                    $.each(response.data, function(i, data_angkatan) {
+                    $.each(response.data_mhs_belum_bayaran, function(i, data_angkatan) {
                         no++;
                         $.each(data_angkatan, function(j, angkatan) {
                             html += `<tr>`;
@@ -189,21 +188,11 @@
                              // ========================================= Prodi ===============================================
                             html += `<td class="text-center">`;
                             html += `<table class="table table-vcenter table-bordered table_grouping" style="margin-bottom:-2px;">`;
-                            // html += `<thead>`;
-                            // html += `<tr>`;
-                            // html += `<th>PRODI</th>`;
-                            // html += `<th>ROMBEL</th>`;
-                            // html += `<th>JML MHS</th>`;
-                            // html +=`</tr>`;
-                            // html +=`</thead>`;
-                            
                             let color = '';
                             let jml_mhs_angkatan = 0;
                             $.each(angkatan, function(p, prodi) {
                                 jml_mhs_prodi = 0;
-                                let jml_kls = 0;
                                 $.each(prodi, function(k, kelas) {
-                                    jml_kls ++;
                                     jml_mhs_kls = kelas.length;
                                     if(p === 'Teknik Mesin'){
                                         color = 'eb4034'
@@ -226,7 +215,6 @@
                                     html += `<td class="text-center" style="font-size:1rem;font-weight:700;background-color:#${color};color:#fff;">${p}</td>`;
                                     html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;">${k}</td>`;
                                     html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;">${jml_mhs_kls}</td>`;
-                                    html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;" rowspan="${jml_kls}">${jml_kls}</td>`;
                                     html += `</tr>`;
                                     jml_mhs_prodi = jml_mhs_prodi+jml_mhs_kls;
                                 });
@@ -234,223 +222,15 @@
                             });
                             html += `</table>`;
                             html += `</td>`;
-                             // ========================================= Kelas ===============================================
-                            // html += `<td class="text-center">`;
-                            // html += `<table class="table table-vcenter table_grouping" style="margin-bottom:-2px;">`;
-                            // $.each(angkatan, function(p, data_prodi) {
-                            //     $.each(data_prodi, function(k, kelas) {
-                            //         if(p === 'Teknik Mesin'){
-                            //             color = 'eb4034'
-                            //         }
-                            //         if(p === 'Teknik Industri'){
-                            //             color = '0004ff'
-                            //         }
-                            //         if(p === 'Teknik Informatika'){
-                            //             color = 'ff0090'
-                            //         }
-                            //         if(p === 'Manajemen Industri'){
-                            //             // color = 'ffd000'
-                            //             color = 'ebb800'
-                            //         }
-                            //         if(p === 'Teknik Tekstil'){
-                            //             color = '00ab0e'
-                            //         }
-                            //         html += `<tr>`;
-                            //         html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;">${k}</td>`;
-                            //         html += `</tr>`;
-                            //     })
-                            // });
-                            // html += `</table>`;
-                            // html += `</td>`;
-                            // ============================================== JML MHS DITERIMA ===============================================
-                            // html += `<td class="text-center">`;
-                            // html += `<table class="table table-vcenter table_grouping" style="margin-bottom:-2px;">`;
-                            // let jml_mhs_angkatan = 0;
-                            $.each(angkatan, function(p, prodi) {
-                                // let jml_mhs_prodi = 0;
-                                // $.each(prodi, function(k, kelas) {
-                                //     if(p === 'Teknik Mesin'){
-                                //         color = 'eb4034'
-                                //     }
-                                //     if(p === 'Teknik Industri'){
-                                //         color = '0004ff'
-                                //     }
-                                //     if(p === 'Teknik Informatika'){
-                                //         color = 'ff0090'
-                                //     }
-                                //     if(p === 'Manajemen Industri'){
-                                //         // color = 'ffd000'
-                                //         color = 'ebb800'
-                                //     }
-                                //     if(p === 'Teknik Tekstil'){
-                                //         color = '00ab0e'
-                                //     }
-                                //     jml_mhs_kls = kelas.length;
-                                //     // console.log(jml_mhs_prodi)
-                                //     // html += `<tr>`;
-                                //     // html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;">${jml_mhs_kls}</td>`;
-                                //     // html += `</tr>`;
-                                //     jml_mhs_prodi = jml_mhs_prodi+ kelas.length;
-                                    
-                                // })
-                                // jml_mhs_angkatan = jml_mhs_angkatan+jml_mhs_prodi;
-                            });
-                            // html += `<tr>`;
                             html += `<td class="text-center"  style="font-size:1rem; font-weight: 700;">${jml_mhs_angkatan}</td>`;
-                            // html += `</tr>`;
-                            // html += `</table>`;
-                            // html += `</td>`;
                             ttl_jml_mhs_angkatan = ttl_jml_mhs_angkatan+jml_mhs_angkatan;
-                            // ================================================= JML MHS DAFTAR ULANG ============================================
-                            html += `<td class="text-center">`;
-                            html += `<table class="table table-vcenter table_grouping" style="margin-bottom:-2px;">`;
-                            let jml_mhs_daftar_ulang = 0;
-                            $.each(angkatan, function(p, prodi) {
-                                $.each(prodi, function(k, mhs_kelas) {
-                                    if(p === 'Teknik Mesin'){
-                                        color = 'eb4034'
-                                    }
-                                    if(p === 'Teknik Industri'){
-                                        color = '0004ff'
-                                    }
-                                    if(p === 'Teknik Informatika'){
-                                        color = 'ff0090'
-                                    }
-                                    if(p === 'Manajemen Industri'){
-                                        // color = 'ffd000'
-                                        color = 'ebb800'
-                                    }
-                                    if(p === 'Teknik Tekstil'){
-                                        color = '00ab0e'
-                                    }
-
-                                    let mhs_daftar_ulang = 0;
-                                    $.each(mhs_kelas, function(l, mhs) {
-                                        if(mhs.krs !=null){
-                                            mhs_daftar_ulang += 1;
-                                        }
-                                    })
-                                    jml_mhs_daftar_ulang = jml_mhs_daftar_ulang+mhs_daftar_ulang;
-                                    html += `<tr>`;
-                                    html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;">${mhs_daftar_ulang}</td>`;
-                                    html += `</tr>`;
-                                })
-                            })
-                            // html += `<tr>`;
-                            // html += `<td class="text-center"  style="font-size:1rem; font-weight: 700;">${jml_mhs_daftar_ulang}</td>`;
-                            // html += `</tr>`;
-                            html += `</table>`;
-                            html += `</td>`;
-                            ttl_jml_mhs_daftar_ulang = ttl_jml_mhs_daftar_ulang+jml_mhs_daftar_ulang;
-                            // ============================================== JML MHS LULUS ===============================================
-                            html += `<td class="text-center">`;
-                            html += `<table class="table table-vcenter table_grouping" style="margin-bottom:-2px;">`;
-                            let jml_mhs_lulus = 0;
-                            $.each(angkatan, function(p,prodi) {
-                                $.each(prodi, function(k, mhs_kelas) {
-                                    if(p === 'Teknik Mesin'){
-                                        color = 'eb4034'
-                                    }
-                                    if(p === 'Teknik Industri'){
-                                        color = '0004ff'
-                                    }
-                                    if(p === 'Teknik Informatika'){
-                                        color = 'ff0090'
-                                    }
-                                    if(p === 'Manajemen Industri'){
-                                        // color = 'ffd000'
-                                        color = 'ebb800'
-                                    }
-                                    if(p === 'Teknik Tekstil'){
-                                        color = '00ab0e'
-                                    }
-
-                                    let mhs_lulus = mhs_kelas.length;
-                                    $.each(mhs_kelas, function(l, mhs) {
-                                        if(mhs.no_transkip_nilai == null){
-                                            mhs_lulus -= 1;
-                                        }
-                                    });
-                                    jml_mhs_lulus = jml_mhs_lulus+mhs_lulus;
-                                    html += `<tr>`;
-                                    html += `<td class="text-center"  style="font-size:1rem;background-color:#${color};color:#fff;">${mhs_lulus}</td>`;
-                                    html += `</tr>`;
-                                })
-                            });
-                            // html += `<tr>`;
-                            // html += `<td class="text-center"  style="font-size:1rem; font-weight: 700;">${jml_mhs_lulus}</td>`;
-                            // html += `</tr>`;
-                            html += `</table>`;
-                            html += `</td>`;
-                            ttl_jml_mhs_lulus = ttl_jml_mhs_lulus+jml_mhs_lulus;
-                             // =============================================================================================
-                            html += `<td class="text-center">`;
-                            html += `<table class="table table-vcenter table_grouping" style="margin-bottom:-2px;">`;
-                            let jml_mhs_aktif_smt_lalu = 0;
-                            $.each(angkatan, function(p, mhs_prodi) {
-                                let mhs_aktif_smt_lalu = 0;
-                                $.each(mhs_prodi, function(l, mhs) {
-                                    if(mhs.krs_befor != null){
-                                        mhs_aktif_smt_lalu += 1;
-                                    }
-                                });
-                                jml_mhs_aktif_smt_lalu = jml_mhs_aktif_smt_lalu+mhs_aktif_smt_lalu;
-                                html += `<tr>`;
-                                html += `<td class="text-center"  style="font-size:1rem;">${mhs_aktif_smt_lalu}</td>`;
-                                html += `</tr>`;
-                            });
-                            html += `<tr>`;
-                            html += `<td class="text-center"  style="font-size:1rem; font-weight: 700;">${jml_mhs_aktif_smt_lalu}</td>`;
-                            html += `</tr>`;
-                            html += `</table>`;
-                            html += `</td>`;
-                            ttl_jml_mhs_aktif_smt_lalu = ttl_jml_mhs_aktif_smt_lalu+jml_mhs_aktif_smt_lalu;
-                             // =============================================================================================
-                            html += `<td class="text-center">`;
-                            html += `<table class="table table-vcenter table_grouping" style="margin-bottom:-2px;">`;
-                            let jml_mhs_lulus_smt_lalu = 0;
-                            $.each(angkatan, function(p, mhs_prodi) {
-                                let mhs_lulus_smt_lalu = 0;
-                                $.each(mhs_prodi, function(l, mhs) {
-                                    if(mhs.krs_befor != null){
-                                        if(mhs.no_transkip_nilai != null){
-                                            mhs_lulus_smt_lalu ++;
-                                        }
-                                    }
-                                });
-                                jml_mhs_lulus_smt_lalu = jml_mhs_lulus_smt_lalu+mhs_lulus_smt_lalu;
-                                html += `<tr>`;
-                                html += `<td class="text-center"  style="font-size:1rem;">${mhs_lulus_smt_lalu}</td>`;
-                                html += `</tr>`;
-                            });
-                            html += `<tr>`;
-                            html += `<td class="text-center"  style="font-size:1rem; font-weight: 700;">${jml_mhs_lulus_smt_lalu}</td>`;
-                            html += `</tr>`;
-                            html += `</table>`;
-                            html += `</td>`;
-                            ttl_jml_mhs_lulus_smt_lalu = ttl_jml_mhs_lulus_smt_lalu+jml_mhs_lulus_smt_lalu;
-                            // =============================================================================================
-                            html += `</tr>`;
                         });
                     })
                     html += `<tr>`;
                     html += `<td class="text-center" style="font-weight: 700;">Total</td>`;
                     html += `<td class="text-center"></td>`;
                     html += `<td class="text-center" style="font-weight: 700;"></td>`;
-                    html += `<td class="text-center" style="font-weight: 700;"></td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${ttl_jml_mhs_angkatan}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${ttl_jml_mhs_daftar_ulang}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${ttl_jml_mhs_lulus}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${ttl_jml_mhs_aktif_smt_lalu}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${ttl_jml_mhs_lulus_smt_lalu}</td>`;
-                    // html += `<td class="text-center">`;
-                    // html += `<div class="progress">
-                    // <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / ttl_mhs_aktif) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx/ ttl_mhs_aktif) * 100) + `%</div></div>`;
-                    // html += `</td>`;
-                    // html += `<td class="text-center">`;
-                    // html += `<div class="progress">
-                    // <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((total_all_trx-ttl_dispen) / ttl_mhs_aktif) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((total_all_trx-ttl_dispen)/ ttl_mhs_aktif) * 100) + `%</div></div>`;
-                    // html += `</td>`;
                     html += `</tr>`;
                     $("#data_angkatan_prodi_modal").html(html);
 
@@ -475,15 +255,6 @@
                 dataType: "json",
                 beforeSend: function() {
                     $('.icon_load_table').attr('class', 'fa fa-sync fa-spin');
-                    
-                    // Swal.fire({
-                    //     title: 'Proses Pengumpulan Data . . .',
-                    //     imageUrl: `${baseUrl}/assets/img/loading.gif`,
-                    //     // imageHeight: 1500,
-                    //     allowOutsideClick: false,
-                    //     showConfirmButton: false,  
-                    //     imageAlt: 'Loading image'
-                    // })
                 },
                 success: function(response) {
                     console.log(response);

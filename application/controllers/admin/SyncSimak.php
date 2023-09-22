@@ -18,6 +18,7 @@ class SyncSimak extends CI_Controller
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_api', 'api');
+        $this->load->model('M_aktivasi_mhs', 'aktivasi');
         // $this->getMhsFromApiSimak = reqData('MahasiswaForSiskeu');
     }
 
@@ -71,6 +72,11 @@ class SyncSimak extends CI_Controller
                 'type' => 'get_count'
             ]
         ]);
+        $counApiDataKrsNew = $this->api->mGet('KrsNew', [
+            'query' => [
+                'type' => 'get_count'
+            ]
+        ]);
         $countRegMhsSimak = $this->api->mGet('RegMhs', [
             'query' => [
                 'type' => 'get_count',
@@ -90,17 +96,20 @@ class SyncSimak extends CI_Controller
             ]
         ]);
         $data['count_mhs_simak'] = $counApiDataMhs['mhsdata'];
+        $data['count_krs_simak'] = $counApiDataKrsNew['krs_new'];
         $data['semester_aktif_simak'] = $smtAktifSimak['semester_aktif']['id_smt'];
         $data['reg_mhs_simak'] = $countRegMhsSimak['reg_mhs'];
         $data['reg_ujian_simak'] = $countRegUjianSimak['reg_ujian'];
         $data['siskeu_trx_simak'] = $countTotalTrx['total_trx'];
         // ======================= Lokal ====================================
         $LocalDataMhs = $this->masterdata->getDataMhs()->num_rows();
+        $LocalDataKrs = $this->aktivasi->cekKrsMhsLokal()->num_rows();
         $dataRegMhs = $this->masterdata->getRegMhs()->num_rows();
         $dataRegUjian = $this->masterdata->getRegUjian()->num_rows();
         $dataTotalTrx = $this->transaksi->getDataTransaksi()->num_rows();
         $data['semester_aktif_local'] = $smtAktif;
         $data['count_mhs_local'] = $LocalDataMhs;
+        $data['count_krs_local'] = $LocalDataKrs;
         $data['reg_mhs_local'] = $dataRegMhs;
         $data['reg_ujian_local'] = $dataRegUjian;
         $data['siskeu_trx_local'] = $dataTotalTrx;
@@ -124,22 +133,22 @@ class SyncSimak extends CI_Controller
     {
         $dataMhs = [];
         $data_update = [];
-
-        // for ($i = 0; $i < $data_offset; $i++) {
         $responseApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
         ]);
-        // }
         $dataMhs = $responseApiDataMhs['mhsdata'];
         // echo '<pre>';
         // var_dump($responseApiDataMhs);
         // echo '</pre';
         // die;
-
+        $index_update = 0;
         foreach ($dataMhs as $i => $mhs) {
-            if ($mhs['no_transkip_nilai'] == '') {
-                $mhs['no_transkip_nilai'] = null;
+            // if ($mhs['no_transkip_nilai'] == '') {
+            //     $mhs['no_transkip_nilai'] = null;
+            // }
+            if ($mhs['no_transkip_nilai'] != null || $mhs['no_transkip_nilai'] != '') {
+                $data_update[$index_update] = $this->masterdata->updateDataMhs($mhs['id_pd'], $mhs);
             }
-            $data_update[$i] = $this->masterdata->updateDataMhs($mhs['id_pd'], $mhs);
+            $index_update++;
         }
         // $dataMhs = $responseApiDataMhs['mhsdata'];
         echo '<pre>';
@@ -226,6 +235,43 @@ class SyncSimak extends CI_Controller
             echo json_encode([
                 'data' => 'success',
                 'count_mhs_local_update' => $DataMhsLocalNew
+            ]);
+        } else {
+            echo json_encode(['data' => 'error']);
+        }
+    }
+
+    public function SyncDataKrs()
+    {
+        // data lokal
+        $result = $this->aktivasi->cekKrsMhsLokal()->result_array();
+        $jmlKrsLokal = count($result);
+        if ($jmlKrsLokal > 0) {
+            // insert from simak sesuai data update terakhir
+            $DataKrsSimak = $this->api->mGet('KrsNew', [
+                'query' => [
+                    'offset' => $jmlKrsLokal,
+                    'limit' => 1000
+                ]
+            ]);
+        } else {
+            // insert all from simak
+            $DataKrsSimak = $this->api->mGet('KrsNew', [
+                'query' => [
+                    // 'offset' => $jmlKrsLokal
+                ]
+            ]);
+        }
+        $dataInsert = $DataKrsSimak['krs_new'];
+        foreach ($dataInsert as $j => $d) {
+            $insert[] = $this->aktivasi->insertKrsToLocal($d);
+        }
+
+        if ($insert) {
+            $DataKrsLocalNew = count($insert) + $jmlKrsLokal;
+            echo json_encode([
+                'data' => 'success',
+                'count_krs_local_update' => $DataKrsLocalNew
             ]);
         } else {
             echo json_encode(['data' => 'error']);

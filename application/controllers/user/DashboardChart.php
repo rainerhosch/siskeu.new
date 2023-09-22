@@ -60,17 +60,18 @@ class DashboardChart extends CI_Controller
     {
         $date_now = date("Y-m-d H:i:s");
         $dataLoad = $this->getDataBelumBayaranDanDispen();
-        echo json_encode($dataLoad['data']);
+        $data_mhs_belum_bayaran = $dataLoad['data_mhs_belum_bayaran'];
+        // echo json_encode($dataLoad['data']);
         // echo '<pre>';
-        // var_dump($dataLoad);
+        // var_dump($data_mhs_belum_bayaran);
         // echo '</pre>';
-        die;
+        // die;
 
         $spreadsheet = new Spreadsheet();
         $Terbilang = new FormatTerbilang();
         $spreadsheet->setActiveSheetIndex(0);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Penerimaan_Kas');
+        $sheet->setTitle('data_mhs_belum_bayaran');
 
         //define width of column
         $sheet->getColumnDimension('A')->setWidth(20.00);
@@ -142,6 +143,27 @@ class DashboardChart extends CI_Controller
         $sheet->getStyle('A' . $row_header . ':F' . $row_header)->getFont()->setBold(true);
         $sheet->getStyle('A' . $merge_header . ':F' . $merge_header)->getFont()->setBold(true);
 
+        $row_tbl = 7;
+        foreach ($data_mhs_belum_bayaran as $i => $data_angkatan) {
+            $i++;
+            foreach ($data_angkatan as $angkatan => $a) {
+                foreach ($a as $prodi => $p) {
+                    foreach ($p as $kelas => $k) {
+                        foreach ($k as $mhs => $m) {
+                            $row_min = $row_tbl + 1;
+                            $sheet->setCellValue('A' . $row_min, $angkatan);
+                            $sheet->setCellValue('B' . $row_min, $prodi);
+                            $sheet->setCellValue('C' . $row_min, $kelas);
+                            $sheet->setCellValue('D' . $row_min, $m['nipd']);
+                            $sheet->setCellValue('E' . $row_min, $m['nm_pd']);
+                            $row_tbl++;
+                        }
+                    }
+
+                }
+            }
+        }
+
 
 
         $filename = 'Data_mahasiswa_belum_melakukan_pembayaran_dan_dispen_(' . $date_now . ')';
@@ -152,14 +174,12 @@ class DashboardChart extends CI_Controller
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
     }
-
     public function getDataBelumBayaranDanDispen()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $res['data'] = array();
         $tahun_masuk = $this->masterdata->getDataAngkatan(['tahun_masuk >' => '2016'])->result_array();
-        $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
-
+        // $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
 
         $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
         $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
@@ -169,55 +189,134 @@ class DashboardChart extends CI_Controller
         } else {
             $smt_befor = ($tahun_smt_befor - 1) . '1';
         }
+        $res['data_mhs_belum_bayaran'] = array();
 
-        $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
+
+        // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
         foreach ($tahun_masuk as $i => $val) {
-
-            // $res['data'][$i]['angkatan'] = $val['tahun_masuk'];
             $data_prodi = $this->masterdata->getProdi(['tahun_masuk' => $val['tahun_masuk']])->result_array();
-            // $res['data'][$val['tahun_masuk']]['total_mhs'] = 0;
             foreach ($data_prodi as $p => $prodi) {
-                $list_mhs = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk'], 'nm_jur' => $prodi['nm_jur']])->result_array();
-                $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']] = $list_mhs;
+                $data_kelas = $this->masterdata->getKelas(['m.tahun_masuk' => $val['tahun_masuk'], 'm.nm_jur' => $prodi['nm_jur']])->result_array();
+                foreach ($data_kelas as $k => $dk) {
+                    $list_mhs = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk'], 'nm_jur' => $prodi['nm_jur'], 'id_kelas' => $dk['id_kelas']])->result_array();
+                    // $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']] = $list_mhs;
 
-                $x = 0;
-                foreach ($list_mhs as $l => $mhs) {
-                    // $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$x] = $mhs;
-                    $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['data_trx'] = $this->masterdata->getDataPembayaranChart(['t.nim' => $mhs['nipd'], 'td.id_jenis_pembayaran <' => 5, 't.semester' => $smtAktifRes['id_smt']])->row_array();
-                    if ($mhs['no_transkip_nilai'] == "") {
-                        $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['no_transkip_nilai'] = null;
-                        $x++;
-                    }
-                    $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['data_dispen'] = null;
-                    $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['krs_befor'] = null;
-                    $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['krs'] = null;
+                    $n = 0;
+                    foreach ($list_mhs as $x => $mhs) {
+                        $cek_krs_befor = $this->aktivasi->cekKrsMhsLokal(['id_tahun_ajaran' => $smt_befor, 'nipd' => $mhs['nipd']])->row_array();
 
-                    foreach ($cek_krs as $c => $krs) {
-                        if ($krs['nipd'] == $mhs['nipd']) {
-                            $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['krs'] = $cek_krs[$c];
+                        $cek_dispen = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
+                        $data_dispen = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->row_array();
+
+                        // $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['krs_befor'] = null;
+                        $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$x] = $mhs;
+                        $param_tx = [
+                            'm.tahun_masuk' => $mhs['tahun_masuk'],
+                            'td.id_jenis_pembayaran <' => 5,
+                            'm.nipd' => $mhs['nipd'],
+                            't.semester' => $smtAktifRes['id_smt']
+                        ];
+                        $data_trx = $this->masterdata->getDataPembayaranChart($param_tx)->row_array();
+                        if ($cek_krs_befor != null) {
+                            // if ($cek_dispen > 0) {
+                            //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
+                            //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
+                            //     $n++;
+                            // }
+                            if ($data_trx == null && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
+                                $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
+                                $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
+                                $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
+                                $n++;
+                            }
+                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $data_trx == null) {
+                            $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
+                            $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
+                            $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
+                            $n++;
                         }
+                        $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$x]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
                     }
-                    foreach ($cek_krs_befor as $kb => $ckb) {
-                        if ($ckb['nipd'] == $mhs['nipd']) {
-                            $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$l]['krs_befor'] = $cek_krs_befor[$kb];
-                        }
-                    }
-
                 }
             }
         }
-
         $res['smt_aktif'] = $smtAktifRes['id_smt'];
         $res['smt_befor'] = $smt_befor;
         return $res;
-        // echo '<pre>';
-        // var_dump($cek_krs_befor);
-        // var_dump($res['data']);
-        // echo '</pre>';
-        // die;
     }
 
     public function getDataBelumBayaran()
+    {
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $res['data'] = array();
+        $tahun_masuk = $this->masterdata->getDataAngkatan(['tahun_masuk >' => '2016'])->result_array();
+        // $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
+
+        $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
+        $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
+        $smt_befor = '';
+        if ($cek_ganjil_genap == '1') {
+            $smt_befor = ($tahun_smt_befor - 1) . '2';
+        } else {
+            $smt_befor = ($tahun_smt_befor - 1) . '1';
+        }
+        $res['data_mhs_belum_bayaran'] = array();
+
+
+        // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
+        foreach ($tahun_masuk as $i => $val) {
+            $data_prodi = $this->masterdata->getProdi(['tahun_masuk' => $val['tahun_masuk']])->result_array();
+            foreach ($data_prodi as $p => $prodi) {
+                $data_kelas = $this->masterdata->getKelas(['m.tahun_masuk' => $val['tahun_masuk'], 'm.nm_jur' => $prodi['nm_jur']])->result_array();
+                foreach ($data_kelas as $k => $dk) {
+                    $list_mhs = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk'], 'nm_jur' => $prodi['nm_jur'], 'id_kelas' => $dk['id_kelas']])->result_array();
+                    // $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']] = $list_mhs;
+
+                    $n = 0;
+                    foreach ($list_mhs as $x => $mhs) {
+                        $cek_krs_befor = $this->aktivasi->cekKrsMhsLokal(['id_tahun_ajaran' => $smt_befor, 'nipd' => $mhs['nipd']])->row_array();
+
+                        $cek_dispen = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
+                        $data_dispen = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->row_array();
+
+                        // $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['krs_befor'] = null;
+                        $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$x] = $mhs;
+                        $param_tx = [
+                            'm.tahun_masuk' => $mhs['tahun_masuk'],
+                            'td.id_jenis_pembayaran <' => 5,
+                            'm.nipd' => $mhs['nipd'],
+                            't.semester' => $smtAktifRes['id_smt']
+                        ];
+                        $data_trx = $this->masterdata->getDataPembayaranChart($param_tx)->row_array();
+                        if ($cek_krs_befor != null) {
+                            // if ($cek_dispen > 0) {
+                            //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
+                            //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
+                            //     $n++;
+                            // }
+                            if ($data_trx == null && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
+                                $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
+                                $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
+                                $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
+                                $n++;
+                            }
+                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $data_trx == null) {
+                            $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
+                            $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
+                            $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
+                            $n++;
+                        }
+                        $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$x]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
+                    }
+                }
+            }
+        }
+        $res['smt_aktif'] = $smtAktifRes['id_smt'];
+        $res['smt_befor'] = $smt_befor;
+        echo json_encode($res);
+    }
+
+    public function getDataBelumBayaranV3()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         $res['data'] = array();
@@ -296,7 +395,7 @@ class DashboardChart extends CI_Controller
             // $res['data'] = $this->masterdata->getDataAngkatan(['tahun_masuk >' => '2016'])->result_array();
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             // $list_simak = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
-            $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
+            // $cek_krs = $this->aktivasi->cekKrsMhsSimak()->result_array();
 
 
             $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
@@ -309,7 +408,7 @@ class DashboardChart extends CI_Controller
             }
 
             // $cek_krs_befor = $this->getDataKrs();
-            $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
+            // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
             $index = 0;
             foreach ($res['data'] as $i => $val) {
                 if ($data_post['filter'] != '0') {
@@ -355,8 +454,12 @@ class DashboardChart extends CI_Controller
                 $res['data'][$i]['list_dispen'] = null;
                 foreach ($list_mhs as $l => $mhs) {
                     $res['data'][$i]['list_mhs'][$l]['data_dispen'] = null;
-                    $res['data'][$i]['list_mhs'][$l]['krs_befor'] = null;
-                    $res['data'][$i]['list_mhs'][$l]['krs'] = null;
+                    // $res['data'][$i]['list_mhs'][$l]['krs_befor'] = null;
+                    // $res['data'][$i]['list_mhs'][$l]['krs'] = null;
+
+
+                    $res['data'][$i]['list_mhs'][$l]['krs'] = $this->aktivasi->cekKrsMhsLokal(['nipd' => $mhs['nipd']])->result_array();
+                    $res['data'][$i]['list_mhs'][$l]['krs_befor'] = $this->aktivasi->cekKrsMhsLokal(['id_tahun_ajaran' => $smt_befor, 'nipd' => $mhs['nipd']])->row_array();
                     // foreach ($list_simak as $ls => $simak) {
                     //     if ($list_simak[$ls]['pin'] == '') {
                     //         $list_simak[$ls]['pin'] = null;
@@ -379,17 +482,17 @@ class DashboardChart extends CI_Controller
                     //     }
                     // }
 
-                    foreach ($cek_krs as $c => $krs) {
-                        if ($krs['nipd'] == $mhs['nipd']) {
-                            $res['data'][$i]['list_mhs'][$l]['krs'] = $cek_krs[$c];
-                            // $res['data'][$i]['list_mhs'][$l]['pernah_krs'] = 1;
-                        }
-                    }
-                    foreach ($cek_krs_befor as $kb => $ckb) {
-                        if ($ckb['nipd'] == $mhs['nipd']) {
-                            $res['data'][$i]['list_mhs'][$l]['krs_befor'] = $cek_krs_befor[$kb];
-                        }
-                    }
+                    // foreach ($cek_krs as $c => $krs) {
+                    //     if ($krs['nipd'] == $mhs['nipd']) {
+                    //         $res['data'][$i]['list_mhs'][$l]['krs'] = $cek_krs[$c];
+                    //         // $res['data'][$i]['list_mhs'][$l]['pernah_krs'] = 1;
+                    //     }
+                    // }
+                    // foreach ($cek_krs_befor as $kb => $ckb) {
+                    //     if ($ckb['nipd'] == $mhs['nipd']) {
+                    //         $res['data'][$i]['list_mhs'][$l]['krs_befor'] = $cek_krs_befor[$kb];
+                    //     }
+                    // }
 
 
                     $res['data'][$i]['list_mhs'][$l]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
