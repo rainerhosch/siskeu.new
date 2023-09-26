@@ -398,7 +398,7 @@ class DashboardChart extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             $data_post = $this->input->post();
-            $res['data'] = $this->masterdata->getDataAngkatan()->result_array();
+            $res['data'] = $this->masterdata->getDataAngkatan(['tahun_masuk >' => '2016'])->result_array();
             // $res['data'] = $this->masterdata->getDataAngkatan(['tahun_masuk >' => '2016'])->result_array();
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             // $list_simak = $this->aktivasi->cekStatusKelulusanMhs()->result_array();
