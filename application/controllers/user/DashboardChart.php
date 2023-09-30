@@ -59,11 +59,28 @@ class DashboardChart extends CI_Controller
     public function createExcel()
     {
         $date_now = date("Y-m-d H:i:s");
+        $data = $this->input->get('type');
+        $dataRes = array();
+        $title = '';
+        $title_header = '';
+        $nameoffile = '';
+        $ker = '';
         $dataLoad = $this->getDataBelumBayaranDanDispen();
-        $data_mhs_belum_bayaran = $dataLoad['data_mhs_belum_bayaran'];
+        if ($data != '1') {
+            $title = 'data_mhs_belum_bayaran';
+            $title_header = 'LAPORAN DATA MAHASISWA BELUM MELUNASI CICILAN DAN DISPEN';
+            $nameoffile = 'Data_mahasiswa_belum_melakukan_pembayaran_dan_dispen_';
+            $dataRes = $dataLoad['data_mhs_belum_bayaran'];
+        } else {
+            $title = 'data_mhs_sudah_bayaran';
+            $title_header = 'LAPORAN DATA MAHASISWA SUDAH MELAKUKAN PEMBAYARAN DAN DISPEN';
+            $nameoffile = 'Data_mahasiswa_sudah_melakukan_pembayaran_dan_dispen_';
+            $dataRes = $dataLoad['data_mhs_sudah_bayaran'];
+
+        }
         // echo json_encode($dataLoad['data']);
         // echo '<pre>';
-        // var_dump($data_mhs_belum_bayaran);
+        // var_dump($dataRes);
         // echo '</pre>';
         // die;
 
@@ -71,7 +88,7 @@ class DashboardChart extends CI_Controller
         $Terbilang = new FormatTerbilang();
         $spreadsheet->setActiveSheetIndex(0);
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('data_mhs_belum_bayaran');
+        $sheet->setTitle($title);
 
         //define width of column
         $sheet->getColumnDimension('A')->setWidth(20.00);
@@ -105,7 +122,7 @@ class DashboardChart extends CI_Controller
         ];
 
         // =========================== configurasi Title =====================================
-        $sheet->setCellValue('A1', 'LAPORAN DATA MAHASISWA BELUM MELUNASI CICILAN DAN DISPEN');
+        $sheet->setCellValue('A1', $title_header);
         $sheet->mergeCells('A1:F2');
         $sheet->setCellValue('A3', $date_now);
         $sheet->mergeCells('A3:F4');
@@ -144,7 +161,7 @@ class DashboardChart extends CI_Controller
         $sheet->getStyle('A' . $merge_header . ':F' . $merge_header)->getFont()->setBold(true);
 
         $row_tbl = 7;
-        foreach ($data_mhs_belum_bayaran as $i => $data_angkatan) {
+        foreach ($dataRes as $i => $data_angkatan) {
             $i++;
             foreach ($data_angkatan as $angkatan => $a) {
                 foreach ($a as $prodi => $p) {
@@ -173,7 +190,7 @@ class DashboardChart extends CI_Controller
 
 
 
-        $filename = 'Data_mahasiswa_belum_melakukan_pembayaran_dan_dispen_(' . $date_now . ')';
+        $filename = $nameoffile . '(' . $date_now . ')';
         $writer = new Xlsx($spreadsheet);
         // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Type:application/vnd.ms-excel');
@@ -181,6 +198,218 @@ class DashboardChart extends CI_Controller
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
     }
+
+    public function createExcelPayudi()
+    {
+        $date_now = date("Y-m-d H:i:s");
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $data = $this->input->get('type');
+        $dataLoad = $this->getDataBelumBayaranDanDispen();
+        $dataRes = $dataLoad['data_mhs_sudah_bayaran'];
+        // echo '<pre>';
+        // var_dump($dataRes);
+        // echo '</pre>';
+        // die;
+
+        // ==================================== CONFIGURATION ==========================================
+        $title = 'data_mhs_sudah_bayaran';
+        $title_header = 'RENCANA PEMASUKAN UANG KULIAH';
+        $title_header_2 = 'STT WASTUKANCANA PURWAKARTA';
+        $title_header_smt = '';
+        if ($smtAktifRes['smt'] == '1') {
+            $title_header_smt = 'SEMESTER GANJIL TAHUN AKADEMIK' . $smtAktifRes['nm_smt'];
+        } else {
+            $title_header_smt = 'SEMESTER GENAP TAHUN AKADEMIK' . $smtAktifRes['nm_smt'];
+        }
+        $nameoffile = 'Data_mahasiswa_sudah_melakukan_pembayaran_dan_dispen_';
+        // =============================================================================================
+
+        $spreadsheet = new Spreadsheet();
+        $Terbilang = new FormatTerbilang();
+        $spreadsheet->setActiveSheetIndex(0);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle($title);
+
+        //define width of column
+        $sheet->getColumnDimension('A')->setWidth(20.00);
+        $sheet->getColumnDimension('B')->setWidth(19.00);
+        $sheet->getColumnDimension('C')->setWidth(22.00);
+        $sheet->getColumnDimension('D')->setWidth(22.00);
+        $sheet->getColumnDimension('E')->setWidth(15.00);
+        $sheet->getColumnDimension('F')->setWidth(15.00);
+        $sheet->getColumnDimension('G')->setWidth(15.00);
+        $sheet->getColumnDimension('H')->setWidth(10.00);
+        $sheet->getColumnDimension('I')->setWidth(26.00);
+
+        //Define Style table
+        $styleTitle = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+        ];
+        $styleTable = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['RGB' => '000000']
+                ]
+            ]
+        ];
+
+        // =========================== configurasi Title =====================================
+        $sheet->setCellValue('A1', $title_header);
+        $sheet->mergeCells('A1:H2');
+        $sheet->setCellValue('A3', $title_header_2);
+        $sheet->mergeCells('A3:H4');
+        $sheet->setCellValue('A5', $title_header_smt);
+        $sheet->mergeCells('A5:H6');
+        $sheet->mergeCells('A7:H7');
+        $sheet->getStyle('A1:H6')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H6')->getFont()->setSize(14);
+        $sheet->getStyle('A1:H6')->applyFromArray($styleTitle); //styling header table
+
+        $row_header = 8;
+        $merge_header = $row_header + 1;
+        $sheet->setCellValue('A' . $row_header, 'ANGKATAN');
+        $sheet->setCellValue('B' . $row_header, 'PRODI');
+        $sheet->setCellValue('C' . $row_header, 'KELAS');
+        $sheet->setCellValue('D' . $row_header, 'JUMLAH MHS AKTIF');
+        $sheet->setCellValue('E' . $row_header, 'DATA PEMBAYARAN');
+        $sheet->mergeCells('E' . $row_header . ':' . 'G' . $row_header);
+        $sheet->setCellValue('E' . ($row_header + 1), 'Cicilan 1');
+        $sheet->setCellValue('F' . ($row_header + 1), 'Cicilan 2');
+        $sheet->setCellValue('G' . ($row_header + 1), 'Cicilan 3');
+        $sheet->setCellValue('H' . $row_header, 'DISPEN');
+        // $sheet->setCellValue('G' . $row_header, 'KETERANGAN');
+        // $sheet->setCellValue('H' . $row_header, 'Admin');
+        // $sheet->setCellValue('I' . $row_header, 'Keterangan');
+
+        // merge all header
+        $sheet->mergeCells('A' . $row_header . ':A' . $merge_header);
+        $sheet->mergeCells('B' . $row_header . ':B' . $merge_header);
+        $sheet->mergeCells('C' . $row_header . ':C' . $merge_header);
+        $sheet->mergeCells('D' . $row_header . ':D' . $merge_header);
+        // $sheet->mergeCells('F' . $row_header . ':F' . $merge_header);
+        // $sheet->mergeCells('G' . $row_header . ':G' . $merge_header);
+        $sheet->mergeCells('H' . $row_header . ':H' . $merge_header);
+        // $sheet->mergeCells('I' . $row_header . ':I' . $merge_header);
+        //styling title
+        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':H' . $row_header)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $merge_header . ':H' . $merge_header)->getFont()->setBold(true);
+
+        $row_tbl = 9;
+        $row_min = 0;
+        $row_start = 10;
+        foreach ($dataRes as $i => $data_angkatan) {
+            $i++;
+            foreach ($data_angkatan as $angkatan => $a) {
+                foreach ($a as $prodi => $p) {
+                    foreach ($p as $kelas => $k) {
+                        // $row_max = $row_tbl + 1;
+                        $row_min = $row_tbl + 1;
+                        $sheet->setCellValue('A' . $row_min, $angkatan);
+                        $sheet->setCellValue('B' . $row_min, $prodi);
+                        $sheet->setCellValue('C' . $row_min, $kelas);
+
+                        $sheet->setCellValue('D' . $row_min, count($k));
+                        $jml_pembayaran_c1 = 0;
+                        $jml_pembayaran_c2 = 0;
+                        $jml_pembayaran_c3 = 0;
+                        $jml_dispen = 0;
+                        foreach ($k as $mhs => $m) {
+                            $data_trx = $m['data_trx'];
+                            $data_dispen = $m['data_dispen'];
+                            if ($data_trx != null) {
+                                // $data_trx_detail = $m['data_trx']['detail_trx'];
+                                foreach ($data_trx['detail_trx'] as $x => $detail_trx) {
+                                    if ($detail_trx['id_jenis_pembayaran'] == '2') {
+                                        $jml_pembayaran_c1 = $jml_pembayaran_c1 + $detail_trx['jml_bayar'];
+                                    }
+                                    if ($detail_trx['id_jenis_pembayaran'] == '3') {
+                                        $jml_pembayaran_c2 = $jml_pembayaran_c2 + $detail_trx['jml_bayar'];
+                                    }
+                                    if ($detail_trx['id_jenis_pembayaran'] == '4') {
+                                        $jml_pembayaran_c3 = $jml_pembayaran_c3 + $detail_trx['jml_bayar'];
+                                    }
+                                }
+                            } elseif ($data_dispen != null) {
+                                $jml_dispen = $jml_dispen + $data_dispen['tg_dispen'];
+                            }
+                            // echo '<pre>';
+                            // var_dump($data_trx);
+                            // echo '</pre>';
+                            // die;
+                            // foreach (data_trx_detail as $dt => $data_trx) {
+                            //         if ($detail_trx['id_jenis_pembayaran'] == '2') {
+                            //             $jml_pembayaran_c1 = $jml_pembayaran_c1 + $detail_trx['jml_bayar'];
+                            //         }
+                            //         if ($detail_trx['id_jenis_pembayaran'] == '3') {
+                            //             $jml_pembayaran_c2 = $jml_pembayaran_c2 + $detail_trx['jml_bayar'];
+                            //         }
+                            //         if ($detail_trx['id_jenis_pembayaran'] == '4') {
+                            //             $jml_pembayaran_c3 = $jml_pembayaran_c3 + $detail_trx['jml_bayar'];
+                            //         }
+                            // }
+                        }
+                        $sheet->setCellValue('E' . $row_min, $jml_pembayaran_c1);
+                        $sheet->setCellValue('F' . $row_min, $jml_pembayaran_c2);
+                        $sheet->setCellValue('G' . $row_min, $jml_pembayaran_c3);
+                        $sheet->setCellValue('H' . $row_min, $jml_dispen);
+                        $sheet->getStyle('A' . $row_min . ':H' . $row_min)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                        $sheet->getStyle('A' . $row_min . ':H' . $row_min)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+                        $row_tbl++;
+                        // foreach ($k as $mhs => $m) {
+                        //     $status = '';
+                        //     $row_min = $row_tbl + 1;
+                        //     $sheet->setCellValue('A' . $row_min, $angkatan);
+                        //     $sheet->setCellValue('B' . $row_min, $prodi);
+                        //     $sheet->setCellValue('C' . $row_min, $kelas);
+                        //     $sheet->setCellValue('D' . $row_min, $m['nipd']);
+                        //     $sheet->setCellValue('E' . $row_min, $m['nm_pd']);
+                        //     if ($m['data_dispen'] != null) {
+                        //         $status = 'DISPEN';
+                        //     } else {
+                        //         $status = 'SUDAH MELAKUKAN PEMBAYARAN';
+                        //     }
+                        //     $sheet->setCellValue('H' . $row_min, $status);
+                        //     $row_tbl++;
+                        // }
+                    }
+
+                }
+            }
+        }
+
+
+        $sheet->setCellValue('A' . $row_min + 1, 'TOTAL');
+        $sheet->mergeCells('A' . $row_min + 1 . ':C' . $row_min + 1);
+        $sheet->setCellValue('D' . $row_min + 1, '=SUM(D' . $row_start . ':D' . $row_min . ')');
+        $sheet->setCellValue('E' . $row_min + 1, '=SUM(E' . $row_start . ':E' . $row_min . ')');
+        $sheet->setCellValue('F' . $row_min + 1, '=SUM(F' . $row_start . ':F' . $row_min . ')');
+        $sheet->setCellValue('G' . $row_min + 1, '=SUM(G' . $row_start . ':G' . $row_min . ')');
+        $sheet->setCellValue('H' . $row_min + 1, '=SUM(H' . $row_start . ':H' . $row_min . ')');
+
+        $sheet->getStyle('A' . $row_min + 1 . ':H' . $row_min + 1)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A' . $row_min + 1 . ':H' . $row_min + 1)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A' . $row_min + 1 . ':H' . $row_min + 1)->getFont()->setBold(true);
+
+        $filename = $nameoffile . '(' . $date_now . ')';
+        $writer = new Xlsx($spreadsheet);
+        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Type:application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+
+    }
+
     public function getDataBelumBayaranDanDispen()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
@@ -197,6 +426,7 @@ class DashboardChart extends CI_Controller
             $smt_befor = ($tahun_smt_befor - 1) . '1';
         }
         $res['data_mhs_belum_bayaran'] = array();
+        $res['data_mhs_sudah_bayaran'] = array();
 
 
         // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
@@ -209,6 +439,7 @@ class DashboardChart extends CI_Controller
                     // $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']] = $list_mhs;
 
                     $n = 0;
+                    $m = 0;
                     foreach ($list_mhs as $x => $mhs) {
                         $cek_krs_befor = $this->aktivasi->cekKrsMhsLokal(['id_tahun_ajaran' => $smt_befor, 'nipd' => $mhs['nipd']])->row_array();
 
@@ -223,24 +454,40 @@ class DashboardChart extends CI_Controller
                             'm.nipd' => $mhs['nipd'],
                             't.semester' => $smtAktifRes['id_smt']
                         ];
+
+                        $cek_trx = $this->masterdata->getDataPembayaranChart($param_tx)->num_rows();
                         $data_trx = $this->masterdata->getDataPembayaranChart($param_tx)->row_array();
+                        if ($cek_trx > 0) {
+                            $data_trx['detail_trx'] = $this->masterdata->getDataDetailPembayaranChart(['id_transaksi' => $data_trx['id_transaksi']])->result_array();
+                        }
                         if ($cek_krs_befor != null) {
                             // if ($cek_dispen > 0) {
                             //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
                             //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
                             //     $n++;
                             // }
-                            if ($data_trx == null && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
+                            if ($cek_trx == 0 && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
                                 $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
                                 $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
                                 $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
                                 $n++;
                             }
-                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $data_trx == null) {
+                            if ($cek_trx > 0 && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
+                                $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m] = $mhs;
+                                $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_dispen'] = $data_dispen;
+                                $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_trx'] = $data_trx;
+                                $m++;
+                            }
+                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $data_trx == 0) {
                             $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
                             $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
                             $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
                             $n++;
+                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $data_trx > 0) {
+                            $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m] = $mhs;
+                            $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_dispen'] = $data_dispen;
+                            $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_trx'] = $data_trx;
+                            $m++;
                         }
                         $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$x]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
                     }
@@ -251,6 +498,8 @@ class DashboardChart extends CI_Controller
         $res['smt_befor'] = $smt_befor;
         return $res;
     }
+
+
 
     public function getDataBelumBayaran()
     {
@@ -268,6 +517,7 @@ class DashboardChart extends CI_Controller
             $smt_befor = ($tahun_smt_befor - 1) . '1';
         }
         $res['data_mhs_belum_bayaran'] = array();
+        $res['data_mhs_sudah_bayaran'] = array();
 
 
         // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
@@ -280,6 +530,7 @@ class DashboardChart extends CI_Controller
                     // $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']] = $list_mhs;
 
                     $n = 0;
+                    $m = 0;
                     foreach ($list_mhs as $x => $mhs) {
                         $cek_krs_befor = $this->aktivasi->cekKrsMhsLokal(['id_tahun_ajaran' => $smt_befor, 'nipd' => $mhs['nipd']])->row_array();
 
@@ -294,24 +545,31 @@ class DashboardChart extends CI_Controller
                             'm.nipd' => $mhs['nipd'],
                             't.semester' => $smtAktifRes['id_smt']
                         ];
-                        $data_trx = $this->masterdata->getDataPembayaranChart($param_tx)->row_array();
+                        $cek_trx = $this->masterdata->getDataPembayaranChart($param_tx)->num_rows();
+                        $data_trx = $this->masterdata->getDataPembayaranChart($param_tx)->result_array();
                         if ($cek_krs_befor != null) {
-                            // if ($cek_dispen > 0) {
-                            //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
-                            //     $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
-                            //     $n++;
-                            // }
-                            if ($data_trx == null && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
+                            if ($cek_trx == 0 && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
                                 $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
                                 $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
                                 $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
                                 $n++;
                             }
-                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $data_trx == null) {
+                            if ($data_trx > 0 && $mhs['no_transkip_nilai'] == null || $cek_dispen > 0) {
+                                $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m] = $mhs;
+                                $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_dispen'] = $data_dispen;
+                                $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_trx'] = $data_trx;
+                                $m++;
+                            }
+                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $cek_trx == 0) {
                             $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n] = $mhs;
                             $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_dispen'] = $data_dispen;
                             $res['data_mhs_belum_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$n]['data_trx'] = $data_trx;
                             $n++;
+                        } elseif ($mhs['tahun_masuk'] == substr($smtAktifRes['id_smt'], 0, 4) && $cek_trx > 0) {
+                            $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m] = $mhs;
+                            $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_dispen'] = $data_dispen;
+                            $res['data_mhs_sudah_bayaran'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$m]['data_trx'] = $data_trx;
+                            $m++;
                         }
                         $res['data'][$i][$val['tahun_masuk']][$prodi['nm_jur']][$dk['nama_kelas']][$x]['data_dispen'] = $this->aktivasi->getDataDispenMhs(['d.tahun_akademik' => $smtAktifRes['id_smt'], 'm.nipd' => $mhs['nipd'], 'd.tg_dispen >' => 0, 'status' => 0])->num_rows();
                     }

@@ -113,7 +113,8 @@
             <div class="heder-table">
                 <h2>Data Mahasiswa Belum Melakukan Pembayaran<span class="smt_aktif"></span></h2>
                 <div class="leftHeader">
-                    <button class="btn btn-xs btn-success btn_print_excel" disabled>EXCEL</button>
+                    <button class="btn btn-xs btn-success btn_print_excel_1" disabled>Cetak MHS sudah bayaran</button>
+                    <button class="btn btn-xs btn-success btn_print_excel_0" disabled>Cetak MHS belum bayaran</button>
                 </div>
                 <div class="div_loading_table">
                     <i class="fa fa-sync" id="icon_sync_mhs" hi></i>
@@ -153,9 +154,14 @@
         var getUrl = window.location;
         var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
         // console.log(year_now)
-        $(`.btn_print_excel`).on('click', function(){
+        $(`.btn_print_excel_1`).on('click', function(){
             var uri_location = window.location;
-            let url =  uri_location+'/createExcel';
+            let url =  uri_location+'/createExcelPayudi';
+            window.open(url, '_blank');
+        });
+        $(`.btn_print_excel_0`).on('click', function(){
+            var uri_location = window.location;
+            let url =  uri_location+'/createExcel?type=0';
             window.open(url, '_blank');
         });
 
@@ -167,7 +173,8 @@
                     $('#icon_sync_mhs').attr('class', 'fa fa-sync fa-spin');
                 },
                 success: function(response) {
-                    $(`.btn_print_excel`).attr('disabled', false);
+                    $(`.btn_print_excel_1`).attr('disabled', false);
+                    $(`.btn_print_excel_0`).attr('disabled', false);
                     $(`.div_loading_table`).attr('hidden', true);
                     console.log(response)
                     $('.smt_befor').html(response.smt_befor);

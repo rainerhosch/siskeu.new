@@ -92,6 +92,16 @@ class M_masterdata extends CI_Model
         $this->db->group_by('m.nipd');
         return $this->db->get();
     }
+    public function getDataDetailPembayaranChart($where = null)
+    {
+        // $this->db->distinct();
+        $this->db->select('*');
+        $this->db->from('transaksi_detail');
+        if ($where != null) {
+            $this->db->where($where);
+        }
+        return $this->db->get();
+    }
     public function getDataPembayaranChartNoFIlter($where = null)
     {
         // $this->db->distinct();
