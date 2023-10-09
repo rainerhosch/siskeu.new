@@ -1270,12 +1270,20 @@ class Transaksi extends CI_Controller
                     $where = [
                         'id_jenis_pembayaran' => $id_pembayaran
                     ];
+                    $cekTrx = $this->transaksi->getDataTransaksiSebelumnya(['nim' => $nim, 'semester' => $smtAktif, 'td.id_jenis_pembayaran' => 9])->result_array();
+                    $jml_sudah_bayar = 0;
+                    foreach ($cekTrx as $i => $val) {
+                        $jml_sudah_bayar = $jml_sudah_bayar + $val['jml_bayar'];
+                    }
                     $resJnsPembayaran = $this->masterdata->GetJenisPembayaran($where)->row_array();
                     $data = [
                         'id_jp' => $id_pembayaran,
                         'nm_jp' => $resJnsPembayaran['nm_jp'],
-                        'biaya' => $dataBiaya['uang_bangunan']
+                        'biaya' => $dataBiaya['uang_bangunan'] - $jml_sudah_bayar
                     ];
+
+                    // var_dump($jml_sudah_bayar);
+                    // die;
                 } else {
                     $data = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $id_pembayaran])->row_array();
                 }
