@@ -208,11 +208,11 @@ class Laporan extends CI_Controller
         // Get records
         if ($jenis_kas != 'all') {
             $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset, ['mjp.jenis_kas' => $jenis_kas])->result_array();
-            $allcount = $this->transaksi->getDataTransaksiPagenation(null, '', '', ['mjp.jenis_kas' => $jenis_kas])->num_rows();
+            $allcount = $this->transaksi->getDataTransaksiPagenation($key_cari, '', '', ['mjp.jenis_kas' => $jenis_kas])->num_rows();
         } else {
             // All records count
             $dataHistoriTx = $this->transaksi->getDataTransaksiPagenation($key_cari, $limit, $offset)->result_array();
-            $allcount = $this->transaksi->getDataTransaksiPagenation()->num_rows();
+            $allcount = $this->transaksi->getDataTransaksiPagenation($key_cari)->num_rows();
         }
         $countHistoriTx = count($dataHistoriTx);
         for ($i = 0; $i < $countHistoriTx; $i++) {
