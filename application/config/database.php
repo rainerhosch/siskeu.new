@@ -120,8 +120,8 @@ $db['wastudig_simak'] = [
 
 $db['wastudig_siskeu'] = array(
 	'hostname' => 'wastu.digital',
-	'username' => 'wastudig_simak',
-	'password' => 'Inovasi2025DIGITAL',
+	'username' => 'wastudig_siskeu',
+	'password' => 'superusersimak2023@pwk',
 	'database' => 'wastudig_siskeu',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
