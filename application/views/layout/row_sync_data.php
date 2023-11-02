@@ -34,7 +34,7 @@
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown mhs_local_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Lokal</small>
                             </h3>
                         </div>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown mhs_simak_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Simak</small>
                             </h3>
                         </div>
@@ -76,7 +76,7 @@
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown krs_local_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Lokal</small>
                             </h3>
                         </div>
@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown krs_simak_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Simak</small>
                             </h3>
                         </div>
@@ -163,7 +163,7 @@
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown reg_mhs_local_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Lokal</small>
                             </h3>
                         </div>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown reg_mhs_simak_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Simak</small>
                             </h3>
                         </div>
@@ -202,7 +202,7 @@
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown reg_ujian_local_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Lokal</small>
                             </h3>
                         </div>
@@ -211,7 +211,7 @@
                         </div>
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown reg_ujian_simak_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Simak</small>
                             </h3>
                         </div>
@@ -243,7 +243,7 @@
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown dataTrx_local_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Lokal</small>
                             </h3>
                         </div>
@@ -252,7 +252,7 @@
                         </div>
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown dataTrx_simak_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Simak</small>
                             </h3>
                         </div>
@@ -283,7 +283,7 @@
                     <div class="col-sm-12">
                         <!-- <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown dashboardSimak_local_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Lokal</small>
                             </h3>
                         </div>
@@ -292,14 +292,14 @@
                         </div>
                         <div class="col-sm-5">
                             <h3 class="widget-content text-center animation-pullDown dashboardSimak_simak_label">
-                                <strong><span></span></strong> Data<br>
+                                <strong><span></span></strong>
                                 <small>Data Simak</small>
                             </h3>
                         </div> -->
                         <small>Portal untuk melihat data laporan keuangan SIMAK</small>
                         <ul>
                             <li>Data 1</li>
-                            <li>Data 2</li>
+                            <!-- <li>Data 2</li> -->
                         </ul>
                     </div>
                 </div>

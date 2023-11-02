@@ -274,6 +274,7 @@
                     let total_mhs=0;
                     let total_all_trx=0;
                     let total_trx = 0;
+                    let trx_befor = 0;
                     let ttl_belum_bayar_spp=0;
                     let ttl_dispen = 0;
                     let ttl_mhs_daftar_ulang = 0;
@@ -292,6 +293,8 @@
                         // console.log(val.tahun_masuk)
                         // console.log(year_now-val.tahun_masuk)
                         // total_trx = val.data_trx.length;
+                        
+                        // new code
                         total_trx = val.trx;
                         ttl_dispen += val.data_dispen;
                         total_mhs += val.jml_mhs;
@@ -330,10 +333,16 @@
                         jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                         ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
                         if((year_now-val.tahun_masuk) <= 0){
+                            if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                                 jml_mhs_aktif=total_trx;
-                                jml_mhs_tanpa_keterangan = 0;
                                 jml_mhs_aktif_now = total_trx;
+                            }else{
+                                jml_mhs_aktif = val.trx_befor;
+                                ttl_mhs_aktif= ttl_mhs_aktif +  val.trx_befor;
+                                jml_mhs_aktif_now =  val.trx_befor;
+                            }
+                            jml_mhs_tanpa_keterangan = 0;
                         }
 
                         
@@ -481,10 +490,16 @@
                     jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                     ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
                     if((year_now-val.tahun_masuk) <= 0){
-                            ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
-                            jml_mhs_aktif=total_trx;
+                        if(val.trx_befor === null){
+                                ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
+                                jml_mhs_aktif=total_trx;
+                                jml_mhs_aktif_now = total_trx;
+                            }else{
+                                jml_mhs_aktif = val.trx_befor;
+                                ttl_mhs_aktif= ttl_mhs_aktif +  val.trx_befor;
+                                jml_mhs_aktif_now =  val.trx_befor;
+                            }
                             jml_mhs_tanpa_keterangan = 0;
-                            jml_mhs_aktif_now = total_trx;
                     }
 
                     

@@ -676,15 +676,26 @@ class DashboardChart extends CI_Controller
             // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
             $index = 0;
             foreach ($res['data'] as $i => $val) {
+                $res['data'][$i]['trx_befor'] = null;
                 if ($data_post['filter'] != '0') {
                     if ($data_post['filter'] == '2') {
                         $jenis_dispen = '1';
                     }
                     if ($data_post['filter'] == '3') {
                         $jenis_dispen = '3';
+                        $res['data'][$i]['trx_befor'] = $this->masterdata->getDataPembayaranChart([
+                            'm.tahun_masuk' => $val['tahun_masuk'],
+                            'td.id_jenis_pembayaran' => '2',
+                            't.semester' => $smtAktifRes['id_smt']
+                        ])->num_rows();
                     }
                     if ($data_post['filter'] == '4') {
                         $jenis_dispen = '4';
+                        $res['data'][$i]['trx_befor'] = $this->masterdata->getDataPembayaranChart([
+                            'm.tahun_masuk' => $val['tahun_masuk'],
+                            'td.id_jenis_pembayaran' => '2',
+                            't.semester' => $smtAktifRes['id_smt']
+                        ])->num_rows();
                     }
                     $res['data'][$i]['jenis_dispen'] = $jenis_dispen;
                     $param_dispen = [
