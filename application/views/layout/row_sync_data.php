@@ -509,7 +509,7 @@
                     $('#icon_sync_dataTrx').attr('class', 'fa fa-sync fa-spin');
                     $.ajax({
                         type: 'POST', //Method type
-                        url: 'sync-simak/DataTrxSiskeu',
+                        url: 'sync-simak/DataTrxSiskeuV2',
                         dataType: 'json',
                         success: function(response) {
                             console.log(response);

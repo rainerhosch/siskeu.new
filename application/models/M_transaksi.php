@@ -306,6 +306,27 @@ class M_transaksi extends CI_Model
             }
         }
     }
+    public function syncTransaksi($data)
+    {
+        $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+        $dbwastudig_siskeu->insert('transaksi', $data);
+        if (!$dbwastudig_siskeu) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+
+    public function syncDetailTransaksi($data)
+    {
+        $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+        $dbwastudig_siskeu->insert('transaksi_detail', $data);
+        if (!$dbwastudig_siskeu) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
 
     // add Detail TX
     public function addNewDetailTransaksi($data)
