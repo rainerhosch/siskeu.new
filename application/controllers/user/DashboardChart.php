@@ -672,6 +672,7 @@ class DashboardChart extends CI_Controller
                 $smt_befor = ($tahun_smt_befor - 1) . '1';
             }
 
+
             // $cek_krs_befor = $this->getDataKrs();
             // $cek_krs_befor = $this->aktivasi->cekKrsMhsSimakBefor(['id_tahun_ajaran' => $smt_befor])->result_array();
             $index = 0;
@@ -707,7 +708,9 @@ class DashboardChart extends CI_Controller
                     $param_tx = [
                         'm.tahun_masuk' => $val['tahun_masuk'],
                         'td.id_jenis_pembayaran' => $data_post['filter'],
-                        't.semester' => $smtAktifRes['id_smt']
+                        't.semester' => $smtAktifRes['id_smt'],
+                        // filter untuk tidak mengambil data trx beasiswa seperti KIP, dll. (dengan set uang masuk = 1)
+                        't.uang_masuk' => 1,
                     ];
                 } else {
                     $res['data'][$i]['jenis_dispen'] = 'all';
@@ -720,14 +723,19 @@ class DashboardChart extends CI_Controller
                     $param_tx = [
                         'm.tahun_masuk' => $val['tahun_masuk'],
                         'td.id_jenis_pembayaran <' => 5,
-                        't.semester' => $smtAktifRes['id_smt']
+                        't.semester' => $smtAktifRes['id_smt'],
+                        // filter untuk tidak mengambil data trx beasiswa seperti KIP, dll. (dengan set uang masuk = 1)
+                        't.uang_masuk' => 1,
                     ];
                 }
+
 
                 $res['data'][$i]['jml_mhs'] = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk']])->num_rows();
                 $list_mhs = $this->masterdata->getDataListMhs(['tahun_masuk' => $val['tahun_masuk']])->result_array();
                 $res['data'][$i]['list_mhs'] = $list_mhs;
                 $res['data'][$i]['list_dispen'] = null;
+                // var_dump($res['data']);
+                // die;
                 foreach ($list_mhs as $l => $mhs) {
                     $res['data'][$i]['list_mhs'][$l]['data_dispen'] = null;
 

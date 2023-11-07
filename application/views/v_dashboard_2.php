@@ -261,6 +261,7 @@
                 },
                 dataType: "json",
                 beforeSend: function() {
+                    $(`.span_loading_table`).attr('hidden', false);
                     $('.icon_load_table').attr('class', 'fa fa-sync fa-spin');
                 },
                 success: function(response) {

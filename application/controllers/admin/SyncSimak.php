@@ -422,7 +422,6 @@ class SyncSimak extends CI_Controller
                         $insertDetailTrx = $this->transaksi->syncDetailTransaksi($dtx);
                     }
                 }
-                
             }
             // var_dump($dataTrxMissing);die;
             $res = [
