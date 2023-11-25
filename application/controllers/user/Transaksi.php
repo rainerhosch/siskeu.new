@@ -2080,25 +2080,40 @@ class Transaksi extends CI_Controller
         // var_dump($resDetailTx);
         // die;
         if ($bayarLainnya == true) {
-            foreach ($dataTxSebelumnya as $a => $value) {
-                if ($value['id_jenis_pembayaran'] == 8) {
-                    $kewajibanPerpanjangSemester = $kewajibanPerpanjangSemester - $value['jml_bayar'];
-                } else if ($value['id_jenis_pembayaran'] == 16) {
-                    for ($j = 0; $j < count($resBiayaLain); $j++) {
-                        $resBiayaLain[$j]['biaya'] = $resBiayaLain[$j]['biaya'] - $value['jml_bayar'];
-                    }
-                } else {
-                    foreach ($resBiayaLain as $key => $val) {
-                        if (isset($val['id_jp']) && isset($value['id_jenis_pembayaran'])) { //update 18/10/2021
-                            if ($value['id_jenis_pembayaran'] == $val['id_jp']) {
-                                $resBiayaLain[$key]['biaya'] = $val['biaya'] - $value['jml_bayar'];
-                            } else {
-                                $resBiayaLain[$key]['biaya'] = $val['biaya'];
-                            }
+            foreach ($resBiayaLain as $key => $rbl) {
+                foreach ($dataTxSebelumnya as $a => $dTxS) {
+                    if ($dTxS['id_jenis_pembayaran'] == $rbl['id_jp']) {
+                        if ($rbl['id_jp'] == 8) {
+                            $kewajibanPerpanjangSemester = $kewajibanPerpanjangSemester - $dTxS['jml_bayar'];
+                        } else if ($rbl['id_jp'] == 16) {
+                            $resBiayaLain[$key]['biaya'] = $resBiayaLain[$key]['biaya'] - $dTxS['jml_bayar'];
+                        } else {
+                            $resBiayaLain[$key]['biaya'] = $rbl['biaya'] - $dTxS['jml_bayar'];
                         }
+                    } else {
+                        $resBiayaLain[$key]['biaya'] = $rbl['biaya'];
                     }
                 }
             }
+            // foreach ($dataTxSebelumnya as $a => $value) {
+            //     if ($value['id_jenis_pembayaran'] == 8) {
+            //         $kewajibanPerpanjangSemester = $kewajibanPerpanjangSemester - $value['jml_bayar'];
+            //     } else if ($value['id_jenis_pembayaran'] == 16) {
+            //         for ($j = 0; $j < count($resBiayaLain); $j++) {
+            //             $resBiayaLain[$j]['biaya'] = $resBiayaLain[$j]['biaya'] - $value['jml_bayar'];
+            //         }
+            //     } else {
+            //         foreach ($resBiayaLain as $key => $val) {
+            //             if (isset($val['id_jp']) && isset($value['id_jenis_pembayaran'])) { //update 18/10/2021
+            //                 if ($value['id_jenis_pembayaran'] == $val['id_jp']) {
+            //                     $resBiayaLain[$key]['biaya'] = $val['biaya'] - $value['jml_bayar'];
+            //                 } else {
+            //                     $resBiayaLain[$key]['biaya'] = $val['biaya'];
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             // var_dump($resBiayaLain);
             // die;
 
@@ -2121,6 +2136,18 @@ class Transaksi extends CI_Controller
                         }
                     }
                 }
+                // kemahasiswaan
+                if ($dtx['id_jenis_pembayaran'] == '5') {
+                    for ($j = 0; $j < count($resBiayaLain); $j++) {
+                        if ($resBiayaLain[$j] == null) {
+                            $resBiayaLain[$j]['id_jp'] = $dtx['id_jenis_pembayaran'];
+                            $resBiayaLain[$j]['nm_jp'] = $dtx['nm_jenis_pembayaran'];
+                            $resBiayaLain[$j]['biaya'] = $dtx['jml_bayar'];
+                            $resBiayaLain[$j]['potongan_biaya'] = $dtx['potongan'];
+                        }
+                    }
+                }
+
                 if ($dtx['id_jenis_pembayaran'] == '6') {
                     $dataCekTG = [
                         'nim' => $dataTx['nim'],
