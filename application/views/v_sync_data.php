@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-sm-12 text-center">
                             <div class="progress progress-striped active" id="progress_sync_mhs" style="display: none;">
-                                <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style=""></div>
+                                <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <button class="btn btn-primary" id="btn_sync_mhs"><i class="fa fa-sync" id="icon_sync_mhs"></i> Sinkron Data</button>
                         </div>

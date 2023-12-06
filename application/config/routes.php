@@ -24,6 +24,8 @@ $route['transaksi/cetak_kwitansi/(:num)'] = 'user/transaksi/cetak_kwitansi/$1';
 $route['transaksi/cetak_ulang_kwitansi/(:num)'] = 'user/transaksi/cetak_ulang_kwitansi/$1';
 $route['transaksi/cetak_kwitansi_dev/(:num)'] = 'user/transaksi/cetak_kwitansi_dev/$1';
 
+$route['excel-kms'] = 'user/laporan_transaksi/kms';
+
 // for admin access manajemen 
 $route['sync-simak'] = 'admin/SyncSimak';
 $route['sync-simak/(:any)'] = 'admin/SyncSimak/$1';

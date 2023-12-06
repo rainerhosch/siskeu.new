@@ -1,20 +1,27 @@
 <style>
-    .widget-simple, h4{
+    .widget-simple,
+    h4 {
         font-size: 14px;
     }
+
     .widegt-box {
         border-radius: 5px;
     }
+
     .widget-simple .widget-content {
         font-size: 14px;
     }
+
     .widget-simple .widget-content small {
         display: block;
         margin-top: 7px;
         font-size: 11px;
         font-weight: 700;
     }
-    .widget-content > h1, h2, h3 {
+
+    .widget-content>h1,
+    h2,
+    h3 {
         text-align: center;
         margin-bottom: 0px;
     }
@@ -53,7 +60,7 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="progress progress-striped active" id="progress_sync_mhs" style="display: none;">
-                            <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style=""></div>
+                            <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <button class="btn btn-primary btn-xs" id="btn_sync_mhs" disabled><i class="fa fa-sync" id="icon_sync_mhs"></i> Sinkron Data</button>
                     </div>
@@ -61,7 +68,7 @@
             </div>
         </a>
     </div>
-    
+
     <div class="col-sm-6 col-lg-3">
         <!-- Widget -->
         <a href="#" class="widget widget-hover-effect1 widegt-box">
@@ -95,7 +102,7 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="progress progress-striped active" id="progress_sync_krs" style="display: none;">
-                            <div class="progress-bar progress-bar-info" id="bar_sync_krs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style=""></div>
+                            <div class="progress-bar progress-bar-info" id="bar_sync_krs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <button class="btn btn-primary btn-xs" id="btn_sync_krs" disabled><i class="fa fa-sync" id="icon_sync_krs"></i> Sinkron Data</button>
                     </div>
@@ -313,12 +320,48 @@
         </a>
     </div>
     <!-- end widget -->
+
+    <!-- excel report -->
+    <div class="col-sm-6 col-lg-3">
+        <!-- Widget -->
+        <a href="#" class="widget widget-hover-effect1 widegt-box">
+            <div class="widget-simple">
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <h4><strong>Cetak Laporan</strong></h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul>
+                            <li id="btn_excel_kms">Kemahasiswaan</li>
+                            <li>Cicilan 1,2,3</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <button class="btn btn-primary btn-xs">Format Excel</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <!-- end widget -->
+
 </div>
 <script>
     $(document).ready(function() {
-        $('#btn_sync_dashboardSimak').on('click', function(){
+        $('#btn_sync_dashboardSimak').on('click', function() {
             // var data = `<?= $this->session->userdata('username'); ?>`
             let url = `https://simak.wastu.digital/admin/DashboardSiskeu/Auth?token=tehpoci`;
+            window.open(url);
+        });
+
+        $('#btn_excel_kms').on('click', function() {
+            let url = `/siskeu.new/excel-kms`;
             window.open(url);
         });
         $.ajax({
@@ -357,7 +400,7 @@
                     $('.btn#btn_sync_krs').attr('disabled', true);
                 }
 
-                $('.btn#btn_sync_krs').click(function(){
+                $('.btn#btn_sync_krs').click(function() {
                     $('#icon_sync_krs').attr('class', 'fa fa-sync fa-spin');
                     let awal = $('.krs_local_label span').text();
                     let total = $('.krs_simak_label span').text();
