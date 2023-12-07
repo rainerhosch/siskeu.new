@@ -39,6 +39,9 @@
                                 <input type="text" id="jurusan" name="jurusan" class="form-control validate" readonly>
                             </div>
                         </div>
+                        <div class="col-sm-12">
+                            <span id="notif_tg_mhs"></span>
+                        </div>
                         <form id="form_pembayaran" enctype="multipart/form-data">
                             <br>
                             <table id="table_kewajiban" class="table table-vcenter table-condensed">

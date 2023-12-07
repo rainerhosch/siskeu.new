@@ -63,7 +63,7 @@ class PDF extends FPDF
         $this->Image($file, $x, $y, $w, $h);
         $this->Rotate(0);
     }
-//END ROTATE TEXT, IMAGE
+    //END ROTATE TEXT, IMAGE
 }
 
 $pdf = new PDF('P', 'mm', 'A4');
@@ -311,20 +311,42 @@ $pdf->SetFont('Courier', 'UB', 9);
 $pdf->Cell(20, 4, 'CATATAN', 0, 0, 'L');
 $pdf->SetFont('Courier', 'B', 9);
 $pdf->Cell(3, 4, ':', 0, 1, 'L');
-$data_catatan = [
-    0 => [
-        'no' => '1. ',
-        'text' => 'Syarat Bisa Perwalian Online, Harus Lunas Cicilan Ke-1 !'
-    ],
-    1 => [
-        'no' => '2. ',
-        'text' => 'Syarat Bisa Mengikuti UTS, Harus Lunas Cicilan Ke-2 !'
-    ],
-    2 => [
-        'no' => '3. ',
-        'text' => 'Syarat Bisa Mengikuti UAS, Harus Lunas Cicilan Ke-3 !'
-    ],
-];
+
+if ($data_transaksi['kewajiban']['tg_kmhs'] != 0 || $data_transaksi['kewajiban']['kmhs'] != 0) {
+    $data_catatan = [
+        0 => [
+            'no' => '1. ',
+            'text' => 'Tunggakan Kemahasiswaan, silahkan lakukan pembayaran dengan transfer ke bank BTN-0003601501092818.'
+        ],
+        1 => [
+            'no' => '2. ',
+            'text' => 'Syarat Bisa Perwalian Online, Harus Lunas Cicilan Ke-1 !'
+        ],
+        2 => [
+            'no' => '3. ',
+            'text' => 'Syarat Bisa Mengikuti UTS, Harus Lunas Cicilan Ke-2 !'
+        ],
+        3 => [
+            'no' => '4. ',
+            'text' => 'Syarat Bisa Mengikuti UAS, Harus Lunas Cicilan Ke-3 !'
+        ],
+    ];
+} else {
+    $data_catatan = [
+        0 => [
+            'no' => '1. ',
+            'text' => 'Syarat Bisa Perwalian Online, Harus Lunas Cicilan Ke-1 !'
+        ],
+        1 => [
+            'no' => '2. ',
+            'text' => 'Syarat Bisa Mengikuti UTS, Harus Lunas Cicilan Ke-2 !'
+        ],
+        2 => [
+            'no' => '3. ',
+            'text' => 'Syarat Bisa Mengikuti UAS, Harus Lunas Cicilan Ke-3 !'
+        ],
+    ];
+}
 $pdf->SetFont('Courier', 'B', 9);
 foreach ($data_catatan as $val) {
     $pdf->Cell(4, 4, $val['no'], 0, 0, 'L');

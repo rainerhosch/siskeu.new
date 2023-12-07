@@ -23,6 +23,18 @@ $("#nipd").on("keypress", function (e) {
           let html_3 = ``;
           $("#nama_mhs").val(response.nm_pd);
           $("#jurusan").val(response.nm_jur);
+          if (response.tg_CS != 0) {
+            $("#notif_tg_mhs").html(
+              "<code>Ada tunggakan CS Rp." + response.tg_CS + "</code>"
+            );
+          }
+          if (response.data_tg.length > 0) {
+            $("#notif_tg_mhs").html(
+              "<code>Ada tunggakan Kemahasiswaan Rp." +
+                response.tg_Kmhs +
+                "</code>"
+            );
+          }
 
           html += `<tr>`;
           html += `<td class="text-center">`;

@@ -2218,10 +2218,12 @@ class Transaksi extends CI_Controller
             }
         }
 
-        if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
-            $dataTx['kewajiban']['cs'] = 0;
-            $dataTx['kewajiban']['kmhs'] = 0;
-            $dataTx['kewajibanCS'] = 0;
+        if (isset($dataTx['bayar_skripsi']) && isset($dataTx['kewajiban']['tg_cs'])) {
+            if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
+                $dataTx['kewajiban']['cs'] = 0;
+                $dataTx['kewajiban']['kmhs'] = 0;
+                $dataTx['kewajibanCS'] = 0;
+            }
         }
 
         // var_dump($resBiayaLain);
@@ -2734,10 +2736,16 @@ class Transaksi extends CI_Controller
             }
         }
 
-        if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
-            $dataTx['kewajiban']['cs'] = 0;
-            $dataTx['kewajiban']['kmhs'] = 0;
-            $dataTx['kewajibanCS'] = 0;
+        // echo '<pre>';
+        // var_dump($dataTx);
+        // echo '</pre>';
+        // die;
+        if (isset($dataTx['bayar_skripsi']) && isset($dataTx['kewajiban']['tg_cs'])) {
+            if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
+                $dataTx['kewajiban']['cs'] = 0;
+                $dataTx['kewajiban']['kmhs'] = 0;
+                $dataTx['kewajibanCS'] = 0;
+            }
         }
 
         // var_dump($resBiayaLain);
@@ -2750,9 +2758,9 @@ class Transaksi extends CI_Controller
         $dataTx['admin_log']['tanggal_log'] = mdate($tgl_str, $tgl_now);
         $dataTx['admin_log']['ket_cetak'] = 'print_ulang';
         $data['data_transaksi'] = $dataTx;
-        // echo'<pre>';
+        // echo '<pre>';
         // var_dump($dataTx);
-        // echo'</pre>';
+        // echo '</pre>';
         // die;
         $this->load->view('transaksi/kwitansi_new', $data);
     }

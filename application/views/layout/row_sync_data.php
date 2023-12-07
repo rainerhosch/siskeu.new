@@ -335,8 +335,8 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <ul>
-                            <li id="btn_excel_kms">Kemahasiswaan</li>
-                            <li>Cicilan 1,2,3</li>
+                            <li id="btn_excel_kms"><button class="btn btn-success btn-xs">Kemahasiswaan</button></li>
+                            <li id="btn_excel_cicilan"><button class="btn btn-danger btn-xs">Cicilan 1,2,3</button></li>
                         </ul>
                     </div>
                 </div>
@@ -363,6 +363,9 @@
         $('#btn_excel_kms').on('click', function() {
             let url = `/siskeu.new/excel-kms`;
             window.open(url);
+        });
+        $('#btn_excel_cicilan').on('click', function() {
+            alert('Feature not active.')
         });
         $.ajax({
             type: "GET",
