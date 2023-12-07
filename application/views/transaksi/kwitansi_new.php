@@ -316,7 +316,7 @@ if ($data_transaksi['kewajiban']['tg_kmhs'] != 0 || $data_transaksi['kewajiban']
     $data_catatan = [
         0 => [
             'no' => '1. ',
-            'text' => 'Tunggakan Kemahasiswaan, silahkan lakukan pembayaran dengan transfer ke bank BTN-0003601501092818.'
+            'text' => 'Pembayaran Kemahasiswaan, silahkan lakukan pembayaran dengan transfer ke bank BTN-0003601501092818.'
         ],
         1 => [
             'no' => '2. ',
