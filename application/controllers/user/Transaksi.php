@@ -3277,11 +3277,12 @@ class Transaksi extends CI_Controller
                 }
             }
         }
-
-        if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
-            $dataTx['kewajiban']['cs'] = 0;
-            $dataTx['kewajiban']['kmhs'] = 0;
-            $dataTx['kewajibanCS'] = 0;
+        if (isset($dataTx['bayar_skripsi']) && isset($dataTx['kewajiban']['tg_cs'])) {
+            if ($dataTx['bayar_skripsi'] > 0 && $dataTx['kewajiban']['tg_cs'] > 0) {
+                $dataTx['kewajiban']['cs'] = 0;
+                $dataTx['kewajiban']['kmhs'] = 0;
+                $dataTx['kewajibanCS'] = 0;
+            }
         }
 
         // var_dump($resBiayaLain);
