@@ -3098,7 +3098,8 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_tg_kmhs'] = 0;
             $dataTx['dataTx'] = 0;
         }
-
+        var_dump($dataTx['kewajiban']['tg_kmhs']);
+        die;
         if ($bayarKMHS == true) {
             foreach ($dataTxSebelumnya as $a => $val) {
                 if ($val['id_jenis_pembayaran'] == 5) {
