@@ -2000,17 +2000,44 @@ class Transaksi extends CI_Controller
         // echo '</pre>';
         // die;
         if ($bayarTG_KMHS == true) {
+            $whereBefor = [
+                't.nim' => $dataTx['nim'],
+                't.semester' => $dataTx['semester'],
+                't.id_transaksi <' => $id_transaksi,
+                'td.id_jenis_pembayaran' => '7'
+            ];
+            $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($whereBefor)->result_array();
+
+            $whereAfter = [
+                't.nim' => $dataTx['nim'],
+                't.semester' => $dataTx['semester'],
+                't.id_transaksi >' => $id_transaksi,
+                'td.id_jenis_pembayaran' => '7'
+            ];
+            $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereAfter)->result_array();
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
                 'jenis_tunggakan' => '7'
             ];
             $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+
             if ($dataTG == null) {
                 foreach ($resDetailTx as $i => $Dtx) {
                     if ($Dtx['id_jenis_pembayaran'] == 7) {
                         $kewajibanTGKMHS = (int) $Dtx['jml_bayar'];
                     }
                 }
+                if (count($dataTxSetelahnya) > 0) {
+                    foreach ($dataTxSetelahnya as $x => $dtA) {
+                        $kewajibanTGKMHS += (int) $dtA['jml_bayar'];
+                    }
+                }
+                if (count($dataTxSebelumnya) > 0) {
+                    foreach ($dataTxSebelumnya as $x => $dtB) {
+                        $kewajibanTGKMHS += (int) $dtB['jml_bayar'];
+                    }
+                }
+
             } else {
                 $kewajibanTGKMHS = $dataTG['jml_tunggakan'];
                 foreach ($resDetailTx as $i => $Dtx) {
@@ -2518,17 +2545,44 @@ class Transaksi extends CI_Controller
         // echo '</pre>';
         // die;
         if ($bayarTG_KMHS == true) {
+            $whereBefor = [
+                't.nim' => $dataTx['nim'],
+                't.semester' => $dataTx['semester'],
+                't.id_transaksi <' => $id_transaksi,
+                'td.id_jenis_pembayaran' => '7'
+            ];
+            $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($whereBefor)->result_array();
+
+            $whereAfter = [
+                't.nim' => $dataTx['nim'],
+                't.semester' => $dataTx['semester'],
+                't.id_transaksi >' => $id_transaksi,
+                'td.id_jenis_pembayaran' => '7'
+            ];
+            $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereAfter)->result_array();
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
                 'jenis_tunggakan' => '7'
             ];
             $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+
             if ($dataTG == null) {
                 foreach ($resDetailTx as $i => $Dtx) {
                     if ($Dtx['id_jenis_pembayaran'] == 7) {
                         $kewajibanTGKMHS = (int) $Dtx['jml_bayar'];
                     }
                 }
+                if (count($dataTxSetelahnya) > 0) {
+                    foreach ($dataTxSetelahnya as $x => $dtA) {
+                        $kewajibanTGKMHS += (int) $dtA['jml_bayar'];
+                    }
+                }
+                if (count($dataTxSebelumnya) > 0) {
+                    foreach ($dataTxSebelumnya as $x => $dtB) {
+                        $kewajibanTGKMHS += (int) $dtB['jml_bayar'];
+                    }
+                }
+
             } else {
                 $kewajibanTGKMHS = $dataTG['jml_tunggakan'];
                 foreach ($resDetailTx as $i => $Dtx) {
@@ -3040,17 +3094,44 @@ class Transaksi extends CI_Controller
         // echo '</pre>';
         // die;
         if ($bayarTG_KMHS == true) {
+            $whereBefor = [
+                't.nim' => $dataTx['nim'],
+                't.semester' => $dataTx['semester'],
+                't.id_transaksi <' => $id_transaksi,
+                'td.id_jenis_pembayaran' => '7'
+            ];
+            $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($whereBefor)->result_array();
+
+            $whereAfter = [
+                't.nim' => $dataTx['nim'],
+                't.semester' => $dataTx['semester'],
+                't.id_transaksi >' => $id_transaksi,
+                'td.id_jenis_pembayaran' => '7'
+            ];
+            $dataTxSetelahnya = $this->transaksi->getDataTransaksiSebelumnya($whereAfter)->result_array();
             $dataCekTG = [
                 'nim' => $dataTx['nim'],
                 'jenis_tunggakan' => '7'
             ];
             $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+
             if ($dataTG == null) {
                 foreach ($resDetailTx as $i => $Dtx) {
                     if ($Dtx['id_jenis_pembayaran'] == 7) {
                         $kewajibanTGKMHS = (int) $Dtx['jml_bayar'];
                     }
                 }
+                if (count($dataTxSetelahnya) > 0) {
+                    foreach ($dataTxSetelahnya as $x => $dtA) {
+                        $kewajibanTGKMHS += (int) $dtA['jml_bayar'];
+                    }
+                }
+                if (count($dataTxSebelumnya) > 0) {
+                    foreach ($dataTxSebelumnya as $x => $dtB) {
+                        $kewajibanTGKMHS += (int) $dtB['jml_bayar'];
+                    }
+                }
+
             } else {
                 $kewajibanTGKMHS = $dataTG['jml_tunggakan'];
                 foreach ($resDetailTx as $i => $Dtx) {
@@ -3079,6 +3160,8 @@ class Transaksi extends CI_Controller
                 'jenis_tunggakan' => '7'
             ];
             $dataTG = $this->tunggakan->getTunggakanMhs($dataCekTG)->row_array();
+            // var_dump($resDetailTx);
+            // die;
             if ($dataTG == null) {
                 foreach ($resDetailTx as $i => $Dtx) {
                     if ($Dtx['id_jenis_pembayaran'] == 7) {
@@ -3098,8 +3181,8 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_tg_kmhs'] = 0;
             $dataTx['dataTx'] = 0;
         }
-        var_dump($dataTx['kewajiban']['tg_kmhs']);
-        die;
+        // var_dump($dataTx['kewajiban']['tg_kmhs']);
+        // die;
         if ($bayarKMHS == true) {
             foreach ($dataTxSebelumnya as $a => $val) {
                 if ($val['id_jenis_pembayaran'] == 5) {
