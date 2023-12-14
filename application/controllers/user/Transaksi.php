@@ -2692,6 +2692,8 @@ class Transaksi extends CI_Controller
             foreach ($resDetailTx as $i => $dtx) {
                 // cuti
                 if ($dtx['id_jenis_pembayaran'] == '16') {
+                    var_dump($dtx['jml_bayar']);
+                    die;
                     $resDetailTx[$i]['jml_cuti'] = $dtx['jml_bayar'] / $resBiayaLain[$i]['biaya'];
                     for ($j = 0; $j < count($resBiayaLain); $j++) {
                         if ($resBiayaLain[$j]['id_jp'] == '16') {
