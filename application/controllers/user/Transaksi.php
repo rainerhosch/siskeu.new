@@ -2686,18 +2686,19 @@ class Transaksi extends CI_Controller
             //         }
             //     }
             // }
-            echo '<pre>';
-            var_dump($resBiayaLain);
-            var_dump($resDetailTx);
-            echo '</pre>';
-            die;
+            // echo '<pre>';
+            // var_dump($resBiayaLain);
+            // var_dump($resDetailTx);
+            // echo '</pre>';
+            // die;
 
             foreach ($resDetailTx as $i => $dtx) {
                 // cuti
                 if ($dtx['id_jenis_pembayaran'] == '16') {
                     // var_dump($dtx);
                     // die;
-                    $resDetailTx[$i]['jml_cuti'] = (int) $dtx['jml_bayar'] / (int) $resBiayaLain[$i]['biaya'];
+                    // $resDetailTx[$i]['jml_cuti'] = (int) $dtx['jml_bayar'] / (int) $resBiayaLain[$i]['biaya'];
+                    $resDetailTx[$i]['jml_cuti'] = 1;
                     for ($j = 0; $j < count($resBiayaLain); $j++) {
                         if ($resBiayaLain[$j]['id_jp'] == '16') {
                             $resBiayaLain[$j]['biaya'] = $dtx['jml_bayar'];
