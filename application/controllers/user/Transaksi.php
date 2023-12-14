@@ -2686,8 +2686,8 @@ class Transaksi extends CI_Controller
             //         }
             //     }
             // }
-            // var_dump($resDetailTx);
-            // die;
+            var_dump($resBiayaLain);
+            die;
 
             foreach ($resDetailTx as $i => $dtx) {
                 // cuti
