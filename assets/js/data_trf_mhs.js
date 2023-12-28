@@ -378,7 +378,8 @@ function accTRF(id, type_bayar) {
                 htmlzx += `<td width="40%" class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
                 htmlzx += `<option value="1">BANK BSI</option>
                   <option value="2">BANK MANDIRI</option>
-                  <option value="3">BANK BNI</option>`;
+                  <option value="3">BANK BNI</option>;
+                  <option value="4">BANK BTN</option>`;
                 htmlzx += `</select></td>`;
                 htmlzx += `</tr>`;
                 htmlzx += `<tr class="detail_trf">`;
