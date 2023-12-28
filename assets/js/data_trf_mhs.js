@@ -138,8 +138,9 @@ function accTRF(id, type_bayar) {
                 tds += `<td><label for="rek_tujuan">Rekening Tujuan</label></td>`;
                 tds += `<td class="text-center"><select class="form-control form-control-sm rek_tujuan" id="rek_tujuan" name="rek_tujuan">`;
                 tds += `<option value="1">BANK BSI</option>
-                <option value="2">BANK MANDIRI</option>PP
-                <option value="3">BANK BNI</option>`;
+                <option value="2">BANK MANDIRI</option>
+                <option value="3">BANK BNI</option>;
+                <option value="4">BANK BTN</option>`;
                 tds += `</select></td>`;
                 tds += `</tr>`;
                 tds += `<tr class="detail_trf">`;
