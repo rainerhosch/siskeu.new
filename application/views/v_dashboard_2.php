@@ -333,7 +333,7 @@
                         ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
                         jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                         ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
-                        if((year_now-val.tahun_masuk) <= 0){
+                        if((year_now-val.tahun_masuk) <= 1){
                             if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                                 jml_mhs_aktif=total_trx;
@@ -346,12 +346,15 @@
                             jml_mhs_tanpa_keterangan = 0;
                         }
 
-                        
                         if((year_now-val.tahun_masuk) < 7){
                             jml_belum_bayar_spp = (jml_mhs_aktif_now-total_trx);
                             ttl_belum_bayar_spp += jml_belum_bayar_spp;
                             status = '';
                         }
+                        console.log(year_now-val.tahun_masuk)
+                        // console.log(total_trx)
+                        // console.log(jml_mhs_aktif_now)
+                        // console.log((total_trx/jml_mhs_aktif_now)*100)
 
                         html += `<tr>`;
                         html += `<td class="text-center">${no}</td>`;
@@ -490,7 +493,7 @@
                     ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
                     jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                     ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
-                    if((year_now-val.tahun_masuk) <= 0){
+                    if((year_now-val.tahun_masuk) <= 1){
                         if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                                 jml_mhs_aktif=total_trx;
@@ -509,6 +512,11 @@
                         ttl_belum_bayar_spp += jml_belum_bayar_spp;
                         status = '';
                     }
+                    console.log(year_now-val.tahun_masuk)
+                    // console.log(total_trx)
+                    // console.log(jml_mhs_aktif_now)
+                    // console.log((total_trx/jml_mhs_aktif_now)*100)
+
 
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
