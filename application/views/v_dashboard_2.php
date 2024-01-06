@@ -150,10 +150,9 @@
     </div>
 
     <script>
-        let year_now = new Date().getFullYear();
+        // let xyear_xnow = new Date().getFullYear();
         var getUrl = window.location;
         var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
-        // console.log(year_now)
         $(`.btn_print_excel_1`).on('click', function(){
             var uri_location = window.location;
             let url =  uri_location+'/createExcelPayudi';
@@ -292,7 +291,6 @@
                         let status = '(LULUS)';
                         let jml_belum_bayar_spp=0;
                         // console.log(val.tahun_masuk)
-                        // console.log(year_now-val.tahun_masuk)
                         // total_trx = val.data_trx.length;
                         
                         // new code
@@ -333,7 +331,7 @@
                         ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
                         jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                         ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
-                        if((year_now-val.tahun_masuk) <= 1){
+                        if((response.tahun_smt_aktif-val.tahun_masuk) <= 0){
                             if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                                 jml_mhs_aktif=total_trx;
@@ -346,12 +344,12 @@
                             jml_mhs_tanpa_keterangan = 0;
                         }
 
-                        if((year_now-val.tahun_masuk) < 7){
+                        if((response.tahun_smt_aktif-val.tahun_masuk) < 7){
                             jml_belum_bayar_spp = (jml_mhs_aktif_now-total_trx);
                             ttl_belum_bayar_spp += jml_belum_bayar_spp;
                             status = '';
                         }
-                        console.log(year_now-val.tahun_masuk)
+                        console.log(response.tahun_smt_aktif-val.tahun_masuk)
                         // console.log(total_trx)
                         // console.log(jml_mhs_aktif_now)
                         // console.log((total_trx/jml_mhs_aktif_now)*100)
@@ -454,7 +452,6 @@
                     let status = '(LULUS)';
                     let jml_belum_bayar_spp=0;
                     // console.log(val.tahun_masuk)
-                    // console.log(year_now-val.tahun_masuk)
                     // total_trx = val.data_trx.length;
                     total_trx = val.trx;
                     ttl_dispen += val.data_dispen;
@@ -493,7 +490,7 @@
                     ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
                     jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                     ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
-                    if((year_now-val.tahun_masuk) <= 1){
+                    if((response.tahun_smt_aktif-val.tahun_masuk) <= 0){
                         if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                                 jml_mhs_aktif=total_trx;
@@ -507,12 +504,12 @@
                     }
 
                     
-                    if((year_now-val.tahun_masuk) < 7){
+                    if((response.tahun_smt_aktif-val.tahun_masuk) < 7){
                         jml_belum_bayar_spp = (jml_mhs_aktif_now-total_trx);
                         ttl_belum_bayar_spp += jml_belum_bayar_spp;
                         status = '';
                     }
-                    console.log(year_now-val.tahun_masuk)
+                    console.log(response.tahun_smt_aktif-val.tahun_masuk)
                     // console.log(total_trx)
                     // console.log(jml_mhs_aktif_now)
                     // console.log((total_trx/jml_mhs_aktif_now)*100)

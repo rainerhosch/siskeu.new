@@ -496,6 +496,7 @@ class DashboardChart extends CI_Controller
         }
         $res['smt_aktif'] = $smtAktifRes['id_smt'];
         $res['smt_befor'] = $smt_befor;
+        $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
         return $res;
     }
 
@@ -578,6 +579,7 @@ class DashboardChart extends CI_Controller
         }
         $res['smt_aktif'] = $smtAktifRes['id_smt'];
         $res['smt_befor'] = $smt_befor;
+        $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
         echo json_encode($res);
     }
 
@@ -645,6 +647,7 @@ class DashboardChart extends CI_Controller
 
         $res['smt_aktif'] = $smtAktifRes['id_smt'];
         $res['smt_befor'] = $smt_befor;
+        $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
         echo json_encode($res);
         // echo '<pre>';
         // var_dump($cek_krs_befor);
@@ -758,6 +761,7 @@ class DashboardChart extends CI_Controller
             }
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
             $res['smt_befor'] = $smt_befor;
+            $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
             echo json_encode($res);
         } else {
             show_404();
