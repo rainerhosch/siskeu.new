@@ -350,6 +350,7 @@ class Laporan extends CI_Controller
         $data['data_transaksi'] = $dataHistoriTx;
         $data['total_result'] = $allcount;
         $data['row'] = $offset;
+        $data['last_query'] = $this->db->last_query();
         $data['user_loged'] = $this->session->userdata('id_user');
 
         echo json_encode($data);

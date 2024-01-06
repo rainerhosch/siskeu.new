@@ -320,6 +320,7 @@
                         ttl_lulus_smt_lalu = ttl_lulus_smt_lalu + jml_mhs_lulus_smt_lalu;
                         
                         let jml_mhs_tanpa_keterangan = (jml_mhs_aktif-jml_mhs_lulus-jml_mhs_aktif_smt_lalu);
+                        console.log('jml_mhs_tanpa_keterangan ' + val.tahun_masuk + ' : ' + jml_mhs_tanpa_keterangan);
                         // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_aktif);
                         // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                         // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
@@ -349,7 +350,7 @@
                             ttl_belum_bayar_spp += jml_belum_bayar_spp;
                             status = '';
                         }
-                        console.log(response.tahun_smt_aktif-val.tahun_masuk)
+                        // console.log(response.tahun_smt_aktif-val.tahun_masuk)
                         // console.log(total_trx)
                         // console.log(jml_mhs_aktif_now)
                         // console.log((total_trx/jml_mhs_aktif_now)*100)
@@ -509,7 +510,7 @@
                         ttl_belum_bayar_spp += jml_belum_bayar_spp;
                         status = '';
                     }
-                    console.log(response.tahun_smt_aktif-val.tahun_masuk)
+                    // console.log(response.tahun_smt_aktif-val.tahun_masuk)
                     // console.log(total_trx)
                     // console.log(jml_mhs_aktif_now)
                     // console.log((total_trx/jml_mhs_aktif_now)*100)

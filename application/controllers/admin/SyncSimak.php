@@ -67,6 +67,8 @@ class SyncSimak extends CI_Controller
         $smtAktifSimak = $this->api->mGet('TahunAkademikAktif', [
             'query' => []
         ]);
+        // var_dump($smtAktifSimak);
+        // die;
         $counApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
             'query' => [
                 'type' => 'get_count'
@@ -387,7 +389,8 @@ class SyncSimak extends CI_Controller
 
     }
 
-    public function DataTrxSiskeuV2(){
+    public function DataTrxSiskeuV2()
+    {
         if ($this->input->is_ajax_request()) {
             $resTrxLokakal = $this->transaksi->getDataTransaksi()->result_array();
             $resSimak = $this->api->mGet('siskeu/TrxCount', [
@@ -402,23 +405,23 @@ class SyncSimak extends CI_Controller
             $dataTrxMissing = array();
             $dataTrxForPush = array();
             $dataDetailTrxForPush = array();
-            foreach($resTrxLokakal as $i => $lokal){
+            foreach ($resTrxLokakal as $i => $lokal) {
                 $dataTotalTrxLokal[] = $lokal['id_transaksi'];
             }
             array_multisort($dataTotalTrxLokal, SORT_ASC, SORT_STRING);
-            foreach($resSimak['total_trx'] as $j => $simak){
+            foreach ($resSimak['total_trx'] as $j => $simak) {
                 $dataTrxSimak[] = $simak['id_transaksi'];
                 // $dataTrxSimak[$simak['id_transaksi']];
             }
             array_multisort($dataTrxSimak, SORT_ASC, SORT_STRING);
             $dataMissing = array_diff($dataTotalTrxLokal, $dataTrxSimak);
-            foreach( $dataMissing as $j => $missing){
+            foreach ($dataMissing as $j => $missing) {
                 $dataTrxMissing[] = $missing;
-                $dataTrxForPush = $this->transaksi->getDataTransaksi(['id_transaksi'=>$missing])->row_array();
+                $dataTrxForPush = $this->transaksi->getDataTransaksi(['id_transaksi' => $missing])->row_array();
                 $insertTrx = $this->transaksi->syncTransaksi($dataTrxForPush);
-                if($insertTrx){
-                    $dataDetailTrxForPush = $this->transaksi->getDataTransaksi(['id_transaksi'=>$missing])->result_array();
-                    foreach($dataDetailTrxForPush as $k => $dtx){
+                if ($insertTrx) {
+                    $dataDetailTrxForPush = $this->transaksi->getDataTransaksi(['id_transaksi' => $missing])->result_array();
+                    foreach ($dataDetailTrxForPush as $k => $dtx) {
                         $insertDetailTrx = $this->transaksi->syncDetailTransaksi($dtx);
                     }
                 }
@@ -427,14 +430,14 @@ class SyncSimak extends CI_Controller
             $res = [
                 'statu' => true,
                 'data' => [
-                    'lokal'=>$dataTotalTrxLokal,
-                    'simak'=>$dataTrxSimak,
-                    'missing'=>$dataTrxMissing,
-                    'forPush'=>$dataTrxForPush
+                    'lokal' => $dataTotalTrxLokal,
+                    'simak' => $dataTrxSimak,
+                    'missing' => $dataTrxMissing,
+                    'forPush' => $dataTrxForPush
                 ],
                 'msg' => 'Success.'
             ];
-        }else {
+        } else {
             $res = [
                 'statu' => false,
                 'data' => null,
