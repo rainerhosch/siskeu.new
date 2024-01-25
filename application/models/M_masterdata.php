@@ -89,9 +89,29 @@ class M_masterdata extends CI_Model
         if ($where != null) {
             $this->db->where($where);
         }
+        // $this->db->group_by('t.id_transaksi');
         $this->db->group_by('m.nipd');
         return $this->db->get();
     }
+
+    // test function
+    public function getDataPembayaranChartV2($where = null)
+    {
+        // $this->db->distinct();
+        $this->db->select('t.*');
+        $this->db->from('transaksi t');
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
+        if ($where != null) {
+            $this->db->where($where);
+        }
+        $this->db->group_by('t.id_transaksi');
+        // $this->db->group_by('m.nipd');
+        return $this->db->get();
+    }
+
+
+
     public function getDataDetailPembayaranChart($where = null)
     {
         // $this->db->distinct();
