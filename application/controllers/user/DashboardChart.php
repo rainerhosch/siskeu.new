@@ -66,6 +66,10 @@ class DashboardChart extends CI_Controller
         $nameoffile = '';
         $ker = '';
         $dataLoad = $this->getDataBelumBayaranDanDispen();
+        echo '<pre>';
+        var_dump($dataLoad['data_mhs_belum_bayaran']);
+        echo '</pre>';
+        die;
         if ($data != '1') {
             $title = 'data_mhs_belum_bayaran';
             $title_header = 'LAPORAN DATA MAHASISWA BELUM MELUNASI CICILAN DAN DISPEN';

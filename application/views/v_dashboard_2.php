@@ -285,7 +285,7 @@
                     let ttl_lulus_smt_lalu = 0;
                     $.each(response.data, function(i, val) {
                         let jml_mhs_lulus = val.jml_mhs;
-                        let jml_mhs_aktif = 0;
+                        let jml_mhs_daftar_ulang = 0;
                         let jml_mhs_aktif_smt_lalu = 0;
                         let jml_mhs_lulus_smt_lalu = 0;
                         let status = '(LULUS)';
@@ -304,7 +304,7 @@
                                 jml_mhs_lulus -= 1;
                             }
                             if(lm.krs != null){
-                                jml_mhs_aktif += 1;
+                                jml_mhs_daftar_ulang += 1;
                             }
                             if(lm.krs_befor != null){
                                 jml_mhs_aktif_smt_lalu += 1;
@@ -319,14 +319,16 @@
                         });
                         ttl_lulus_smt_lalu = ttl_lulus_smt_lalu + jml_mhs_lulus_smt_lalu;
                         
-                        let jml_mhs_tanpa_keterangan = (jml_mhs_aktif-jml_mhs_lulus-jml_mhs_aktif_smt_lalu);
-                        console.log('jml_mhs_tanpa_keterangan ' + val.tahun_masuk + ' : ' + jml_mhs_tanpa_keterangan);
+                        let jml_mhs_tanpa_keterangan = (jml_mhs_daftar_ulang-jml_mhs_lulus-jml_mhs_aktif_smt_lalu);
+                        console.log('jml_mhs_aktif ' + val.tahun_masuk + ' : ' + jml_mhs_daftar_ulang);
+                        console.log('jml_mhs_aktif_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_aktif_smt_lalu);
+                        // console.log('jml_mhs_tanpa_keterangan ' + val.tahun_masuk + ' : ' + jml_mhs_tanpa_keterangan);
                         // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_aktif);
                         // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                         // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                         // console.log('jml_lulus_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_lulus_smt_lalu);
                         
-                        ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_aktif;
+                        ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_daftar_ulang;
                         ttl_mhs_aktif_smtlalu = ttl_mhs_aktif_smtlalu + jml_mhs_aktif_smt_lalu;
                         ttl_mhs_lulus = ttl_mhs_lulus + jml_mhs_lulus;
                         ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
@@ -335,10 +337,10 @@
                         if((response.tahun_smt_aktif-val.tahun_masuk) <= 0){
                             if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
-                                jml_mhs_aktif=total_trx;
+                                jml_mhs_daftar_ulang=total_trx;
                                 jml_mhs_aktif_now = total_trx;
                             }else{
-                                jml_mhs_aktif = val.trx_befor;
+                                jml_mhs_daftar_ulang = val.trx_befor;
                                 ttl_mhs_aktif= ttl_mhs_aktif +  val.trx_befor;
                                 jml_mhs_aktif_now =  val.trx_befor;
                             }
@@ -354,12 +356,13 @@
                         // console.log(total_trx)
                         // console.log(jml_mhs_aktif_now)
                         // console.log((total_trx/jml_mhs_aktif_now)*100)
-
+                        
+                        // console.log('jml_mhs_aktif2 ' + val.tahun_masuk + ' : ' + jml_mhs_daftar_ulang);
                         html += `<tr>`;
                         html += `<td class="text-center">${no}</td>`;
                         html += `<td class="text-center">${val.tahun_masuk} <br><small style="font-size:0.85rem;;">${status}</small></td>`;
                         html += `<td class="text-center">${val.jml_mhs}</td>`;
-                        html += `<td class="text-center">${jml_mhs_aktif}</td>`;
+                        html += `<td class="text-center">${jml_mhs_daftar_ulang}</td>`;
                         html += `<td class="text-center">${jml_mhs_lulus}</td>`;
                         html += `<td class="text-center">${jml_mhs_tanpa_keterangan}</td>`;
                         html += `<td class="text-center">${jml_mhs_aktif_smt_lalu}</td>`;
@@ -447,7 +450,7 @@
                 let ttl_lulus_smt_lalu = 0;
                 $.each(response.data, function(i, val) {
                     let jml_mhs_lulus = val.jml_mhs;
-                    let jml_mhs_aktif = 0;
+                    let jml_mhs_daftar_ulang = 0;
                     let jml_mhs_aktif_smt_lalu = 0;
                     let jml_mhs_lulus_smt_lalu = 0;
                     let status = '(LULUS)';
@@ -460,16 +463,16 @@
                     total_all_trx = total_all_trx + total_trx;
 
                     $.each(val.list_mhs, function(j, lm){
-                        if(lm.no_transkip_nilai == null){
+                        if(lm.no_transkip_nilai === null){
                             jml_mhs_lulus -= 1;
                         }
                         if(lm.krs != null){
-                            jml_mhs_aktif += 1;
+                            jml_mhs_daftar_ulang += 1;
                         }
                         if(lm.krs_befor != null){
                             jml_mhs_aktif_smt_lalu += 1;
                             if(lm.no_transkip_nilai != null){
-                                jml_mhs_lulus_smt_lalu ++;
+                                jml_mhs_lulus_smt_lalu +=1;
                             }
                         }
                         
@@ -479,13 +482,17 @@
                     });
                     ttl_lulus_smt_lalu = ttl_lulus_smt_lalu + jml_mhs_lulus_smt_lalu;
                     
-                    let jml_mhs_tanpa_keterangan = (jml_mhs_aktif-jml_mhs_lulus-jml_mhs_aktif_smt_lalu);
-                    // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_aktif);
+                    let jml_mhs_tanpa_keterangan = (jml_mhs_daftar_ulang-jml_mhs_lulus-jml_mhs_aktif_smt_lalu);
+                    
+                    console.log('jml_mhs_aktif ' + val.tahun_masuk + ' : ' + jml_mhs_daftar_ulang);
+                    console.log('jml_mhs_aktif_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_aktif_smt_lalu);
+                    console.log('jml_mhs_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
+                    // console.log('jml_mhs_krs ' + val.tahun_masuk + ' : ' + jml_mhs_daftar_ulang);
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     // console.log('jml_lulus_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_lulus_smt_lalu);
                     
-                    ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_aktif;
+                    ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_daftar_ulang;
                     ttl_mhs_aktif_smtlalu = ttl_mhs_aktif_smtlalu + jml_mhs_aktif_smt_lalu;
                     ttl_mhs_lulus = ttl_mhs_lulus + jml_mhs_lulus;
                     ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
@@ -494,10 +501,10 @@
                     if((response.tahun_smt_aktif-val.tahun_masuk) <= 0){
                         if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
-                                jml_mhs_aktif=total_trx;
+                                jml_mhs_daftar_ulang=total_trx;
                                 jml_mhs_aktif_now = total_trx;
                             }else{
-                                jml_mhs_aktif = val.trx_befor;
+                                jml_mhs_daftar_ulang = val.trx_befor;
                                 ttl_mhs_aktif= ttl_mhs_aktif +  val.trx_befor;
                                 jml_mhs_aktif_now =  val.trx_befor;
                             }
@@ -520,7 +527,7 @@
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center">${val.tahun_masuk} <br><small style="font-size:0.85rem;;">${status}</small></td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
-                    html += `<td class="text-center">${jml_mhs_aktif}</td>`;
+                    html += `<td class="text-center">${jml_mhs_daftar_ulang}</td>`;
                     html += `<td class="text-center">${jml_mhs_lulus}</td>`;
                     html += `<td class="text-center">${jml_mhs_tanpa_keterangan}</td>`;
                     html += `<td class="text-center">${jml_mhs_aktif_smt_lalu}</td>`;
