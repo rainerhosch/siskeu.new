@@ -27,6 +27,7 @@ class M_tunggakan extends CI_Model
     public function addNewTunggakan($data)
     {
         $insertSiske = $this->db->insert('tunggakan', $data);
+        $data['id_tunggakan'] = $this->db->insert_id();
         if (!$insertSiske) {
             return FALSE;
         } else {
@@ -45,7 +46,14 @@ class M_tunggakan extends CI_Model
         $this->db->where($id_tunggakan);
         $this->db->update('tunggakan', $data);
         if ($this->db->affected_rows() > 0) {
-            return TRUE;
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $dbwastudig_siskeu->where($id_tunggakan);
+            $exec = $dbwastudig_siskeu->update('tunggakan', $data);
+            if ($dbwastudig_siskeu->affected_rows() > 0) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
         } else {
             return FALSE;
         }
@@ -57,6 +65,9 @@ class M_tunggakan extends CI_Model
         $this->db->where($data);
         $this->db->delete('tunggakan');
         if ($this->db->affected_rows() > 0) {
+            $dbwastudig_siskeu = $this->load->database('wastudig_siskeu', TRUE);
+            $dbwastudig_siskeu->where($data);
+            $dbwastudig_siskeu->delete('tunggakan');
             return TRUE;
         } else {
             return FALSE;
