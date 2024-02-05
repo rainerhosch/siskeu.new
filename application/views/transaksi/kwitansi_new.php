@@ -149,8 +149,8 @@ $pdf->Cell(4, 4, ': ', 0, 0, 'L');
 $pdf->MultiCell(60, 4, $data_transaksi['nm_pd'], 0, 'L');
 // end
 
-$pdf->Line(5, 56, 207, 56);
-$pdf->Ln(5);
+// $pdf->Line(5, 56, 207, 56);
+$pdf->Ln(3);
 
 
 // rincian pembayaran
@@ -181,28 +181,31 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
             $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
         }
     }
-    // if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_kmhs'] == 0) {
-    //     $pdf->SetFont('Courier', 'IB', 10);
-    //     $pdf->Cell(81, 5, 'Tunggakan Kemahasiswaan', 1, 0, 'L');
-    //     $pdf->SetFont('Courier', 'IB', 10);
-    //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'], 0, '', '.'), 1, 0, 'R');
-    //     $pdf->Cell(40, 5, number_format($data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 0, 'R');
-    //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'] - $data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 1, 'R');
-    //     $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_tg_kmhs'];
-    //     $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['tg_kmhs'];
-    // }
 
+    /**
+     * For Showing Data tunggakan at kwitansi
+     */
+    if ($data_transaksi['kewajiban']['tg_kmhs'] > 0 && $data_transaksi['bayar_tg_kmhs'] == 0) {
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(81, 5, 'Tunggakan Kemahasiswaan', 1, 0, 'L');
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['tg_kmhs'] - $data_transaksi['bayar_tg_kmhs'], 0, '', '.'), 1, 1, 'R');
+        $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_tg_kmhs'];
+        $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['tg_kmhs'];
+    }
 
-    // if ($data_transaksi['kewajiban']['kmhs'] > 0 && $data_transaksi['bayar_kmhs'] == 0) {
-    //     $pdf->SetFont('Courier', 'IB', 10);
-    //     $pdf->Cell(81, 5, 'Kemahasiswaan', 1, 0, 'L');
-    //     $pdf->SetFont('Courier', 'IB', 10);
-    //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'], 0, '', '.'), 1, 0, 'R');
-    //     $pdf->Cell(40, 5, number_format($data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 0, 'R');
-    //     $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'] - $data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 1, 'R');
-    //     $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_kmhs'];
-    //     $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['kmhs'];
-    // }
+    if ($data_transaksi['kewajiban']['kmhs'] > 0 && $data_transaksi['bayar_kmhs'] == 0) {
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(81, 5, 'Kemahasiswaan', 1, 0, 'L');
+        $pdf->SetFont('Courier', 'IB', 10);
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 0, 'R');
+        $pdf->Cell(40, 5, number_format($data_transaksi['kewajiban']['kmhs'] - $data_transaksi['bayar_kmhs'], 0, '', '.'), 1, 1, 'R');
+        $total_bayar_trx = $total_bayar_trx + $data_transaksi['bayar_kmhs'];
+        $total_kewajiban = $total_kewajiban + $data_transaksi['kewajiban']['kmhs'];
+    }
     if ($data_transaksi['kewajiban']['tg_cs'] > 0 && $data_transaksi['bayar_tg_cs'] == 0) {
         $pdf->SetFont('Courier', 'IB', 10);
         $pdf->Cell(81, 5, 'Tunggakan Semester Lalu', 1, 0, 'L');
@@ -354,11 +357,11 @@ foreach ($data_catatan as $val) {
 }
 
 // footer
-$pdf->SetY(-187);
+$pdf->SetY(-195);
 $pdf->SetFont('Courier', 'IB', 10);
 $pdf->Cell(100, 5, '', 0, 0, 'C');
 $pdf->Cell(137, 5, 'Purwakarta : ' . $tglLog, 0, 1, 'C');
-$pdf->Ln(3);
+$pdf->Ln(13);
 
 $pdf->SetFont('Courier', 'IB', 8);
 $pdf->Cell(100, 5, '', 0, 0, 'C');
