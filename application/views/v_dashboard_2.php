@@ -175,7 +175,7 @@
                     $(`.btn_print_excel_1`).attr('disabled', false);
                     $(`.btn_print_excel_0`).attr('disabled', false);
                     $(`.div_loading_table`).attr('hidden', true);
-                    console.log(response)
+                    // console.log(response)
                     $('.smt_befor').html(response.smt_befor);
                     let html = ``;
                     let no = 0;
@@ -264,10 +264,10 @@
                     $('.icon_load_table').attr('class', 'fa fa-sync fa-spin');
                 },
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     $(`.span_loading_table`).attr('hidden', true);
                     // swal.close()
-                    $('#smt_aktif').html(response.smt_aktif);
+                    $('.smt_aktif').html(response.smt_aktif);
                     $('.smt_befor').html(response.smt_befor);
                     html = ``;
                     let no = 1;
@@ -433,7 +433,7 @@
                 console.log(response);
                 $(`.span_loading_table`).attr('hidden', true);
                 swal.close()
-                $('#smt_aktif').html(response.smt_aktif);
+                $('.smt_aktif').html(response.smt_aktif);
                 $('.smt_befor').html(response.smt_befor);
                 html = ``;
                 let no = 1;
@@ -491,6 +491,8 @@
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     // console.log('jml_lulus ' + val.tahun_masuk + ' : ' + jml_mhs_lulus);
                     // console.log('jml_lulus_smt_lalu ' + val.tahun_masuk + ' : ' + jml_mhs_lulus_smt_lalu);
+
+                    // console.log(response.tahun_smt_aktif+2)
                     
                     ttl_mhs_daftar_ulang = ttl_mhs_daftar_ulang + jml_mhs_daftar_ulang;
                     ttl_mhs_aktif_smtlalu = ttl_mhs_aktif_smtlalu + jml_mhs_aktif_smt_lalu;
@@ -498,7 +500,7 @@
                     ttl_mhs_tanpa_keterangan = ttl_mhs_tanpa_keterangan + jml_mhs_tanpa_keterangan;
                     jml_mhs_aktif_now = jml_mhs_aktif_smt_lalu-jml_mhs_lulus_smt_lalu;
                     ttl_mhs_aktif = ttl_mhs_aktif + (jml_mhs_aktif_smt_lalu - jml_mhs_lulus_smt_lalu);
-                    if((response.tahun_smt_aktif-val.tahun_masuk) <= 0){
+                    if((response.tahun_smt_aktif-val.tahun_masuk) <= 0 && response.tahun_smt_aktif+2 != response.smt_aktif){
                         if(val.trx_befor === null){
                                 ttl_mhs_aktif= ttl_mhs_aktif + total_trx;
                                 jml_mhs_daftar_ulang=total_trx;

@@ -577,7 +577,7 @@ class DashboardChart extends CI_Controller
         if ($cek_ganjil_genap == '1') {
             $smt_befor = ($tahun_smt_befor - 1) . '2';
         } else {
-            $smt_befor = ($tahun_smt_befor - 1) . '1';
+            $smt_befor = ($tahun_smt_befor) . '1';
         }
         $res['data_mhs_belum_bayaran'] = array();
         $res['data_mhs_sudah_bayaran'] = array();
@@ -734,8 +734,11 @@ class DashboardChart extends CI_Controller
             if ($cek_ganjil_genap == '1') {
                 $smt_befor = ($tahun_smt_befor - 1) . '2';
             } else {
-                $smt_befor = ($tahun_smt_befor - 1) . '1';
+                $smt_befor = ($tahun_smt_befor) . '1';
             }
+
+            // var_dump($smt_befor);
+            // die;
 
 
             // $cek_krs_befor = $this->getDataKrs();
@@ -846,7 +849,7 @@ class DashboardChart extends CI_Controller
             if ($cek_ganjil_genap == '1') {
                 $smt_befor = ($tahun_smt_befor - 1) . '2';
             } else {
-                $smt_befor = ($tahun_smt_befor - 1) . '1';
+                $smt_befor = ($tahun_smt_befor) . '1';
             }
 
             foreach ($res['data'] as $i => $val) {
