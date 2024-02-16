@@ -2239,8 +2239,10 @@ class Transaksi extends CI_Controller
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
                         }
                     } else {
-                        if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
-                            $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        if ($resBiayaLain[$j] != null) {
+                            if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
+                                $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                            }
                         }
                     }
                 }
@@ -2789,8 +2791,10 @@ class Transaksi extends CI_Controller
                             $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
                         }
                     } else {
-                        if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
-                            $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        if ($resBiayaLain[$j] != null) {
+                            if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
+                                $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                            }
                         }
                     }
                 }
@@ -3318,7 +3322,7 @@ class Transaksi extends CI_Controller
             $dataTx['data_kewajiban_lain'] = null;
         }
         // echo '<pre>';
-        // var_dump($dataTx);
+        // var_dump($resDetailTx);
         // echo '</pre>';
         // die;
         for ($x = 0; $x < $countDetailTX; $x++) {
@@ -3363,8 +3367,10 @@ class Transaksi extends CI_Controller
                         // var_dump($resBiayaLain);
                         // echo '</pre>';
                         // die;
-                        if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
-                            $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                        if ($resBiayaLain[$j] != null) {
+                            if ($resDetailTx[$x]['id_jenis_pembayaran'] == $resBiayaLain[$j]['id_jp']) {
+                                $resDetailTx[$x]['kewajiban_Bayar'] = $resBiayaLain[$j]['biaya'];
+                            }
                         }
                     }
                 }

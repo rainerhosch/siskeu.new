@@ -261,8 +261,12 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
             $kewajiban_bayar = $dtx['kewajiban_Bayar'];
         } else {
             foreach ($data_kewajiban as $x => $dk) {
-                if ($dk['id_jp'] == $dtx['id_jenis_pembayaran']) {
-                    $kewajiban_bayar = $dk['biaya'];
+                if ($dk != null) {
+                    if ($dk['id_jp'] == $dtx['id_jenis_pembayaran']) {
+                        $kewajiban_bayar = $dk['biaya'];
+                    }
+                } else {
+                    $kewajiban_bayar = 0;
                 }
             }
         }
