@@ -138,3 +138,24 @@ $db['wastudig_siskeu'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+$db['wastudig_pmb'] = array(
+	'hostname' => 'wastu.digital',
+	'username' => 'wastudig_pmb',
+	'password' => 'superusersimak2023@pwk',
+	'database' => 'wastudig_pmb',
+	'dbdriver' => 'mysqli',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'development'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'autoinit' => TRUE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
