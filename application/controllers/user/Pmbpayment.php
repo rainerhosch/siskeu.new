@@ -62,7 +62,9 @@ class Pmbpayment extends CI_Controller
         {
             if ($this->input->is_ajax_request()) {
                 $id_pendaftar = $this->input->post('id');
+                $this->insertDataPendaftar($id_pendaftar);
                 $update = $this->pmbgateway->updateDataPmbRegister(['id'=>$id_pendaftar],['status' => 2]);
+                $update = true;
                 if($update){
                     $data = [
                         'status' => true,
@@ -117,6 +119,56 @@ class Pmbpayment extends CI_Controller
                 ];
             }
             echo json_encode($data);
+        }
+
+        public function insertDataPendaftar($id)
+        {
+            $datareg = $this->pmbgateway->getDataPendaftarById(['id' => $id])->row_array();
+            $max_id_reg_pd = $this->pmbgateway->max_id_reg_pd('pmb_pendaftaran', [])->row_array();
+	        $max_kode = $this->pmbgateway->max_kode('pmb_pendaftaran', date('Y'))->row_array();
+	        if($max_kode['max'] == null){
+	            $kode = date('Y').str_pad(1, 4, '0', STR_PAD_LEFT);
+	        } else {
+	            $kode = $max_kode['max'] + 1;
+	        }
+	        $id_reg_pd_create = $max_id_reg_pd['max'] + 1;
+	        
+	        $data_create_pendaftaran = [
+	            'id_reg_pd' => $id_reg_pd_create,
+	            'kode_pendaftaran' => $kode,
+	            'token_md5' => $datareg['password'],
+	            'status' => 1, 
+	            'waktu_kuliah' => $datareg['rombel'],
+	            'asal_slta' => $datareg['slta_p'],
+	            'jurusan_slta' => $datareg['jurusan_slta_p'],
+	            'jurusan_pil1' => $datareg['jurusan1'],
+	            'user_approve' => 46,
+	            'id_register' => $id,
+	            ];
+	            
+	        $data_create_mahasiswa_pt = [
+	            'id_reg_pd' => $id_reg_pd_create,
+	            'id_pd' => $id_reg_pd_create,
+	            'password' => $datareg['password'],
+	            'id_level' => 4,
+	            ];
+            
+            $data_create_mahasiswa = [
+	            'id_pd' => $id_reg_pd_create,
+	            'nm_pd' => $datareg['nama'],
+	            'id_wil_feeder' => $datareg['kecamatan'],
+	            'id_wil' => $datareg['kecamatan'],
+	            'telepon_seluler' =>$datareg['no_hp'],
+	            'email' =>$datareg['email'],
+	            'jk' =>$datareg['jen_kel'],
+	            
+	            ];
+	            
+	            
+			$data['pendaf'] = $this->pmbgateway->insertDataTable('pmb_pendaftaran', $data_create_pendaftaran);     
+			$data['mpt']    = $this->pmbgateway->insertDataTable('mahasiswa_pt', $data_create_mahasiswa_pt);     
+			$data['m']      = $this->pmbgateway->insertDataTable('mahasiswa', $data_create_mahasiswa);
+
         }
 
 }
