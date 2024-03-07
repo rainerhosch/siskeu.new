@@ -15,8 +15,9 @@ class M_pmb extends CI_Model
     function getData($condition = null)
     {
         M_pmb::$db_pmb = $this->load->database('wastudig_pmb', TRUE);
-        M_pmb::$db_pmb->select('*');
+        M_pmb::$db_pmb->select('pmb_register.*, pmb_pendaftaran.kode_pendaftaran, pmb_pendaftaran.pendamping');
         M_pmb::$db_pmb->from('pmb_register');
+        M_pmb::$db_pmb->join('pmb_pendaftaran', 'pmb_pendaftaran.id_register=pmb_register.id', 'left');
         if ($condition != null) {
             M_pmb::$db_pmb->where($condition);
         }

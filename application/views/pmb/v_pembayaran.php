@@ -86,12 +86,14 @@
                     <tr>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">No</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">TAHUN</br>PENDAFTARAN</th>
+                        <th class="text-center" style="font-size:1.5rem; font-weight: 700;">KODE</br>PENDAFTARAN</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">NAMA</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">NO HP</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">JURUSAN</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">BIAYA</br>PENDAFTARAN</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">TANGGAL</br>PENDAFTARAN</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">BUKTI</br>TRF</th>
+                        <th class="text-center" style="font-size:1.5rem; font-weight: 700;">PENDAMPING</th>
                         <th class="text-center" style="font-size:1.5rem; font-weight: 700;">STATUS</th>
                     </tr>
                 </thead>
@@ -149,10 +151,17 @@
                                     label:'Sudah divalidasi'
                                 };
                             }
+                            if(value.pendamping === "" || value.pendamping === null){
+                                value.pendamping = "-";
+                            }
+                            if(value.kode_pendaftaran === null){
+                                value.kode_pendaftaran = "-";
+                            }
                             
                             html +=`<tr>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${i+1}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.created_at.substring(0, 4)}</td>`;
+                            html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.kode_pendaftaran}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.nama}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.no_hp}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${prodi}</td>`;
@@ -160,6 +169,7 @@
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.created_at}</td>`;
                             // html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.bukti_tf}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;"><a href="#" data-id_trf="${value.id}" data-nama="${value.nama}" data-tahun="${value.created_at.substring(0, 4)}" data-img="${value.bukti_tf}" class="btn btn-xs btn-info btn_show_bukti_trf">${value.bukti_tf}</a></i></td>`;
+                            html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.pendamping}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;"><i style="color:${status_validasi.color};">${status_validasi.label}</i></td>`;
                             html +=`</tr>`;
                         })

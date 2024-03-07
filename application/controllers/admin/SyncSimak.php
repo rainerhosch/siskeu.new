@@ -216,7 +216,7 @@ class SyncSimak extends CI_Controller
             // insert from simak sesuai data update terakhir
             $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
                 'query' => [
-                    'offset' => $jmlMhsLokal
+                    'offset' => $jmlMhsLokal+1
                 ]
             ]);
         } else {
