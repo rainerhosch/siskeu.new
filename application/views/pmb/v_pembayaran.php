@@ -113,6 +113,8 @@
                 success: function(response) {
                     console.log(response)
                     let html = ``;
+                    let class_disabled = 'disabled';
+                    let classBtn = 'btn_show_bukti_trf_disabled';
                     if(response.data.length > 0){
                         $.each(response.data, function(i, value) {
                             let status_validasi = {};
@@ -134,6 +136,8 @@
                             }
 
                             if(value.status === '1'){
+                                class_disabled = '';
+                                classBtn = 'btn_show_bukti_trf';
                                 status_validasi = {
                                     color:'#ffa700',
                                     label:'Belum divalidasi'
@@ -167,8 +171,7 @@
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${prodi}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">Rp. ${parseInt(value.biaya_form).toLocaleString()}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.created_at}</td>`;
-                            // html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.bukti_tf}</td>`;
-                            html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;"><a href="#" data-id_trf="${value.id}" data-nama="${value.nama}" data-tahun="${value.created_at.substring(0, 4)}" data-img="${value.bukti_tf}" class="btn btn-xs btn-info btn_show_bukti_trf">${value.bukti_tf}</a></i></td>`;
+                            html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;"><a href="#" data-id_trf="${value.id}" data-nama="${value.nama}" data-tahun="${value.created_at.substring(0, 4)}" data-img="${value.bukti_tf}" class="btn btn-xs btn-info ${classBtn}" ${class_disabled}>${value.bukti_tf}</a></i></td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;">${value.pendamping}</td>`;
                             html +=`<td  class="text-center" style="font-size:1.2rem; font-weight: 600;"><i style="color:${status_validasi.color};">${status_validasi.label}</i></td>`;
                             html +=`</tr>`;
