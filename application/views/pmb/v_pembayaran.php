@@ -125,10 +125,10 @@
                                 prodi='Teknik Industri';
                             }
                             if(value.jurusan1 === '3'){
-                                prodi='Menejemen Industri';
+                                prodi='Teknik Tekstil';
                             }
                             if(value.jurusan1 === '4'){
-                                prodi='Teknik Tekstil';
+                                prodi='Menejemen Industri';
                             }
                             if(value.jurusan1 === '5'){
                                 prodi='Teknik Informatika';
