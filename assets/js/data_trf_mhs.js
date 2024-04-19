@@ -9,7 +9,6 @@ $(".btn_trf_online").click(function () {
     },
     dataType: "JSON",
     success: function (response) {
-      // console.log(response);
       let html = ``;
       let jenis_bayar = ``;
       if (response != null) {
@@ -23,7 +22,11 @@ $(".btn_trf_online").click(function () {
           
           $.each(value.pembayaran, function (i, val) {
             // console.log(val);
-            html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
+            if(val != null){
+              html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
+            }else{
+              html += `<i class="text-danger">Pembayaran tidak valid</i><br>`;
+            }
           });
           html += `</td>`;
           html += `<td class = "text-center" >${value.tgl_trf}</td>`;
