@@ -58,7 +58,7 @@ class M_laporan_transaksi extends CI_Model
 
     public function get_kms_data($data = null)
     {
-        $this->db->select('t.`nim`, t.`semester`, mjp.`nm_jenis_pembayaran`, td.*');
+        $this->db->select('MONTH(t.tanggal) AS bulan, YEAR(t.tanggal) AS tahun, t.`nim`, t.`semester`, mjp.`nm_jenis_pembayaran`, td.*');
         $this->db->from('`transaksi` t');
         $this->db->join('transaksi_detail td', 'td.`id_transaksi` = t.`id_transaksi`');
         $this->db->join('master_jenis_pembayaran mjp', 'mjp.`id_jenis_pembayaran` = td.`id_jenis_pembayaran`');

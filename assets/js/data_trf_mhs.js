@@ -20,7 +20,9 @@ $(".btn_trf_online").click(function () {
           html += `<td class = "text-center" >${no}</td>`;
           html += `<td class = "text-center" >${value.nipd}</td>`;
           html += `<td class = "text-center" >`;
+          
           $.each(value.pembayaran, function (i, val) {
+            // console.log(val);
             html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
           });
           html += `</td>`;

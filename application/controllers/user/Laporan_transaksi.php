@@ -47,6 +47,10 @@ class Laporan_transaksi extends CI_Controller
         $data['page'] = 'Rekap Data All Transaksi';
         $data['content'] = 'laporan/rekap_data_all_transaksi';
 
+        
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        $smtAktif = $smtAktifRes['id_smt'];
+
         $kondisi = [
             'kn.id_tahun_ajaran > ' => 20211,
         ];
@@ -55,16 +59,26 @@ class Laporan_transaksi extends CI_Controller
             't.semester >=' => 20211,
             'mjp.`id_jenis_pembayaran`' => 5,
         ];
-        $getSemesterAktif = $this->laporan_transaksi->smt_aktif()->row_array();
-        $ganjil_genap = substr($getSemesterAktif['mak'], 4);
-        $smt_aktif    = substr($getSemesterAktif['mak'], 0, 4);
+        // $getSemesterAktif = $this->laporan_transaksi->smt_aktif()->row_array();
+        $ganjil_genap = substr($smtAktifRes['id_smt'], 4);
+        $tahun_smt    = substr($smtAktifRes['id_smt'], 0, 4);
+        // echo '<pre>';
+        // var_dump($tahun_smt);
+        // echo '</pre>';
+        // exit();
 
 
         $get_kms_data = $this->laporan_transaksi->get_kms_data($kondisi2)->result_array();
         $get_kms_data_array = array();
+        $get_kms_data_array_bln = array();
         foreach ($get_kms_data as $key => $val) {
             $get_kms_data_array[$val['semester']][$val['nim']][$val['id_jenis_pembayaran']][] = $val;
+            $get_kms_data_array_bln[$val['tahun']][$val['bulan']][$val['nim']][$val['id_jenis_pembayaran']][] = $val;
         }
+        echo '<pre>';
+        echo print_r($get_kms_data_array_bln);
+        echo '</pre>';
+        exit();
         $kms_data_array = array();
         foreach ($get_kms_data_array as $smt => $val) {
             foreach ($val as $nipd => $va) {
@@ -77,6 +91,10 @@ class Laporan_transaksi extends CI_Controller
                 }
             }
         }
+        // echo '<pre>';
+        // echo print_r($kms_data_array);
+        // echo '</pre>';
+        // exit();
         $get_krs_smt = $this->laporan_transaksi->get_krs_smt($kondisi)->result_array();
         $get_krs_smt_data = array();
         foreach ($get_krs_smt as $key => $val) {
@@ -84,7 +102,7 @@ class Laporan_transaksi extends CI_Controller
         }
 
         // echo '<pre>';
-        // echo print_r($get_krs_smt_data);
+        // echo print_r($get_krs_smt);
         // echo '</pre>';
         // exit();
         //Define Style table
@@ -160,10 +178,10 @@ class Laporan_transaksi extends CI_Controller
 
                 $angkatan     = '20' . substr($v['nipd'], 0, 2);
                 if ($ganjil_genap == 1) {
-                    $hasil = $smt_aktif - $angkatan;
+                    $hasil = $tahun_smt - $angkatan;
                     $ang = (2 * $hasil) + 1;
                 } else if ($ganjil_genap == 2) {
-                    $hasil = $smt_aktif - $angkatan;
+                    $hasil = $tahun_smt - $angkatan;
                     $ang = (2 * $hasil) + 2;
                 }
 
@@ -187,7 +205,7 @@ class Laporan_transaksi extends CI_Controller
 
         $spreadsheet->setActiveSheetIndex(0);
         $writer = new Xlsx($spreadsheet);
-        $filename = 'report_uang_kemahasiswaan';
+        $filename = 'report_uang_kemahasiswaan_smt_'.$smtAktif;
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
         header('Cache-Control: max-age=0');
