@@ -90,7 +90,11 @@
                     html += `<td class="text-center ${colorBG}" >${value.nipd}</td>`;
                     html += `<td class="text-center ${colorBG}" >`;
                     $.each(value.pembayaran, function (i, val) {
-                        html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
+                        if(val != null){
+                            html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
+                        }else{
+                            html += `<i class="text-danger">Pembayaran tidak valid.</i>`;
+                        }
                     });
                     html += `</td>`;
                     html += `<td class="text-center ${colorBG}" >${value.tgl_trf}</td>`;
