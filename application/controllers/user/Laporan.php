@@ -746,13 +746,14 @@ class Laporan extends CI_Controller
         //define width of column
         $sheet->getColumnDimension('A')->setWidth(5.00);
         $sheet->getColumnDimension('B')->setWidth(19.00);
-        $sheet->getColumnDimension('C')->setWidth(15.00);
-        $sheet->getColumnDimension('D')->setWidth(25.00);
-        $sheet->getColumnDimension('E')->setWidth(15.00);
+        $sheet->getColumnDimension('C')->setWidth(19.00);
+        $sheet->getColumnDimension('D')->setWidth(15.00);
+        $sheet->getColumnDimension('E')->setWidth(25.00);
         $sheet->getColumnDimension('F')->setWidth(15.00);
-        $sheet->getColumnDimension('G')->setWidth(13.00);
-        $sheet->getColumnDimension('H')->setWidth(10.00);
-        $sheet->getColumnDimension('I')->setWidth(26.00);
+        $sheet->getColumnDimension('G')->setWidth(15.00);
+        $sheet->getColumnDimension('H')->setWidth(13.00);
+        $sheet->getColumnDimension('I')->setWidth(10.00);
+        $sheet->getColumnDimension('J')->setWidth(26.00);
 
         //Define Style table
         $styleTitle = [
@@ -786,29 +787,31 @@ class Laporan extends CI_Controller
         $row_header = 6;
         $merge_header = $row_header + 1;
         $sheet->setCellValue('A' . $row_header, 'No');
-        $sheet->setCellValue('B' . $row_header, 'Tgl Transaksi');
-        $sheet->setCellValue('C' . $row_header, 'NIM');
-        $sheet->setCellValue('D' . $row_header, 'Rincian Transaksis');
-        $sheet->mergeCells('D' . $row_header . ':' . 'E' . $row_header);
-        $sheet->setCellValue('D' . ($row_header + 1), 'Jenis Pembayaran');
-        $sheet->setCellValue('E' . ($row_header + 1), 'Jumlah Bayar');
-        $sheet->setCellValue('F' . $row_header, 'Total');
-        $sheet->setCellValue('G' . $row_header, 'Semester');
-        $sheet->setCellValue('H' . $row_header, 'Admin');
-        $sheet->setCellValue('I' . $row_header, 'Keterangan');
+        $sheet->setCellValue('B' . $row_header, 'ID TRANSAKSI');
+        $sheet->setCellValue('C' . $row_header, 'Tgl Transaksi');
+        $sheet->setCellValue('D' . $row_header, 'NIM');
+        $sheet->setCellValue('E' . $row_header, 'Rincian Transaksis');
+        $sheet->mergeCells('E' . $row_header . ':' . 'F' . $row_header);
+        $sheet->setCellValue('E' . ($row_header + 1), 'Jenis Pembayaran');
+        $sheet->setCellValue('F' . ($row_header + 1), 'Jumlah Bayar');
+        $sheet->setCellValue('G' . $row_header, 'Total');
+        $sheet->setCellValue('H' . $row_header, 'Semester');
+        $sheet->setCellValue('I' . $row_header, 'Admin');
+        $sheet->setCellValue('J' . $row_header, 'Keterangan');
         // merge all header
         $sheet->mergeCells('A' . $row_header . ':A' . $merge_header);
         $sheet->mergeCells('B' . $row_header . ':B' . $merge_header);
         $sheet->mergeCells('C' . $row_header . ':C' . $merge_header);
-        $sheet->mergeCells('F' . $row_header . ':F' . $merge_header);
+        $sheet->mergeCells('D' . $row_header . ':D' . $merge_header);
         $sheet->mergeCells('G' . $row_header . ':G' . $merge_header);
         $sheet->mergeCells('H' . $row_header . ':H' . $merge_header);
         $sheet->mergeCells('I' . $row_header . ':I' . $merge_header);
+        $sheet->mergeCells('J' . $row_header . ':J' . $merge_header);
         //styling title
-        $sheet->getStyle('A' . $row_header . ':I' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A' . $row_header . ':I' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-        $sheet->getStyle('A' . $row_header . ':I' . $row_header)->getFont()->setBold(true);
-        $sheet->getStyle('A' . $merge_header . ':I' . $merge_header)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $row_header . ':J' . $row_header)->getAlignment()->setHorizontal(PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':J' . $row_header)->getAlignment()->setVertical(PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A' . $row_header . ':J' . $row_header)->getFont()->setBold(true);
+        $sheet->getStyle('A' . $merge_header . ':J' . $merge_header)->getFont()->setBold(true);
 
 
         $row_tbl = 8;
@@ -822,17 +825,19 @@ class Laporan extends CI_Controller
             // die;
             $row_min = (($row_tbl + 1) - count($val['detail_transaksi']));
             $sheet->setCellValue('A' . $row_min, $i);
-            $sheet->setCellValue('B' . $row_min, $val['tanggal']);
-            $sheet->setCellValue('C' . $row_min, $val['nim']);
+            $sheet->setCellValue('B' . $row_min, $val['id_transaksi']);
+            $sheet->setCellValue('C' . $row_min, $val['tanggal']);
+            $sheet->setCellValue('D' . $row_min, $val['nim']);
             if (count($val['detail_transaksi']) > 0) {
 
                 $sheet->mergeCells('A' . $row_min . ':' . 'A' . $row_tbl);
                 $sheet->mergeCells('B' . $row_min . ':' . 'B' . $row_tbl);
                 $sheet->mergeCells('C' . $row_min . ':' . 'C' . $row_tbl);
-                $sheet->mergeCells('F' . $row_min . ':' . 'F' . $row_tbl);
+                $sheet->mergeCells('D' . $row_min . ':' . 'D' . $row_tbl);
                 $sheet->mergeCells('G' . $row_min . ':' . 'G' . $row_tbl);
                 $sheet->mergeCells('H' . $row_min . ':' . 'H' . $row_tbl);
                 $sheet->mergeCells('I' . $row_min . ':' . 'I' . $row_tbl);
+                $sheet->mergeCells('J' . $row_min . ':' . 'J' . $row_tbl);
             }
 
 
@@ -841,12 +846,12 @@ class Laporan extends CI_Controller
                 $now = ($row_min + $keyls);
                 if ($keyls > 0) {
 
-                    $sheet->setCellValue('D' . $now, $dtx['nm_jenis_pembayaran']);
-                    $sheet->setCellValue('E' . $now, $dtx['jml_bayar']);
+                    $sheet->setCellValue('E' . $now, $dtx['nm_jenis_pembayaran']);
+                    $sheet->setCellValue('F' . $now, $dtx['jml_bayar']);
                 } else {
 
-                    $sheet->setCellValue('D' . $row_min, $dtx['nm_jenis_pembayaran']);
-                    $sheet->setCellValue('E' . $now, $dtx['jml_bayar']);
+                    $sheet->setCellValue('E' . $row_min, $dtx['nm_jenis_pembayaran']);
+                    $sheet->setCellValue('F' . $now, $dtx['jml_bayar']);
                 }
                 // $sheet->setCellValue('D' . ($row_tbl + $keyls), $dtx['nm_jenis_pembayaran']);
                 // $sheet->setCellValue('E' . ($row_tbl + $keyls), $dtx['jml_bayar']);
@@ -855,10 +860,10 @@ class Laporan extends CI_Controller
                 $keyls++;
             }
             $total_bayar = array_sum($jml_bayar);
-            $sheet->setCellValue('F' . $row_min, $total_bayar);
-            $sheet->setCellValue('G' . $row_min, $val['semester']);
-            $sheet->setCellValue('H' . $row_min, $val['nama_user']);
-            $sheet->setCellValue('I' . $row_min, $val['uang_masuk']);
+            $sheet->setCellValue('G' . $row_min, $total_bayar);
+            $sheet->setCellValue('H' . $row_min, $val['semester']);
+            $sheet->setCellValue('I' . $row_min, $val['nama_user']);
+            $sheet->setCellValue('J' . $row_min, $val['uang_masuk']);
             $data_terbilang[] = $total_bayar;
 
             $row_tbl++;
@@ -867,20 +872,20 @@ class Laporan extends CI_Controller
         $terbilang = $Terbilang->terbilang($sum_total);
         $sheet->getStyle('E8:F' . ($row_tbl - 1))->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $sheet->setCellValue('A' . $row_tbl, 'TOTAL (RP)');
-        $sheet->mergeCells('A' . $row_tbl . ':' . 'C' . ($row_tbl + 1));
+        $sheet->mergeCells('A' . $row_tbl . ':' . 'D' . ($row_tbl + 1));
         $sheet->setCellValue(
-            'D' . $row_tbl,
+            'E' . $row_tbl,
             '=SUM(F8:F' . ($row_tbl - 1) . ')'
         );
         $sheet->setCellValue(
-            'D' . ($row_tbl + 1),
+            'E' . ($row_tbl + 1),
             $terbilang
         );
-        $sheet->getStyle('D' . $row_tbl)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $sheet->mergeCells('D' . $row_tbl . ':' . 'I' . $row_tbl);
-        $sheet->mergeCells('D' . ($row_tbl + 1) . ':' . 'I' . ($row_tbl + 1));
-        $sheet->getStyle('A' . $row_tbl . ':' . 'I' . ($row_tbl + 1))->getFont()->setBold(true);
-        $sheet->getStyle('A6:I' . ($row_tbl + 1))->applyFromArray($styleTable); //styling header table
+        $sheet->getStyle('E' . $row_tbl)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $sheet->mergeCells('E' . $row_tbl . ':' . 'J' . $row_tbl);
+        $sheet->mergeCells('E' . ($row_tbl + 1) . ':' . 'J' . ($row_tbl + 1));
+        $sheet->getStyle('A' . $row_tbl . ':' . 'J' . ($row_tbl + 1))->getFont()->setBold(true);
+        $sheet->getStyle('A6:J' . ($row_tbl + 1))->applyFromArray($styleTable); //styling header table
 
         $filename = 'Laporan_Penerimaan_Kas_Yayasan_Bunga_Bangsa(' . $bulan_laporan . ')';
         $writer = new Xlsx($spreadsheet);
