@@ -70,8 +70,8 @@
                     <span class="span_loading_table"><i class="fa fa-sync icon_load_table"  hi></i></span>
                     <select class="form-select" id="single-select-field" data-placeholder="Choose one thing">
                         <option value="">-- Pilih --</option>
-                        <option value="0" selected>Select All</option>
-                        <option value="2">Cicilan 1</option>
+                        <!-- <option value="0" selected>Select All</option> -->
+                        <option value="2" selected>Cicilan 1</option>
                         <option value="3">Cicilan 2</option>
                         <option value="4">Cicilan 3</option>
                     </select>
@@ -163,6 +163,10 @@
             let url =  uri_location+'/createExcel?type=0';
             window.open(url, '_blank');
         });
+        var e = document.getElementById("single-select-field");
+        var dataSelected = e.value;
+        // var dataSelected = e.options[e.selectedIndex].text;
+        // console.log(value)
 
         $.ajax({
                 type: "POST",
@@ -415,7 +419,7 @@
             url: "dashboard_chart/getDataPembayaran",
             // url: "dashboard_chart/getDataPembayaranV2",
             data:{
-                filter: 0
+                filter: dataSelected
             },
             dataType: "json",
             beforeSend: function() {

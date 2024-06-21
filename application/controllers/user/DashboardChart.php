@@ -717,6 +717,7 @@ class DashboardChart extends CI_Controller
         // echo '</pre>';
         // die;
     }
+    
     public function getDataPembayaran()
     {
         if ($this->input->is_ajax_request()) {
@@ -832,7 +833,6 @@ class DashboardChart extends CI_Controller
             show_404();
         }
     }
-
     public function getDataPembayaranV2()
     {
         if ($this->input->is_ajax_request()) {

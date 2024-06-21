@@ -24,6 +24,9 @@ $route['transaksi/cetak_kwitansi/(:num)'] = 'user/transaksi/cetak_kwitansi/$1';
 $route['transaksi/cetak_ulang_kwitansi/(:num)'] = 'user/transaksi/cetak_ulang_kwitansi/$1';
 $route['transaksi/cetak_kwitansi_dev/(:num)'] = 'user/transaksi/cetak_kwitansi_dev/$1';
 
+$route['create-va'] = 'user/createva';
+
+// PMB
 $route['pmb-gateway'] = 'user/pmbpayment';
 $route['pmb-gateway/(:any)'] = 'user/pmbpayment/$1';
 
