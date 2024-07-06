@@ -100,11 +100,30 @@ class M_aktivasi_mhs extends CI_Model
         FROM dispensasi d 
         JOIN mahasiswa m ON m.id_pd=d.id_reg_pd;
         */
-        $this->db->select('d.id_dispensasi, d.jenis_dispen, d.tanggal_input, m.id_pd, m.nipd, m.nm_pd, m.id_jur, m.nm_jur, d.tgl_janji_lunas, d.no_tlp, d.tg_dispen, d.tahun_akademik, d.tgl_pelunasan, d.status, d.jml_kirim_pesan');
+        // $this->db->select('*');
+        // $this->db->select('d.id_dispensasi, d.jenis_dispen, d.tanggal_input, m.id_pd, m.nipd, m.nm_pd, m.id_jur, m.nm_jur, d.tgl_janji_lunas, d.no_tlp, d.tg_dispen, d.tahun_akademik, d.tgl_pelunasan, d.status, d.jml_kirim_pesan');
+        $this->db->select([
+            'd.id_dispensasi',
+            'd.jenis_dispen',
+            'd.tanggal_input',
+            'm.id_pd',
+            'm.nipd',
+            'm.nm_pd',
+            'm.id_jur',
+            'm.nm_jur',
+            'd.tgl_janji_lunas',
+            'd.no_tlp',
+            'd.tg_dispen',
+            'd.tahun_akademik',
+            'd.tgl_pelunasan',
+            'd.status',
+            'd.jml_kirim_pesan'
+        ]);
         $this->db->from('dispensasi d');
-        $this->db->join('mahasiswa m', 'm.id_pd=d.id_reg_pd');
-        // $this->db->join('kalender_akademik ka', 'ka.id_smt=d.tahun_akademik');
-        if ($data != null) {
+        $this->db->join('mahasiswa m', 'm.id_pd = d.id_reg_pd', 'inner');
+        // $this->db->join('mahasiswa m', 'm.id_pd=d.id_reg_pd');
+        // Apply where conditions if any
+        if (!is_null($data)) {
             $this->db->where($data);
         }
         $this->db->order_by('d.id_dispensasi', 'desc');

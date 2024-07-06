@@ -14,6 +14,8 @@ $route['translate_uri_dashes'] = FALSE;
 $route['dashboard'] = 'user/dashboard';
 $route['dashboard_chart'] = 'user/DashboardChart';
 $route['dashboard_chart/(:any)'] = 'user/DashboardChart/$1';
+$route['dashboard_chart_v2'] = 'user/DashboardChartV2';
+$route['dashboard_chart_v2/(:any)'] = 'user/DashboardChartV2/$1';
 $route['migrasitrxtotg'] = 'user/MigrasiTrxToTg';
 $route['migrasitrxtotg/(:any)'] = 'user/MigrasiTrxToTg/$1';
 
