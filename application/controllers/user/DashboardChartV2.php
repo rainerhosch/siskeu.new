@@ -14,6 +14,11 @@ class DashboardChartV2 extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Jakarta');
+        if ($this->session->has_userdata('username') == null) {
+            $this->session->set_flashdata('message', "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button> <h4><i class='icon fa fa-warning'></i> Alert!</h4> Harus Login Terlebih Dahulu</div>");
+            redirect(base_url());
+        }
         $this->load->model('M_tunggakan', 'tunggakan');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
@@ -35,6 +40,7 @@ class DashboardChartV2 extends CI_Controller
             $data_post = $this->input->post();
             // Ambil data semester aktif
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            // $smtAktifRes['id_smt'] = '20222';
             $res['data'] = array();
 
             // Tentukan semester sebelumnya
@@ -57,11 +63,14 @@ class DashboardChartV2 extends CI_Controller
                 if (!isset($grouped_by[$tahun_masuk])) {
                     $grouped_by[$tahun_masuk] = [
                         'tahun_masuk' => $tahun_masuk,
+                        'list_mhs'=>[],
                         'jml_mhs' => 0,
                         'data_dispen' => 0,
                         'trx' => 0
                     ];
                 }
+                
+                $grouped_by[$tahun_masuk]['list_mhs'][] = $mhs;
 
                 // Tambahkan data mahasiswa ke dalam grup
                 $grouped_by[$tahun_masuk]['jml_mhs']++;

@@ -138,10 +138,10 @@ class SyncSimak extends CI_Controller
         $responseApiDataMhs = $this->api->mGet('MahasiswaForSiskeu', [
         ]);
         $dataMhs = $responseApiDataMhs['mhsdata'];
-        // echo '<pre>';
-        // var_dump($responseApiDataMhs);
-        // echo '</pre';
-        // die;
+        echo '<pre>';
+        var_dump($responseApiDataMhs);
+        echo '</pre';
+        die;
         $index_update = 0;
         foreach ($dataMhs as $i => $mhs) {
             // if ($mhs['no_transkip_nilai'] == '') {

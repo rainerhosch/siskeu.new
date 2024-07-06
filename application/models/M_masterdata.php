@@ -82,7 +82,7 @@ class M_masterdata extends CI_Model
     public function getDataPembayaranChart($where = null)
     {
         // $this->db->distinct();
-        $this->db->select('t.*');
+        $this->db->select('t.*, td.*');
         $this->db->from('transaksi t');
         $this->db->join('mahasiswa m', 'm.nipd=t.nim');
         $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
