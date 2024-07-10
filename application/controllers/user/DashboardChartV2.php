@@ -85,10 +85,11 @@ class DashboardChartV2 extends CI_Controller
                 if ($data_post['filter'] == '4') {
                     $jenis_dispen = '4';
                 }
-                $grouped_by[$tahun_masuk]['data_dispen'] += $this->aktivasi->getDataDispenMhs([
+                $grouped_by[$tahun_masuk]['data_dispen'] += $this->aktivasi->getDataDispenMhsV2([
                     'd.tahun_akademik' => $smtAktifRes['id_smt'],
                     'm.nipd' => $mhs['nipd'],
                     'd.tg_dispen >' => 0,
+                    'd.status'=> 0,
                     'd.jenis_dispen' => $jenis_dispen
                 ])->num_rows();
             }
