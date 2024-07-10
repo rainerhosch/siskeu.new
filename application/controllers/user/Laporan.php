@@ -1074,6 +1074,11 @@ class Laporan extends CI_Controller
         $FormatTanggal = new FormatTanggal;
         $jenis_dispen = $this->input->get('jenis_dispen');
 
+        // echo '<pre>';
+        // var_dump($smtAktifRes);
+        // echo'</pre>';
+        // die;
+
         $kondisi = [
             // 'd.jenis_dispen' => $jenis_dispen,
             'd.tahun_akademik' => $smtAktif,
@@ -1208,9 +1213,10 @@ class Laporan extends CI_Controller
 
         // configurasi Title
         // $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt . ' ' . $smtAktifRes['id_thn_ajaran'] . '/' . $smtAktifRes['id_thn_ajaran'] + 1);
-        $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt);
+        $sheet->setCellValue('A1', 'DAFTAR TAGIHAN DISPENSASI SPP SEMESTER ' . $jns_smt);
         $sheet->mergeCells('A1:J2');
-        $sheet->setCellValue('A3', '2021/2022');
+        $sheet->setCellValue('A3', $smtAktifRes['nm_smt']);
+        // $sheet->setCellValue('A3', '2021/2022');
         $sheet->mergeCells('A3:J4');
         $sheet->getStyle('A1:J4')->getFont()->setSize(12);
         $sheet->getStyle('A1:J4')->getFont()->setBold(true);
