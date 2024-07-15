@@ -82,14 +82,19 @@ class M_aktivasi_mhs extends CI_Model
         return $this->db->insert('dispensasi', $data);
     }
 
-    public function cekStatusAktifMhs($data = null, $table = '')
+    public function cekStatusAktifMhs($data = null, $table = '', $datawherein = null)
     {
-        $this->db->select('m.nipd, m.nm_pd, m.nm_jur, t.aktif');
+        $this->db->select('m.nipd, m.nm_pd, m.nm_jur, t.aktif, t.Tahun');
         $this->db->from($table);
         $this->db->join('mahasiswa m', 'm.nipd=t.nim');
         if ($data != null) {
             $this->db->where($data);
         }
+        
+        if ($datawherein != null) {
+            $this->db->where_in('t.aktif', $datawherein);
+        }
+        $this->db->group_by('m.nipd');
         return $this->db->get();
     }
 

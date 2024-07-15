@@ -50,8 +50,8 @@ class DashboardChartV2 extends CI_Controller
 
             // Ambil data KRS mahasiswa
             if ($data_post['filter'] == '2') {
-                $filter_smt = $smtAktifRes['id_smt']-1;
-            }else{
+                $filter_smt = $smtAktifRes['id_smt'] - 1;
+            } else {
                 $filter_smt = $smtAktifRes['id_smt'];
             }
             $data_krs = $this->krs->getDataKrsMhs([
@@ -202,6 +202,69 @@ class DashboardChartV2 extends CI_Controller
 
             $res['smt_aktif'] = $smtAktifRes['id_smt'];
             $res['smt_befor'] = $smt_befor;
+            $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
+            echo json_encode($res);
+        } else {
+            show_404();
+        }
+    }
+
+    public function getDataPembayaranChart()
+    {
+        if ($this->input->is_ajax_request()) {
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            // Tentukan semester sebelumnya
+            $tahun_smt = substr($smtAktifRes['id_smt'], 0, 4);
+            $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
+            $smt_befor = ($cek_ganjil_genap == '1') ? ($tahun_smt - 1) . '2' : $tahun_smt . '1';
+
+            $end_smt = [];
+            for ($i = 0; $i < 3; $i++) {
+                $end_smt = ($tahun_smt * 1) . 1;
+                $tahun_smt--;
+            }
+
+            $dataSmt = $this->masterdata->getDataSemester(['id_smt >=' => $end_smt, 'id_smt <=' => $smtAktifRes['id_smt']])->result_array();
+            // $res['data_smt'] = $dataSmt;
+
+            $dataChart = [];
+            foreach ($dataSmt as $i => $val) {
+                $res['trx']['C1'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
+                    'td.id_jenis_pembayaran' => 2,
+                    't.semester' => $val['id_smt'],
+                    't.uang_masuk' => 1,
+                ])->num_rows();
+                $res['trx']['C2'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
+                    'td.id_jenis_pembayaran' => 3,
+                    't.semester' => $val['id_smt'],
+                    't.uang_masuk' => 1,
+                ])->num_rows();
+                $res['trx']['C3'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
+                    'td.id_jenis_pembayaran' => 4,
+                    't.semester' => $val['id_smt'],
+                    't.uang_masuk' => 1,
+                ])->num_rows();
+
+
+
+                // $where = [
+                //     't.tahun' => $val['id_smt'],
+                // ];
+                // $res['trx'][$i][$val['id_smt']]['C1']=$this->aktivasi->cekStatusAktifMhs($where, 'reg_mhs t')->num_rows();
+                // $res['trx'][$i][$val['id_smt']]['C2']=$this->aktivasi->cekStatusAktifMhs($where, 'reg_ujian t', ('1, 3'))->num_rows();
+                // $res['trx'][$i][$val['id_smt']]['C3']=$this->aktivasi->cekStatusAktifMhs($where, 'reg_ujian t', ('2, 4'))->num_rows();
+                // $res['last_query']=$this->db->last_query();
+                $res['dataChart']['labels'][$i] = $val['id_smt'];
+            }
+            foreach ($res['trx'] as $key => $value) {
+                $i = 0;
+                foreach ($value as $k => $v) {
+                    $dataChart[$key][$i] = $v;
+                    $i++;
+                }
+            }
+            $res['dataChart']['datasets'] = $dataChart;
+            $res['smt_aktif'] = $smtAktifRes['id_smt'];
             $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
             echo json_encode($res);
         } else {

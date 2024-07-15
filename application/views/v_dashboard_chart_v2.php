@@ -70,6 +70,8 @@
     }
 </style>
 <script src="<?= base_url() ?>assets/js/chart.js/chart.js"></script>
+<script src="<?= base_url() ?>assets/js/hightcharts/highcharts.js"></script>
+<script src="<?= base_url() ?>assets/js/hightcharts/accessibility.js"></script>
 <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
@@ -129,66 +131,149 @@
         </div>
     </div>
     <div class="block">
-        <canvas id="myChart"></canvas>
+        <!-- <canvas id="myChart"></canvas> -->
+        <figure class="highcharts-figure">
+            <div id="myChart"></div>
+        </figure>
+
     </div>
     <script>
         $.ajax({
             type: "POST",
-            url: "dashboard_chart_v2/getDataPembayaranYear",
+            url: "dashboard_chart_v2/getDataPembayaranChart",
             dataType: "json",
             success: function (response) {
                 console.log(response)
-            }
-        })
-        const ctx = document.getElementById('myChart');
 
-        new Chart(ctx, {
-            // type: 'line',
-            type: 'bar',
-            data: {
-                labels: ['20201', '20202', '20221', '20222', '20231', '20232'],
-                datasets: [
-                    {
-                        label: '# Cicilan 1',
-                        data: [1276, 1235, 1015, 1356, 1401, 1145],
-                        borderWidth: 1
-                    },
-                    {
-                        label: '# Cicilan 2',
-                        data: [1350, 1221, 1084, 1212, 1053, 1321],
-                        borderWidth: 1
-                    },
-                    {
-                        label: '# Cicilan 3',
-                        data: [1052, 1025, 1221, 1421, 1126, 1285],
-                        borderWidth: 1
-                    },
+                const ctx = document.getElementById('myChart');
+                // new Chart(ctx, {
+                //     // type: 'line',
+                //     type: 'bar',
+                //     data: {
+                //         labels: response.dataChart.labels,
+                //         datasets: [
+                //             {
+                //                 label: '# Cicilan 1',
+                //                 data: response.dataChart.datasets.C1,
+                //                 borderWidth: 1
+                //             },
+                //             {
+                //                 label: '# Cicilan 2',
+                //                 data: response.dataChart.datasets.C2,
+                //                 borderWidth: 1
+                //             },
+                //             {
+                //                 label: '# Cicilan 3',
+                //                 data: response.dataChart.datasets.C3,
+                //                 borderWidth: 1
+                //             },
 
-                ]
-            },
-            options: {
-                plugins: {
+                //         ]
+                //     },
+                //     options: {
+                //         plugins: {
+                //             title: {
+                //                 display: true,
+                //                 text: 'Chart Pembayaran SPP'
+                //             },
+                //             legend: {
+                //                 labels: {
+                //                     // This more specific font property overrides the global property
+                //                     font: {
+                //                         size: 12,
+                //                         weight: 'bold'
+                //                     }
+                //                 }
+                //             }
+                //         },
+                //         scales: {
+                //             y: {
+                //                 beginAtZero: true
+                //             }
+                //         }
+                //     }
+                // });
+
+
+                Highcharts.chart(ctx, {
+                    chart: {
+                        // type: 'line',
+                        // type: 'area',
+                        type: 'column',
+                    },
                     title: {
-                        display: true,
-                        text: 'Chart Pembayaran SPP'
+                        text: 'Histori Data Pembayaran Cicilan Per Semester',
+                        align: 'left'
+                    },
+                    subtitle: {
+                        text: 'Source: <a ' +
+                            'href="/siskeu.new/transaksi"' +
+                            'target="_blank">Transaksi</a>',
+                        align: 'left'
+                    },
+                    xAxis: {
+                        categories: response.dataChart.labels,
+                        title: {
+                            text: null
+                        },
+                        gridLineWidth: 1,
+                        lineWidth: 0
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Population (mahasiswa)',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        },
+                        gridLineWidth: 0
+                    },
+                    tooltip: {
+                        valueSuffix: '  mahasiswa'
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: '50%',
+                            dataLabels: {
+                                enabled: true
+                            },
+                            groupPadding: 0.1
+                        }
                     },
                     legend: {
-                        labels: {
-                            // This more specific font property overrides the global property
-                            font: {
-                                size: 12,
-                                weight: 'bold'
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'top',
+                        x: -40,
+                        y: 80,
+                        floating: true,
+                        borderWidth: 1,
+                        backgroundColor:
+                            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: '# Cicilan 1',
+                        data: response.dataChart.datasets.C1
+                    }, {
+                        name: '# Cicilan 2',
+                        data: response.dataChart.datasets.C2
+                    }, {
+                        name: '# Cicilan 3',
+                        data: response.dataChart.datasets.C3
+                    }]
+                });
+
+
             }
-        });
+        })
+
+
     </script>
 
     <script>
