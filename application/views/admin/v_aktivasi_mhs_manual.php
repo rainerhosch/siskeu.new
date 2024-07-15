@@ -127,7 +127,7 @@
                         dataType: "json",
                         success: function(response) {
                             if (response.status === 200) {
-                                console.log(response.data);
+                                // console.log(response.data);
                                 $('.roles').prop('hidden', false);
                                 $('#nipd_hidden').val(response.data.nipd);
                                 $('#biaya_cs').val(response.data.biaya_cs);
@@ -162,7 +162,7 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        console.log(response)
+                        // console.log(response)
                         let html = ``;
                         html += `<tr>`;
                         html += `<td class = "text-center" >${response.nipd}</td>`;

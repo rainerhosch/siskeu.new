@@ -15,6 +15,11 @@ class AktivasiMhs extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        date_default_timezone_set('Asia/Jakarta');
+        if ($this->session->has_userdata('username') == null) {
+            $this->session->set_flashdata('message', "<div class='alert alert-danger alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button> <h4><i class='icon fa fa-warning'></i> Alert!</h4> Harus Login Terlebih Dahulu</div>");
+            redirect(base_url());
+        }
 
         $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_masterdata', 'masterdata');
@@ -107,7 +112,7 @@ class AktivasiMhs extends CI_Controller
 
     public function sync_dispen()
     {
-        $update_dispen =[];
+        $update_dispen = [];
         // jenis dispen (1,3,4)
         $dataCekDispen = [
             'd.id_reg_pd <>' => '6178', //Winda Ayu Melati
@@ -116,21 +121,21 @@ class AktivasiMhs extends CI_Controller
             'd.jenis_dispen' => 1,
         ];
         $data_dispen = $this->aktivasi->getDataDispenMhs($dataCekDispen)->result_array();
-        foreach($data_dispen as $dd){
+        foreach ($data_dispen as $dd) {
             $id_dispen = $dd['id_dispensasi'];
             $where = [
                 't.nim' => $dd['nipd'],
                 't.semester' => $dd['tahun_akademik']
-                
+
             ];
             $dataHistoriTx = $this->transaksi->getDataTransaksi($where)->result_array();
             $countHistoriTx = count($dataHistoriTx);
             for ($i = 0; $i < $countHistoriTx; $i++) {
                 $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataHistoriTx[$i]['id_transaksi']])->result_array();
                 $dataHistoriTx[$i]['detail_transaksi'] = $resDetailTx;
-                
-                foreach($resDetailTx as $rDtx){
-                    if($rDtx['id_jenis_pembayaran'] = $dd['jenis_dispen'] && $rDtx['jml_bayar'] = $dd['tg_dispen']){
+
+                foreach ($resDetailTx as $rDtx) {
+                    if ($rDtx['id_jenis_pembayaran'] = $dd['jenis_dispen'] && $rDtx['jml_bayar'] = $dd['tg_dispen']) {
                         // update dispen
                         $dataUpdateDispen = [
                             'status' => 1,
@@ -139,13 +144,13 @@ class AktivasiMhs extends CI_Controller
                     }
                 }
             }
-            
+
         }
-        echo'<pre>';
+        echo '<pre>';
         var_dump($data_dispen);
-        echo'</pre>';
+        echo '</pre>';
         die;
-    } 
+    }
 
     public function update_jml_pesan()
     {
@@ -412,13 +417,13 @@ class AktivasiMhs extends CI_Controller
             ];
             if ($jenis_cek == '3' || $jenis_cek == '4') {
                 $table = 'reg_ujian t';
-                if($jenis_cek == '3'){
-                    $where_in= array(1, 3); 
-                }else{
-                    $where_in= array(2, 4);
+                if ($jenis_cek == '3') {
+                    $where_in = array(1, 3);
+                } else {
+                    $where_in = array(2, 4);
                     // $where['aktif']=2;
                 }
-                $dataStatus = $this->aktivasi->cekStatusAktifSimak($where, $table,  $where_in)->row_array();
+                $dataStatus = $this->aktivasi->cekStatusAktifSimak($where, $table, $where_in)->row_array();
                 // var_dump($dataStatus);die;
                 if ($dataStatus != null) {
                     if ($dataStatus['aktif'] == '1' || $dataStatus['aktif'] == '2') {
@@ -459,11 +464,11 @@ class AktivasiMhs extends CI_Controller
                 }
             }
             $response = [
-                'nipd'      => $dataMhs['nipd'],
-                'nama'      => $dataMhs['nm_pd'],
-                'jurusan'   => $dataMhs['nm_jur'],
-                'status'    => $status,
-                'aktif'     => $aktif,
+                'nipd' => $dataMhs['nipd'],
+                'nama' => $dataMhs['nm_pd'],
+                'jurusan' => $dataMhs['nm_jur'],
+                'status' => $status,
+                'aktif' => $aktif,
                 'kewajiban' => $kewajiban_cicilan
             ];
         } else {
@@ -510,7 +515,7 @@ class AktivasiMhs extends CI_Controller
                 $jenjangMhs = $data['nm_jenj_didik'];
                 $angkatan_mhs = '20' . substr($data['nipd'], 0, 2);
                 $where_tahun = [
-                    'angkatan' =>  $angkatan_mhs
+                    'angkatan' => $angkatan_mhs
                 ];
                 $dataBiayaAngkatan = $this->masterdata->getBiayaAngkatan($where_tahun, $jenjangMhs)->row_array();
                 $biayaCS = $dataBiayaAngkatan['cicilan_semester'];
@@ -549,20 +554,20 @@ class AktivasiMhs extends CI_Controller
                 if ($dataDispen == NULL) {
                     $response = [
                         'status' => 200,
-                        'msg'   => 'data ditemukan',
+                        'msg' => 'data ditemukan',
                         'data' => $data
                     ];
                 } else {
                     $response = [
                         'status' => 203,
-                        'msg'   => 'Data dispen, ' . $dataDispen['nm_pd'] . ' sudah ada!',
+                        'msg' => 'Data dispen, ' . $dataDispen['nm_pd'] . ' sudah ada!',
                         'data' => $dataDispen
                     ];
                 }
             } else {
                 $response = [
                     'status' => 203,
-                    'msg'   => 'tidak ada mahasiswa dengan nim tersebut!',
+                    'msg' => 'tidak ada mahasiswa dengan nim tersebut!',
                     'data' => $data
                 ];
             }
@@ -614,20 +619,20 @@ class AktivasiMhs extends CI_Controller
                         'tgl_reg' => $tgl,
                         'aktif' => $dataInput['jenis_dispen'],
                         'keterangan' => 'from siskeu_new',
-                        'aktif_by' =>  $id_user
+                        'aktif_by' => $id_user
                     ];
                     $active = $this->aktivasi->aktivasi_perwalian($dataAktifDispenKrs);
                     if ($active === true) {
                         // success
                         $reponse = [
                             'status' => true,
-                            'msg'   => 'success'
+                            'msg' => 'success'
                         ];
                     } else {
                         // error
                         $reponse = [
                             'status' => false,
-                            'msg'   => $active
+                            'msg' => $active
                         ];
                     }
                 } else {
@@ -647,26 +652,26 @@ class AktivasiMhs extends CI_Controller
                         // success
                         $reponse = [
                             'status' => true,
-                            'msg'   => 'success'
+                            'msg' => 'success'
                         ];
                     } else {
                         // error
                         $reponse = [
                             'status' => false,
-                            'msg'   => $active
+                            'msg' => $active
                         ];
                     }
                 }
             } else {
                 $reponse = [
                     'status' => false,
-                    'msg'   => 'Gagal insert data'
+                    'msg' => 'Gagal insert data'
                 ];
             }
         } else {
             $reponse = [
                 'status' => false,
-                'msg'   => 'invalid request'
+                'msg' => 'invalid request'
             ];
         }
         echo json_encode($reponse);
