@@ -143,7 +143,7 @@
             url: "dashboard_chart_v2/getDataPembayaranChart",
             dataType: "json",
             success: function (response) {
-                console.log(response)
+                // console.log(response)
 
                 const ctx = document.getElementById('myChart');
                 // new Chart(ctx, {
@@ -199,7 +199,8 @@
                     chart: {
                         // type: 'line',
                         // type: 'area',
-                        type: 'column',
+                        // type: 'column',
+                        type: 'bar',
                     },
                     title: {
                         text: 'Histori Data Pembayaran Cicilan Per Semester',
@@ -307,10 +308,8 @@
     </script>
 
     <script>
-
         var e = document.getElementById("single-select-field");
         var dataSelected = e.value;
-
         $('#single-select-field').select2({
             // theme: "bootstrap-3",
             width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
@@ -336,7 +335,7 @@
                 // })
             },
             success: function (response) {
-                // console.log(response)
+                console.log(response)
                 $(`.span_loading_table`).attr('hidden', true);
                 swal.close()
                 $('.smt_aktif').html(response.smt_aktif);
