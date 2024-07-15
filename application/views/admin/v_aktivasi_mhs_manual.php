@@ -97,6 +97,7 @@
                                             <th class="text-center">Nama</th>
                                             <th class="text-center">Jurusan</th>
                                             <th class="text-center">Status</th>
+                                            <th class="text-center">Sisa Kewajiban</th>
                                         </tr>
                                     </thead>
                                     <tbody id="data_mhs_tbody">
@@ -126,7 +127,7 @@
                         dataType: "json",
                         success: function(response) {
                             if (response.status === 200) {
-                                // console.log(response.data);
+                                console.log(response.data);
                                 $('.roles').prop('hidden', false);
                                 $('#nipd_hidden').val(response.data.nipd);
                                 $('#biaya_cs').val(response.data.biaya_cs);
@@ -161,7 +162,7 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        // console.log(response)
+                        console.log(response)
                         let html = ``;
                         html += `<tr>`;
                         html += `<td class = "text-center" >${response.nipd}</td>`;
@@ -178,6 +179,13 @@
                             }
                         }
                         html += `</td>`;
+                        html += `<td class = "text-center" ><i>`;
+                        if (response.kewajiban === 0) {
+                            html += `Lunas`;
+                        }else{
+                            html += `Rp.${parseInt(response.kewajiban).toLocaleString()}`;
+                        }
+                        html += `</i></td>`;
                         html += `</tr>`;
                         $("#data_mhs_tbody").html(html);
                         $('#btn_aktifasi_manual').on('click', function() {

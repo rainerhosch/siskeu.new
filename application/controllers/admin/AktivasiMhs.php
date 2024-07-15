@@ -412,7 +412,7 @@ class AktivasiMhs extends CI_Controller
             ];
             if ($jenis_cek == '3' || $jenis_cek == '4') {
                 $table = 'reg_ujian t';
-                $dataStatus = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+                $dataStatus = $this->aktivasi->cekStatusAktifSimak($where, $table)->row_array();
                 if ($dataStatus != null) {
                     if ($dataStatus['aktif'] == '1' || $dataStatus['aktif'] == '2') {
                         $status = 'Sudah Aktif';
@@ -422,7 +422,7 @@ class AktivasiMhs extends CI_Controller
                         $aktif = $dataStatus['aktif'];
                     }
                 } else {
-                    if ($kewajiban_cicilan <= 500000) {
+                    if ($kewajiban_cicilan == 0) {
                         $status = 1;
                         $aktif = 0;
                     } else {
@@ -431,8 +431,8 @@ class AktivasiMhs extends CI_Controller
                     }
                 }
             } else {
-                $table = 'reg_mhs t';
-                $dataStatus = $this->aktivasi->cekStatusAktifMhs($where, $table)->row_array();
+                $table = 'regmhs t';
+                $dataStatus = $this->aktivasi->cekStatusAktifSimak($where, $table)->row_array();
                 if ($dataStatus != null) {
                     if ($dataStatus['aktif'] == '2') {
                         $status = 'Sudah Aktif';
@@ -442,7 +442,7 @@ class AktivasiMhs extends CI_Controller
                         $aktif = $dataStatus['aktif'];
                     }
                 } else {
-                    if ($kewajiban_cicilan <= 500000) {
+                    if ($kewajiban_cicilan == 0) {
                         $status = 1;
                         $aktif = 0;
                     } else {
@@ -456,7 +456,8 @@ class AktivasiMhs extends CI_Controller
                 'nama'      => $dataMhs['nm_pd'],
                 'jurusan'   => $dataMhs['nm_jur'],
                 'status'    => $status,
-                'aktif'     => $aktif
+                'aktif'     => $aktif,
+                'kewajiban' => $kewajiban_cicilan
             ];
         } else {
             $response = 'Invalid Request!';

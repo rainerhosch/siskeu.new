@@ -69,6 +69,7 @@
         padding: 4px;
     }
 </style>
+<script src="<?= base_url() ?>assets/js/chart.js/chart.js"></script>
 <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
@@ -102,8 +103,9 @@
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">No</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN</br>ANGKATAN</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">JUMLAH</br><small
-                                style="font-size:1rem; font-weight: 700;">MHS AKTIF BY</br><span
-                                    class="smt_befor"></span></small></th>
+                                style="font-size:1rem; font-weight: 700;">MHS AKTIF BY KRS</br>
+                                <!-- <span class="smt_befor"></span> -->
+                            </small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
@@ -126,21 +128,84 @@
             </table>
         </div>
     </div>
+    <div class="block">
+        <canvas id="myChart"></canvas>
+    </div>
     <script>
-        
+        $.ajax({
+            type: "POST",
+            url: "dashboard_chart_v2/getDataPembayaranYear",
+            dataType: "json",
+            success: function (response) {
+                console.log(response)
+            }
+        })
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            // type: 'line',
+            type: 'bar',
+            data: {
+                labels: ['20201', '20202', '20221', '20222', '20231', '20232'],
+                datasets: [
+                    {
+                        label: '# Cicilan 1',
+                        data: [1276, 1235, 1015, 1356, 1401, 1145],
+                        borderWidth: 1
+                    },
+                    {
+                        label: '# Cicilan 2',
+                        data: [1350, 1221, 1084, 1212, 1053, 1321],
+                        borderWidth: 1
+                    },
+                    {
+                        label: '# Cicilan 3',
+                        data: [1052, 1025, 1221, 1421, 1126, 1285],
+                        borderWidth: 1
+                    },
+
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Chart Pembayaran SPP'
+                    },
+                    legend: {
+                        labels: {
+                            // This more specific font property overrides the global property
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+
         var e = document.getElementById("single-select-field");
         var dataSelected = e.value;
 
-        $('#single-select-field' ).select2({
+        $('#single-select-field').select2({
             // theme: "bootstrap-3",
-            width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
-            placeholder: $( this ).data( 'placeholder' ),
+            width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+            placeholder: $(this).data('placeholder'),
         });
 
         $.ajax({
             type: "POST",
             url: "dashboard_chart_v2/getDataPembayaran",
-            data:{
+            data: {
                 filter: dataSelected
             },
             dataType: "json",
@@ -156,11 +221,12 @@
                 // })
             },
             success: function (response) {
-                console.log(response)
+                // console.log(response)
                 $(`.span_loading_table`).attr('hidden', true);
                 swal.close()
                 $('.smt_aktif').html(response.smt_aktif);
-                $('.smt_befor').html(response.smt_befor);
+                // $('.smt_befor').html(response.smt_befor);
+                // dataSelected === '2' ? $('.smt_befor').html(response.smt_befor) : $('.smt_befor').html(response.smt_aktif)
                 html = ``;
                 let no = 1;
                 let total_mhs = 0;
@@ -217,7 +283,7 @@
 
         $('.form-select').on('change', function () {
             let data = $(this).val();
-            // console.log( data );
+            console.log(data);
             $.ajax({
                 type: "POST",
                 url: "dashboard_chart_v2/getDataPembayaran",
@@ -235,7 +301,8 @@
                     $(`.span_loading_table`).attr('hidden', true);
                     swal.close()
                     $('.smt_aktif').html(response.smt_aktif);
-                    $('.smt_befor').html(response.smt_befor);
+                    // $('.smt_befor').html(response.smt_befor);
+                    // dataSelected === 2 ? $('.smt_befor').html(response.smt_befor) : $('.smt_befor').html(response.smt_aktif)
                     html = ``;
                     let no = 1;
                     let total_mhs = 0;

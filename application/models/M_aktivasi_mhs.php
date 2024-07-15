@@ -93,6 +93,21 @@ class M_aktivasi_mhs extends CI_Model
         return $this->db->get();
     }
 
+    public function cekStatusAktifSimak($data = null, $table = '')
+    {
+        
+        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+        $dbwastudig_simak->select('mpt.nipd, m.nm_pd, j.nm_jur, t.aktif');
+        $dbwastudig_simak->from($table);
+        $dbwastudig_simak->join('mahasiswa_pt mpt', 'mpt.nipd=t.nim');
+        $dbwastudig_simak->join('jurusan j', 'j.id_jur=mpt.id_sms');
+        $dbwastudig_simak->join('mahasiswa m', 'm.id_pd=mpt.id_pd');
+        if ($data != null) {
+            $dbwastudig_simak->where($data);
+        }
+        return $dbwastudig_simak->get();
+    }
+
     public function getDataDispenMhs($data = null)
     {
         /*
@@ -186,6 +201,9 @@ class M_aktivasi_mhs extends CI_Model
                 return 'gagal insert lokal';
             }
         } else {
+            // insert to simak
+            $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+            $dbwastudig_simak->insert('regmhs', $data);
             return 'exists';
         }
     }
@@ -211,6 +229,9 @@ class M_aktivasi_mhs extends CI_Model
                 return 'gagal insert lokal';
             }
         } else {
+            // insert to simak
+            $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+            $dbwastudig_simak->insert('reg_ujian', $data);
             return 'exists';
         }
     }
