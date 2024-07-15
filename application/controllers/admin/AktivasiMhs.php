@@ -413,12 +413,12 @@ class AktivasiMhs extends CI_Controller
             if ($jenis_cek == '3' || $jenis_cek == '4') {
                 $table = 'reg_ujian t';
                 if($jenis_cek == '3'){
-                    $where['aktif']=1;
+                    $where_in= array(1, 3); 
                 }else{
-                    $where['aktif']=2;
-
+                    $where_in= array(2, 4);
+                    // $where['aktif']=2;
                 }
-                $dataStatus = $this->aktivasi->cekStatusAktifSimak($where, $table)->row_array();
+                $dataStatus = $this->aktivasi->cekStatusAktifSimak($where, $table,  $where_in)->row_array();
                 // var_dump($dataStatus);die;
                 if ($dataStatus != null) {
                     if ($dataStatus['aktif'] == '1' || $dataStatus['aktif'] == '2') {

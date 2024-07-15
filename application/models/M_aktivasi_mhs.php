@@ -93,9 +93,9 @@ class M_aktivasi_mhs extends CI_Model
         return $this->db->get();
     }
 
-    public function cekStatusAktifSimak($data = null, $table = '')
+    public function cekStatusAktifSimak($data = null, $table = '', $datawherein = null)
     {
-        
+
         $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
         $dbwastudig_simak->select('mpt.nipd, m.nm_pd, j.nm_jur, t.aktif');
         $dbwastudig_simak->from($table);
@@ -104,6 +104,9 @@ class M_aktivasi_mhs extends CI_Model
         $dbwastudig_simak->join('mahasiswa m', 'm.id_pd=mpt.id_pd');
         if ($data != null) {
             $dbwastudig_simak->where($data);
+        }
+        if ($datawherein != null) {
+            $dbwastudig_simak->where_in('t.aktif', $datawherein);
         }
         return $dbwastudig_simak->get();
     }
