@@ -203,16 +203,32 @@
                     },
                     title: {
                         text: 'Histori Data Pembayaran Cicilan Per Semester',
+                        style: {
+                            // fontSize: '15px',
+                            fontFamily: 'poppins'
+                        },
                         align: 'left'
                     },
                     subtitle: {
                         text: 'Source: <a ' +
                             'href="/siskeu.new/transaksi"' +
                             'target="_blank">Transaksi</a>',
-                        align: 'left'
+                        align: 'left',
+                        style: {
+                            // color: 'red',
+                            fontFamily: 'poppins',
+                            fontSize: '12px'
+                        }
                     },
                     xAxis: {
                         categories: response.dataChart.labels,
+                        labels: {
+                            style: {
+                                // color: 'red',
+                                fontSize: '15px',
+                                fontFamily: 'poppins'
+                            }
+                        },
                         title: {
                             text: null
                         },
@@ -223,7 +239,12 @@
                         min: 0,
                         title: {
                             text: 'Population (mahasiswa)',
-                            align: 'high'
+                            align: 'high',
+                            style: {
+                                // color: 'red',
+                                fontFamily: 'poppins',
+                                fontSize: '10px'
+                            }
                         },
                         labels: {
                             overflow: 'justify'
@@ -231,7 +252,11 @@
                         gridLineWidth: 0
                     },
                     tooltip: {
-                        valueSuffix: '  mahasiswa'
+                        valueSuffix: '  mahasiswa',
+                        style: {
+                            // color: 'red',
+                            fontSize: '12px'
+                        }
                     },
                     plotOptions: {
                         bar: {
@@ -246,13 +271,18 @@
                         layout: 'vertical',
                         align: 'right',
                         verticalAlign: 'top',
-                        x: -40,
-                        y: 80,
+                        x: 0,
+                        y: 0,
                         floating: true,
                         borderWidth: 1,
                         backgroundColor:
                             Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                        shadow: true
+                        shadow: true,
+                        style: {
+                            // color: 'red',
+                            fontFamily: 'poppins',
+                            fontSize: '14px'
+                        }
                     },
                     credits: {
                         enabled: false
