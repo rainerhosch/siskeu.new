@@ -47,6 +47,11 @@
         margin: 7px;
     }
 
+    .leftPosition {
+        right: 35px;
+        margin: 7px;
+    }
+
     .div_loading_table {
         font-size: 20px;
         position: absolute;
@@ -131,180 +136,133 @@
         </div>
     </div>
     <div class="block">
-        <!-- <canvas id="myChart"></canvas> -->
-        <figure class="highcharts-figure">
-            <div id="myChart"></div>
-        </figure>
+        <div class="leftPosition">
+            <select class="form-select" id="chartTypeSelect">
+                <option value="bar">Bar</option>
+                <option value="line">Line</option>
+                <option value="area">Area</option>
+                <option value="column">Column</option>
+            </select>
+        </div>
+        <div>
+            <!-- <canvas id="myChart"></canvas> -->
+            <figure class="highcharts-figure">
+                <div id="myChart"></div>
+            </figure>
+        </div>
 
     </div>
     <script>
-        $.ajax({
-            type: "POST",
-            url: "dashboard_chart_v2/getDataPembayaranChart",
-            dataType: "json",
-            success: function (response) {
-                // console.log(response)
-
-                const ctx = document.getElementById('myChart');
-                // new Chart(ctx, {
-                //     // type: 'line',
-                //     type: 'bar',
-                //     data: {
-                //         labels: response.dataChart.labels,
-                //         datasets: [
-                //             {
-                //                 label: '# Cicilan 1',
-                //                 data: response.dataChart.datasets.C1,
-                //                 borderWidth: 1
-                //             },
-                //             {
-                //                 label: '# Cicilan 2',
-                //                 data: response.dataChart.datasets.C2,
-                //                 borderWidth: 1
-                //             },
-                //             {
-                //                 label: '# Cicilan 3',
-                //                 data: response.dataChart.datasets.C3,
-                //                 borderWidth: 1
-                //             },
-
-                //         ]
-                //     },
-                //     options: {
-                //         plugins: {
-                //             title: {
-                //                 display: true,
-                //                 text: 'Chart Pembayaran SPP'
-                //             },
-                //             legend: {
-                //                 labels: {
-                //                     // This more specific font property overrides the global property
-                //                     font: {
-                //                         size: 12,
-                //                         weight: 'bold'
-                //                     }
-                //                 }
-                //             }
-                //         },
-                //         scales: {
-                //             y: {
-                //                 beginAtZero: true
-                //             }
-                //         }
-                //     }
-                // });
-
-
-                Highcharts.chart(ctx, {
-                    chart: {
-                        type: 'line',
-                        // type: 'area',
-                        // type: 'column',
-                        // type: 'bar',
-                    },
-                    title: {
-                        text: 'Histori Data Pembayaran Cicilan Per Semester',
-                        style: {
-                            // fontSize: '15px',
-                            fontFamily: 'poppins'
+        function createChart(type) {
+            $.ajax({
+                type: "POST",
+                url: "dashboard_chart_v2/getDataPembayaranChart",
+                dataType: "json",
+                success: function (response) {
+                    Highcharts.chart('myChart', {
+                        chart: {
+                            type: type
                         },
-                        align: 'left'
-                    },
-                    subtitle: {
-                        text: 'Source: <a ' +
-                            'href="/siskeu.new/transaksi"' +
-                            'target="_blank">Transaksi</a>',
-                        align: 'left',
-                        style: {
-                            // color: 'red',
-                            fontFamily: 'poppins',
-                            fontSize: '12px'
-                        }
-                    },
-                    xAxis: {
-                        categories: response.dataChart.labels,
-                        labels: {
+                        title: {
+                            text: 'Histori Data Pembayaran Cicilan Per Semester',
                             style: {
-                                // color: 'red',
-                                fontSize: '15px',
                                 fontFamily: 'poppins'
-                            }
-                        },
-                        title: {
-                            text: null
-                        },
-                        gridLineWidth: 1,
-                        lineWidth: 0
-                    },
-                    yAxis: {
-                        min: 0,
-                        title: {
-                            text: 'Population (mahasiswa)',
-                            align: 'high',
-                            style: {
-                                // color: 'red',
-                                fontFamily: 'poppins',
-                                fontSize: '10px'
-                            }
-                        },
-                        labels: {
-                            overflow: 'justify'
-                        },
-                        gridLineWidth: 0
-                    },
-                    tooltip: {
-                        valueSuffix: '  mahasiswa',
-                        style: {
-                            // color: 'red',
-                            fontSize: '12px'
-                        }
-                    },
-                    plotOptions: {
-                        bar: {
-                            borderRadius: '50%',
-                            dataLabels: {
-                                enabled: true
                             },
-                            groupPadding: 0.1
-                        }
-                    },
-                    legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'top',
-                        x: 0,
-                        y: 0,
-                        floating: true,
-                        borderWidth: 1,
-                        backgroundColor:
-                            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                        shadow: true,
-                        style: {
-                            // color: 'red',
-                            fontFamily: 'poppins',
-                            fontSize: '14px'
-                        }
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    series: [{
-                        name: '# Cicilan 1',
-                        data: response.dataChart.datasets.C1
-                    }, {
-                        name: '# Cicilan 2',
-                        data: response.dataChart.datasets.C2
-                    }, {
-                        name: '# Cicilan 3',
-                        data: response.dataChart.datasets.C3
-                    }]
-                });
+                            align: 'left'
+                        },
+                        subtitle: {
+                            text: 'Source: <a href="/siskeu.new/transaksi" target="_blank">Transaksi</a>',
+                            align: 'left',
+                            style: {
+                                fontFamily: 'poppins',
+                                fontSize: '12px'
+                            }
+                        },
+                        xAxis: {
+                            categories: response.dataChart.labels,
+                            labels: {
+                                style: {
+                                    fontSize: '15px',
+                                    fontFamily: 'poppins'
+                                }
+                            },
+                            title: {
+                                text: null
+                            },
+                            gridLineWidth: 1,
+                            lineWidth: 0
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Population (mahasiswa)',
+                                align: 'high',
+                                style: {
+                                    fontFamily: 'poppins',
+                                    fontSize: '10px'
+                                }
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            },
+                            gridLineWidth: 0
+                        },
+                        tooltip: {
+                            valueSuffix: ' mahasiswa',
+                            style: {
+                                fontSize: '12px'
+                            }
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: '50%',
+                                dataLabels: {
+                                    enabled: true
+                                },
+                                groupPadding: 0.1
+                            }
+                        },
+                        legend: {
+                            layout: 'vertical',
+                            align: 'right',
+                            verticalAlign: 'top',
+                            x: 0,
+                            y: 0,
+                            floating: true,
+                            borderWidth: 1,
+                            backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                            shadow: true,
+                            style: {
+                                fontFamily: 'poppins',
+                                fontSize: '14px'
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: '# Cicilan 1',
+                            data: response.dataChart.datasets.C1
+                        }, {
+                            name: '# Cicilan 2',
+                            data: response.dataChart.datasets.C2
+                        }, {
+                            name: '# Cicilan 3',
+                            data: response.dataChart.datasets.C3
+                        }]
+                    });
+                }
+            });
+        }
 
+        // Initial chart load
+        createChart('bar');
 
-            }
-        })
-
-
+        // Update chart on select box change
+        $('#chartTypeSelect').on('change', function () {
+            var selectedType = $(this).val();
+            createChart(selectedType);
+        });
     </script>
 
     <script>
