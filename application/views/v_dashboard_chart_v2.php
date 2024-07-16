@@ -223,6 +223,7 @@
                             }
                         },
                         legend: {
+                            enabled: true,
                             layout: 'vertical',
                             align: 'right',
                             verticalAlign: 'top',
