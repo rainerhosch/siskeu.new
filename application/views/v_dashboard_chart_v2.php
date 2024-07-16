@@ -197,10 +197,10 @@
 
                 Highcharts.chart(ctx, {
                     chart: {
-                        // type: 'line',
+                        type: 'line',
                         // type: 'area',
                         // type: 'column',
-                        type: 'bar',
+                        // type: 'bar',
                     },
                     title: {
                         text: 'Histori Data Pembayaran Cicilan Per Semester',
