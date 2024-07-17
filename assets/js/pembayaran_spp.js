@@ -110,7 +110,7 @@ $("#nipd").on("keypress", function (e) {
                 },
                 dataType: "json",
                 success: function (response) {
-                  // console.log(response);
+                  console.log(response);
 
                   if ((response.totalKewajiban = 0)) {
                     $(".btn#btn_proses").prop("disabled", true);
@@ -261,12 +261,24 @@ $("#form_pembayaran").submit(function (e) {
     dataType: "JSON",
     success: function (response) {
       console.log(response);
+      let id_transaksi = response.data;
+      let title = ``;
+      let text = ``;
+      let icon = ``;
       if (response != 0) {
-        let id_transaksi = response;
+        if(response.status === true){
+          title = `Transaksi Berhasil!`;
+          text = `Transaksi ${response.data} telah berhasil di input, apakah ingin mencetak kwitansi?`;
+          icon = `info`;
+        }else{
+          title = `Transaksi Gagal!`;
+          text = `${response.data}`;
+          icon = "warning";
+        }
         Swal.fire({
-          title: "Transaksi Berhasil!",
-          text: `Transaksi ${id_transaksi} telah berhasil di input, apakah ingin mencetak kwitansi?`,
-          icon: "info",
+          title: title,
+          text: text,
+          icon: icon,
           showCancelButton: true,
           confirmButtonColor: "##d33",
           confirmButtonText: "Cetak",
@@ -282,6 +294,7 @@ $("#form_pembayaran").submit(function (e) {
             location.reload();
           } else {
             // refresh page
+            window.focus();
             location.reload();
           }
         });

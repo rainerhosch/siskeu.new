@@ -1154,7 +1154,8 @@ class Transaksi extends CI_Controller
             $condition_dup = [
                 'tanggal' => $tgl,
                 'nim' => $nimMhs,
-                'semester' => $smtBayar
+                'semester' => $smtBayar,
+                'bayar_via' => $bayar_via
             ];
             $trx_duplicate = 0;
             $validasi_trx = $this->transaksi->getDataTransaksiOnly($condition_dup)->row_array();
@@ -1167,7 +1168,10 @@ class Transaksi extends CI_Controller
                 }
             }
             if ($trx_duplicate > 0) {
-                $response = 'transaksi duplikat!';
+                $response = [
+                    'status' => false,
+                    'data' => 'transaksi duplikat!'
+                ];
                 if ($uang_masuk == 1) {
                     echo json_encode($response);
                 } else {
@@ -1180,13 +1184,19 @@ class Transaksi extends CI_Controller
                 $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
                 // $insert = true;
                 if (!$insertTx) {
-                    $response = 'gagal insert transaksi!';
+                    $response = [
+                        'status' => false,
+                        'data' => 'gagal insert transaksi!'
+                    ];
                 } else {
                     $inputDetailTx = count($dataTxDetail);
                     for ($i = 0; $i < $inputDetailTx; $i++) {
                         $this->transaksi->addNewDetailTransaksi($dataTxDetail[$i]);
                     }
-                    $response = $id_transaksi;
+                    $response = [
+                        'status' => true,
+                        'data' => $id_transaksi
+                    ];
                 }
                 if ($uang_masuk == 1) {
                     echo json_encode($response);
