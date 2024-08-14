@@ -2663,12 +2663,19 @@ class Transaksi extends CI_Controller
             $dataTx['bayar_kmhs'] = 0;
         }
 
-        // var_dump($resDetailTx);
+        // echo '<pre>';
+        // // var_dump($dataTest);
+        // var_dump($dataTxSebelumnya);
+        // var_dump($resBiayaLain[0]['biaya']);
+        // echo '</pre>';
         // die;
+        $dataTest = [];
         if ($bayarLainnya == true) {
             foreach ($resBiayaLain as $key => $rbl) {
                 foreach ($dataTxSebelumnya as $a => $dTxS) {
-                    if ($dTxS['id_jenis_pembayaran'] == $rbl['id_jp']) {
+                    if ($dTxS['id_jenis_pembayaran'] !== $rbl['id_jp']) {
+                        // $resBiayaLain[$key]['biaya'] = $rbl['biaya'];
+                    } else {
                         if ($rbl['id_jp'] == 8) {
                             $kewajibanPerpanjangSemester = $kewajibanPerpanjangSemester - $dTxS['jml_bayar'];
                         } else if ($rbl['id_jp'] == 16) {
@@ -2676,10 +2683,12 @@ class Transaksi extends CI_Controller
                                 $resBiayaLain[$key]['biaya'] = $resBiayaLain[$key]['biaya'] - $dTxS['jml_bayar'];
                             }
                         } else {
-                            $resBiayaLain[$key]['biaya'] = $rbl['biaya'] - $dTxS['jml_bayar'];
+                            if (!isset($dataTest['total_bayar'])) {
+                                $dataTest['total_bayar'] = 0;
+                            }
+                            $dataTest['total_bayar'] += $dTxS['jml_bayar'];
+                            $resBiayaLain[$key]['biaya'] -= $dTxS['jml_bayar'];
                         }
-                    } else {
-                        $resBiayaLain[$key]['biaya'] = $rbl['biaya'];
                     }
                 }
             }
@@ -2703,8 +2712,10 @@ class Transaksi extends CI_Controller
             //     }
             // }
             // echo '<pre>';
+            // var_dump($dataTest);
+            // // var_dump($dataTxSebelumnya);
+            // var_dump($resBiayaLain[0]['biaya'] - $dataTest['total_bayar']);
             // var_dump($resBiayaLain);
-            // // var_dump($resDetailTx);
             // echo '</pre>';
             // die;
 
@@ -2760,8 +2771,9 @@ class Transaksi extends CI_Controller
                 }
             }
             $dataTx['data_kewajiban_lain'] = $resBiayaLain;
-
-            // var_dump($resBiayaLain);
+            // echo '<pre>';
+            // var_dump($dataTx);
+            // echo '</pre>';
             // die;
         } else {
             $dataTx['data_kewajiban_lain'] = null;
