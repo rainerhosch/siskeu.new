@@ -114,13 +114,17 @@ function accTRF(id, type_bayar) {
               $("#nipd").prop("readonly", true);
 
               html += `<tr>`;
+              html += `<td><label for="input_smt">Semester</label></td>`;
               html += `<td class="text-center">`;
-              html += `<input class="form-check-input input_smt" type="radio" name="smt" id="radio_${response.thn_smt}1" value="${response.thn_smt}1"><br>`;
-              html += `<label class="form-check-label" for="smt_1"> ( ${response.thn_smt}1 )</label>`;
-              html += `</td>`;
-              html += `<td class="text-center">`;
-              html += `<input class="form-check-input input_smt" type="radio" name="smt" id="radio_${response.thn_smt}2" value="${response.thn_smt}2"><br>`;
-              html += `<label class="form-check-label" for="smt_2"> ( ${response.thn_smt}2 )</label>`;
+              html += `<select class="form-control form-control-sm input_smt" name="smt" id="select_smt">`;
+              html += `<option value="${response.thn_smt}1"> ( ${response.thn_smt}1 - Ganjil)</option>`;
+              html += `<option value="${response.thn_smt}2"> ( ${response.thn_smt}2 - Genap)</option>`;
+              if (response.data_tg.length === 0) {
+                html +=`<hr>`
+                html += `<option value="${(response.thn_smt*1)+1}1"> ( ${(response.thn_smt*1)+1}1 - Ganjil)</option>`;
+                html += `<option value="${(response.thn_smt*1)+1}2"> ( ${(response.thn_smt*1)+1}2 - Genap)</option>`;
+              }
+              html += `</select>`;
               html += `</td>`;
               html += `</tr>`;
               // line jenis transaksi (transfer atau langsung)
@@ -135,7 +139,8 @@ function accTRF(id, type_bayar) {
               html += `</td>`;
               html += `</tr>`;
               $("#data_kwajiban_tbody2").html(html);
-              $("input[name=smt][value=" + smt + "]").prop("checked", true);
+              $("select[name=smt] option[value=" + smt + "]").prop("selected", true);
+              // $('.input_smt').prop('disabled', 'disabled')
               let bayar_via = $(".bayar_via").val();
               let tds = ``;
               if (bayar_via === "2") {
@@ -167,8 +172,9 @@ function accTRF(id, type_bayar) {
               } else {
                 $(".detail_trf").remove();
               }
-              if ($("input[name='smt']").is(":checked")) {
-                let smt = $("input[name='smt']:checked").val();
+
+              $("select[name=smt] option:selected").each(function() {
+                let smt = $(this).val();
                 let nipd = $("#nipd").val();
                 // console.log(smt)
                 if (smt) {
@@ -283,7 +289,7 @@ function accTRF(id, type_bayar) {
                     },
                   });
                 }
-              }
+              })
               // });
 
               if (response.dataHistoriTX != 0) {

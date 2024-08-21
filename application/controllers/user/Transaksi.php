@@ -443,7 +443,7 @@ class Transaksi extends CI_Controller
 
                 $dataCekNim = [
                     'nim' => $nim,
-                    'semester' => $smtAktif
+                    // 'semester' => $smtAktif
                 ];
                 // cek histori transaksi
                 $dataHistoriTx = $this->transaksi->getDataTransaksi($dataCekNim)->result_array();

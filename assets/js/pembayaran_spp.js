@@ -37,14 +37,23 @@ $("#nipd").on("keypress", function (e) {
           }
 
           html += `<tr>`;
+          html += `<td><label for="input_smt">Semester</label></td>`;
           html += `<td class="text-center">`;
-          html += `<input class="form-check-input input_smt" type="radio" name="smt" id="smt_1" value="${response.thn_smt}1" ${stts_radio}><br>`;
-          html += `<label class="form-check-label" for="smt_1"> ( ${response.thn_smt}1 )</label>`;
+          html += `<select class="form-control input_smt" name="smt" id="smt_1" ${stts_radio}><br>`;
+          html += `<option value="${response.thn_smt}1"> ( ${response.thn_smt}1 - Ganjil)</option>`;
+          html += `<option value="${response.thn_smt}2"> ( ${response.thn_smt}2 - Genap)</option>`;
+          if (response.data_tg.length === 0) {
+            html +=`<hr>`
+            html += `<option value="${(response.thn_smt*1)+1}1"> ( ${(response.thn_smt*1)+1}1 - Ganjil)</option>`;
+            html += `<option value="${(response.thn_smt*1)+1}2"> ( ${(response.thn_smt*1)+1}2 - Genap)</option>`;
+          }
+          html += `</select>`;
           html += `</td>`;
-          html += `<td class="text-center">`;
-          html += `<input class="form-check-input input_smt" type="radio" name="smt" id="smt_2" value="${response.thn_smt}2"><br>`;
-          html += `<label class="form-check-label" for="smt_2"> ( ${response.thn_smt}2 )</label>`;
-          html += `</td>`;
+          // html += `<td class="text-center">`;
+          // html += `<select class="form-control input_smt" name="smt" id="smt_2"><br>`;
+          // html += `<option value="${response.thn_smt}2"> ( ${response.thn_smt}2 )</option>`;
+          // html += `</select>`;
+          // html += `</td>`;
           html += `</tr>`;
           // line jenis transaksi (transfer atau langsung)
           html += `<tr>`;
@@ -94,10 +103,10 @@ $("#nipd").on("keypress", function (e) {
               $(".detail_trf").remove();
             }
           });
-          $(".input_smt").click(function () {
-            let smt = $("input[name='smt']:checked").val();
+          $(".input_smt").on('change', function () {
+            let smt = $(this).val();
             let nipd = $("#nipd").val();
-            // console.log(smt)
+            console.log(smt)
             if (smt) {
               // alert("Your are a - " + smt);
 
