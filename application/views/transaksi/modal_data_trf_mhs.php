@@ -164,6 +164,18 @@
                                     html += `<hr>`
                                     html += `<option value="${(response.thn_smt * 1) + 1}1"> ( ${(response.thn_smt * 1) + 1}1 - Ganjil)</option>`;
                                     html += `<option value="${(response.thn_smt * 1) + 1}2"> ( ${(response.thn_smt * 1) + 1}2 - Genap)</option>`;
+                                } else {
+                                    let check_tg = true;
+                                    $.each(response.data_tg, function (i, value) {
+                                        if (value.jenis_tunggakan != 1 || value.jenis_tunggakan != 2 || value.jenis_tunggakan != 3 || value.jenis_tunggakan != 4) {
+                                            check_tg = false;
+                                        }
+                                    })
+                                    if (check_tg === false) {
+                                        html += `<hr>`
+                                        html += `<option value="${(response.thn_smt * 1) + 1}1"> ( ${(response.thn_smt * 1) + 1}1 - Ganjil)</option>`;
+                                        html += `<option value="${(response.thn_smt * 1) + 1}2"> ( ${(response.thn_smt * 1) + 1}2 - Genap)</option>`;
+                                    }
                                 }
                                 html += `</select>`;
                                 html += `</td>`;
