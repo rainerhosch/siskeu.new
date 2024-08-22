@@ -94,65 +94,70 @@
         <?= $this->session->flashdata('message'); ?>
     </div>
     <div class="row">
-        <div class="alert alert-info"><marquee behavior="" direction=""> <strong>JANGAN LUPA UNTUK MENGINPUTKAN DATA MAHASISWA KIP, PADA AWAL SETIAP SEMESTER!.</strong></marquee></div>
+        <div class="alert alert-info">
+            <marquee behavior="" direction=""> <strong>JANGAN LUPA UNTUK MENGINPUTKAN DATA MAHASISWA KIP, PADA AWAL
+                    SETIAP SEMESTER!.</strong></marquee>
+        </div>
     </div>
     <?php if ($this->session->userdata('role') != 4): ?>
-                                                                                                                                                                                                                                                                            <div class="row">
-                                                                                                                                                                                                                                                                                <div class="col-sm-6 col-lg-3">
-                                                                                                                                                                                                                                                                                    <a href="#pembayaran-spp" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaran">
-                                                                                                                                                                                                                                                                                        <div class="widget-simple">
-                                                                                                                                                                                                                                                                                            <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
-                                                                                                                                                                                                                                                                                                <i class="fa fa-bitcoin"></i>
-                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                            <h3 class="widget-content text-right animation-pullDown">
-                                                                                                                                                                                                                                                                                                Pembayaran <strong>SPP</strong><br>
-                                                                                                                                                                                                                                                                                                <small>Buat Transaksi Baru</small>
-                                                                                                                                                                                                                                                                                            </h3>
-                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                    </a>
-                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                <div class="col-sm-6 col-lg-3">
-                                                                                                                                                                                                                                                                                    <a href="#pembayaran-lain" class="widget widget-hover-effect1" data-toggle="modal" data-target="#formPembayaranLain">
-                                                                                                                                                                                                                                                                                        <div class="widget-simple">
-                                                                                                                                                                                                                                                                                            <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
-                                                                                                                                                                                                                                                                                                <i class="fa fa-dollar"></i>
-                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                            <h3 class="widget-content text-right animation-pullDown">
-                                                                                                                                                                                                                                                                                                Pembayaran <strong>Lain</strong><br>
-                                                                                                                                                                                                                                                                                                <small>Buat Transaksi Baru</small>
-                                                                                                                                                                                                                                                                                            </h3>
-                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                    </a>
-                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                <div class="col-sm-6 col-lg-3 btn_trf_online">
-                                                                                                                                                                                                                                                                                    <a href="#data-transfer" class="widget widget-hover-effect1">
-                                                                                                                                                                                                                                                                                        <!-- <a href="#data-transfer" class="widget widget-hover-effect1" data-toggle="modal" data-target="#dataTransferMhs"> -->
-                                                                                                                                                                                                                                                                                        <div class="widget-simple">
-                                                                                                                                                                                                                                                                                            <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
-                                                                                                                                                                                                                                                                                                <i class="gi gi-circle_info"></i>
-                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                            <h3 class="widget-content text-right animation-pullDown">
-                                                                                                                                                                                                                                                                                                <strong id="label-jmlpembayaran">Pembayaran</strong><br>
-                                                                                                                                                                                                                                                                                                <small>Mahasiswa Transfer</small>
-                                                                                                                                                                                                                                                                                            </h3>
-                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                    </a>
-                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                <div class="col-sm-6 col-lg-3">
-                                                                                                                                                                                                                                                                                    <a href="#" class="widget widget-hover-effect1">
-                                                                                                                                                                                                                                                                                        <div class="widget-simple">
-                                                                                                                                                                                                                                                                                            <div class="widget-icon pull-left themed-background animation-fadeIn">
-                                                                                                                                                                                                                                                                                                <!-- <i class="gi gi-wallet"></i> -->
-                                                                                                                                                                                                                                                                                                <i class="fa fa-file-text-o"></i>
-                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                            <h3 class="widget-content text-right animation-pullDown">
-                                                                                                                                                                                                                                                                                                <?= $jumlah_tx_hari_ini; ?> <strong>Transaksi</strong><br>
-                                                                                                                                                                                                                                                                                                <small>Transaksi Hari Ini</small>
-                                                                                                                                                                                                                                                                                            </h3>
-                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                    </a>
-                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                            </div>
+        <div class="row">
+            <div class="col-sm-6 col-lg-3">
+                <a href="#pembayaran-spp" class="widget widget-hover-effect1" data-toggle="modal"
+                    data-target="#formPembayaran">
+                    <div class="widget-simple">
+                        <div class="widget-icon pull-left themed-background-spring animation-fadeIn">
+                            <i class="fa fa-bitcoin"></i>
+                        </div>
+                        <h3 class="widget-content text-right animation-pullDown">
+                            Pembayaran <strong>SPP</strong><br>
+                            <small>Buat Transaksi Baru</small>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <a href="#pembayaran-lain" class="widget widget-hover-effect1" data-toggle="modal"
+                    data-target="#formPembayaranLain">
+                    <div class="widget-simple">
+                        <div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+                            <i class="fa fa-dollar"></i>
+                        </div>
+                        <h3 class="widget-content text-right animation-pullDown">
+                            Pembayaran <strong>Lain</strong><br>
+                            <small>Buat Transaksi Baru</small>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-lg-3 btn_trf_online">
+                <a href="#data-transfer" class="widget widget-hover-effect1">
+                    <!-- <a href="#data-transfer" class="widget widget-hover-effect1" data-toggle="modal" data-target="#dataTransferMhs"> -->
+                    <div class="widget-simple">
+                        <div class="widget-icon pull-left themed-background-amethyst animation-fadeIn">
+                            <i class="gi gi-circle_info"></i>
+                        </div>
+                        <h3 class="widget-content text-right animation-pullDown">
+                            <strong id="label-jmlpembayaran">Pembayaran</strong><br>
+                            <small>Mahasiswa Transfer</small>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <a href="#" class="widget widget-hover-effect1">
+                    <div class="widget-simple">
+                        <div class="widget-icon pull-left themed-background animation-fadeIn">
+                            <!-- <i class="gi gi-wallet"></i> -->
+                            <i class="fa fa-file-text-o"></i>
+                        </div>
+                        <h3 class="widget-content text-right animation-pullDown">
+                            <?= $jumlah_tx_hari_ini; ?> <strong>Transaksi</strong><br>
+                            <small>Transaksi Hari Ini</small>
+                        </h3>
+                    </div>
+                </a>
+            </div>
+        </div>
     <?php endif; ?>
 
     <div class="row">
@@ -174,7 +179,8 @@
                                         <div id="example-datatable_filter" class="dataTables_filter">
                                             <label>
                                                 <div class="input-group">
-                                                    <input type="search" class="form-control" placeholder="Search" aria-controls="example-datatable" id="form_cari">
+                                                    <input type="search" class="form-control" placeholder="Search"
+                                                        aria-controls="example-datatable" id="form_cari">
                                                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                                 </div>
                                             </label>
@@ -182,7 +188,8 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                                    <table id="example-datatable"
+                                        class="table table-vcenter table-condensed table-bordered">
                                         <thead>
                                             <tr>
                                                 <th class="text-center">No</th>
@@ -209,7 +216,8 @@
 
                                 <div class="row">
                                     <div class="col-sm-5 hidden-xs">
-                                        <div class="dataTables_info" id="datatable_info" role="status" aria-live="polite"></div>
+                                        <div class="dataTables_info" id="datatable_info" role="status"
+                                            aria-live="polite"></div>
                                     </div>
                                     <!-- Paginate -->
                                     <div class="col-sm-7 col-xs-12 clearfix">
@@ -289,14 +297,14 @@
     <?php $this->load->view('transaksi/modal_form_pembayaran_lain'); ?>
     <?php $this->load->view('transaksi/modal_data_trf_mhs'); ?>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var input_search = '';
             $.ajax({
                 url: '<?= base_url() ?>user/Transaksi/getDataTrfMahasiswa/',
                 type: 'POST',
                 serverSide: true,
                 dataType: 'json',
-                success: function(response) {
+                success: function (response) {
                     $(`<i>${response.data} </i>`).insertBefore("#label-jmlpembayaran");
                     // console.log(response)
                 }
@@ -305,18 +313,18 @@
             $('.div_btn_row').hide();
             $("#riwayat_transaksi").hide();
             $(".data_kwajiban").hide();
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#alert_tx").html("");
                 <?php $this->session->unset_userdata('message'); ?>;
             }, 2000);
 
-            $("#form_cari").on("keyup change", function(e) {
+            $("#form_cari").on("keyup change", function (e) {
                 e.preventDefault();
                 let keyword = $(this).val();
                 input_search = keyword;
                 loadFilter(keyword);
             });
-            $('#pagination').on('click', 'a', function(e) {
+            $('#pagination').on('click', 'a', function (e) {
                 e.preventDefault();
                 let limit = $('#datatable_length').val();
                 let offset = $(this).attr('data-ci-pagination-page');
@@ -336,7 +344,7 @@
                     },
                     serverSide: true,
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         let user_log = response.user_loged;
                         let data_transaksi = response.data_transaksi;
                         let total_data = response.total_result;
@@ -351,7 +359,7 @@
             function loadPagination(input_search, limit, offset) {
                 let jenis_kas = 'all';
                 let filter = null;
-                if(input_search != ''){
+                if (input_search != '') {
                     filter = input_search
                 }
                 $.ajax({
@@ -366,7 +374,7 @@
                     },
                     serverSide: true,
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         let user_log = response.user_loged;
                         let data_transaksi = response.data_transaksi;
                         let total_data = response.total_result;
@@ -387,9 +395,9 @@
 
                     console.log(total_data)
                     let numEnd = offset + 10;
-                    $('#datatable_info').html(`<strong>${offset+1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
+                    $('#datatable_info').html(`<strong>${offset + 1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
                     no = offset;
-                    $.each(data_transaksi, function(i, value) {
+                    $.each(data_transaksi, function (i, value) {
                         no++;
 
                         var total_bayarTrx = 0;
@@ -405,7 +413,7 @@
                         htmlx += `<td class = "text-center" >${value.nm_pd}</td>`;
 
                         htmlx += `<td class = "text-center" >`;
-                        $.each(value.detail_transaksi, function(k, val) {
+                        $.each(value.detail_transaksi, function (k, val) {
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
                             total_bayarTrx += parseInt(val.jml_bayar);
                         });
@@ -462,14 +470,14 @@
                     data: id_transaksi
                 },
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     $("#editTrx").modal("show");
                     let htmlz = ``;
-                    $.each(response.data_transaksi, function(i, val) {
+                    $.each(response.data_transaksi, function (i, val) {
                         let id_trx = val.id_transaksi;
                         let nim = val.nim;
                         let nm_pd = val.nm_pd;
-                        $.each(val.detail_transaksi, function(k, detailTx) {
+                        $.each(val.detail_transaksi, function (k, detailTx) {
                             htmlz += `<tr>`;
                             htmlz += `<td><label data-error="wrong" data-success="right" for="${detailTx.nm_jenis_pembayaran}">${detailTx.nm_jenis_pembayaran}</label></td>`;
                             htmlz += `<td class="text-center"><input type="text" id="input_${detailTx.id_detail_transaksi}" name="${detailTx.id_detail_transaksi}" class="form-control validate text-right input_${k}" value="${detailTx.jml_bayar}"></td>`;
@@ -488,9 +496,9 @@
                     $("#tabel_form_edit_trx").html(htmlz);
 
                     let data = 0;
-                    $.each(response.data_transaksi, function(i, val) {
-                        $.each(val.detail_transaksi, function(k, detailTx) {
-                            $('#input_' + detailTx.id_detail_transaksi).on('input', function() {
+                    $.each(response.data_transaksi, function (i, val) {
+                        $.each(val.detail_transaksi, function (k, detailTx) {
+                            $('#input_' + detailTx.id_detail_transaksi).on('input', function () {
                                 data += $('#input_' + detailTx.id_detail_transaksi).val();
                                 $('#total_' + detailTx.id_detail_transaksi).val(data);
                             });
@@ -515,7 +523,7 @@
                 cancelButtonText: "Batal",
                 closeOnConfirm: false,
                 closeOnCancel: false,
-            }).then(function(isConfirm) {
+            }).then(function (isConfirm) {
                 if (isConfirm) {
                     // cetak
                     window.location.replace(`transaksi/hapus_transaksi/${id_transaksi}`);
@@ -529,8 +537,8 @@
             });
         }
     </script>
-    <script src="<?= base_url() ?>assets/js/data_trf_mhs.js"></script>
-    <script src="<?= base_url() ?>assets/js/pembayaran_lainnya.js"></script>
-    <script src="<?= base_url() ?>assets/js/pembayaran_spp.js"></script>
+    <!-- <script src="<?= base_url() ?>assets/js/data_trf_mhs.js"></script> -->
+    <!-- <script src="<?= base_url() ?>assets/js/pembayaran_lainnya.js"></script> -->
+    <!-- <script src="<?= base_url() ?>assets/js/pembayaran_spp.js"></script> -->
 </div>
 <!-- END Page Content -->
