@@ -142,6 +142,7 @@
                     },
                     dataType: "json",
                     success: function (response) {
+                        console.log(response);
                         if (response != null) {
                             if (type_bayar === 1) {
                                 $("#formPembayaran").modal("show");
@@ -249,7 +250,7 @@
                                                 let attr_checked = ``;
                                                 let vBiaya = 0;
                                                 $.each(response.dataKewajibanSmt, function (i, value) {
-                                                    console.log(value);
+                                                    // console.log(value);
                                                     let jml_bayar = jml_trf;
 
                                                     if (parseInt(value.biaya) > 0) {
@@ -262,7 +263,7 @@
                                                         jml_trf = jml_trf - parseInt(value.biaya);
                                                         vBiaya = parseInt(value.biaya);
                                                     }
-                                                    console.log(`${i}_` + vBiaya + " - " + jml_trf);
+                                                    // console.log(`${i}_` + vBiaya + " - " + jml_trf);
                                                     if (jml_trf >= 0 && vBiaya != 0) {
                                                         attr_disable = ``;
                                                         attr_checked = `checked`;
@@ -496,7 +497,7 @@
                                         let sisa_trf = 0;
                                         $.each(array_jenis_bayar, function (i, value) {
                                             i++;
-                                            console.log(i);
+                                            // console.log(i);
                                             let id_jns_bayar = value;
                                             let nim_mhs = $("#nim_mhs_bayar_hidden").val();
                                             let jnj_didik = $("#jenjang_mhs_bayar_hidden").val();
@@ -537,7 +538,7 @@
 
                                         $(".selectJenisBayar").on("change", function () {
                                             let id_jns_bayar = this.value;
-                                            console.log(id_jns_bayar);
+                                            // console.log(id_jns_bayar);
                                             let nim_mhs = $("#nim_mhs_bayar_hidden").val();
                                             let jnj_didik = $("#jenjang_mhs_bayar_hidden").val();
                                             let thn_masuk = $("#angkatan_mhs_bayar_hidden").val();
