@@ -155,6 +155,23 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
 
+    public function batchInsertDataMhs($data)
+    {
+        if (empty($data)) {
+            return false;
+        }
+        $this->db->trans_start();
+        foreach ($data as $row) {
+            $this->db->insert('mahasiswa', $row);
+        }
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function getDataMhsByPrody($data = null)
     {
         $this->db->select('id_jur, nm_jur');

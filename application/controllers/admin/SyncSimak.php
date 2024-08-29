@@ -212,28 +212,17 @@ class SyncSimak extends CI_Controller
         // data lokal
         $result = $this->masterdata->getDataMhs()->result_array();
         $jmlMhsLokal = count($result);
-        if ($jmlMhsLokal > 0) {
-            // insert from simak sesuai data update terakhir
-            $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
-                'query' => [
-                    'offset' => $jmlMhsLokal+1
-                ]
-            ]);
-        } else {
-            // insert all from simak
-            $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
-                'query' => [
-                    // 'offset' => $jmlMhsLokal
-                ]
-            ]);
-        }
+        $offset = $jmlMhsLokal > 0 ? $jmlMhsLokal + 1 : 0;
+        $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
+            'query' => [
+                'offset' => $offset
+            ]
+        ]);
         $dataInsert = $DataMhsSimak['mhsdata'];
-        foreach ($dataInsert as $j => $d) {
-            $insert[] = $this->masterdata->insertDataMhs($d);
-        }
+        $insert = $this->masterdata->batchInsertDataMhs($dataInsert);
 
         if ($insert) {
-            $DataMhsLocalNew = count($insert) + $jmlMhsLokal;
+            $DataMhsLocalNew = $jmlMhsLokal + count($dataInsert);
             echo json_encode([
                 'data' => 'success',
                 'count_mhs_local_update' => $DataMhsLocalNew

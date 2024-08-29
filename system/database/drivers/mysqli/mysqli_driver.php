@@ -398,6 +398,9 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	protected function _escape_str($str)
 	{
+		if (is_bool($this->conn_id)) {
+			return FALSE;
+		}
 		return $this->conn_id->real_escape_string($str);
 	}
 
