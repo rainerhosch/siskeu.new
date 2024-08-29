@@ -29,7 +29,7 @@
                         <div class="sm-form mb-5 row" style="margin-top: 5px;">
                             <div class="col-sm-12">
                                 <input type="text" id="nipd" name="nipd" class="form-control validate"
-                                    placeholder="Cari NIM..">
+                                    placeholder="Cari NIM / No Virtual Account">
                                 <span id="notif_search"></span>
                             </div>
                         </div>
@@ -99,6 +99,12 @@
     $("#nipd").on("keypress", function (e) {
         if (e.which == 13) {
             let nipd = $("#nipd").val();
+            if (nipd.length > 9) {
+                nipd = nipd.substring(nipd.length - 9);
+                // nipd = nipd.substring(nipd,nipd.length - 9, 9);
+            }
+
+            console.log(nipd);
             let stts_radio = ``;
             $.ajax({
                 type: "POST",
@@ -108,7 +114,6 @@
                 },
                 dataType: "json",
                 success: function (response) {
-                    // console.log(response);
                     if (response != null) {
                         if ((response.totalKewajiban = 0)) {
                             $(".btn#btn_proses").prop("disabled", true);
@@ -216,7 +221,7 @@
                         $(".input_smt").on('change', function () {
                             let smt = $(this).val();
                             let nipd = $("#nipd").val();
-                            // console.log(smt)
+                            // console.log(nipd)
                             if (smt) {
                                 // alert("Your are a - " + smt);
 
