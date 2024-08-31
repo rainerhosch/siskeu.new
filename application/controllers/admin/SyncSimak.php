@@ -212,12 +212,16 @@ class SyncSimak extends CI_Controller
         // data lokal
         $result = $this->masterdata->getDataMhs()->result_array();
         $jmlMhsLokal = count($result);
-        $offset = $jmlMhsLokal > 0 ? $jmlMhsLokal + 1 : 0;
+        // $offset = $jmlMhsLokal > 0 ? $jmlMhsLokal + 1 : 0;
+        $offset = $jmlMhsLokal;
+        
+        // var_dump($offset);die;
         $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
             'query' => [
                 'offset' => $offset
             ]
         ]);
+        // var_dump($DataMhsSimak);die;
         $dataInsert = $DataMhsSimak['mhsdata'];
         $insert = $this->masterdata->batchInsertDataMhs($dataInsert);
 

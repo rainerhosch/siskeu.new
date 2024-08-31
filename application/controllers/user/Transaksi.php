@@ -459,6 +459,7 @@ class Transaksi extends CI_Controller
                 $dataMhs['jenis_pembayaran'] = $resJnsPembayaran;
                 $dataMhs['thn_smt'] = $cekTahunSmt;
                 $dataMhs['jns_smt'] = $smt_jns;
+                $dataMhs['smt_aktif'] = $smtAktif;
             } else {
                 $dataMhs;
             }

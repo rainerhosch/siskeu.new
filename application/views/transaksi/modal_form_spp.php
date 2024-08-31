@@ -114,6 +114,8 @@
                 },
                 dataType: "json",
                 success: function (response) {
+                    console.log(response)
+                    let smt_aktif = response.smt_aktif;
                     if (response != null) {
                         if ((response.totalKewajiban = 0)) {
                             $(".btn#btn_proses").prop("disabled", true);
@@ -142,13 +144,13 @@
                         html += `<tr>`;
                         html += `<td><label for="input_smt">Semester</label></td>`;
                         html += `<td class="text-center">`;
-                        html += `<select class="form-control input_smt" name="smt" id="smt_1" ${stts_radio}><br>`;
-                        html += `<option value="${response.thn_smt}1"> ( ${response.thn_smt}1 - Ganjil)</option>`;
-                        html += `<option value="${response.thn_smt}2"> ( ${response.thn_smt}2 - Genap)</option>`;
+                        html += `<select class="form-control input_smt" name="smt" id="smt_1" ${stts_radio}>`;
+                        html += `<option value="${response.thn_smt}1" ${response.smt_aktif === `${response.thn_smt}1` ? 'selected' : ''}> ( ${response.thn_smt}1 - Ganjil)</option>`;
+                        html += `<option value="${response.thn_smt}2" ${response.smt_aktif === `${response.thn_smt}2` ? 'selected' : ''}> ( ${response.thn_smt}2 - Genap)</option>`;
                         if (response.data_tg.length === 0) {
                             html += `<hr>`
-                            html += `<option value="${(response.thn_smt * 1) + 1}1"> ( ${(response.thn_smt * 1) + 1}1 - Ganjil)</option>`;
-                            html += `<option value="${(response.thn_smt * 1) + 1}2"> ( ${(response.thn_smt * 1) + 1}2 - Genap)</option>`;
+                            html += `<option value="${(response.thn_smt * 1) + 1}1" ${response.smt_aktif === `${(response.thn_smt * 1) + 1}1` ? 'selected' : ''}> ( ${(response.thn_smt * 1) + 1}1 - Ganjil)</option>`;
+                            html += `<option value="${(response.thn_smt * 1) + 1}2" ${response.smt_aktif === `${(response.thn_smt * 1) + 1}2` ? 'selected' : ''}> ( ${(response.thn_smt * 1) + 1}2 - Genap)</option>`;
                         } else {
                             let check_tg = true;
                             $.each(response.data_tg, function (i, value) {
@@ -218,6 +220,7 @@
                                 $(".detail_trf").remove();
                             }
                         });
+
                         $(".input_smt").on('change', function () {
                             let smt = $(this).val();
                             let nipd = $("#nipd").val();
