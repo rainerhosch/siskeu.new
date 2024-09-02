@@ -269,6 +269,7 @@
     <script>
         var e = document.getElementById("single-select-field");
         var dataSelected = e.value;
+        console.log(dataSelected);
         $('#single-select-field').select2({
             // theme: "bootstrap-3",
             width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',

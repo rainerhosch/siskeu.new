@@ -48,16 +48,34 @@ class DashboardChartV2 extends CI_Controller
             $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
             $smt_befor = ($cek_ganjil_genap == '1') ? ($tahun_smt_befor - 1) . '2' : $tahun_smt_befor . '1';
 
+            // var_dump($tahun_smt_befor);
+            // var_dump($data_post['filter']);
+            // var_dump($smtAktifRes['id_smt']);
+            // var_dump(date('Y').'1' == $smtAktifRes['id_smt']);
+            // die;
+
             // Ambil data KRS mahasiswa
             if ($data_post['filter'] == '2') {
-                $filter_smt = $smtAktifRes['id_smt'] - 1;
+                $filter_smt = $smt_befor;
             } else {
                 $filter_smt = $smtAktifRes['id_smt'];
             }
+
             $data_krs = $this->krs->getDataKrsMhs([
                 'kn.id_tahun_ajaran' => $filter_smt,
                 'm.no_transkip_nilai' => null
             ])->result_array();
+            
+            if(date('Y').'1' == $smtAktifRes['id_smt']){
+                $data_new = $this->masterdata->getDataMhs(['tahun_masuk' => date('Y')])->result_array();
+                $data_krs = array_merge($data_krs, $data_new);
+            }
+
+            // echo '<pre>';
+            // var_dump($data_krs);
+            // var_dump($data_new);
+            // echo '</pre>';
+            // die;
 
             // Siapkan array untuk hasil pengelompokan
             $grouped_by = [];
