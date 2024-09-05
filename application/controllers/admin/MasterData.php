@@ -73,6 +73,39 @@ class MasterData extends CI_Controller
         $data['content'] = 'admin/data_mahasiswa';
         $this->load->view('template', $data);
     }
+    public function KelolaDB()
+    {
+        $data['title'] = 'Master Data';
+        $data['page'] = 'Kelola DB';
+        $data['content'] = 'admin/v_kelola_db';
+        $this->load->view('template', $data);
+    }
+
+    public function backupDatabase()
+    {
+        // if ($this->input->is_ajax_request()) {
+        date_default_timezone_set("Asia/Jakarta");
+        $this->load->dbutil();
+        $prefs = array(
+            'format' => 'zip', // gzip, zip, txt
+            'filename' => 'simak_new_siskeu.sql',
+        );
+
+        $backup = $this->dbutil->backup($prefs);
+        $db_name = 'backup_database_siskeu_new__' . date("d-m-Y__H-i-s") . '.zip'; // nama backup dalam bentuk zip
+        $save = './backup/db/' . $db_name; //folder tempat database disimpan
+
+        $this->load->helper('file'); // load helper file
+        write_file($save, $backup);
+
+        $this->load->helper("download"); // load helper download
+        force_download($db_name, $backup);
+
+        echo json_encode(['status' => 'success', 'message' => 'Database downloaded successfully.']);
+        // } else {
+        //     show_404();
+        // }
+    }
 
     public function GetDataMhs()
     {
