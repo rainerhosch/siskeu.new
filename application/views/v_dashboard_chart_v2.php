@@ -310,6 +310,9 @@
                 let total_belum_bayar = 0;
 
                 $.each(response.data, function (i, val) {
+                    if (val.trx > val.jml_mhs) {
+                        val.jml_mhs = val.trx;
+                    }
                     total_mhs += val.jml_mhs;
                     total_all_trx += val.trx;
                     total_dispen += val.data_dispen;
