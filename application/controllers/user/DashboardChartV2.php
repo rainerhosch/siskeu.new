@@ -63,8 +63,14 @@ class DashboardChartV2 extends CI_Controller
 
             $data_krs = $this->krs->getDataKrsMhs([
                 'kn.id_tahun_ajaran' => $filter_smt,
-                'm.no_transkip_nilai' => null
+                'm.no_transkip_nilai' => null,
+                'm.tahun_masuk >' => '2017'
             ])->result_array();
+            // echo '<pre>';
+            // var_dump($this->db->last_query());
+            // var_dump($data_krs);
+            // echo '</pre>';
+            // die;
             
             if(date('Y').'1' == $smtAktifRes['id_smt']){
                 $data_new = $this->masterdata->getDataMhs(['tahun_masuk' => date('Y')])->result_array();
