@@ -1156,10 +1156,15 @@ class Transaksi extends CI_Controller
                 'tanggal' => $tgl,
                 'nim' => $nimMhs,
                 'semester' => $smtBayar,
-                'bayar_via' => $bayar_via
+                'bayar_via' => $bayar_via,
+                'substr(jam, 1,2) =' => substr($jam,0,2),
+                'user_id' => $this->session->userdata('id_user')
             ];
+
             $trx_duplicate = 0;
             $validasi_trx = $this->transaksi->getDataTransaksiOnly($condition_dup)->row_array();
+            // var_dump($this->db->last_query());
+            // var_dump($condition_dup);die;
             if ($validasi_trx != null) {
                 $validasi_dtrx = $this->transaksi->getDataDetailTransaksiOnly(['id_transaksi' => $validasi_trx['id_transaksi']])->result_array();
                 foreach ($validasi_dtrx as $i => $vdtx) {
@@ -1596,8 +1601,12 @@ class Transaksi extends CI_Controller
             $condition_dup = [
                 'tanggal' => $tgl,
                 'nim' => $nimMhs,
-                'semester' => $smtAktif
+                'semester' => $smtAktif,
+                'substr(jam, 1,2) =' => substr($jam,0,2),
+                'user_id' => $this->session->userdata('id_user')
             ];
+
+            // var_dump($condition_dup);
             $trx_duplicate = 0;
             $validasi_trx = $this->transaksi->getDataTransaksiOnly($condition_dup)->row_array();
             if ($validasi_trx != null) {
