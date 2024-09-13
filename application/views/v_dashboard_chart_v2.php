@@ -97,6 +97,7 @@
                         <option value="3">Cicilan 2</option>
                         <option value="4">Cicilan 3</option>
                     </select>
+                    <button class="btn btn-success btn-xs px-10"><i class="fa fa-print"></i> | Data Belum Bayar</button>
                 </div>
             </div>
             <!-- <div class="div_loading_table1">
