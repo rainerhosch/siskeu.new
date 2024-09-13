@@ -65,7 +65,7 @@ class DashboardChartV2 extends CI_Controller
                 'kn.id_tahun_ajaran' => $filter_smt,
                 'm.no_transkip_nilai' => null,
                 'm.tgl_sk_yudisium' => null,
-                'm.tahun_masuk >' => '2017'
+                'm.tahun_masuk >' => '2016'
             ])->result_array();
             // echo '<pre>';
             // var_dump($this->db->last_query());
