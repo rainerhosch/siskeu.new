@@ -60,9 +60,11 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="progress progress-striped active" id="progress_sync_mhs" style="display: none;">
-                            <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-info" id="bar_sync_mhs" role="progressbar"
+                                aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <button class="btn btn-primary btn-xs" id="btn_sync_mhs" disabled><i class="fa fa-sync" id="icon_sync_mhs"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_mhs" disabled><i class="fa fa-sync"
+                                id="icon_sync_mhs"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -102,9 +104,11 @@
                 <div class="row">
                     <div class="col-sm-12 text-center">
                         <div class="progress progress-striped active" id="progress_sync_krs" style="display: none;">
-                            <div class="progress-bar progress-bar-info" id="bar_sync_krs" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-info" id="bar_sync_krs" role="progressbar"
+                                aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <button class="btn btn-primary btn-xs" id="btn_sync_krs" disabled><i class="fa fa-sync" id="icon_sync_krs"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_krs" disabled><i class="fa fa-sync"
+                                id="icon_sync_krs"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -149,7 +153,8 @@
                                 <div class="bar"></div>
                                 <div class="percent">0%</div>
                             </div> -->
-                        <button class="btn btn-primary btn-xs" id="btn_sync_smt_aktif" disabled><i class="fa fa-sync" id="icon_sync_smt_aktif"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_smt_aktif" disabled><i class="fa fa-sync"
+                                id="icon_sync_smt_aktif"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -188,7 +193,8 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary btn-xs" id="btn_sync_reg_mhs" disabled><i class="fa fa-sync" id="icon_sync_reg_mhs"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_reg_mhs" disabled><i class="fa fa-sync"
+                                id="icon_sync_reg_mhs"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -227,7 +233,8 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary btn-xs" id="btn_sync_reg_ujian" disabled><i class="fa fa-sync" id="icon_sync_reg_ujian"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_reg_ujian" disabled><i class="fa fa-sync"
+                                id="icon_sync_reg_ujian"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -268,7 +275,8 @@
                 <hr>
                 <div class="row">
                     <div class="col-sm-12 text-center">
-                        <button class="btn btn-primary btn-xs" id="btn_sync_dataTrx" disabled><i class="fa fa-sync" id="icon_sync_dataTrx"></i> Sinkron Data</button>
+                        <button class="btn btn-primary btn-xs" id="btn_sync_dataTrx" disabled><i class="fa fa-sync"
+                                id="icon_sync_dataTrx"></i> Sinkron Data</button>
                     </div>
                 </div>
             </div>
@@ -353,25 +361,25 @@
 
 </div>
 <script>
-    $(document).ready(function() {
-        $('#btn_sync_dashboardSimak').on('click', function() {
+    $(document).ready(function () {
+        $('#btn_sync_dashboardSimak').on('click', function () {
             // var data = `<?= $this->session->userdata('username'); ?>`
             let url = `https://simak.wastu.digital/admin/DashboardSiskeu/Auth?token=tehpoci`;
             window.open(url);
         });
 
-        $('#btn_excel_kms').on('click', function() {
+        $('#btn_excel_kms').on('click', function () {
             let url = `/siskeu.new/excel-kms`;
             window.open(url);
         });
-        $('#btn_excel_cicilan').on('click', function() {
+        $('#btn_excel_cicilan').on('click', function () {
             alert('Feature not active.')
         });
         $.ajax({
             type: "GET",
             url: 'sync-simak/getCountData',
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 $('.mhs_local_label span').text(response.count_mhs_local);
                 $('.mhs_simak_label span').text(response.count_mhs_simak);
@@ -395,15 +403,17 @@
                 }
 
 
-                if ($('.krs_local_label span').text() != $('.krs_simak_label span').text()) {
-                    if ($('.krs_local_label span').text() < $('.krs_simak_label span').text()) {
+                if (parseInt($('.krs_local_label span').text()) != parseInt($('.krs_simak_label span').text())) {
+                    // console.log(parseInt($('.krs_local_label span').text()))
+                    // console.log(parseInt($('.krs_simak_label span').text()))
+                    if (parseInt($('.krs_local_label span').text()) < parseInt($('.krs_simak_label span').text())) {
                         $('.btn#btn_sync_krs').attr('disabled', false);
                     }
                 } else {
                     $('.btn#btn_sync_krs').attr('disabled', true);
                 }
 
-                $('.btn#btn_sync_krs').click(function() {
+                $('.btn#btn_sync_krs').click(function () {
                     $('#icon_sync_krs').attr('class', 'fa fa-sync fa-spin');
                     let awal = $('.krs_local_label span').text();
                     let total = $('.krs_simak_label span').text();
@@ -413,19 +423,23 @@
                         type: 'POST', //Method type
                         url: 'sync-simak/SyncDataKrs',
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             // console.log(data);
                             if (data.data == 'success') {
                                 $('#icon_sync_krs').attr('class', 'fa fa-sync');
                                 // $('#progress_sync_krs').css('display', 'none');
                                 // $('.btn#btn_sync_krs').show();
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $('#success_message').html('');
                                 }, 5000);
                                 $('.krs_local_label span').text(data.count_krs_local_update);
-                                if ($('.mhs_local_label span').text() === $('.mhs_simak_label span').text()) {
-                                    $('.btn#btn_sync_krs').prop('disabled', true);
+                                if (parseInt($('.mhs_local_label span').text()) === parseInt($('.mhs_simak_label span').text())) {
+                                // if (data.count_krs_local_update == parseInt($('.mhs_simak_label span').text())) {
+                                    $('.btn#btn_sync_krs').attr('disabled', true);
+                                } else {
+                                    $('#icon_sync_krs').attr('class', 'fa fa-sync');
+                                    $('.btn#btn_sync_krs').attr('disabled', false);
                                 }
                             }
                         }
@@ -433,7 +447,7 @@
                 });
 
 
-                $('.btn#btn_sync_mhs').click(function() {
+                $('.btn#btn_sync_mhs').click(function () {
                     $('#icon_sync_mhs').attr('class', 'fa fa-sync fa-spin');
 
                     let awal = $('.mhs_local_label span').text();
@@ -444,14 +458,14 @@
                         type: 'POST', //Method type
                         url: 'sync-simak/SyncDataMhs',
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             // console.log(data);
                             if (data.data == 'success') {
                                 $('#icon_sync_mhs').attr('class', 'fa fa-sync');
                                 // $('#progress_sync_mhs').css('display', 'none');
                                 // $('.btn#btn_sync_mhs').show();
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $('#success_message').html('');
                                 }, 5000);
                                 $('.mhs_local_label span').text(data.count_mhs_local_update);
@@ -468,19 +482,19 @@
                 } else {
                     $('.btn#btn_sync_smt_aktif').attr('disabled', true);
                 }
-                $('.btn#btn_sync_smt_aktif').click(function() {
+                $('.btn#btn_sync_smt_aktif').click(function () {
                     // lest code...
                     $('#icon_sync_smt_aktif').attr('class', 'fa fa-sync fa-spin');
                     $.ajax({
                         type: 'POST', //Method type
                         url: 'sync-simak/SyncTahunAkademik',
                         dataType: 'json',
-                        success: function(data) {
+                        success: function (data) {
                             // console.log(data);
                             if (data.data == 'success') {
                                 $('#icon_sync_smt_aktif').attr('class', 'fa fa-sync');
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $('#success_message').html('');
                                 }, 5000);
                                 $('.sm_active_local_label span').text(data.semester_aktif_local_update);
@@ -493,18 +507,18 @@
                 if ($('.reg_mhs_local_label span').text() != $('.reg_mhs_simak_label span').text()) {
                     $('.btn#btn_sync_reg_mhs').attr('disabled', false);
                 }
-                $('.btn#btn_sync_reg_mhs').click(function() {
+                $('.btn#btn_sync_reg_mhs').click(function () {
                     $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync fa-spin');
                     $.ajax({
                         type: 'POST', //Method type
                         url: 'sync-simak/SyncRegMhs',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             // console.log(response);
                             if (response.status == 200) {
                                 $('#icon_sync_reg_mhs').attr('class', 'fa fa-sync');
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $('#success_message').html('');
                                 }, 5000);
                                 if (response.tipe == 'simak') {
@@ -522,18 +536,18 @@
                 if ($('.reg_ujian_local_label span').text() != $('.reg_ujian_simak_label span').text()) {
                     $('.btn#btn_sync_reg_ujian').attr('disabled', false);
                 }
-                $('.btn#btn_sync_reg_ujian').click(function() {
+                $('.btn#btn_sync_reg_ujian').click(function () {
                     $('#icon_sync_reg_ujian').attr('class', 'fa fa-sync fa-spin');
                     $.ajax({
                         type: 'POST', //Method type
                         url: 'sync-simak/SyncRegUjian',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             // console.log(response);
                             if (response.status == 200) {
                                 $('#icon_sync_reg_ujian').attr('class', 'fa fa-sync');
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $('#success_message').html('');
                                 }, 5000);
                                 if (response.tipe == 'simak') {
@@ -551,18 +565,18 @@
                 if ($('.dataTrx_local_label span').text() != $('.dataTrx_simak_label span').text()) {
                     $('.btn#btn_sync_dataTrx').attr('disabled', false);
                 }
-                $('.btn#btn_sync_dataTrx').click(function() {
+                $('.btn#btn_sync_dataTrx').click(function () {
                     $('#icon_sync_dataTrx').attr('class', 'fa fa-sync fa-spin');
                     $.ajax({
                         type: 'POST', //Method type
                         url: 'sync-simak/DataTrxSiskeuV2',
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             console.log(response);
                             if (response.status == true) {
                                 $('#icon_sync_dataTrx').attr('class', 'fa fa-sync');
                                 $('#success_message').html("<div class='alert alert-success alert-dismissable'><h4><i class='fa fa-check-circle'></i> Success</h4> Syncron <a href='javascript:void(0)' class='alert-link'>data</a>!</div>");
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     $('#success_message').html('');
                                 }, 5000);
                                 if (response.action == 'simak') {

@@ -214,7 +214,7 @@ class SyncSimak extends CI_Controller
         $jmlMhsLokal = count($result);
         // $offset = $jmlMhsLokal > 0 ? $jmlMhsLokal + 1 : 0;
         $offset = $jmlMhsLokal;
-        
+
         // var_dump($offset);die;
         $DataMhsSimak = $this->api->mGet('MahasiswaForSiskeu', [
             'query' => [
@@ -232,45 +232,50 @@ class SyncSimak extends CI_Controller
                 'count_mhs_local_update' => $DataMhsLocalNew
             ]);
         } else {
-            echo json_encode(['data' => 'error']);
+            echo json_encode([
+                'data_for_insert' => $dataInsert,
+                'data' => $insert,
+                'msg' => 'error'
+            ]);
         }
     }
 
     public function SyncDataKrs()
     {
         // data lokal
-        $result = $this->aktivasi->cekKrsMhsLokal()->result_array();
-        $jmlKrsLokal = count($result);
-        if ($jmlKrsLokal > 0) {
-            // insert from simak sesuai data update terakhir
-            $DataKrsSimak = $this->api->mGet('KrsNew', [
-                'query' => [
-                    'offset' => $jmlKrsLokal
-                    // 'limit' => 1000
-                ]
-            ]);
-        } else {
-            // insert all from simak
-            $DataKrsSimak = $this->api->mGet('KrsNew', [
-                'query' => [
-                    // 'offset' => $jmlKrsLokal
-                ]
-            ]);
-        }
+        $jmlKrsLokal = $this->aktivasi->cekKrsMhsLokal()->num_rows();
+        // $jmlKrsLokal = count($result);
+        // $offset = $jmlKrsLokal > 0 ? $jmlKrsLokal + 1 : $jmlKrsLokal;
+        $offset = $jmlKrsLokal;
+        $DataKrsSimak = $this->api->mGet('KrsNew', [
+            'query' => [
+                'offset' => $offset,
+                'limit' => 1
+                // 'limit' => 100000
+            ]
+        ]);
         $dataInsert = $DataKrsSimak['krs_new'];
         // foreach ($dataInsert as $j => $d) {
         //     $insert[] = $this->aktivasi->insertKrsToLocal($d);
         // }
         $insert = $this->aktivasi->batchInsertKrs($dataInsert);
+        // $insert = true;
 
         if ($insert) {
-            $DataKrsLocalNew = count($insert) + $dataInsert;
+            $DataKrsLocalNew = count($dataInsert) + $jmlKrsLokal;
             echo json_encode([
                 'data' => 'success',
-                'count_krs_local_update' => $DataKrsLocalNew
+                'count_krs_local_update' => $DataKrsLocalNew,
+                'offset' => $jmlKrsLokal,
+                'data_for_insert' => $DataKrsSimak
             ]);
         } else {
-            echo json_encode(['data' => 'error']);
+            echo json_encode([
+                'data_for_insert' => $DataKrsSimak,
+                'offset' => $jmlKrsLokal,
+                'data' => $insert,
+                'msg' => 'error'
+            ]);
         }
     }
 
