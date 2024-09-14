@@ -250,8 +250,8 @@ class SyncSimak extends CI_Controller
         $DataKrsSimak = $this->api->mGet('KrsNew', [
             'query' => [
                 'offset' => $offset,
-                'limit' => 1
-                // 'limit' => 100000
+                // 'limit' => 1
+                'limit' => 100000
             ]
         ]);
         $dataInsert = $DataKrsSimak['krs_new'];
