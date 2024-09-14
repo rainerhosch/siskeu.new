@@ -67,6 +67,24 @@ class M_aktivasi_mhs extends CI_Model
             return 'gagal insert lokal';
         }
     }
+
+    public function batchInsertKrs($data)
+    {
+        if (empty($data)) {
+            return false;
+        }
+        $this->db->trans_start();
+        foreach ($data as $row) {
+            $this->db->insert('krs_new', $row);
+        }
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function cekKrsMhsSebelumnyaLokal($data = null)
     {
         $this->db->select('id_krs, nipd, id_tahun_ajaran');

@@ -38,116 +38,122 @@ class DashboardChartV2 extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             $data_post = $this->input->post();
-            // Ambil data semester aktif
-            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
-            // $smtAktifRes['id_smt'] = '20222';
-            $res['data'] = array();
-
-            // Tentukan semester sebelumnya
-            $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
-            $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
-            $smt_befor = ($cek_ganjil_genap == '1') ? ($tahun_smt_befor - 1) . '2' : $tahun_smt_befor . '1';
-
-            // var_dump($tahun_smt_befor);
-            // var_dump($data_post['filter']);
-            // var_dump($smtAktifRes['id_smt']);
-            // var_dump(date('Y').'1' == $smtAktifRes['id_smt']);
-            // die;
-
-            // Ambil data KRS mahasiswa
-            if ($data_post['filter'] == '2') {
-                $filter_smt = $smt_befor;
-            } else {
-                $filter_smt = $smtAktifRes['id_smt'];
-            }
-
-            $data_krs = $this->krs->getDataKrsMhs([
-                'kn.id_tahun_ajaran' => $filter_smt,
-                'm.no_transkip_nilai' => null,
-                'm.tgl_sk_yudisium' => null,
-                'm.tahun_masuk >' => '2016'
-            ])->result_array();
-            // echo '<pre>';
-            // var_dump($this->db->last_query());
-            // var_dump($data_krs);
-            // echo '</pre>';
-            // die;
-            
-            if(date('Y').'1' == $smtAktifRes['id_smt']){
-                $data_new = $this->masterdata->getDataMhs(['tahun_masuk' => date('Y')])->result_array();
-                $data_krs = array_merge($data_krs, $data_new);
-            }
-
-            // echo '<pre>';
-            // var_dump($data_krs);
-            // var_dump($data_new);
-            // echo '</pre>';
-            // die;
-
-            // Siapkan array untuk hasil pengelompokan
-            $grouped_by = [];
-
-            // Proses pengelompokan dan hitung data dispen
-            foreach ($data_krs as $mhs) {
-                $tahun_masuk = $mhs['tahun_masuk'];
-                if (!isset($grouped_by[$tahun_masuk])) {
-                    $grouped_by[$tahun_masuk] = [
-                        'tahun_masuk' => $tahun_masuk,
-                        'list_mhs' => [],
-                        'jml_mhs' => 0,
-                        'data_dispen' => 0,
-                        'trx' => 0
-                    ];
-                }
-
-                $grouped_by[$tahun_masuk]['list_mhs'][] = $mhs;
-
-                // Tambahkan data mahasiswa ke dalam grup
-                $grouped_by[$tahun_masuk]['jml_mhs']++;
-
-                // Hitung data dispen per mahasiswa
-                if ($data_post['filter'] == '2') {
-                    $jenis_dispen = '1';
-                }
-                if ($data_post['filter'] == '3') {
-                    $jenis_dispen = '3';
-                }
-                if ($data_post['filter'] == '4') {
-                    $jenis_dispen = '4';
-                }
-                $grouped_by[$tahun_masuk]['data_dispen'] += $this->aktivasi->getDataDispenMhsV2([
-                    'd.tahun_akademik' => $smtAktifRes['id_smt'],
-                    'm.nipd' => $mhs['nipd'],
-                    'd.tg_dispen >' => 0,
-                    'd.status' => 0,
-                    'd.jenis_dispen' => $jenis_dispen
-                ])->num_rows();
-            }
-
-            // Hitung data transaksi per tahun masuk
-            foreach ($grouped_by as $tahun_masuk => &$data) {
-                $data['trx'] = $this->masterdata->getDataPembayaranChart([
-                    'm.tahun_masuk' => $tahun_masuk,
-                    'td.id_jenis_pembayaran' => $data_post['filter'],
-                    't.semester' => $smtAktifRes['id_smt'],
-                    't.uang_masuk' => 1,
-                ])->num_rows();
-            }
-
-            // Memasukkan hasil ke dalam res['data']
-            $res['data'] = array_values($grouped_by);
-            // Sortir data secara descending berdasarkan tahun_masuk
-            usort($res['data'], function ($a, $b) {
-                return $b['tahun_masuk'] - $a['tahun_masuk'];
-            });
-
-            $res['smt_aktif'] = $smtAktifRes['id_smt'];
-            $res['smt_befor'] = $smt_befor;
-            $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
+            $res = $this->getDataProgressPembayaranSPP($data_post);
             echo json_encode($res);
         } else {
             show_404();
         }
+    }
+
+    private function getDataProgressPembayaranSPP($data_post)
+    {
+        // Ambil data semester aktif
+        $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+        // $smtAktifRes['id_smt'] = '20222';
+        $res['data'] = array();
+
+        // Tentukan semester sebelumnya
+        $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
+        $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
+        $smt_befor = ($cek_ganjil_genap == '1') ? ($tahun_smt_befor - 1) . '2' : $tahun_smt_befor . '1';
+
+        // var_dump($tahun_smt_befor);
+        // var_dump($data_post['filter']);
+        // var_dump($smtAktifRes['id_smt']);
+        // var_dump(date('Y').'1' == $smtAktifRes['id_smt']);
+        // die;
+
+        // Ambil data KRS mahasiswa
+        if ($data_post['filter'] == '2') {
+            $filter_smt = $smt_befor;
+        } else {
+            $filter_smt = $smtAktifRes['id_smt'];
+        }
+
+        $data_krs = $this->krs->getDataKrsMhs([
+            'kn.id_tahun_ajaran' => $filter_smt,
+            'm.no_transkip_nilai' => null,
+            'm.tgl_sk_yudisium' => null,
+            'm.tahun_masuk >' => '2016'
+        ])->result_array();
+        // echo '<pre>';
+        // var_dump($this->db->last_query());
+        // var_dump($data_krs);
+        // echo '</pre>';
+        // die;
+        
+        if(date('Y').'1' == $smtAktifRes['id_smt']){
+            $data_new = $this->masterdata->getDataMhs(['tahun_masuk' => date('Y')])->result_array();
+            $data_krs = array_merge($data_krs, $data_new);
+        }
+
+        // Siapkan array untuk hasil pengelompokan
+        $grouped_by = [];
+
+        // Proses pengelompokan dan hitung data dispen
+        foreach ($data_krs as $mhs) {
+            $tahun_masuk = $mhs['tahun_masuk'];
+            if (!isset($grouped_by[$tahun_masuk])) {
+                $grouped_by[$tahun_masuk] = [
+                    'tahun_masuk' => $tahun_masuk,
+                    'list_mhs' => [],
+                    'jml_mhs' => 0,
+                    'data_dispen' => 0,
+                    'trx' => 0
+                ];
+            }
+
+            $data_kelas = $this->masterdata->getDataKelas(['id_kelas'=>$mhs['id_kelas']])->row_array();
+            $mhs['nama_kelas'] = $data_kelas['nama_kelas'];
+
+            
+
+            $grouped_by[$tahun_masuk]['list_mhs'][] = $mhs;
+
+            // Tambahkan data mahasiswa ke dalam grup
+            $grouped_by[$tahun_masuk]['jml_mhs']++;
+
+            // Hitung data dispen per mahasiswa
+            if ($data_post['filter'] == '2') {
+                $jenis_dispen = '1';
+            }
+            if ($data_post['filter'] == '3') {
+                $jenis_dispen = '3';
+            }
+            if ($data_post['filter'] == '4') {
+                $jenis_dispen = '4';
+            }
+            $grouped_by[$tahun_masuk]['data_dispen'] += $this->aktivasi->getDataDispenMhsV2([
+                'd.tahun_akademik' => $smtAktifRes['id_smt'],
+                'm.nipd' => $mhs['nipd'],
+                'd.tg_dispen >' => 0,
+                'd.status' => 0,
+                'd.jenis_dispen' => $jenis_dispen
+            ])->num_rows();
+        }
+
+        // Hitung data transaksi per tahun masuk
+        foreach ($grouped_by as $tahun_masuk => &$data) {
+            $data['trx'] = $this->masterdata->getDataPembayaranChart([
+                'm.tahun_masuk' => $tahun_masuk,
+                'td.id_jenis_pembayaran' => $data_post['filter'],
+                't.semester' => $smtAktifRes['id_smt'],
+                't.uang_masuk' => 1,
+            ])->num_rows();
+        }
+
+        // Memasukkan hasil ke dalam res['data']
+        $res['data'] = array_values($grouped_by);
+        // Sortir data secara descending berdasarkan tahun_masuk
+        usort($res['data'], function ($a, $b) {
+            return $b['tahun_masuk'] - $a['tahun_masuk'];
+        });
+
+        $res['smt_aktif'] = $smtAktifRes['id_smt'];
+        $res['smt_befor'] = $smt_befor;
+        $res['tahun_smt_aktif'] = substr($smtAktifRes['id_smt'], 0, 4);
+        return $res;
+
     }
 
     public function getDataPembayaranYear()

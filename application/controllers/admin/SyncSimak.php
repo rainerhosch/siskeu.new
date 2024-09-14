@@ -245,8 +245,8 @@ class SyncSimak extends CI_Controller
             // insert from simak sesuai data update terakhir
             $DataKrsSimak = $this->api->mGet('KrsNew', [
                 'query' => [
-                    'offset' => $jmlKrsLokal,
-                    'limit' => 1000
+                    'offset' => $jmlKrsLokal
+                    // 'limit' => 1000
                 ]
             ]);
         } else {
@@ -258,12 +258,13 @@ class SyncSimak extends CI_Controller
             ]);
         }
         $dataInsert = $DataKrsSimak['krs_new'];
-        foreach ($dataInsert as $j => $d) {
-            $insert[] = $this->aktivasi->insertKrsToLocal($d);
-        }
+        // foreach ($dataInsert as $j => $d) {
+        //     $insert[] = $this->aktivasi->insertKrsToLocal($d);
+        // }
+        $insert = $this->aktivasi->batchInsertKrs($dataInsert);
 
         if ($insert) {
-            $DataKrsLocalNew = count($insert) + $jmlKrsLokal;
+            $DataKrsLocalNew = count($insert) + $dataInsert;
             echo json_encode([
                 'data' => 'success',
                 'count_krs_local_update' => $DataKrsLocalNew
