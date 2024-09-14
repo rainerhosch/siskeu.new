@@ -81,10 +81,11 @@ class DashboardChartV2 extends CI_Controller
         // var_dump($data_krs);
         // echo '</pre>';
         // die;
-        
-        if(date('Y').'1' == $smtAktifRes['id_smt']){
-            $data_new = $this->masterdata->getDataMhs(['tahun_masuk' => date('Y')])->result_array();
-            $data_krs = array_merge($data_krs, $data_new);
+        if ($data_post['filter'] == '2') {
+            if (date('Y') . '1' == $smtAktifRes['id_smt']) {
+                $data_new = $this->masterdata->getDataMhs(['tahun_masuk' => date('Y')])->result_array();
+                $data_krs = array_merge($data_krs, $data_new);
+            }
         }
 
         // Siapkan array untuk hasil pengelompokan
@@ -103,10 +104,10 @@ class DashboardChartV2 extends CI_Controller
                 ];
             }
 
-            $data_kelas = $this->masterdata->getDataKelas(['id_kelas'=>$mhs['id_kelas']])->row_array();
+            $data_kelas = $this->masterdata->getDataKelas(['id_kelas' => $mhs['id_kelas']])->row_array();
             $mhs['nama_kelas'] = $data_kelas['nama_kelas'];
 
-            
+
 
             $grouped_by[$tahun_masuk]['list_mhs'][] = $mhs;
 
