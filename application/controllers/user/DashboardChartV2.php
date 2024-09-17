@@ -47,6 +47,23 @@ class DashboardChartV2 extends CI_Controller
 
     private function getDataProgressPembayaranSPP($data_post)
     {
+
+        /*
+        ** QUERY TO GET DATA BELUM BAYAR
+
+                SELECT mahasiswa.nipd AS 'nim', mahasiswa.nm_pd AS 'nama', mahasiswa.nm_jur AS 'prodi', wastu_kelas.nama_kelas AS 'kelas', mahasiswa.tahun_masuk AS 'angkatan'
+        FROM `mahasiswa`
+        JOIN wastu_kelas ON wastu_kelas.id_kelas=mahasiswa.id_kelas
+        WHERE nipd NOT IN (SELECT transaksi.nim
+        FROM transaksi
+        JOIN transaksi_detail ON transaksi_detail.id_transaksi=transaksi.id_transaksi
+        WHERE substr(transaksi.nim, 1,2)='24' AND transaksi_detail.id_jenis_pembayaran=2 AND transaksi.semester=20241 AND transaksi.uang_masuk=1
+        GROUP BY transaksi.nim  
+        ORDER BY `transaksi`.`id_transaksi` DESC) AND tahun_masuk=2024;
+        */
+
+
+
         // Ambil data semester aktif
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         // $smtAktifRes['id_smt'] = '20222';
