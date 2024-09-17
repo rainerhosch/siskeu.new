@@ -81,11 +81,11 @@ class DashboardChartV2 extends CI_Controller
             ])->result_array();
             $data_krs = [];
             $no = 0;
-            echo '<pre>';
-            var_dump($this->db->last_query());
-            // var_dump($data_krs);
-            echo '</pre>';
-            die;
+            // echo '<pre>';
+            // var_dump($this->db->last_query());
+            // // var_dump($data_krs);
+            // echo '</pre>';
+            // die;
 
             foreach($data_reg_ujian as $i => $val){
                 // $data_get = $this->krs->getDataKrsMhs([
