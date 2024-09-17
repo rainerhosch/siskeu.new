@@ -115,16 +115,15 @@
                                 <!-- <span class="smt_befor"></span> -->
                             </small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
-                                style="font-size:1rem; font-weight: 700;">SUDAH MELUNASI</br>PEMBAYARAN SPP</small>
+                                style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
-                                style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
-                        </th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
+                                style="font-size:1rem; font-weight: 700;">SUDAH MELUNASI</br>PEMBAYARAN SPP</small></th>
                         <th class="text-center" style="font-size:1.2rem;font-weight: 700;">PERSENTASE</br><small
                                 style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN PEMBAYARAN</small></th>
                         <th class="text-center" style="font-size:1.2rem;font-weight: 700;">PERSENTASE</br><small
@@ -324,10 +323,10 @@
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center"><strong>${val.tahun_masuk}</strong><br><small style="font-size:0.85rem;;">${status}</small></td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
-                    html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
-                    html += `<td class="text-center">${val.data_dispen}</td>`; //betul
                     html += `<td class="text-center">${val.trx}</td>`;
+                    html += `<td class="text-center">${val.data_dispen}</td>`; //betul
                     html += `<td class="text-center">${val.jml_mhs - val.trx}</td>`;
+                    html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%</div></div>`;
@@ -343,10 +342,10 @@
                 html += `<td class="text-center" style="font-weight: 700;">Total</td>`;
                 html += `<td class="text-center"></td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_mhs}</td>`;
-                html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
-                html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
                 html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
+                html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
                 html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
+                html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
                 html += `<td class="text-center">`;
                 html += `<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx / total_mhs) * 100) + `%</div></div>`;
