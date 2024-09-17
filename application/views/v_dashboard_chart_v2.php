@@ -324,10 +324,10 @@
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center"><strong>${val.tahun_masuk}</strong><br><small style="font-size:0.85rem;;">${status}</small></td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
-                    html += `<td class="text-center">${val.trx}</td>`;
+                    html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
                     html += `<td class="text-center">${val.data_dispen}</td>`; //betul
                     html += `<td class="text-center">${val.jml_mhs - val.trx}</td>`;
-                    html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
+                    html += `<td class="text-center">${val.trx}</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%</div></div>`;
