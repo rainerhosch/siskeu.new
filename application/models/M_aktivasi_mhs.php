@@ -26,16 +26,11 @@ class M_aktivasi_mhs extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('reg_ujian');
-        if ($data != null) {
-            $this->db->where($data);
-            // foreach ($data as $i => $val) {
-                if ($data['aktif'] == '1') {
-                    $this->db->or_where(['aktif' => '3']);
-                } else {
-                    $this->db->or_where(['aktif' => '4']);
-                }
-            // }
-        }
+        $this->db->where('tahun', '20241');
+        $this->db->group_start();
+        $this->db->where('aktif', '1');
+        $this->db->or_where('aktif', '3');
+        $this->db->group_end();
         $this->db->group_by('reg_ujian.nim');
         return $this->db->get();
     }
