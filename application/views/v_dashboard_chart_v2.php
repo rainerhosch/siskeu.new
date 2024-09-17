@@ -296,7 +296,7 @@
                 // })
             },
             success: function (response) {
-                // console.log(response)
+                console.log(response)
                 $(`.span_loading_table`).attr('hidden', true);
                 swal.close()
                 $('.smt_aktif').html(response.smt_aktif);
@@ -375,7 +375,7 @@
                     $('.icon_load_table').attr('class', 'fa fa-sync fa-spin');
                 },
                 success: function (response) {
-                    // console.log(response)
+                    console.log(response)
                     $(`.span_loading_table`).attr('hidden', true);
                     swal.close()
                     $('.smt_aktif').html(response.smt_aktif);

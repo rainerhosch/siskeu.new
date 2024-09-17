@@ -12,6 +12,33 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_aktivasi_mhs extends CI_Model
 {
 
+    public function getRegMhs($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('reg_mhs');
+        if ($data != null) {
+            $this->db->where($data);
+        }
+        return $this->db->get();
+    }
+
+    public function getRegUjian($data = null)
+    {
+        $this->db->select('*');
+        $this->db->from('reg_ujian');
+        if ($data != null) {
+            $this->db->where($data);
+            // foreach ($data as $i => $val) {
+                if ($data['aktif'] == '1') {
+                    $this->db->or_where(['aktif' => '3']);
+                } else {
+                    $this->db->or_where(['aktif' => '4']);
+                }
+            // }
+        }
+        return $this->db->get();
+    }
+
     public function cekStatusKelulusanMhs($data = null)
     {
         $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
@@ -108,7 +135,7 @@ class M_aktivasi_mhs extends CI_Model
         if ($data != null) {
             $this->db->where($data);
         }
-        
+
         if ($datawherein != null) {
             $this->db->where_in('t.aktif', $datawherein);
         }

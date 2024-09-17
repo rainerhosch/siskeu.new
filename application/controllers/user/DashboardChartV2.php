@@ -70,12 +70,42 @@ class DashboardChartV2 extends CI_Controller
             $filter_smt = $smtAktifRes['id_smt'];
         }
 
-        $data_krs = $this->krs->getDataKrsMhs([
-            'kn.id_tahun_ajaran' => $filter_smt,
-            'm.no_transkip_nilai' => null,
-            'm.tgl_sk_yudisium' => null,
-            'm.tahun_masuk >' => '2016'
-        ])->result_array();
+
+        // Ambil data base KRS sebelumnya jika pembayaran Cicilan 1 -> done 
+        // Ambil data base KRS aktif jika pembayaran Cicilan 2 -> done
+        // Ambil data base UTS jika pembayarn cicilan 3 -> belum
+        if ($data_post['filter'] == '4') {
+            $data_reg_ujian = $this->aktivasi->getRegUjian([
+                'tahun'=>$filter_smt,
+                'aktif'=> '1'
+            ])->result_array();
+            $data_krs = [];
+            $no = 0;
+            foreach($data_reg_ujian as $i => $val){
+                // $data_get = $this->krs->getDataKrsMhs([
+                //     'kn.id_tahun_ajaran' => $filter_smt,
+                //     'm.no_transkip_nilai' => null,
+                //     'm.tgl_sk_yudisium' => null,
+                //     'm.tahun_masuk >' => '2016',
+                //     'm.nipd' => $val['nim']
+                // ])->row_array();
+                $data_get = $this->masterdata->getMahasiswaByNim([
+                    'nipd' => $val['nim'],
+                    'tahun_masuk >' => '2016',
+                    ])->row_array();
+                if($data_get != null){
+                    $data_krs[$no] = $data_get;
+                    $no++;
+                }
+            }
+        }else{
+            $data_krs = $this->krs->getDataKrsMhs([
+                'kn.id_tahun_ajaran' => $filter_smt,
+                'm.no_transkip_nilai' => null,
+                'm.tgl_sk_yudisium' => null,
+                'm.tahun_masuk >' => '2016'
+            ])->result_array();
+        }
         // echo '<pre>';
         // var_dump($this->db->last_query());
         // var_dump($data_krs);
