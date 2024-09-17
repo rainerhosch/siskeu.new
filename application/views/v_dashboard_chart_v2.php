@@ -115,7 +115,7 @@
                                 <!-- <span class="smt_befor"></span> -->
                             </small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
-                                style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
+                                style="font-size:1rem; font-weight: 700;">SUDAH MELUNASI</br>PEMBAYARAN SPP</small>
                         </th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
@@ -123,7 +123,8 @@
                                 style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
-                                style="font-size:1rem; font-weight: 700;">SUDAH MELUNASI</br>PEMBAYARAN SPP</small></th>
+                                style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
+                        </th>
                         <th class="text-center" style="font-size:1.2rem;font-weight: 700;">PERSENTASE</br><small
                                 style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN PEMBAYARAN</small></th>
                         <th class="text-center" style="font-size:1.2rem;font-weight: 700;">PERSENTASE</br><small
