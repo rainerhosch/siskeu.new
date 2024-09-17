@@ -343,10 +343,10 @@
                 html += `<td class="text-center" style="font-weight: 700;">Total</td>`;
                 html += `<td class="text-center"></td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_mhs}</td>`;
-                html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
-                html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
-                html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
+                html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
+                html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
+                html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
                 html += `<td class="text-center">`;
                 html += `<div class="progress">
                     <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx / total_mhs) * 100) + `%</div></div>`;
