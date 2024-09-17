@@ -36,6 +36,7 @@ class M_aktivasi_mhs extends CI_Model
                 }
             // }
         }
+        $this->db->group_by('reg_ujian.nim');
         return $this->db->get();
     }
 
