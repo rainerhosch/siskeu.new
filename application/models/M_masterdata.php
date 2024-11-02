@@ -270,7 +270,7 @@ class M_masterdata extends CI_Model
     // get semester aktif
     public function getDataSemester($filter = null)
     {
-        $this->db->select('id_smt, nm_smt, smt, id_thn_ajaran');
+        $this->db->select('id_smt, nm_smt, smt, id_thn_ajaran, a_periode_aktif as status');
         $this->db->from('kalender_akademik');
         if ($filter != null) {
             $this->db->where($filter);

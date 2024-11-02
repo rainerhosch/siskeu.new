@@ -1,5 +1,5 @@
 <style>
-    .table thead > tr > th {
+    .table thead>tr>th {
         font-size: 14px;
         font-weight: 600;
     }
@@ -13,11 +13,12 @@
     table {
         background-color: #ffffff;
     }
-    .widget-simple
-    .widget-content {
+
+    .widget-simple .widget-content {
         font-size: 14px;
         margin: 12px 0;
     }
+
     .widget-simple .widget-content small {
         display: block;
         margin-top: 7px;
@@ -53,8 +54,8 @@
                         <i class="gi gi-print"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
-                        Buat Laporan<strong> Excel</strong><br>
-                        <small><strong>Membuat Laporan Per tanggal.</strong></small>
+                        Buat Laporan<strong> Cicilan</strong><br>
+                        <small><strong>Membuat Laporan Per Semester.</strong></small>
                     </h3>
                 </div>
             </a>
@@ -66,8 +67,10 @@
                         <i class="fa fa-usd"></i>
                     </div>
                     <h3 class="widget-content text-right animation-pullDown">
-                        Kas Diterima Per <?= $bln_berjalan; ?> <strong><?= 'Rp.' . number_format($total_uang_masuk_bulan_ini); ?></strong><br>
-                        <small><strong>(Data tersebut pure uang masuk, data input potongan tidak di hitung.)</strong></small>
+                        Kas Diterima Per <?= $bln_berjalan; ?>
+                        <strong><?= 'Rp.' . number_format($total_uang_masuk_bulan_ini); ?></strong><br>
+                        <small><strong>(Data tersebut pure uang masuk, data input potongan tidak di
+                                hitung.)</strong></small>
                     </h3>
                 </div>
             </a>
@@ -93,7 +96,8 @@
                                         <div id="example-datatable_filter" class="dataTables_filter">
                                             <label>
                                                 <div class="input-group">
-                                                    <input type="search" class="form-control" placeholder="Search" aria-controls="example-datatable" id="form_cari">
+                                                    <input type="search" class="form-control" placeholder="Search"
+                                                        aria-controls="example-datatable" id="form_cari">
                                                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                                 </div>
                                             </label>
@@ -101,7 +105,8 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                                    <table id="example-datatable"
+                                        class="table table-vcenter table-condensed table-bordered">
                                         <thead>
                                             <tr>
                                                 <th class="text-center">No</th>
@@ -141,17 +146,17 @@
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // pagination setup
             loadPagination(0);
-            $('#pagination').on('click', 'a', function(e) {
+            $('#pagination').on('click', 'a', function (e) {
                 e.preventDefault();
                 let limit = $('#datatable_length').val();
                 let offset = $(this).attr('data-ci-pagination-page');
                 loadPagination(limit, offset);
             });
 
-            $("#form_cari").on("keyup change", function(e) {
+            $("#form_cari").on("keyup change", function (e) {
                 e.preventDefault();
                 let keyword = $(this).val();
                 loadFilter(keyword);
@@ -170,7 +175,7 @@
                     },
                     serverSide: true,
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         let user_log = response.user_loged;
                         let data_transaksi = response.data_transaksi;
                         let total_data = response.total_result;
@@ -195,7 +200,7 @@
                     },
                     serverSide: true,
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         let user_log = response.user_loged;
                         let data_transaksi = response.data_transaksi;
                         let total_data = response.total_result;
@@ -216,11 +221,11 @@
                 if (data_transaksi != 0) {
                     console.log(data_transaksi)
                     let total_bayar = 0;
-                    
+
                     let numEnd = offset + 10;
-                    $('#datatable_info').html(`<strong>${offset+1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
+                    $('#datatable_info').html(`<strong>${offset + 1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
                     no = offset;
-                    $.each(data_transaksi, function(i, value) {
+                    $.each(data_transaksi, function (i, value) {
                         let sum = 0;
                         no++;
                         htmlx += `<tr>`;
@@ -228,16 +233,16 @@
                         htmlx += `<td class = "text-center" >${value.tanggal}</td>`;
                         htmlx += `<td class = "text-center" >${value.nim}</td>`;
                         htmlx += `<td class = "text-center" >`;
-                        $.each(value.detail_transaksi, function(k, val) {
+                        $.each(value.detail_transaksi, function (k, val) {
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
                             sum += Number(val.jml_bayar);
                             total_bayar += parseInt(val.jml_bayar);
                         });
-                            // console.log(sum);
+                        // console.log(sum);
                         const total = sum;
                         htmlx += `</td><td class = "text-center"><i>Rp.${parseInt(total).toLocaleString()}</i></td>`;
                         htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                        
+
                         if (value.bayar_via != 2) {
                             htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar Tunai</i></td>`;
                         } else {
@@ -247,20 +252,20 @@
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">Jam Trf</i> :<i style="font-size:1rem;">${value.jam_trf}</i><br>`;
                             htmlx += `</td>`;
                         }
-                        if(value.uang_masuk != 1){
+                        if (value.uang_masuk != 1) {
                             uang_masuk = `Potongan SPP/Beasiswa`;
-                        }else{
+                        } else {
                             uang_masuk = ``;
                         }
                         htmlx += `<td class = "text-center" >${uang_masuk}</td>`;
                         htmlx += `<td class = "text-center" >${value.nama_user}</td>`;
                         htmlx += `</tr>`;
-                        });
+                    });
 
-                        // htmlx += `<tr>`;
-                        // htmlx += `<td colspan="4" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTER INI</i></td>`;
-                        // htmlx += `<td colspan="6" class="text-center"><i id="total">Rp.${total_bayar.toLocaleString()}</i></td>`;
-                        // htmlx += `</tr>`;
+                    // htmlx += `<tr>`;
+                    // htmlx += `<td colspan="4" class="text-center"><i>TOTAL JUMLAH PEMBAYARAN PADA SEMESTER INI</i></td>`;
+                    // htmlx += `<td colspan="6" class="text-center"><i id="total">Rp.${total_bayar.toLocaleString()}</i></td>`;
+                    // htmlx += `</tr>`;
                 } else {
                     htmlx += `<tr>`;
                     htmlx += `<td colspan="12" class="text-center"><br>`;
@@ -275,10 +280,46 @@
                 $("#data_kas_tbody").html(htmlx);
             }
 
-            $('#btn_cetak_laporan_bulan_lalu').on('click', function(e) {
+            $('#btn_cetak_laporan_bulan_lalu').on('click', function (e) {
                 e.preventDefault();
                 let hrf = `<?= base_url('laporan/BuatLaporanBulanan') ?>?jenis_laporan=1`;
                 window.open(hrf, '_blank');
+            });
+            $('#btn_creat_laporan').on('click', function (e) {
+                e.preventDefault();
+                var semesterSelect = '';
+
+                $.ajax({
+                    url: '<?= base_url() ?>masterdata/getDataSemerter/',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        let data_smt = response.data;
+                        console.log(response);
+                        semesterSelect += '<select id="semesterSelect" class="form-control">';
+                        $.each(data_smt, function (index, smt) {
+                            semesterSelect += `<option value="${smt.id_smt}" ${smt.status === 1 ? 'selected' : ''} style="${smt.status === 1 ? 'color: blue;' : ''}">${smt.id_smt}</option>`;
+                        });
+                        semesterSelect += '</select>';
+
+                        Swal.fire({
+                            title: 'Create Laporan Cicilan',
+                            html: `Silahkan pilih semester. </hr> ${semesterSelect}`,
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, buat laporan!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const selectedSemester = document.getElementById('semesterSelect').value;
+                                let hrf = `<?= base_url('laporan-cicilan') ?>?smt=${selectedSemester}`;
+                                window.open(hrf, '_blank');
+                            }
+                        });
+                    }
+                });
             });
         });
     </script>

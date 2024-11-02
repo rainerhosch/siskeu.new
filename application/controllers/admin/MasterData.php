@@ -39,6 +39,27 @@ class MasterData extends CI_Controller
         // return $ApiDataKrs['krs_new'];
     }
 
+    public function getDataSemerter()
+    {
+        if ($this->input->is_ajax_request()) {
+            $smtAktifRes = $this->masterdata->getDataSemester()->result_array();
+            if (!$smtAktifRes) {
+                $response = [
+                    'status' => false,
+                    'data' => $smtAktifRes
+                ];
+            } else {
+                $response = [
+                    'status' => true,
+                    'data' => $smtAktifRes
+                ];
+            }
+            echo json_encode($response);
+        } else {
+            show_404();
+        }
+    }
+
 
     public function getDataMhsPerangkatan()
     {

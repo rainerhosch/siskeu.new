@@ -10,13 +10,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
  *  Quots of the code     : 'rapihkan lah code mu, seperti halnya kau menata kehidupan'
  */
 
- use PhpOffice\PhpWord\PhpWord;
- use PhpOffice\PhpWord\Writer\Word2007;
- use PhpOffice\PhpSpreadsheet\Style\Border;
- use PhpOffice\PhpSpreadsheet\Style\Color;
- use \PhpOffice\PhpSpreadsheet;
- use PhpOffice\PhpSpreadsheet\Spreadsheet;
- use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Writer\Word2007;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use \PhpOffice\PhpSpreadsheet;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Laporan_cicilan extends CI_Controller
 {
@@ -33,172 +33,176 @@ class Laporan_cicilan extends CI_Controller
         date_default_timezone_set('Asia/Jakarta');
         $this->load->library('pagination');
 
-        
+
         $this->load->model('M_laporan_cicilan', 'cicilan');
+        $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_menu', 'menu');
         $this->load->model('M_user', 'user');
     }
 
     public function index()
     {
+        $data_post = $this->input->get();
+        // var_dump($data_post);
+        // die;
         $biaya_angkatan = $this->cicilan->biaya_angkatan()->result_array();
-        $kls_cicilan = $this->cicilan->kls_cicilan(['kelas_kuliah.id_smt' => 20241])->result_array();
+        $kls_cicilan = $this->cicilan->kls_cicilan(['kelas_kuliah.id_smt' => $data_post['smt']])->result_array();
         $id_kls = [];
-        foreach($kls_cicilan as $key => $val) {
+        foreach ($kls_cicilan as $key => $val) {
             $id_kls[] = $val['id_kls'];
         }
 
         $angkatan = [];
-        foreach($biaya_angkatan as $key => $val) {
+        foreach ($biaya_angkatan as $key => $val) {
             $angkatan[$val['angkatan']]['S1'] = $val['CS'];
             $angkatan[$val['angkatan']]['D3'] = $val['CS_D3'];
         }
-        $data_cicilan = $this->cicilan->data_cicilan(['semester' => 20241])->result_array();
+        $data_cicilan = $this->cicilan->data_cicilan(['semester' => $data_post['smt']])->result_array();
 
         $cicilan = [];
-        foreach($data_cicilan as $key => $val) {
-            if($val['id_jenis_pembayaran'] == 2) {
+        foreach ($data_cicilan as $key => $val) {
+            if ($val['id_jenis_pembayaran'] == 2) {
                 $cicilan[$val['nim']]['cicilan1'] = $val['bayar'];
-            } else if($val['id_jenis_pembayaran'] == 3) {
+            } else if ($val['id_jenis_pembayaran'] == 3) {
                 $cicilan[$val['nim']]['cicilan2'] = $val['bayar'];
-            } else if($val['id_jenis_pembayaran'] == 4) {
+            } else if ($val['id_jenis_pembayaran'] == 4) {
                 $cicilan[$val['nim']]['cicilan3'] = $val['bayar'];
             }
-            
+
         }
 
         $krs_cicilan = $this->cicilan->krs_cicilan(['krs_new.id_tahun_ajaran' => 20241], $id_kls)->result_array();
         $KRS = [];
-            foreach($krs_cicilan as $key => $val) {
-                $KRS[$key] = $val;
-                $KRS[$key]['cicilan1']  = $angkatan[$val['angkatan']][$val['jenjang']]/3;
-                $KRS[$key]['cicilan2']  = $angkatan[$val['angkatan']][$val['jenjang']]/3;
-                $KRS[$key]['cicilan3']  = $angkatan[$val['angkatan']][$val['jenjang']]/3;
-                $KRS[$key]['bayar1']    = isset($cicilan[$val['nipd']]['cicilan1']) ? $cicilan[$val['nipd']]['cicilan1']  : 0;
-                $KRS[$key]['bayar2']    = isset($cicilan[$val['nipd']]['cicilan2']) ? $cicilan[$val['nipd']]['cicilan2']  : 0;
-                $KRS[$key]['bayar3']    = isset($cicilan[$val['nipd']]['cicilan3']) ? $cicilan[$val['nipd']]['cicilan3']  : 0;
-                $KRS[$key]['sisa1']     = $KRS[$key]['cicilan1'] - $KRS[$key]['bayar1'];
-                $KRS[$key]['sisa2']     = $KRS[$key]['cicilan2'] - $KRS[$key]['bayar2'];
-                $KRS[$key]['sisa3']     = $KRS[$key]['cicilan3'] - $KRS[$key]['bayar3'];
-                $KRS[$key]['total_cicilan']     = $KRS[$key]['cicilan1'] + $KRS[$key]['cicilan2'] + $KRS[$key]['cicilan3'];
-                $KRS[$key]['total_bayar']       = $KRS[$key]['bayar1'] + $KRS[$key]['bayar2'] + $KRS[$key]['bayar3'];
-                $KRS[$key]['total_sisa']        = $KRS[$key]['sisa1'] + $KRS[$key]['sisa2'] + $KRS[$key]['sisa3'];
+        foreach ($krs_cicilan as $key => $val) {
+            $KRS[$key] = $val;
+            $KRS[$key]['cicilan1'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+            $KRS[$key]['cicilan2'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+            $KRS[$key]['cicilan3'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+            $KRS[$key]['bayar1'] = isset($cicilan[$val['nipd']]['cicilan1']) ? $cicilan[$val['nipd']]['cicilan1'] : 0;
+            $KRS[$key]['bayar2'] = isset($cicilan[$val['nipd']]['cicilan2']) ? $cicilan[$val['nipd']]['cicilan2'] : 0;
+            $KRS[$key]['bayar3'] = isset($cicilan[$val['nipd']]['cicilan3']) ? $cicilan[$val['nipd']]['cicilan3'] : 0;
+            $KRS[$key]['sisa1'] = $KRS[$key]['cicilan1'] - $KRS[$key]['bayar1'];
+            $KRS[$key]['sisa2'] = $KRS[$key]['cicilan2'] - $KRS[$key]['bayar2'];
+            $KRS[$key]['sisa3'] = $KRS[$key]['cicilan3'] - $KRS[$key]['bayar3'];
+            $KRS[$key]['total_cicilan'] = $KRS[$key]['cicilan1'] + $KRS[$key]['cicilan2'] + $KRS[$key]['cicilan3'];
+            $KRS[$key]['total_bayar'] = $KRS[$key]['bayar1'] + $KRS[$key]['bayar2'] + $KRS[$key]['bayar3'];
+            $KRS[$key]['total_sisa'] = $KRS[$key]['sisa1'] + $KRS[$key]['sisa2'] + $KRS[$key]['sisa3'];
 
 
-                
-                
-            }
-            // echo '<pre>';
-            // echo print_r($KRS);
-            // echo '</pre>';
-            // exit();
-            $spreadsheet = new Spreadsheet();
-            $Terbilang = new FormatTerbilang();
-            $spreadsheet->setActiveSheetIndex(0);
-            $sheet = $spreadsheet->getActiveSheet();
-            // $sheet->setTitle('Data_Dispen_Semester(' . $smtAktif . ')');
-            $sheet->setTitle('Data_Dispen');
-    
-    
-    
-            //define width of column
-            $sheet->getColumnDimension('A')->setWidth(5.43);
-            $sheet->getColumnDimension('B')->setWidth(13.00);
-            $sheet->getColumnDimension('C')->setWidth(36.00);
-            $sheet->getColumnDimension('D')->setWidth(25.00);
-            $sheet->getColumnDimension('E')->setWidth(18.00);
-            $sheet->getColumnDimension('F')->setWidth(18.00);
-            $sheet->getColumnDimension('G')->setWidth(18.00);
-            $sheet->getColumnDimension('H')->setWidth(18.00);
-            $sheet->getColumnDimension('I')->setWidth(18.00);
-            $sheet->getColumnDimension('J')->setWidth(18.00);
-            $sheet->getColumnDimension('K')->setWidth(18.00);
-            $sheet->getColumnDimension('L')->setWidth(18.00);
-            $sheet->getColumnDimension('M')->setWidth(18.00);
-            $sheet->getColumnDimension('N')->setWidth(18.00);
-            $sheet->getColumnDimension('O')->setWidth(18.00);
-            $sheet->getColumnDimension('P')->setWidth(18.00);
-    
-            //Define Style table
-            $styleTitle = [
-                'alignment' => [
-                    'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
-                ],
-            ];
-            $styleTable = [
-                'alignment' => [
-                    'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
-                ],
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
-                        'color' => ['RGB' => '000000']
-                    ]
+
+
+        }
+        // echo '<pre>';
+        // echo print_r($KRS);
+        // echo '</pre>';
+        // exit();
+        $spreadsheet = new Spreadsheet();
+        $Terbilang = new FormatTerbilang();
+        $spreadsheet->setActiveSheetIndex(0);
+        $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->setTitle('Data_Dispen_Semester(' . $smtAktif . ')');
+        $sheet->setTitle('Data_cicilan_' . $data_post['smt']);
+
+
+
+        //define width of column
+        $sheet->getColumnDimension('A')->setWidth(5.43);
+        $sheet->getColumnDimension('B')->setWidth(13.00);
+        $sheet->getColumnDimension('C')->setWidth(36.00);
+        $sheet->getColumnDimension('D')->setWidth(25.00);
+        $sheet->getColumnDimension('E')->setWidth(18.00);
+        $sheet->getColumnDimension('F')->setWidth(18.00);
+        $sheet->getColumnDimension('G')->setWidth(18.00);
+        $sheet->getColumnDimension('H')->setWidth(18.00);
+        $sheet->getColumnDimension('I')->setWidth(18.00);
+        $sheet->getColumnDimension('J')->setWidth(18.00);
+        $sheet->getColumnDimension('K')->setWidth(18.00);
+        $sheet->getColumnDimension('L')->setWidth(18.00);
+        $sheet->getColumnDimension('M')->setWidth(18.00);
+        $sheet->getColumnDimension('N')->setWidth(18.00);
+        $sheet->getColumnDimension('O')->setWidth(18.00);
+        $sheet->getColumnDimension('P')->setWidth(18.00);
+
+        //Define Style table
+        $styleTitle = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+        ];
+        $styleTable = [
+            'alignment' => [
+                'vertical' => PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'horizontal' => PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['RGB' => '000000']
                 ]
-            ];
-    
-            // configurasi Title
-            // $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt . ' ' . $smtAktifRes['id_thn_ajaran'] . '/' . $smtAktifRes['id_thn_ajaran'] + 1);
-            $sheet->setCellValue('A1', 'DAFTAR CICILAN');
-            $sheet->mergeCells('A1:J2');
-            // $sheet->setCellValue('A3', $smtAktifRes['nm_smt']);
-            // $sheet->setCellValue('A3', '2021/2022');
-            $sheet->mergeCells('A3:J4');
-            $sheet->getStyle('A1:J4')->getFont()->setSize(12);
-            $sheet->getStyle('A1:J4')->getFont()->setBold(true);
-            $sheet->getStyle('A1:J4')->applyFromArray($styleTitle); //styling header table
-    
-            $row_tbl = 8;
-            $no = 1;
-            $row_header = 6;
-            $merge_header = $row_header + 1;
-            $sheet->setCellValue('A' . $row_header, 'NO');
-            $sheet->setCellValue('B' . $row_header, 'NIM');
-            $sheet->setCellValue('C' . $row_header, 'NAMA');
-            $sheet->setCellValue('D' . $row_header, 'PRODI');
-            $sheet->setCellValue('E' . $row_header, 'RINCIAN TAGIHAN C1');
-            $sheet->setCellValue('F' . $row_header, 'RINCIAN TAGIHAN C2');
-            $sheet->setCellValue('G' . $row_header, 'RINCIAN TAGIHAN C3');
-            $sheet->setCellValue('H' . $row_header, 'BAYAR C1');
-            $sheet->setCellValue('I' . $row_header, 'BAYAR C2');
-            $sheet->setCellValue('J' . $row_header, 'BAYAR C3');
-            $sheet->setCellValue('K' . $row_header, 'SISA C1');
-            $sheet->setCellValue('L' . $row_header, 'SISA C2');
-            $sheet->setCellValue('M' . $row_header, 'SISA C3');
-            $sheet->setCellValue('N' . $row_header, 'TOTAL TAGIHAN');
-            $sheet->setCellValue('O' . $row_header, 'TOTAL BAYAR');
-            $sheet->setCellValue('P' . $row_header, 'SISA SISA');
-            
-            foreach($KRS as $key => $va) {
+            ]
+        ];
 
-                $sheet->setCellValue('A' . $row_tbl + $key, $key + 1);
-                $sheet->setCellValue('B' . $row_tbl + $key, $va['nipd']);
-                $sheet->setCellValue('C' . $row_tbl + $key, $va['nm_pd']);
-                $sheet->setCellValue('D' . $row_tbl + $key, $va['nm_jur']);
-                $sheet->setCellValue('E' . $row_tbl + $key, $va['cicilan1']);
-                $sheet->setCellValue('F' . $row_tbl + $key, $va['cicilan2']);
-                $sheet->setCellValue('G' . $row_tbl + $key, $va['cicilan3']);
-                $sheet->setCellValue('H' . $row_tbl + $key, $va['bayar1']);
-                $sheet->setCellValue('I' . $row_tbl + $key, $va['bayar2']);
-                $sheet->setCellValue('J' . $row_tbl + $key, $va['bayar3']);
-                $sheet->setCellValue('K' . $row_tbl + $key, $va['sisa1']);
-                $sheet->setCellValue('L' . $row_tbl + $key, $va['sisa2']);
-                $sheet->setCellValue('M' . $row_tbl + $key, $va['sisa3']);
-                $sheet->setCellValue('N' . $row_tbl + $key, $va['total_cicilan']);
-                $sheet->setCellValue('O' . $row_tbl + $key, $va['total_bayar']);
-                $sheet->setCellValue('P' . $row_tbl + $key, $va['total_sisa']);
-            }
-            $filename = 'LAPORAN DATA';
-            $writer = new Xlsx($spreadsheet);
-            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Type:application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
-            header('Cache-Control: max-age=0');
-            $writer->save('php://output');
-            //styling ti
-        
+        // configurasi Title
+        // $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt . ' ' . $smtAktifRes['id_thn_ajaran'] . '/' . $smtAktifRes['id_thn_ajaran'] + 1);
+        $sheet->setCellValue('A1', 'DAFTAR CICILAN SEMESTER ' . $data_post['smt']);
+        $sheet->mergeCells('A1:J2');
+        // $sheet->setCellValue('A3', $smtAktifRes['nm_smt']);
+        // $sheet->setCellValue('A3', '2021/2022');
+        $sheet->mergeCells('A3:J4');
+        $sheet->getStyle('A1:J4')->getFont()->setSize(12);
+        $sheet->getStyle('A1:J4')->getFont()->setBold(true);
+        $sheet->getStyle('A1:J4')->applyFromArray($styleTitle); //styling header table
+
+        $row_tbl = 8;
+        $no = 1;
+        $row_header = 6;
+        $merge_header = $row_header + 1;
+        $sheet->setCellValue('A' . $row_header, 'NO');
+        $sheet->setCellValue('B' . $row_header, 'NIM');
+        $sheet->setCellValue('C' . $row_header, 'NAMA');
+        $sheet->setCellValue('D' . $row_header, 'PRODI');
+        $sheet->setCellValue('E' . $row_header, 'RINCIAN TAGIHAN C1');
+        $sheet->setCellValue('F' . $row_header, 'RINCIAN TAGIHAN C2');
+        $sheet->setCellValue('G' . $row_header, 'RINCIAN TAGIHAN C3');
+        $sheet->setCellValue('H' . $row_header, 'BAYAR C1');
+        $sheet->setCellValue('I' . $row_header, 'BAYAR C2');
+        $sheet->setCellValue('J' . $row_header, 'BAYAR C3');
+        $sheet->setCellValue('K' . $row_header, 'SISA C1');
+        $sheet->setCellValue('L' . $row_header, 'SISA C2');
+        $sheet->setCellValue('M' . $row_header, 'SISA C3');
+        $sheet->setCellValue('N' . $row_header, 'TOTAL TAGIHAN');
+        $sheet->setCellValue('O' . $row_header, 'TOTAL BAYAR');
+        $sheet->setCellValue('P' . $row_header, 'SISA SISA');
+
+        foreach ($KRS as $key => $va) {
+
+            $sheet->setCellValue('A' . $row_tbl + $key, $key + 1);
+            $sheet->setCellValue('B' . $row_tbl + $key, $va['nipd']);
+            $sheet->setCellValue('C' . $row_tbl + $key, $va['nm_pd']);
+            $sheet->setCellValue('D' . $row_tbl + $key, $va['nm_jur']);
+            $sheet->setCellValue('E' . $row_tbl + $key, $va['cicilan1']);
+            $sheet->setCellValue('F' . $row_tbl + $key, $va['cicilan2']);
+            $sheet->setCellValue('G' . $row_tbl + $key, $va['cicilan3']);
+            $sheet->setCellValue('H' . $row_tbl + $key, $va['bayar1']);
+            $sheet->setCellValue('I' . $row_tbl + $key, $va['bayar2']);
+            $sheet->setCellValue('J' . $row_tbl + $key, $va['bayar3']);
+            $sheet->setCellValue('K' . $row_tbl + $key, $va['sisa1']);
+            $sheet->setCellValue('L' . $row_tbl + $key, $va['sisa2']);
+            $sheet->setCellValue('M' . $row_tbl + $key, $va['sisa3']);
+            $sheet->setCellValue('N' . $row_tbl + $key, $va['total_cicilan']);
+            $sheet->setCellValue('O' . $row_tbl + $key, $va['total_bayar']);
+            $sheet->setCellValue('P' . $row_tbl + $key, $va['total_sisa']);
+        }
+        $filename = 'DATA LAPORAN CICILAN ' . $data_post['smt'];
+        $writer = new Xlsx($spreadsheet);
+        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Type:application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer->save('php://output');
+        //styling ti
+
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Laporan Cicilan';
         $data['content'] = 'laporan/cicilan';
@@ -206,7 +210,7 @@ class Laporan_cicilan extends CI_Controller
         $this->load->view('template', $data);
         // echo json_encode($data);
     }
-    
+
 
     public function CetakLaporanDataDispenV2()
     {
