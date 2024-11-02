@@ -20,6 +20,7 @@ class DashboardChartV2 extends CI_Controller
             redirect(base_url());
         }
         $this->load->model('M_tunggakan', 'tunggakan');
+        $this->load->model('M_transaksi', 'transaksi');
         $this->load->model('M_masterdata', 'masterdata');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
         $this->load->model('M_api', 'api');
@@ -34,6 +35,26 @@ class DashboardChartV2 extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function print_data_belum_bayar()
+    {
+        /*
+        ** QUERY TO GET DATA BELUM BAYAR
+        **
+        SELECT mahasiswa.nipd AS 'nim', mahasiswa.nm_pd AS 'nama', mahasiswa.nm_jur AS 'prodi', wastu_kelas.nama_kelas AS 'kelas', mahasiswa.tahun_masuk AS 'angkatan'
+        FROM `mahasiswa`
+        JOIN wastu_kelas ON wastu_kelas.id_kelas=mahasiswa.id_kelas
+        WHERE nipd NOT IN (SELECT transaksi.nim
+        FROM transaksi
+        JOIN transaksi_detail ON transaksi_detail.id_transaksi=transaksi.id_transaksi
+        WHERE substr(transaksi.nim, 1,2)='24' AND transaksi_detail.id_jenis_pembayaran=2 AND transaksi.semester=20241 AND transaksi.uang_masuk=1
+        GROUP BY transaksi.nim  
+        ORDER BY `transaksi`.`id_transaksi` DESC) AND tahun_masuk=2024;
+        **
+        */
+
+    }
+
+
     public function getDataPembayaran()
     {
         if ($this->input->is_ajax_request()) {
@@ -47,23 +68,6 @@ class DashboardChartV2 extends CI_Controller
 
     private function getDataProgressPembayaranSPP($data_post)
     {
-
-        /*
-        ** QUERY TO GET DATA BELUM BAYAR
-
-                SELECT mahasiswa.nipd AS 'nim', mahasiswa.nm_pd AS 'nama', mahasiswa.nm_jur AS 'prodi', wastu_kelas.nama_kelas AS 'kelas', mahasiswa.tahun_masuk AS 'angkatan'
-        FROM `mahasiswa`
-        JOIN wastu_kelas ON wastu_kelas.id_kelas=mahasiswa.id_kelas
-        WHERE nipd NOT IN (SELECT transaksi.nim
-        FROM transaksi
-        JOIN transaksi_detail ON transaksi_detail.id_transaksi=transaksi.id_transaksi
-        WHERE substr(transaksi.nim, 1,2)='24' AND transaksi_detail.id_jenis_pembayaran=2 AND transaksi.semester=20241 AND transaksi.uang_masuk=1
-        GROUP BY transaksi.nim  
-        ORDER BY `transaksi`.`id_transaksi` DESC) AND tahun_masuk=2024;
-        */
-
-
-
         // Ambil data semester aktif
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
         // $smtAktifRes['id_smt'] = '20222';
@@ -93,8 +97,8 @@ class DashboardChartV2 extends CI_Controller
         // Ambil data base UTS jika pembayarn cicilan 3 -> belum
         if ($data_post['filter'] == '4') {
             $data_reg_ujian = $this->aktivasi->getRegUjian([
-                'tahun'=>$filter_smt,
-                'aktif'=> '1'
+                'tahun' => $filter_smt,
+                'aktif' => '1'
             ])->result_array();
             $data_krs = [];
             $no = 0;
@@ -104,7 +108,7 @@ class DashboardChartV2 extends CI_Controller
             // echo '</pre>';
             // die;
 
-            foreach($data_reg_ujian as $i => $val){
+            foreach ($data_reg_ujian as $i => $val) {
                 // $data_get = $this->krs->getDataKrsMhs([
                 //     'kn.id_tahun_ajaran' => $filter_smt,
                 //     'm.no_transkip_nilai' => null,
@@ -115,13 +119,13 @@ class DashboardChartV2 extends CI_Controller
                 $data_get = $this->masterdata->getMahasiswaByNim([
                     'nipd' => $val['nim'],
                     'tahun_masuk >' => '2016',
-                    ])->row_array();
-                if($data_get != null){
+                ])->row_array();
+                if ($data_get != null) {
                     $data_krs[$no] = $data_get;
                     $no++;
                 }
             }
-        }else{
+        } else {
             $data_krs = $this->krs->getDataKrsMhs([
                 'kn.id_tahun_ajaran' => $filter_smt,
                 'm.no_transkip_nilai' => null,
@@ -190,10 +194,37 @@ class DashboardChartV2 extends CI_Controller
         foreach ($grouped_by as $tahun_masuk => &$data) {
             $data['trx'] = $this->masterdata->getDataPembayaranChart([
                 'm.tahun_masuk' => $tahun_masuk,
-                'td.id_jenis_pembayaran' => $data_post['filter'],
                 't.semester' => $smtAktifRes['id_smt'],
                 't.uang_masuk' => 1,
+                'td.id_jenis_pembayaran' => $data_post['filter']
             ])->num_rows();
+            $data['trx_perpanjangan'] = $this->masterdata->getDataPembayaranChart([
+                'm.tahun_masuk' => $tahun_masuk,
+                't.semester' => $smtAktifRes['id_smt'],
+                't.uang_masuk' => 1,
+                'td.id_jenis_pembayaran' => '8'
+            ])->num_rows();
+            $data['query'] = $this->db->last_query();
+            // foreach ($data['list_mhs'] as &$mhs) {
+            //     $data_transaksi = $this->transaksi->getDataTransaksiOnly([
+            //         'nim' => $mhs['nipd'],
+            //         'semester' => $smtAktifRes['id_smt'],
+            //         'uang_masuk' => 1
+            //     ])->result_array();
+            //     $cnt = 0;
+            //     $mhs['trx_detail'] = null;
+            //     $biaya_angkatan = $this->masterdata->getBiayaAngkatan(['angkatan' => $mhs['tahun_masuk']], $mhs['nm_jenj_didik'])->row_array();
+            //     $mhs['kewajiban_cs'] = $biaya_angkatan['cicilan_semester'] / 3;
+            //     foreach ($data_transaksi as $trx) {
+            //         $trx_detail = $this->transaksi->getDataTxDetail(
+            //             ['td.id_transaksi' => $trx['id_transaksi']]
+            //         )->row_array();
+            //         if (isset($trx_detail['id_jenis_pembayaran']) && $trx_detail['id_jenis_pembayaran'] == $data_post['filter']) {
+            //             $mhs['trx_detail'][$cnt] = $trx_detail;
+            //             $cnt++;
+            //         }
+            //     }
+            // }
         }
 
         // Memasukkan hasil ke dalam res['data']

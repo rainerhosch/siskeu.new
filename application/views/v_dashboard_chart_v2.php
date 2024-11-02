@@ -97,7 +97,10 @@
                         <option value="3">Cicilan 2</option>
                         <option value="4">Cicilan 3</option>
                     </select>
-                    <button class="btn btn-success btn-xs px-10"><i class="fa fa-print"></i> | Data Belum Bayar</button>
+                    <a class="btn btn-success btn-xs px-10 btnPrintBelumBayar" target="_blank"
+                        href="<?= base_url('dashboard_chart_v2/print_data_belum_bayar') ?>"><i class="fa fa-print"></i> |
+                        Data
+                        Belum Bayar</a>
                 </div>
             </div>
             <!-- <div class="div_loading_table1">
@@ -114,6 +117,9 @@
                                 style="font-size:1rem; font-weight: 700;">MHS AKTIF BY KRS</br>
                                 <!-- <span class="smt_befor"></span> -->
                             </small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
+                                style="font-size:1rem; font-weight: 700;">JUMLAH MHS</br>PERPANJANGAN SPP</small>
+                        </th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
@@ -153,6 +159,13 @@
         </div>
 
     </div>
+    <script>
+        $(document).ready(function () {
+            // $('.btnPrintBelumBayar').on('click', function () {
+            //     alert('modul is not active');
+            // })
+        });
+    </script>
     <script>
         function createChart(type) {
             $.ajax({
@@ -305,6 +318,7 @@
                 html = ``;
                 let no = 1;
                 let total_mhs = 0;
+                let total_perpanjang_smt = 0;
                 let total_all_trx = 0;
                 let total_lunas_spp = 0;
                 let total_dispen = 0;
@@ -315,6 +329,7 @@
                         val.jml_mhs = val.trx;
                     }
                     total_mhs += val.jml_mhs;
+                    total_perpanjang_smt += val.trx_perpanjangan;
                     total_all_trx += val.trx;
                     total_dispen += val.data_dispen;
                     total_belum_bayar = (total_mhs - total_all_trx)
@@ -323,17 +338,18 @@
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center"><strong>${val.tahun_masuk}</strong><br><small style="font-size:0.85rem;;">${status}</small></td>`;
                     html += `<td class="text-center">${val.jml_mhs}</td>`;
+                    html += `<td class="text-center">${val.trx_perpanjangan}</td>`;
                     html += `<td class="text-center">${val.trx}</td>`;
                     html += `<td class="text-center">${val.data_dispen}</td>`; //betul
                     html += `<td class="text-center">${val.jml_mhs - val.trx}</td>`;
                     html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((val.trx / val.jml_mhs) * 100) + `%</div></div>`;
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((val.trx + val.trx_perpanjangan) / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((val.trx + val.trx_perpanjangan) / val.jml_mhs) * 100) + `%</div></div>`;
                     html += `</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((val.trx - val.data_dispen) / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((val.trx - val.data_dispen) / val.jml_mhs) * 100) + `%</div></div>`;
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((((val.trx + val.trx_perpanjangan) - val.data_dispen) / val.jml_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((((val.trx + val.trx_perpanjangan) - val.data_dispen) / val.jml_mhs) * 100) + `%</div></div>`;
                     html += `</td>`;
                     html += `</tr>`;
                     no++;
@@ -342,17 +358,18 @@
                 html += `<td class="text-center" style="font-weight: 700;">Total</td>`;
                 html += `<td class="text-center"></td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_mhs}</td>`;
+                html += `<td class="text-center" style="font-weight: 700;">${total_perpanjang_smt}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
                 html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
                 html += `<td class="text-center">`;
                 html += `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx / total_mhs) * 100) + `%</div></div>`;
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((total_all_trx + total_perpanjang_smt) / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((total_all_trx + total_perpanjang_smt) / total_mhs) * 100) + `%</div></div>`;
                 html += `</td>`;
                 html += `<td class="text-center">`;
                 html += `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((total_all_trx - total_dispen) / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((total_all_trx - total_dispen) / total_mhs) * 100) + `%</div></div>`;
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((((total_all_trx + total_perpanjang_smt) - total_dispen) / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((((total_all_trx + total_perpanjang_smt) - total_dispen) / total_mhs) * 100) + `%</div></div>`;
                 html += `</td>`;
                 html += `</tr>`;
                 $("#data_pembayaran_angkatan_modal").html(html);

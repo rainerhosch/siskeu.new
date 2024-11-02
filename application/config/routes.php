@@ -66,3 +66,6 @@ $route['masterdata/GetDataMhs/(:any)'] = 'admin/MasterData/GetDataMhs/$1';
 $route['laporan/(:any)'] = 'user/Laporan/$1';
 $route['laporan/loadRecord/(:any)'] = 'user/Laporan/loadRecord/$1';
 $route['rekap/(:any)'] = 'user/Rekap/$1';
+
+//laporan 
+$route['laporan-cicilan'] = 'user/Laporan_cicilan/index';

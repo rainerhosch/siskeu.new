@@ -89,8 +89,26 @@ class M_masterdata extends CI_Model
         if ($where != null) {
             $this->db->where($where);
         }
+        // if ($where2 != null) {
+        //     $this->db->group_start();
+        //     $this->db->where($where2);
+        //     $this->db->or_where('td.id_jenis_pembayaran', '8');
+        //     $this->db->group_end();
+        // }
         // $this->db->group_by('t.id_transaksi');
         $this->db->group_by('m.nipd');
+        return $this->db->get();
+    }
+    public function getDataPembayaranV3($where = null)
+    {
+        $this->db->select('t.*, td.id_jenis_pembayaran, td.jml_bayar');
+        $this->db->from('transaksi t');
+        $this->db->join('mahasiswa m', 'm.nipd=t.nim');
+        $this->db->join('transaksi_detail td', 'td.id_transaksi=t.id_transaksi');
+        // $this->db->where('(td.id_jenis_pembayaran=2 OR td.id_jenis_pembayaran=8)');
+        // $this->db->where('t.semester', 20241);
+        // $this->db->where('t.uang_masuk', 1);
+        $this->db->order_by('t.nim', 'ASC');
         return $this->db->get();
     }
 
@@ -105,7 +123,7 @@ class M_masterdata extends CI_Model
         if ($where != null) {
             $this->db->where($where);
         }
-        $this->db->group_by('t.id_transaksi');
+        // $this->db->group_by('t.id_transaksi');
         // $this->db->group_by('m.nipd');
         return $this->db->get();
     }
@@ -250,11 +268,11 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
     // get semester aktif
-    public function getDataSemester($filter=null)
+    public function getDataSemester($filter = null)
     {
         $this->db->select('id_smt, nm_smt, smt, id_thn_ajaran');
         $this->db->from('kalender_akademik');
-        if($filter!=null){
+        if ($filter != null) {
             $this->db->where($filter);
         }
         $this->db->order_by('id_smt', 'ASC');
