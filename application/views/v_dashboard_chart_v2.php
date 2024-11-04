@@ -382,7 +382,6 @@
             $.ajax({
                 type: "POST",
                 url: "dashboard_chart_v2/getDataPembayaran",
-                // url: "dashboard_chart/getDataPembayaranV2",
                 data: {
                     filter: data
                 },
@@ -396,12 +395,11 @@
                     $(`.span_loading_table`).attr('hidden', true);
                     swal.close()
                     $('.smt_aktif').html(response.smt_aktif);
-                    // $('.smt_befor').html(response.smt_befor);
-                    // dataSelected === 2 ? $('.smt_befor').html(response.smt_befor) : $('.smt_befor').html(response.smt_aktif)
                     html = ``;
                     let no = 1;
                     let total_mhs = 0;
                     let total_all_trx = 0;
+                    let total_perpanjang_smt = 0; // Tambahkan total_perpanjang_smt
                     let total_lunas_spp = 0;
                     let total_dispen = 0;
                     let total_belum_bayar = 0;
@@ -409,6 +407,7 @@
                     $.each(response.data, function (i, val) {
                         total_mhs += val.jml_mhs;
                         total_all_trx += val.trx;
+                        total_perpanjang_smt += val.trx_perpanjangan; // Hitung total_perpanjang_smt
                         total_dispen += val.data_dispen;
                         total_belum_bayar = (total_mhs - total_all_trx)
                         total_lunas_spp = (total_all_trx - total_dispen)
@@ -417,7 +416,8 @@
                         html += `<td class="text-center"><strong>${val.tahun_masuk}</strong><br><small style="font-size:0.85rem;;">${status}</small></td>`;
                         html += `<td class="text-center">${val.jml_mhs}</td>`;
                         html += `<td class="text-center">${val.trx}</td>`;
-                        html += `<td class="text-center">${val.data_dispen}</td>`; //betul
+                        html += `<td class="text-center">${val.trx_perpanjangan}</td>`; // Tambahkan trx_perpanjangan
+                        html += `<td class="text-center">${val.data_dispen}</td>`;
                         html += `<td class="text-center">${val.jml_mhs - val.trx}</td>`;
                         html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
                         html += `<td class="text-center">`;
@@ -436,16 +436,17 @@
                     html += `<td class="text-center"></td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_mhs}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
-                    html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
+                    html += `<td class="text-center" style="font-weight: 700;">${total_perpanjang_smt}</td>`; // Tambahkan total_perpanjang_smt
+                    html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((total_all_trx / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((total_all_trx / total_mhs) * 100) + `%</div></div>`;
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((total_all_trx + total_perpanjang_smt) / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((total_all_trx + total_perpanjang_smt) / total_mhs) * 100) + `%</div></div>`;
                     html += `</td>`;
                     html += `<td class="text-center">`;
                     html += `<div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil(((total_all_trx - total_dispen) / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil(((total_all_trx - total_dispen) / total_mhs) * 100) + `%</div></div>`;
+                    <div class="progress-bar" role="progressbar" style="width: ` + Math.ceil((((total_all_trx + total_perpanjang_smt) - total_dispen) / total_mhs) * 100) + `%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">` + Math.ceil((((total_all_trx + total_perpanjang_smt) - total_dispen) / total_mhs) * 100) + `%</div></div>`;
                     html += `</td>`;
                     html += `</tr>`;
                     $("#data_pembayaran_angkatan_modal").html(html);
