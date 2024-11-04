@@ -117,9 +117,9 @@
                                 style="font-size:1rem; font-weight: 700;">MHS AKTIF BY KRS</br>
                                 <!-- <span class="smt_befor"></span> -->
                             </small></th>
-                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
+                        <!-- <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">JUMLAH MHS</br>PERPANJANGAN SPP</small>
-                        </th>
+                        </th> -->
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">SUDAH MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
