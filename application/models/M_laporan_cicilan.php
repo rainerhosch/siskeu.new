@@ -29,7 +29,7 @@ class M_laporan_cicilan extends CI_Model
         $this->db->join('transaksi_detail', 'transaksi_detail.id_transaksi = transaksi.id_transaksi');
         if ($data != null) {
             $this->db->where($data);
-            $this->db->where_in("transaksi_detail.id_jenis_pembayaran", array(2,3,4));
+            $this->db->where_in("transaksi_detail.id_jenis_pembayaran", array(2,3,4,8));
         }
         $this->db->group_by('transaksi.nim, transaksi_detail.id_jenis_pembayaran');
         return $this->db->get();
@@ -76,7 +76,7 @@ class M_laporan_cicilan extends CI_Model
         $dbwastudig_simak->join('jurusan', 'jurusan.id_jur = mahasiswa_pt.id_sms');
         if ($data != null) {
             $dbwastudig_simak->where($data);
-            $dbwastudig_simak->where_not_in('krs_new.id_kls', $in);
+            // $dbwastudig_simak->where_not_in('krs_new.id_kls', $in);
         }
         $dbwastudig_simak->group_by('krs_new.nipd');
         return $dbwastudig_simak->get();

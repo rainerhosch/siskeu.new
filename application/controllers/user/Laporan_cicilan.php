@@ -57,9 +57,11 @@ class Laporan_cicilan extends CI_Controller
             $angkatan[$val['angkatan']]['S1'] = $val['CS'];
             $angkatan[$val['angkatan']]['D3'] = $val['CS_D3'];
         }
+
         $data_cicilan = $this->cicilan->data_cicilan(['semester' => $data_post['smt']])->result_array();
 
         $cicilan = [];
+        $people_perpanjang = [];
         foreach ($data_cicilan as $key => $val) {
             if ($val['id_jenis_pembayaran'] == 2) {
                 $cicilan[$val['nim']]['cicilan1'] = $val['bayar'];
@@ -67,30 +69,62 @@ class Laporan_cicilan extends CI_Controller
                 $cicilan[$val['nim']]['cicilan2'] = $val['bayar'];
             } else if ($val['id_jenis_pembayaran'] == 4) {
                 $cicilan[$val['nim']]['cicilan3'] = $val['bayar'];
+            } else if ($val['id_jenis_pembayaran'] == 8) {
+                $cicilan[$val['nim']]['perpanjangan_semester'] = $val['bayar'];
+
+                // $cicilan[$val['nim']]['cicilan1'] = $val['bayar'];
+                // $cicilan[$val['nim']]['cicilan2'] = $val['bayar'];
+                // $cicilan[$val['nim']]['cicilan3'] = $val['bayar'];
+
+                $people_perpanjang[] = $val['nim'];
             }
+
 
         }
 
-        $krs_cicilan = $this->cicilan->krs_cicilan(['krs_new.id_tahun_ajaran' => 20241], $id_kls)->result_array();
+        // echo '<pre>';
+        // echo print_r($people_perpanjang);
+        // echo '</pre>';
+        // exit();
+
+        $krs_cicilan = $this->cicilan->krs_cicilan(['krs_new.id_tahun_ajaran' => $data_post['smt']], $id_kls)->result_array();
         $KRS = [];
         foreach ($krs_cicilan as $key => $val) {
             $KRS[$key] = $val;
-            $KRS[$key]['cicilan1'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
-            $KRS[$key]['cicilan2'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
-            $KRS[$key]['cicilan3'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
-            $KRS[$key]['bayar1'] = isset($cicilan[$val['nipd']]['cicilan1']) ? $cicilan[$val['nipd']]['cicilan1'] : 0;
-            $KRS[$key]['bayar2'] = isset($cicilan[$val['nipd']]['cicilan2']) ? $cicilan[$val['nipd']]['cicilan2'] : 0;
-            $KRS[$key]['bayar3'] = isset($cicilan[$val['nipd']]['cicilan3']) ? $cicilan[$val['nipd']]['cicilan3'] : 0;
+
+            if (in_array($val['nipd'], $people_perpanjang))
+            {
+                $biaya_perp = $angkatan[$val['angkatan']][$val['jenjang']] / 2;
+                $KRS[$key]['cicilan1'] = $biaya_perp / 3;
+                $KRS[$key]['cicilan2'] = $biaya_perp / 3;
+                $KRS[$key]['cicilan3'] = $biaya_perp / 3;
+                $KRS[$key]['bayar1'] = isset($cicilan[$val['nipd']]['perpanjangan_semester']) && $cicilan[$val['nipd']]['perpanjangan_semester'] >= $KRS[$key]['cicilan1'] ? $KRS[$key]['cicilan1'] : 0;
+                $estim_c2  = $cicilan[$val['nipd']]['perpanjangan_semester'] - $KRS[$key]['cicilan1'];
+                $estim_c22 = $estim_c2 > $KRS[$key]['cicilan1'] ? $KRS[$key]['cicilan1'] : $estim_c2;
+                $KRS[$key]['bayar2'] = $estim_c22;
+                $estim_c3  = $estim_c2 > $KRS[$key]['cicilan1'] ? $KRS[$key]['cicilan1'] : $estim_c2;
+                // $estim_c33 = 
+                $KRS[$key]['bayar3'] =  $estim_c22 >= $KRS[$key]['cicilan1'] ? $estim_c3 : 0;
+            }
+            else
+            {
+                $KRS[$key]['cicilan1'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+                $KRS[$key]['cicilan2'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+                $KRS[$key]['cicilan3'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+
+                $KRS[$key]['bayar1'] = isset($cicilan[$val['nipd']]['cicilan1']) ? $cicilan[$val['nipd']]['cicilan1'] : 0;
+                $KRS[$key]['bayar2'] = isset($cicilan[$val['nipd']]['cicilan2']) ? $cicilan[$val['nipd']]['cicilan2'] : 0;
+                $KRS[$key]['bayar3'] = isset($cicilan[$val['nipd']]['cicilan3']) ? $cicilan[$val['nipd']]['cicilan3'] : 0;
+
+            }
+
+            
             $KRS[$key]['sisa1'] = $KRS[$key]['cicilan1'] - $KRS[$key]['bayar1'];
             $KRS[$key]['sisa2'] = $KRS[$key]['cicilan2'] - $KRS[$key]['bayar2'];
             $KRS[$key]['sisa3'] = $KRS[$key]['cicilan3'] - $KRS[$key]['bayar3'];
             $KRS[$key]['total_cicilan'] = $KRS[$key]['cicilan1'] + $KRS[$key]['cicilan2'] + $KRS[$key]['cicilan3'];
             $KRS[$key]['total_bayar'] = $KRS[$key]['bayar1'] + $KRS[$key]['bayar2'] + $KRS[$key]['bayar3'];
             $KRS[$key]['total_sisa'] = $KRS[$key]['sisa1'] + $KRS[$key]['sisa2'] + $KRS[$key]['sisa3'];
-
-
-
-
         }
         // echo '<pre>';
         // echo print_r($KRS);
@@ -102,9 +136,6 @@ class Laporan_cicilan extends CI_Controller
         $sheet = $spreadsheet->getActiveSheet();
         // $sheet->setTitle('Data_Dispen_Semester(' . $smtAktif . ')');
         $sheet->setTitle('Data_cicilan_' . $data_post['smt']);
-
-
-
         //define width of column
         $sheet->getColumnDimension('A')->setWidth(5.43);
         $sheet->getColumnDimension('B')->setWidth(13.00);
@@ -122,7 +153,6 @@ class Laporan_cicilan extends CI_Controller
         $sheet->getColumnDimension('N')->setWidth(18.00);
         $sheet->getColumnDimension('O')->setWidth(18.00);
         $sheet->getColumnDimension('P')->setWidth(18.00);
-
         //Define Style table
         $styleTitle = [
             'alignment' => [
@@ -142,17 +172,16 @@ class Laporan_cicilan extends CI_Controller
                 ]
             ]
         ];
-
         // configurasi Title
         // $sheet->setCellValue('A1', 'DAFTAR TAGIHAN UANG KULIAH ' . $jenis_cicilan . ' SEMESTER ' . $jns_smt . ' ' . $smtAktifRes['id_thn_ajaran'] . '/' . $smtAktifRes['id_thn_ajaran'] + 1);
         $sheet->setCellValue('A1', 'DAFTAR CICILAN SEMESTER ' . $data_post['smt']);
-        $sheet->mergeCells('A1:J2');
+        $sheet->mergeCells('A1:P2');
         // $sheet->setCellValue('A3', $smtAktifRes['nm_smt']);
         // $sheet->setCellValue('A3', '2021/2022');
-        $sheet->mergeCells('A3:J4');
-        $sheet->getStyle('A1:J4')->getFont()->setSize(12);
-        $sheet->getStyle('A1:J4')->getFont()->setBold(true);
-        $sheet->getStyle('A1:J4')->applyFromArray($styleTitle); //styling header table
+        $sheet->mergeCells('A3:P4');
+        $sheet->getStyle('A1:P4')->getFont()->setSize(12);
+        $sheet->getStyle('A1:P4')->getFont()->setBold(true);
+        $sheet->getStyle('A1:P4')->applyFromArray($styleTitle); //styling header table
 
         $row_tbl = 8;
         $no = 1;
@@ -176,7 +205,6 @@ class Laporan_cicilan extends CI_Controller
         $sheet->setCellValue('P' . $row_header, 'SISA SISA');
 
         foreach ($KRS as $key => $va) {
-
             $sheet->setCellValue('A' . $row_tbl + $key, $key + 1);
             $sheet->setCellValue('B' . $row_tbl + $key, $va['nipd']);
             $sheet->setCellValue('C' . $row_tbl + $key, $va['nm_pd']);
@@ -194,6 +222,7 @@ class Laporan_cicilan extends CI_Controller
             $sheet->setCellValue('O' . $row_tbl + $key, $va['total_bayar']);
             $sheet->setCellValue('P' . $row_tbl + $key, $va['total_sisa']);
         }
+
         $filename = 'DATA LAPORAN CICILAN ' . $data_post['smt'];
         $writer = new Xlsx($spreadsheet);
         // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -210,8 +239,6 @@ class Laporan_cicilan extends CI_Controller
         $this->load->view('template', $data);
         // echo json_encode($data);
     }
-
-
     public function CetakLaporanDataDispenV2()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
