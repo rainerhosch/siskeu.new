@@ -231,14 +231,122 @@ class Laporan_cicilan extends CI_Controller
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
         //styling ti
-
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Laporan Cicilan';
         $data['content'] = 'laporan/cicilan';
-
         $this->load->view('template', $data);
         // echo json_encode($data);
     }
+
+    public function chartCicilan()
+    {
+        $data_post = $this->input->post();
+        $biaya_angkatan = $this->cicilan->biaya_angkatan()->result_array();
+        $kls_cicilan = $this->cicilan->kls_cicilan(['kelas_kuliah.id_smt' => $data_post['smt']])->result_array();
+        $id_kls = [];
+        foreach ($kls_cicilan as $key => $val) {
+            $id_kls[] = $val['id_kls'];
+        }
+
+        $angkatan = [];
+        foreach ($biaya_angkatan as $key => $val) {
+            $angkatan[$val['angkatan']]['S1'] = $val['CS'];
+            $angkatan[$val['angkatan']]['D3'] = $val['CS_D3'];
+        }
+
+        $data_cicilan = $this->cicilan->data_cicilan(['semester' => $data_post['smt']])->result_array();
+        $cicilan = [];
+        $people_perpanjang = [];
+        foreach ($data_cicilan as $key => $val) {
+            if ($val['id_jenis_pembayaran'] == 2) {
+                $cicilan[$val['nim']]['cicilan1'] = $val['bayar'];
+            } else if ($val['id_jenis_pembayaran'] == 3) {
+                $cicilan[$val['nim']]['cicilan2'] = $val['bayar'];
+            } else if ($val['id_jenis_pembayaran'] == 4) {
+                $cicilan[$val['nim']]['cicilan3'] = $val['bayar'];
+            } else if ($val['id_jenis_pembayaran'] == 8) {
+                $cicilan[$val['nim']]['perpanjangan_semester'] = $val['bayar'];
+                $people_perpanjang[] = $val['nim'];
+            }
+        }
+
+        $krs_cicilan = $this->cicilan->krs_cicilan(['krs_new.id_tahun_ajaran' => $data_post['smt']], $id_kls)->result_array();
+        $KRS = [];
+
+        $chartT1 = 0;
+        $chartT2 = 0;
+        $chartT3 = 0;
+
+        $chartB1 = 0;
+        $chartB2 = 0;
+        $chartB3 = 0;
+
+        $chartS1 = 0;
+        $chartS2 = 0;
+        $chartS3 = 0;
+
+        foreach ($krs_cicilan as $key => $val) {
+            $KRS[$key] = $val;
+
+            if (in_array($val['nipd'], $people_perpanjang))
+            {
+                $biaya_perp = $angkatan[$val['angkatan']][$val['jenjang']] / 2;
+                $KRS[$key]['cicilan1'] = $biaya_perp / 3;
+                $KRS[$key]['cicilan2'] = $biaya_perp / 3;
+                $KRS[$key]['cicilan3'] = $biaya_perp / 3;
+                $KRS[$key]['bayar1'] = isset($cicilan[$val['nipd']]['perpanjangan_semester']) && $cicilan[$val['nipd']]['perpanjangan_semester'] >= $KRS[$key]['cicilan1'] ? $KRS[$key]['cicilan1'] : 0;
+                $estim_c2  = $cicilan[$val['nipd']]['perpanjangan_semester'] - $KRS[$key]['cicilan1'];
+                $estim_c22 = $estim_c2 > $KRS[$key]['cicilan1'] ? $KRS[$key]['cicilan1'] : $estim_c2;
+                $KRS[$key]['bayar2'] = $estim_c22;
+                $estim_c3  = $estim_c2 > $KRS[$key]['cicilan1'] ? $KRS[$key]['cicilan1'] : $estim_c2;
+                // $estim_c33 = 
+                $KRS[$key]['bayar3'] =  $estim_c22 >= $KRS[$key]['cicilan1'] ? $estim_c3 : 0;
+            }
+            else
+            {
+                $KRS[$key]['cicilan1'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+                $KRS[$key]['cicilan2'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+                $KRS[$key]['cicilan3'] = $angkatan[$val['angkatan']][$val['jenjang']] / 3;
+
+                $KRS[$key]['bayar1'] = isset($cicilan[$val['nipd']]['cicilan1']) ? $cicilan[$val['nipd']]['cicilan1'] : 0;
+                $KRS[$key]['bayar2'] = isset($cicilan[$val['nipd']]['cicilan2']) ? $cicilan[$val['nipd']]['cicilan2'] : 0;
+                $KRS[$key]['bayar3'] = isset($cicilan[$val['nipd']]['cicilan3']) ? $cicilan[$val['nipd']]['cicilan3'] : 0;
+
+            }
+
+            $KRS[$key]['sisa1'] = $KRS[$key]['cicilan1'] - $KRS[$key]['bayar1'];
+            $KRS[$key]['sisa2'] = $KRS[$key]['cicilan2'] - $KRS[$key]['bayar2'];
+            $KRS[$key]['sisa3'] = $KRS[$key]['cicilan3'] - $KRS[$key]['bayar3'];
+            $KRS[$key]['total_cicilan'] = $KRS[$key]['cicilan1'] + $KRS[$key]['cicilan2'] + $KRS[$key]['cicilan3'];
+            $KRS[$key]['total_bayar'] = $KRS[$key]['bayar1'] + $KRS[$key]['bayar2'] + $KRS[$key]['bayar3'];
+            $KRS[$key]['total_sisa'] = $KRS[$key]['sisa1'] + $KRS[$key]['sisa2'] + $KRS[$key]['sisa3'];
+
+            $chartT1 += $KRS[$key]['cicilan1'];
+            $chartT2 += $KRS[$key]['cicilan2'];
+            $chartT3 += $KRS[$key]['cicilan3'];
+
+            $chartB1 += $KRS[$key]['bayar1'];
+            $chartB2 += $KRS[$key]['bayar2'];
+            $chartB3 += $KRS[$key]['bayar3'];
+
+            $chartS1 += $KRS[$key]['sisa1'];
+            $chartS2 += $KRS[$key]['sisa2'];
+            $chartS3 += $KRS[$key]['sisa3'];
+
+            
+        }
+
+        $chartCicilan[0]['name'] = 'TAGIHAN';
+        $chartCicilan[0]['data'] = [$chartT1,$chartT2,$chartT3];
+        $chartCicilan[1]['name'] = 'BAYAR';
+        $chartCicilan[1]['data'] = [$chartB1,$chartB2,$chartB3];
+        $chartCicilan[2]['name'] = 'SISA';
+        $chartCicilan[2]['data'] = [$chartS1,$chartS2,$chartS3];
+        $data['chartCicilan'] = $chartCicilan;
+        $data['chartT1']      = $chartT1;
+        echo json_encode($data);
+    }
+
     public function CetakLaporanDataDispenV2()
     {
         $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();

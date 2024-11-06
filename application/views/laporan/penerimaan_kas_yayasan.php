@@ -27,6 +27,12 @@
         font-style: oblique;
     }
 </style>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 <!-- Page content -->
 <div id="page-content">
     <ul class="breadcrumb breadcrumb-top">
@@ -74,6 +80,29 @@
                     </h3>
                 </div>
             </a>
+        </div>
+    </div>
+
+    <div class="row table_content">
+        <div class="col-sm-12">
+            <div class="row data_historiTX">
+                <div class="col-sm-12">
+                    <div class="block full">
+                        <div class="block-title">
+                            <h2><strong>Laporan</strong> Laporan Kas</h2>
+                        </div>
+                        <div id="SLap">
+                        </div>
+
+                        <figure class="highcharts-figure">
+                            <div id="container"></div>
+                            <p class="highcharts-description">
+                            </p>
+                        </figure>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -146,7 +175,144 @@
 
 
     <script>
+
+        function IDRFormatter(angka, prefix) {
+            var number_string = angka.toString().replace(/[^,\d]/g, ''),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                var separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+        }
         $(document).ready(function () {
+
+            var semesterSelect = '';
+            
+
+            $.ajax({
+                url: '<?= base_url() ?>masterdata/getDataSemerter/',
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    let data_smt = response.data;
+                    console.log(response);
+                    semesterSelect += '<select id="semesterSelectLap" class="form-control">';
+                    $.each(data_smt, function (index, smt) {
+                        if(smt.id_smt > 20222
+                            
+                        ) {
+                            semesterSelect += `<option value="${smt.id_smt}" ${smt.status == 1 ? 'selected' : ''} style="${smt.status == 1 ? 'color: blue;' : ''}">${smt.id_smt}</option>`;
+                        }
+                    });
+                    semesterSelect += '</select>';
+                    $('#SLap').html(semesterSelect);
+                    $('body').on('change', '#semesterSelectLap',function() {
+                        let id_smt = $(this).val();
+                        // chartCicilan
+                        $.ajax({
+                            url: '<?= base_url() ?>user/Laporan_cicilan/chartCicilan/',
+                            type: 'POST',
+                            data: {
+                                smt: id_smt,
+                            },
+                            dataType: 'json',
+                            success: function (response) {
+
+                                Highcharts.setOptions({
+                                    lang: {
+                                        thousandsSep: ','
+                                    }
+                                });
+                                Highcharts.chart('container', {
+                                    chart: {
+                                        type: 'bar'
+                                    },
+                                    title: {
+                                        text: '',
+                                        align: 'left'
+                                    },
+                                    subtitle: {
+                                        // text: 'Source: <a ' +
+                                        //     'href="https://en.wikipedia.org/wiki/List_of_continents_and_continental_subregions_by_population"' +
+                                        //     'target="_blank">Wikipedia.org</a>',
+                                        align: 'left'
+                                    },
+                                    xAxis: {
+                                        categories: ['CICILAN 1', 'CICILAN 2', 'CICILAN 3'],
+                                        title: {
+                                            text: ' '
+                                        },
+                                        gridLineWidth: 1,
+                                        lineWidth: 0,
+                                        
+                                    },
+                                    yAxis: {
+                                        min: 0,
+                                        title: {
+                                            text: ' ',
+                                            align: 'high'
+                                        },
+                                        labels: {
+                                            overflow: 'justify',
+                                            labels: { 
+                                                formatter: function () {
+                                                    return IDRFormatter(this.value, 'Rp. ');
+                                                }
+                                            },
+                                            
+                                        },
+                                        gridLineWidth: 0
+                                    },
+                                    tooltip: {
+                                        valueSuffix: ' '
+                                    },
+                                    plotOptions: {
+                                        bar: {
+                                            borderRadius: '50%',
+                                            dataLabels: {
+                                                enabled: true
+                                            },
+                                            groupPadding: 0.1
+                                        }
+                                    },
+                                    legend: {
+                                        enabled: true,
+                                        layout: 'vertical',
+                                        align: 'right',
+                                        verticalAlign: 'top',
+                                        x: 0,
+                                        y: 270,
+                                        floating: true,
+                                        borderWidth: 1,
+                                        backgroundColor:
+                                            Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                                        shadow: true
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    series: response.chartCicilan
+                                });
+                            }
+                        });
+                        // alert(id_smt);
+                        
+
+                        
+
+                    });
+                    $('#semesterSelectLap').change();
+                }
+            });
+            
+
             // pagination setup
             loadPagination(0);
             $('#pagination').on('click', 'a', function (e) {
