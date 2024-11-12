@@ -544,7 +544,8 @@ class Laporan extends CI_Controller
     {
         $data['title'] = 'SiskeuNEW';
         $data['page'] = 'Laporan Transfer Pembayaran';
-        $data['content'] = 'laporan/data_transfer_pembayaran';
+        $data['content'] = 'laporan/data_transfer_pembayaran_v2';
+        // $data['content'] = 'laporan/data_transfer_pembayaran';
         $this->load->view('template', $data);
     }
 

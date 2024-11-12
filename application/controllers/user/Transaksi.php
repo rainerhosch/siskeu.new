@@ -19,6 +19,7 @@ class Transaksi extends CI_Controller
             redirect(base_url());
         }
         date_default_timezone_set('Asia/Jakarta');
+        $this->load->library('pagination');
         $this->load->library('Terbilang');
         $this->load->library('FormatTanggal');
 
@@ -69,10 +70,14 @@ class Transaksi extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             $data_post = $this->input->post();
-            if ($data_post['filter'] != null) {
-                $res = $this->transaksi->getDataBuktiPembayaran($data_post['filter'])->result_array();
+            $allcount = $this->transaksi->getDataBuktiPembayaran()->num_rows();
+            $data = array();
+            if (isset($data_post['filter']) && $data_post['filter'] != null) {
+                $res = $this->transaksi->getDataBuktiPembayaran($data_post['filter'], null, null)->result_array();
             } else {
-                $res = $this->transaksi->getDataBuktiPembayaran()->result_array();
+                if ($data_post['length'] != null) {
+                    $res = $this->transaksi->getDataBuktiPembayaran(null, $data_post['length'], $data_post['start'])->result_array();
+                }
             }
             foreach ($res as $i => $val) {
                 $data_rek_tujuan = $this->transaksi->get_data_rekening(['id_rek' => $val['rek_tujuan_trf']])->row_array();
@@ -101,9 +106,76 @@ class Transaksi extends CI_Controller
                 'msg' => 'Invalid Request!',
                 'data' => null
             ];
+
+        }
+        // $data['data_transaksi'] = $dataHistoriTx;
+        $data['row'] = isset($data_post['start']) ? $data_post['start'] : 0;
+        $data['draw'] = $this->input->post('draw');
+        $data["recordsTotal"] = $allcount;
+        $data["recordsFiltered"] = $allcount;
+        $data['user_loged'] = $this->session->userdata('id_user');
+        echo json_encode($data);
+    }
+
+    public function get_data_trf_online_v2()
+    {
+        $data_post = $this->input->post();
+        if ($this->input->is_ajax_request()) {
+            $recordTotal = $this->transaksi->count_all_databuktipembayaran();
+            $res = $this->transaksi->getDataBuktiPembayaranDataTables()->result_array();
+            $recordFiltered = $this->transaksi->count_filtered_databuktipembayaran()->num_rows();
+            if (!$res) {
+                $data = [
+                    'status' => false,
+                    'code' => 404,
+                    'msg' => 'Data not Found!',
+                    'data' => null,
+                    'draw' => (int) $data_post['draw'],
+                    'recordsTotal' => 0,
+                    'recordsFiltered' => 0,
+                ];
+            } else {
+                $no = $_POST['start'];
+                foreach ($res as $i => $list) {
+                    $no++;
+                    $row = array();
+
+                    $data_rek_tujuan = $this->transaksi->get_data_rekening(['id_rek' => $list["rek_tujuan_trf"]])->row_array();
+                    $res[$i]['bank_penerima'] = $data_rek_tujuan;
+
+                    $jnsBayar = explode(',', $list["id_jenis_bayar"]);
+                    $pembayaran = [];
+                    foreach ($jnsBayar as $j => $value) {
+                        $filter = ['id_jenis_pembayaran' => $value];
+                        $pembayaran[$j] = $this->masterdata->GetAllJenisTrx($filter)->row_array();
+                    }
+                    $res[$i]['pembayaran'] = $pembayaran;
+                }
+                $data = [
+                    'status' => true,
+                    'code' => 200,
+                    'msg' => 'Ok!',
+                    'data' => $res,
+                    'draw' => (int) $data_post['draw'],
+                    'recordsTotal' => $recordTotal,
+                    'recordsFiltered' => $recordFiltered,
+                ];
+            }
+        } else {
+            $data = [
+                'status' => false,
+                'code' => 500,
+                'msg' => 'Invalid Request!',
+                'data' => null,
+                'row' => isset($data_post['start']) ? $data_post['start'] : 0,
+                'draw' => $data_post['draw'],
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+            ];
         }
         echo json_encode($data);
     }
+
 
     public function insert_trx_from_trf()
     {
@@ -1157,7 +1229,7 @@ class Transaksi extends CI_Controller
                 'nim' => $nimMhs,
                 'semester' => $smtBayar,
                 'bayar_via' => $bayar_via,
-                'substr(jam, 1,2) =' => substr($jam,0,2),
+                'substr(jam, 1,2) =' => substr($jam, 0, 2),
                 'user_id' => $this->session->userdata('id_user')
             ];
 
@@ -1602,7 +1674,7 @@ class Transaksi extends CI_Controller
                 'tanggal' => $tgl,
                 'nim' => $nimMhs,
                 'semester' => $smtAktif,
-                'substr(jam, 1,2) =' => substr($jam,0,2),
+                'substr(jam, 1,2) =' => substr($jam, 0, 2),
                 'user_id' => $this->session->userdata('id_user')
             ];
 

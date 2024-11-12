@@ -13,6 +13,12 @@ class M_transaksi extends CI_Model
     var $column_order = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim', 't.user_id', 't.status_transaksi', 't.transaksi_ke', 'm.nm_pd', 'm.nm_jur', 'm.nm_jenj_didik', 'ts.icon_status_tx', 'u.nama_user', 'u.ttd'); //set column field database for datatable orderable
     var $column_search = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim', ); //set column field database for datatable searchable 
     var $order = array('t.id_transaksi' => 'desc'); // default order 
+    
+    public function __construct() {
+        parent::__construct();
+        $this->_dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+    }
+
 
     private function _get_datatables_query()
     {
@@ -395,19 +401,85 @@ class M_transaksi extends CI_Model
         return $this->db->insert('adm_bukti_pembayaran', $data);
     }
     // get data transfer from simak
-    public function getDataBuktiPembayaran($where = null)
+    public function getDataBuktiPembayaran($where = null, $limit = null, $offset = null)
     {
-
         $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
         $dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
         $dbwastudig_simak->from('adm_bukti_pembayaran bp');
         $dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
         if ($where != null) {
+            // $dbwastudig_simak->group_start();
             $dbwastudig_simak->where($where);
+            // $dbwastudig_simak->like('nipd', $where);
+            // $dbwastudig_simak->or_like('nmpd', $where);
+            // $dbwastudig_simak->group_end();
         }
         $dbwastudig_simak->order_by('id_bukti_trf', 'DESC');
+        if ($limit != null && $offset != null) {
+            $dbwastudig_simak->limit($limit, $offset);
+        }
         return $dbwastudig_simak->get();
     }
+
+    private $_column_order = array('bp.id_bukti_trf', 'bp.nipd', 'mjp.nm_jenis_pembayaran', 'bp.tgl_trf'); // Set kolom yang bisa diurutkan
+    private $_column_search = array('bp.nipd');
+
+    private function _data_tables_query()
+    {
+        $i = 0;
+
+        $this->_dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
+        $this->_dbwastudig_simak->from('adm_bukti_pembayaran bp');
+        $this->_dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+        // for search
+        foreach ($this->_column_search as $item) {
+            if ($_POST['search']['value']) {
+                if ($i === 0) {
+                    $this->_dbwastudig_simak->group_start();
+                    $this->_dbwastudig_simak->like($item, $_POST['search']['value']);
+                } else {
+                    $this->_dbwastudig_simak->or_like($item, $_POST['search']['value']);
+                }
+
+                if (count($this->_column_search) - 1 == $i)
+                    $this->_dbwastudig_simak->group_end();
+            }
+            $i++;
+        }
+        
+        // config order
+        $this->_dbwastudig_simak->order_by('id_bukti_trf', 'DESC');
+        // if (isset($_POST['order'])) {
+        //     $this->_dbwastudig_simak->order_by($this->_column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        // } else if (isset($this->order)) {
+        //     $order = $this->order;
+        //     $this->_dbwastudig_simak->order_by(key($order), $order[key($order)]);
+        // }
+        // return $this->_dbwastudig_simak->get();
+    }
+
+    public function getDataBuktiPembayaranDataTables()
+    {
+        $this->_data_tables_query();
+        if ($_POST['length'] != -1)
+            $this->_dbwastudig_simak->limit($_POST['length'], $_POST['start']);
+        return $this->_dbwastudig_simak->get();
+    }
+
+    public function count_filtered_databuktipembayaran()
+    {
+        $this->_data_tables_query();
+        return $this->_dbwastudig_simak->get();
+    }
+
+    public function count_all_databuktipembayaran()
+    {
+        $this->_dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
+        $this->_dbwastudig_simak->from('adm_bukti_pembayaran bp');
+        $this->_dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+        return $this->_dbwastudig_simak->count_all_results();
+    }
+
 
     public function updateBuktiPembayaran($filter, $data)
     {

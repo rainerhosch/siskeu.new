@@ -6,6 +6,8 @@ $(".btn_trf_online").click(function () {
       filter: {
         status: 0,
       },
+      length: null,
+      start: null,
     },
     dataType: "JSON",
     success: function (response) {
@@ -19,12 +21,12 @@ $(".btn_trf_online").click(function () {
           html += `<td class = "text-center" >${no}</td>`;
           html += `<td class = "text-center" >${value.nipd}</td>`;
           html += `<td class = "text-center" >`;
-          
+
           $.each(value.pembayaran, function (i, val) {
             // console.log(val);
-            if(val != null){
+            if (val != null) {
               html += `<i>${val.nm_jenis_pembayaran}</i><br>`;
-            }else{
+            } else {
               html += `<i class="text-danger">Pembayaran tidak valid</i><br>`;
             }
           });
@@ -120,9 +122,13 @@ function accTRF(id, type_bayar) {
               html += `<option value="${response.thn_smt}1"> ( ${response.thn_smt}1 - Ganjil)</option>`;
               html += `<option value="${response.thn_smt}2"> ( ${response.thn_smt}2 - Genap)</option>`;
               if (response.data_tg.length === 0) {
-                html +=`<hr>`
-                html += `<option value="${(response.thn_smt*1)+1}1"> ( ${(response.thn_smt*1)+1}1 - Ganjil)</option>`;
-                html += `<option value="${(response.thn_smt*1)+1}2"> ( ${(response.thn_smt*1)+1}2 - Genap)</option>`;
+                html += `<hr>`;
+                html += `<option value="${response.thn_smt * 1 + 1}1"> ( ${
+                  response.thn_smt * 1 + 1
+                }1 - Ganjil)</option>`;
+                html += `<option value="${response.thn_smt * 1 + 1}2"> ( ${
+                  response.thn_smt * 1 + 1
+                }2 - Genap)</option>`;
               }
               html += `</select>`;
               html += `</td>`;
@@ -139,7 +145,10 @@ function accTRF(id, type_bayar) {
               html += `</td>`;
               html += `</tr>`;
               $("#data_kwajiban_tbody2").html(html);
-              $("select[name=smt] option[value=" + smt + "]").prop("selected", true);
+              $("select[name=smt] option[value=" + smt + "]").prop(
+                "selected",
+                true
+              );
               // $('.input_smt').prop('disabled', 'disabled')
               let bayar_via = $(".bayar_via").val();
               let tds = ``;
@@ -173,7 +182,7 @@ function accTRF(id, type_bayar) {
                 $(".detail_trf").remove();
               }
 
-              $("select[name=smt] option:selected").each(function() {
+              $("select[name=smt] option:selected").each(function () {
                 let smt = $(this).val();
                 let nipd = $("#nipd").val();
                 // console.log(smt)
@@ -289,7 +298,7 @@ function accTRF(id, type_bayar) {
                     },
                   });
                 }
-              })
+              });
               // });
 
               if (response.dataHistoriTX != 0) {
