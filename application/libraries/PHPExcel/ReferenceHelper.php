@@ -890,9 +890,9 @@ class PHPExcel_ReferenceHelper
 
 			// Verify which parts should be updated
 			$updateColumn = (($newColumn{0} != '$') && ($beforeColumn{0} != '$') &&
-							 PHPExcel_Cell::columnIndexFromString($newColumn) >= PHPExcel_Cell::columnIndexFromString($beforeColumn));
+							PHPExcel_Cell::columnIndexFromString($newColumn) >= PHPExcel_Cell::columnIndexFromString($beforeColumn));
 			$updateRow = (($newRow{0} != '$') && ($beforeRow{0} != '$') &&
-						  $newRow >= $beforeRow);
+						$newRow >= $beforeRow);
 
 			// Create new column reference
 			if ($updateColumn) {
