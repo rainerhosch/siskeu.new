@@ -18,3 +18,4 @@ application/logs/*
 !application/logs/.htaccess
 application/config/database.php
 config_db.php
+db_file/simak_new_siskeu.sql
