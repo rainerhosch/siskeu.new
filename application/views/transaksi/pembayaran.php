@@ -300,7 +300,7 @@
         $(document).ready(function () {
             var input_search = '';
             $.ajax({
-                url: '<?= base_url() ?>user/Transaksi/getDataTrfMahasiswa/',
+                url: '<?= base_url("user/Transaksi/getDataTrfMahasiswa/", "https") ?>',
                 type: 'POST',
                 serverSide: true,
                 dataType: 'json',
