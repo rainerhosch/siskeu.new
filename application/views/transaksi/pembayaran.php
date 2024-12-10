@@ -335,7 +335,7 @@
             function loadFilter(keyword) {
                 let jenis_kas = 'all';
                 $.ajax({
-                    url: '<?= base_url() ?>laporan/loadRecord/',
+                    url: '<?= base_url("laporan/loadRecord/", "https") ?>',
                     type: 'POST',
                     data: {
                         keyword: keyword,
@@ -363,7 +363,7 @@
                     filter = input_search
                 }
                 $.ajax({
-                    url: '<?= base_url() ?>laporan/loadRecord/' + offset,
+                    url: '<?= base_url("laporan/loadRecord/", "https") ?>' + offset,
                     type: 'POST',
                     data: {
                         keyword: filter,
