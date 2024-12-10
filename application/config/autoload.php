@@ -120,7 +120,9 @@ $autoload['helper'] = array(
 |
 */
 $autoload['config'] = [
-    'pdf_config'
+    'pdf_config',
+    'hooks'
+    // 'cors'
 ];
 
 /*
