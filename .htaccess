@@ -3,9 +3,3 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 
-<IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "https://siskeu.wastu.digital"
-    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
-    Header set Access-Control-Allow-Headers "Origin, Content-Type, Accept, Authorization, X-Requested-With"
-    Header set Access-Control-Allow-Credentials "true"
-</IfModule>
