@@ -300,7 +300,7 @@
         $(document).ready(function () {
             var input_search = '';
             $.ajax({
-                url: '<?= base_url("user/Transaksi/getDataTrfMahasiswa/", "https") ?>',
+                url: '<?= base_url() ?>user/Transaksi/getDataTrfMahasiswa/',
                 type: 'POST',
                 serverSide: true,
                 dataType: 'json',
@@ -335,7 +335,7 @@
             function loadFilter(keyword) {
                 let jenis_kas = 'all';
                 $.ajax({
-                    url: '<?= base_url("laporan/loadRecord/", "https") ?>',
+                    url: '<?= base_url() ?>laporan/loadRecord/',
                     type: 'POST',
                     data: {
                         keyword: keyword,
@@ -363,7 +363,7 @@
                     filter = input_search
                 }
                 $.ajax({
-                    url: '<?= base_url("laporan/loadRecord/", "https") ?>' + offset,
+                    url: '<?= base_url() ?>laporan/loadRecord/' + offset,
                     type: 'POST',
                     data: {
                         keyword: filter,
