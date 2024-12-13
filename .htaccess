@@ -1,7 +1,7 @@
 RewriteEngine On
 
 # Periksa apakah koneksi tidak menggunakan HTTPS
-RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
 # Alihkan ke HTTPS dengan URL yang sama, tetapi gunakan pengalihan permanen (R=301)
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
