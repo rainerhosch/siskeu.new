@@ -79,7 +79,7 @@
 
                         <div class="md-form mb-5 row">
                             <div class="col-md-3">
-                                <label data-error="wrong" data-success="right" for="edit_password">Password</label>
+                                <label data-error="wrong" data-success="right" for="edit_password_profile">Password</label>
                             </div>
                             <div class="col-md-9">
                                 <input type="password" id="edit_password_profile" name="edit_password" class="form-control validate">
@@ -98,10 +98,9 @@
 <script>
     $(document).ready(function() {
         $('#edit_profile').on('click', function() {
-            let BASE_URL = "<?php echo base_url(); ?>";
             $.ajax({
                 type: "GET",
-                url: BASE_URL + 'manajemen/getUserByID',
+                url: `<?= base_url('manajemen/getUserByID') ?>`,
                 dataType: "json",
                 success: function(response) {
                     $('#editProfile').modal('show');

@@ -13,8 +13,7 @@
         font-weight: 400;
     }
 </style>
-<div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle"
-    aria-hidden="true">
+<div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -143,7 +142,7 @@
                             }
 
                             html += `<tr>`;
-                            html += `<td><label for="input_smt">Semester</label></td>`;
+                            html += `<td><label for="smt_1">Semester</label></td>`;
                             html += `<td class="text-center">`;
                             html += `<select class="form-control input_smt" name="smt" id="smt_1" ${stts_radio}>`;
                             html += `<option value="${response.thn_smt}1" ${response.smt_aktif === `${response.thn_smt}1` ? 'selected' : ''}> ( ${response.thn_smt}1 - Ganjil)</option>`;
@@ -254,7 +253,7 @@
                                             $.each(response.dataKewajibanSmt, function (i, value) {
                                                 i++;
                                                 htmlx += `<tr>`;
-                                                htmlx += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
+                                                htmlx += `<td><label data-error="wrong" data-success="right" for="${value.post_id}">${value.label}</label></td>`;
                                                 htmlx += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
                                                 htmlx += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${value.biaya == 0 ? "disabled" : ""
                                                     }></td>`;
@@ -262,7 +261,7 @@
                                             });
                                             // line potongan spp
                                             htmlx += `<tr>`;
-                                            htmlx += `<td><label data-error="wrong" data-success="right" for="uang_masuk">Potongan SPP</label></td>`;
+                                            htmlx += `<td><label data-error="wrong" data-success="right" for="check_uang_masuk">Potongan SPP</label></td>`;
                                             htmlx += `<td class="text-center"><input type="hidden" id="uang_masuk" name="uang_masuk" class="form-control validate text-right uang_masuk" value="1" readonly></td>`;
                                             htmlx += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="check_uang_masuk"></td>`;
                                             htmlx += `</tr>`;
@@ -454,6 +453,15 @@
                 },
             });
         });
+
+        document.getElementById('formPembayaran').addEventListener('shown.bs.modal', function () {
+            document.getElementById('formPembayaran').focus();
+        });
+
+        document.getElementById('formPembayaran').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('btnOpenModal').focus(); // Pindahkan fokus ke tombol pemicu
+        });
+
 
     });
 </script>

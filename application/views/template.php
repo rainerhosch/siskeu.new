@@ -10,29 +10,30 @@
     <meta name="author" content="STT Wastukancana">
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src ;"> -->
 
-    <link rel="shortcut icon" href="<?= base_url() ?>assets/proui/img/favicon/logo.png" media="all">
-    <link rel="stylesheet" href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" type="text/css" media="all">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap.min.css" media="all">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css" media="all">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css" media="all">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/themes.css" media="all">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/template/css/my.css" media="all">
+    <link rel="shortcut icon" href="<?= base_url() ?>assets/proui/img/favicon/logo.png" type="text/css">
+    <link rel="stylesheet" href="<?= base_url('assets/') ?>vendor/fontawesome-free/css/all.min.css" type="text/css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/plugins.css" type="text/css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/main.css" type="text/css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/proui/css/themes.css" type="text/css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/template/css/my.css" type="text/css">
     <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/proui/swal/dist/sweetalert2.min.css"> -->
-    <link rel="stylesheet" href="<?= base_url('assets/template/sweetalert2/dist/sweetalert2.min.css') ?>" media="all">
+    <link rel="stylesheet" href="<?= base_url('assets/template/sweetalert2/dist/sweetalert2.min.css') ?>" type="text/css">
 
     <!-- javascript -->
-    <script src="<?= base_url() ?>assets/proui/js/vendor/modernizr.min.js" async></script>
-    <script src="<?= base_url() ?>assets/proui/js/vendor/jquery.min.js" async></script>
-    <script src="<?= base_url() ?>assets/proui/js/vendor/bootstrap.min.js" async></script>
-    <script src="<?= base_url() ?>assets/proui/js/plugins.js" async></script>
-    <script src="<?= base_url() ?>assets/proui/js/app.js" async></script>
-    <script src="<?= base_url() ?>assets/proui/js/pages/index.js" async></script>
+    <script src="<?= base_url() ?>assets/proui/js/vendor/modernizr.min.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/vendor/jquery.min.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/vendor/bootstrap.min.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/plugins.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/app.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/pages/index.js"></script>
     <!-- <script src="<?= base_url() ?>assets/proui/swal/dist/sweetalert2.js"></script> -->
-    <script src="<?= base_url() ?>assets/template/sweetalert2/dist/sweetalert2.min.js" async></script>
+    <script src="<?= base_url() ?>assets/template/sweetalert2/dist/sweetalert2.min.js"></script>
 
-    <script src="<?= base_url() ?>assets/proui/js/pages/tablesDatatables.js" async></script>
-    <script src="<?= base_url() ?>assets/proui/js/pages/moment.min.js" async></script>
+    <script src="<?= base_url() ?>assets/proui/js/pages/tablesDatatables.js"></script>
+    <script src="<?= base_url() ?>assets/proui/js/pages/moment.min.js"></script>
 
     <style>
         .containerX {

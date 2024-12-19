@@ -15,17 +15,17 @@ $config = [
      | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
      |
      */
-    'allowed_methods' => ['GET, POST, OPTIONS, PUT, DELETE'],
+    // 'allowed_methods' => ['GET, POST, OPTIONS, PUT, DELETE'],
 
-    'allowed_origins' => ['https://siskeu.wastu.digital, http://siskeu.wastu.digital'],
+    // 'allowed_origins' => ['https://siskeu.wastu.digital, http://siskeu.wastu.digital'],
 
-    'allowed_origins_patterns' => [],
+    // 'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['Origin, Content-Type, Accept, Authorization, X-Requested-With'],
+    // 'allowed_headers' => ['Origin, Content-Type, Accept, Authorization, X-Requested-With'],
 
-    'exposed_headers' => [],
+    // 'exposed_headers' => [],
 
-    'max_age' => 0,
+    // 'max_age' => 0,
 
-    'supports_credentials' => false,
+    // 'supports_credentials' => false,
 ];

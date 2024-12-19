@@ -37,7 +37,7 @@ $("#nipd").on("keypress", function (e) {
           }
 
           html += `<tr>`;
-          html += `<td><label for="input_smt">Semester</label></td>`;
+          html += `<td><label for="smt_1">Semester</label></td>`;
           html += `<td class="text-center">`;
           html += `<select class="form-control input_smt" name="smt" id="smt_1" ${stts_radio}><br>`;
           html += `<option value="${response.thn_smt}1"> ( ${response.thn_smt}1 - Ganjil)</option>`;
@@ -136,7 +136,7 @@ $("#nipd").on("keypress", function (e) {
                   $.each(response.dataKewajibanSmt, function (i, value) {
                     i++;
                     htmlx += `<tr>`;
-                    htmlx += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
+                    htmlx += `<td><label data-error="wrong" data-success="right" for="${value.post_id}">${value.label}</label></td>`;
                     htmlx += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${value.biaya}" disabled></td>`;
                     htmlx += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${
                       value.biaya == 0 ? "disabled" : ""

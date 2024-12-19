@@ -284,7 +284,7 @@
                                                         attr_checked = ``;
                                                     }
                                                     htmlx += `<tr>`;
-                                                    htmlx += `<td><label data-error="wrong" data-success="right" for="${value.label}">${value.label}</label></td>`;
+                                                    htmlx += `<td><label data-error="wrong" data-success="right" for="${value.post_id}">${value.label}</label></td>`;
                                                     htmlx += `<td class="text-center"><input type="text" id="${value.post_id}" name="${value.post_id}" class="form-control validate text-right input_${i}" value="${vBiaya}" ${attr_disable}></td>`;
                                                     htmlx += `<td class="text-center"><input class="form-check-input" type="checkbox" value="" id="checkcox_${i}" ${vBiaya == 0 ? "disabled" : ""
                                                         } ${attr_checked}></td>`;

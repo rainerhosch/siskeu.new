@@ -14,7 +14,7 @@
                     <div class="col-xs-12">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="gi gi-user"></i></span>
-                            <input type="text" id="username" name="username" class="form-control input-lg" placeholder="Username" value="<?= set_value('username'); ?>">
+                            <input type="text" id="username" name="username" class="form-control input-lg" placeholder="Username" value="<?= set_value('username'); ?>" autocomplete="on">
                             <?= form_error('username', '<small class="text-danger pl-3">', '</small>'); ?>
                         </div>
                     </div>

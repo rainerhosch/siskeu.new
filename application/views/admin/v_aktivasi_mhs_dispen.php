@@ -132,16 +132,16 @@
                     <form action="#" id="form_dispen">
                         <!-- <form action="<?php echo base_url(); ?>aktivasi-mahasiswa/aktif_manual" method="POST"> -->
                         <div class="form-group input-group-sm">
-                            <label for="exampleInputEmail1">Tahun Akademik</label>
+                            <label for="tahun_akademik">Tahun Akademik</label>
                             <input type="text" class="form-control" id="tahun_akademik" name="tahun_akademik" value="<?= $tahun_akademik; ?>" readonly>
                         </div>
 
                         <div class="form-group input-group-sm">
-                            <label for="exampleInputJurusan">Tanggal Pelunasan</label>
+                            <label for="tgl_pelunasan">Tanggal Pelunasan</label>
                             <input type="date" class="form-control" id="tgl_pelunasan" name="tgl_pelunasan" aria-describedby="tgl_pelunasanHelp" placeholder="">
                         </div>
                         <div class="form-group input-group-sm" id="jenis_dispen_form" hidden>
-                            <label for="exampleInputEmail1">Jenis Tunggakan</label>
+                            <label for="jenis_dispen">Jenis Tunggakan</label>
                             <select class="form-control" name="jenis_dispen" id="jenis_dispen" required>
                                 <option value="x">-- Pilih Jenis Dispen --</option>
                                 <option value="1">Ciciclan 1 | PERWALIAN</option>
@@ -150,37 +150,37 @@
                             </select>
                         </div>
                         <div class="form-group input-group-sm" id="form_cari" hidden>
-                            <label for="exampleInputEmail1">Cari Nim</label>
+                            <label for="search-box">Cari Nim</label>
                             <input type="text" class="form-control form_input_data" id="search-box" name="nipd_mhs" placeholder="Cari NIM.">
                             <div id="suggesstion-box">
                             </div>
                         </div>
                         <div id="form_data_mhs" hidden>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputEmail1">NIM</label>
+                                <label for="nipd">NIM</label>
                                 <input type="text" class="form-control form_input_data" id="nipd" name="nipd" aria-describedby="emailHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputNama">Nama</label>
+                                <label for="nama">Nama</label>
                                 <input type="text" class="form-control form_input_data" id="nama" name="nama" aria-describedby="namaHelp" placeholder="" readonly>
                                 <input type="hidden" class="form-control form_input_data" id="id_reg_pd" name="id_reg_pd" aria-describedby="namaHelp" placeholder="" readonly>
                                 <input type="hidden" class="form-control form_input_data" id="id_jur" name="id_jur" aria-describedby="namaHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputJurusan">Jurusan</label>
+                                <label for="jurusan">Jurusan</label>
                                 <input type="text" class="form-control form_input_data" id="jurusan" name="jurusan" aria-describedby="jurusanHelp" placeholder="" readonly>
                             </div>
 
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputTunggakan">Tunggakan Semester Lalu</label>
+                                <label for="tg_smt_lalu">Tunggakan Semester Lalu</label>
                                 <input type="text" class="form-control form_input_data" id="tg_smt_lalu" name="tg_smt_lalu" aria-describedby="tg_smt_laluHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputTunggakan" id="lbl_tg_dispen">Jumlah Dispen</label>
+                                <label for="tg_dispen" id="lbl_tg_dispen">Jumlah Dispen</label>
                                 <input type="text" class="form-control form_input_data" id="tg_dispen" name="tg_dispen" aria-describedby="tg_dispenHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInput">No Tlp Mahasiswa</label>
+                                <label for="no_tlp">No Tlp Mahasiswa</label>
                                 <input type="text" class="form-control form_input_data" id="no_tlp" name="no_tlp" aria-describedby="tg_dispenHelp" placeholder="">
                             </div>
                             <div class="text-right" id="btn_save_data" style="margin-bottom: 5px;">
@@ -208,16 +208,16 @@
                 <div class="modal-body">
                     <form action="#" id="form_edit_dispen">
                         <div class="form-group input-group-sm">
-                            <label for="exampleInputEmail1">Tahun Akademik</label>
+                            <label for="tahun_akademik_edit">Tahun Akademik</label>
                             <input type="text" class="form-control" id="tahun_akademik_edit" name="tahun_akademik_edit" value="<?= $tahun_akademik; ?>" readonly>
                         </div>
 
                         <div class="form-group input-group-sm">
-                            <label for="exampleInputJurusan">Tanggal Pelunasan</label>
+                            <label for="tgl_pelunasan_edit">Tanggal Pelunasan</label>
                             <input type="date" class="form-control" id="tgl_pelunasan_edit" name="tgl_pelunasan_edit" aria-describedby="tgl_pelunasanHelp" placeholder="">
                         </div>
                         <div class="form-group input-group-sm" id="jenis_dispen_form">
-                            <label for="exampleInputEmail1">Jenis Tunggakan</label>
+                            <label for="jenis_dispen_edit">Jenis Tunggakan</label>
                             <select class="form-control" name="jenis_dispen_edit" id="jenis_dispen_edit" disabled>
                                 <option value="x">-- Pilih Jenis Dispen --</option>
                                 <option value="1">Ciciclan 1 | PERWALIAN</option>
@@ -227,26 +227,26 @@
                         </div>
                         <div id="form_data_mhs">
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputEmail1">NIM</label>
+                                <label for="nipd_edit">NIM</label>
                                 <input type="text" class="form-control form_input_data" id="nipd_edit" name="nipd_edit" aria-describedby="emailHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputNama">Nama</label>
+                                <label for="nama_edit">Nama</label>
                                 <input type="hidden" class="form-control form_input_data" id="id_dispen_edit" name="id_dispen_edit" aria-describedby="namaHelp" placeholder="" readonly>
                                 <input type="text" class="form-control form_input_data" id="nama_edit" name="nama_edit" aria-describedby="namaHelp" placeholder="" readonly>
                                 <input type="hidden" class="form-control form_input_data" id="id_reg_pd_edit" name="id_reg_pd_edit" aria-describedby="namaHelp" placeholder="" readonly>
                                 <input type="hidden" class="form-control form_input_data" id="id_jur_edit" name="id_jur_edit" aria-describedby="namaHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputJurusan">Jurusan</label>
+                                <label for="jurusan_edit">Jurusan</label>
                                 <input type="text" class="form-control form_input_data" id="jurusan_edit" name="jurusan_edit" aria-describedby="jurusanHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInputTunggakan" id="lbl_tg_dispen">Total Dispen (Rp)</label>
+                                <label for="tg_dispen_edit" id="lbl_tg_dispen">Total Dispen (Rp)</label>
                                 <input type="text" class="form-control form_input_data" id="tg_dispen_edit" name="tg_dispen_edit" aria-describedby="tg_dispenHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
-                                <label for="exampleInput">No Tlp Mahasiswa</label>
+                                <label for="no_tlp_edit">No Tlp Mahasiswa</label>
                                 <input type="text" class="form-control form_input_data" id="no_tlp_edit" name="no_tlp_edit" aria-describedby="tg_dispenHelp" placeholder="">
                             </div>
                             <div class="text-right" id="btn_save_data" style="margin-bottom: 5px;">
