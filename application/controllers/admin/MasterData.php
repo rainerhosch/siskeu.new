@@ -318,7 +318,7 @@ class MasterData extends CI_Controller
             } else {
                 $response = [
                     'status' => true,
-                    'msg' => 'Success, insert ' . $data['angkatan'] + 1 . '!',
+                    'msg' => 'Success, insert ' . ($data['angkatan'] + 1) . '!',
                     'data' => $data
                 ];
                 // $this->session->set_flashdata('success', 'Sukses, insert ' . $data['angkatan'] + 1 . '!');
