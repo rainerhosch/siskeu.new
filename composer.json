@@ -12,8 +12,8 @@
   },
   "require": {
     "php": ">=5.6",
-    "phpoffice/phpspreadsheet": "^1.11",
-    "phpoffice/phpword": "v0.18.*",
+    "phpoffice/phpspreadsheet": "v3.7.*",
+    "phpoffice/phpword": "v1.3.*",
     "guzzlehttp/guzzle": "^7.0"
   },
   "scripts": {
