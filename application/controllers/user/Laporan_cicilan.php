@@ -205,22 +205,22 @@ class Laporan_cicilan extends CI_Controller
         $sheet->setCellValue('P' . $row_header, 'SISA SISA');
 
         foreach ($KRS as $key => $va) {
-            $sheet->setCellValue('A' . $row_tbl + $key, $key + 1);
-            $sheet->setCellValue('B' . $row_tbl + $key, $va['nipd']);
-            $sheet->setCellValue('C' . $row_tbl + $key, $va['nm_pd']);
-            $sheet->setCellValue('D' . $row_tbl + $key, $va['nm_jur']);
-            $sheet->setCellValue('E' . $row_tbl + $key, $va['cicilan1']);
-            $sheet->setCellValue('F' . $row_tbl + $key, $va['cicilan2']);
-            $sheet->setCellValue('G' . $row_tbl + $key, $va['cicilan3']);
-            $sheet->setCellValue('H' . $row_tbl + $key, $va['bayar1']);
-            $sheet->setCellValue('I' . $row_tbl + $key, $va['bayar2']);
-            $sheet->setCellValue('J' . $row_tbl + $key, $va['bayar3']);
-            $sheet->setCellValue('K' . $row_tbl + $key, $va['sisa1']);
-            $sheet->setCellValue('L' . $row_tbl + $key, $va['sisa2']);
-            $sheet->setCellValue('M' . $row_tbl + $key, $va['sisa3']);
-            $sheet->setCellValue('N' . $row_tbl + $key, $va['total_cicilan']);
-            $sheet->setCellValue('O' . $row_tbl + $key, $va['total_bayar']);
-            $sheet->setCellValue('P' . $row_tbl + $key, $va['total_sisa']);
+            $sheet->setCellValue('A' . ($row_tbl + $key), $key + 1);
+            $sheet->setCellValue('B' . ($row_tbl + $key), $va['nipd']);
+            $sheet->setCellValue('C' . ($row_tbl + $key), $va['nm_pd']);
+            $sheet->setCellValue('D' . ($row_tbl + $key), $va['nm_jur']);
+            $sheet->setCellValue('E' . ($row_tbl + $key), $va['cicilan1']);
+            $sheet->setCellValue('F' . ($row_tbl + $key), $va['cicilan2']);
+            $sheet->setCellValue('G' . ($row_tbl + $key), $va['cicilan3']);
+            $sheet->setCellValue('H' . ($row_tbl + $key), $va['bayar1']);
+            $sheet->setCellValue('I' . ($row_tbl + $key), $va['bayar2']);
+            $sheet->setCellValue('J' . ($row_tbl + $key), $va['bayar3']);
+            $sheet->setCellValue('K' . ($row_tbl + $key), $va['sisa1']);
+            $sheet->setCellValue('L' . ($row_tbl + $key), $va['sisa2']);
+            $sheet->setCellValue('M' . ($row_tbl + $key), $va['sisa3']);
+            $sheet->setCellValue('N' . ($row_tbl + $key), $va['total_cicilan']);
+            $sheet->setCellValue('O' . ($row_tbl + $key), $va['total_bayar']);
+            $sheet->setCellValue('P' . ($row_tbl + $key), $va['total_sisa']);
         }
 
         $filename = 'DATA LAPORAN CICILAN ' . $data_post['smt'];
