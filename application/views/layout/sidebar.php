@@ -11,7 +11,7 @@
                     $where = [
                         'm.is_active' => 1
                     ];
-                    $this->db->distinct();
+                    // $this->db->distinct();
                     $this->db->select('m.id_menu, m.nama_menu, m.link_menu, m.type, m.icon, m.is_active');
                     $this->db->from('menu m');
                     $this->db->where($where);
@@ -23,7 +23,7 @@
                         'uam.role_id' => $this->session->userdata('role'),
                         'm.is_active' => 1
                     ];
-                    $this->db->distinct();
+                    // $this->db->distinct();
                     $this->db->select('m.id_menu, m.nama_menu, m.link_menu, m.type, m.icon, m.is_active');
                     $this->db->from('menu m');
                     $this->db->join('user_access_menu uam', 'm.id_menu=uam.menu_id');
