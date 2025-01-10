@@ -11,10 +11,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_transaksi extends CI_Model
 {
     var $column_order = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim', 't.user_id', 't.status_transaksi', 't.transaksi_ke', 'm.nm_pd', 'm.nm_jur', 'm.nm_jenj_didik', 'ts.icon_status_tx', 'u.nama_user', 'u.ttd'); //set column field database for datatable orderable
-    var $column_search = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim', ); //set column field database for datatable searchable 
+    var $column_search = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim',); //set column field database for datatable searchable 
     var $order = array('t.id_transaksi' => 'desc'); // default order 
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         parent::__construct();
         $this->_dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
     }
@@ -446,7 +447,7 @@ class M_transaksi extends CI_Model
             }
             $i++;
         }
-        
+
         // config order
         $this->_dbwastudig_simak->order_by('id_bukti_trf', 'DESC');
         // if (isset($_POST['order'])) {
@@ -491,6 +492,24 @@ class M_transaksi extends CI_Model
         } else {
             return FALSE;
         }
+    }
+
+    public function getCountTrxAdmin($where = null)
+    {
+        $this->db->select('u.nama_user, t.user_id AS admin_id, COUNT(t.id_transaksi) AS jumlah_transaksi');
+        $this->db->from('transaksi t');
+        $this->db->join('users u', 't.user_id=u.id_user');
+        if(isset($where)) {
+            $this->db->where($where);
+            // $this->db->where('status_transaksi', '1'); // Filter jika hanya ingin transaksi sukses
+            // $this->db->where('tanggal >=', '2025-01-01');  // Filter tanggal mulai
+            // $this->db->where('tanggal <=', '2025-01-09');  // Filter tanggal akhir
+        }
+        $this->db->group_by('user_id');
+        $this->db->order_by('jumlah_transaksi', 'DESC');
+        return $query = $this->db->get();
+
+        // return $query->result_array(); // Mengembalikan hasil dalam bentuk array
     }
 
     // get data transfer from simak

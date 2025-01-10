@@ -45,6 +45,39 @@ class Transaksi extends CI_Controller
         $this->load->view('template', $data);
     }
 
+    public function getDataTrxAdmin()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data_post = $this->input->post();
+            $filter = [
+                'status_transaksi' => '1',
+                'tanggal <=' => $data_post['year'] . '-' . $data_post['month'] . '-' . '31',
+                'tanggal >=' => $data_post['year'] . '-' . $data_post['month'] . '-' . '01',
+            ];
+            // $filter = [
+            //     'status_transaksi' => '1',
+            //     'tanggal <=' => substr(date('Y-m-d'), 0, 7) . '-31',
+            //     'tanggal >=' => substr(date('Y-m-d'), 0, 7) . '-01'
+            // ];
+            $res = $this->transaksi->getCountTrxAdmin($filter)->result_array();
+            $data = [
+                'status' => true,
+                'code' => 200,
+                'msg' => 'Ok!',
+                'data_filter' => $data_post,
+                'data' => $res
+            ];
+        } else {
+            $data = [
+                'status' => false,
+                'code' => 500,
+                'msg' => 'Invalid Request!',
+                'data' => null
+            ];
+        }
+        echo json_encode($data);
+    }
+
     public function getDataTrfMahasiswa()
     {
         if ($this->input->is_ajax_request()) {
@@ -106,7 +139,6 @@ class Transaksi extends CI_Controller
                 'msg' => 'Invalid Request!',
                 'data' => null
             ];
-
         }
         // $data['data_transaksi'] = $dataHistoriTx;
         $data['row'] = isset($data_post['start']) ? $data_post['start'] : 0;
@@ -1699,7 +1731,6 @@ class Transaksi extends CI_Controller
                     'msg' => 'transaksi duplikat!',
                     'data' => null
                 ];
-
             } else {
                 $insertTx = $this->transaksi->addNewTransaksi($dataInsertTx);
 
@@ -1834,8 +1865,7 @@ class Transaksi extends CI_Controller
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
-        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;
-        ;
+        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
         $dataTx['smt'] = $smt_bayar;
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
@@ -2129,7 +2159,6 @@ class Transaksi extends CI_Controller
                         $kewajibanTGKMHS += (int) $dtB['jml_bayar'];
                     }
                 }
-
             } else {
                 $kewajibanTGKMHS = $dataTG['jml_tunggakan'];
                 foreach ($resDetailTx as $i => $Dtx) {
@@ -2383,8 +2412,7 @@ class Transaksi extends CI_Controller
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
-        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;
-        ;
+        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
         $dataTx['smt'] = $smt_bayar;
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
@@ -2678,7 +2706,6 @@ class Transaksi extends CI_Controller
                         $kewajibanTGKMHS += (int) $dtB['jml_bayar'];
                     }
                 }
-
             } else {
                 $kewajibanTGKMHS = $dataTG['jml_tunggakan'];
                 foreach ($resDetailTx as $i => $Dtx) {
@@ -2951,8 +2978,7 @@ class Transaksi extends CI_Controller
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
-        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;
-        ;
+        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
         $dataTx['smt'] = $smt_bayar;
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
@@ -3246,7 +3272,6 @@ class Transaksi extends CI_Controller
                         $kewajibanTGKMHS += (int) $dtB['jml_bayar'];
                     }
                 }
-
             } else {
                 $kewajibanTGKMHS = $dataTG['jml_tunggakan'];
                 foreach ($resDetailTx as $i => $Dtx) {

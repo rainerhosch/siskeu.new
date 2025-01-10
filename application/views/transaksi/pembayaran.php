@@ -160,6 +160,82 @@
         </div>
     <?php endif; ?>
 
+    <!-- <div class="row">
+        <div class="col-sm-12">
+            <div class="block full">
+                <div class="block-title">
+                    <h2><strong>Data</strong> Transaksi Admin</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Jumlah Transaksi Bulan Ini</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_trx_admin">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="block full">
+                <div class="block-title">
+                    <h2><strong>Data</strong> Transaksi Admin</h2>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6">
+                        <label for="filter_month" class="form-label">Filter Bulan:</label>
+                        <select id="filter_month" class="form-control">
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="filter_year" class="form-label">Filter Tahun:</label>
+                        <select id="filter_year" class="form-control">
+                            <?php
+                            $currentYear = date("Y");
+                            for ($i = $currentYear; $i >= $currentYear - 5; $i--) {
+                                echo "<option value=\"$i\">$i</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Jumlah Transaksi Dalam Satu Bulan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_trx_admin">
+                            <!-- Data akan diisi dengan JavaScript atau PHP -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="row">
         <div class="col-sm-12">
             <div class="row data_historiTX">
@@ -297,14 +373,75 @@
     <?php $this->load->view('transaksi/modal_form_pembayaran_lain'); ?>
     <?php $this->load->view('transaksi/modal_data_trf_mhs'); ?>
     <script>
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentMonth = new Date().getMonth() + 1; // getMonth() returns zero-based month (0-11)
+            document.getElementById('filter_month').value = currentMonth < 10 ? '0' + currentMonth : currentMonth;
+            let currentYear = $('#filter_year').val();
+            $.ajax({
+                    url: '<?= base_url() ?>user/Transaksi/getDataTrxAdmin/',
+                    type: 'POST',
+                    data: {
+                        month: currentMonth,
+                        year: currentYear
+                    },
+                    serverSide: true,
+                    dataType: 'json',
+                    success: function(response) {
+                        // console.log(response)
+                        let _data = response.data;
+                        let html = ``;
+                        $.each(_data, function(k, val) {
+                            html += `<tr>`;
+                            html += `<td>${val.nama_user}</td>`;
+                            html += `<td>${val.jumlah_transaksi} Transaksi</td>`;
+                            html += `</tr>`;
+                        })
+                        $("#tbody_trx_admin").html(html);
+                    }
+                });
+
+        });
+        $(document).ready(function() {
+            $('#filter_month, #filter_year').change(function() {
+                let month = $('#filter_month').val();
+                let year = $('#filter_year').val();
+                loadTrxAdmin(month, year)
+
+            })
+
+            function loadTrxAdmin(data_month, data_year) {
+                $.ajax({
+                    url: '<?= base_url() ?>user/Transaksi/getDataTrxAdmin/',
+                    type: 'POST',
+                    data: {
+                        month: data_month,
+                        year: data_year
+                    },
+                    serverSide: true,
+                    dataType: 'json',
+                    success: function(response) {
+                        // console.log(response)
+                        let _data = response.data;
+                        let html = ``;
+                        $.each(_data, function(k, val) {
+                            html += `<tr>`;
+                            html += `<td>${val.nama_user}</td>`;
+                            html += `<td>${val.jumlah_transaksi} Transaksi</td>`;
+                            html += `</tr>`;
+                        })
+                        $("#tbody_trx_admin").html(html);
+                    }
+                });
+            }
+
+
             var input_search = '';
             $.ajax({
                 url: '<?= base_url() ?>user/Transaksi/getDataTrfMahasiswa/',
                 type: 'POST',
                 serverSide: true,
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     $(`<i>${response.data} </i>`).insertBefore("#label-jmlpembayaran");
                     // console.log(response)
                 }
@@ -313,18 +450,18 @@
             $('.div_btn_row').hide();
             $("#riwayat_transaksi").hide();
             $(".data_kwajiban").hide();
-            setTimeout(function () {
+            setTimeout(function() {
                 $("#alert_tx").html("");
                 <?php $this->session->unset_userdata('message'); ?>;
             }, 2000);
 
-            $("#form_cari").on("keyup change", function (e) {
+            $("#form_cari").on("keyup change", function(e) {
                 e.preventDefault();
                 let keyword = $(this).val();
                 input_search = keyword;
                 loadFilter(keyword);
             });
-            $('#pagination').on('click', 'a', function (e) {
+            $('#pagination').on('click', 'a', function(e) {
                 e.preventDefault();
                 let limit = $('#datatable_length').val();
                 let offset = $(this).attr('data-ci-pagination-page');
@@ -344,7 +481,7 @@
                     },
                     serverSide: true,
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         let user_log = response.user_loged;
                         let data_transaksi = response.data_transaksi;
                         let total_data = response.total_result;
@@ -374,7 +511,7 @@
                     },
                     serverSide: true,
                     dataType: 'json',
-                    success: function (response) {
+                    success: function(response) {
                         let user_log = response.user_loged;
                         let data_transaksi = response.data_transaksi;
                         let total_data = response.total_result;
@@ -397,7 +534,7 @@
                     let numEnd = offset + 10;
                     $('#datatable_info').html(`<strong>${offset + 1}</strong>-<strong>${numEnd}</strong> dari <strong>${total_data}</strong> Record`);
                     no = offset;
-                    $.each(data_transaksi, function (i, value) {
+                    $.each(data_transaksi, function(i, value) {
                         no++;
 
                         var total_bayarTrx = 0;
@@ -413,7 +550,7 @@
                         htmlx += `<td class = "text-center" >${value.nm_pd}</td>`;
 
                         htmlx += `<td class = "text-center" >`;
-                        $.each(value.detail_transaksi, function (k, val) {
+                        $.each(value.detail_transaksi, function(k, val) {
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">${val.nm_jenis_pembayaran}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jml_bayar).toLocaleString()}</i><br>`;
                             total_bayarTrx += parseInt(val.jml_bayar);
                         });
@@ -470,14 +607,14 @@
                     data: id_transaksi
                 },
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     $("#editTrx").modal("show");
                     let htmlz = ``;
-                    $.each(response.data_transaksi, function (i, val) {
+                    $.each(response.data_transaksi, function(i, val) {
                         let id_trx = val.id_transaksi;
                         let nim = val.nim;
                         let nm_pd = val.nm_pd;
-                        $.each(val.detail_transaksi, function (k, detailTx) {
+                        $.each(val.detail_transaksi, function(k, detailTx) {
                             htmlz += `<tr>`;
                             htmlz += `<td><label data-error="wrong" data-success="right" for="${detailTx.nm_jenis_pembayaran}">${detailTx.nm_jenis_pembayaran}</label></td>`;
                             htmlz += `<td class="text-center"><input type="text" id="input_${detailTx.id_detail_transaksi}" name="${detailTx.id_detail_transaksi}" class="form-control validate text-right input_${k}" value="${detailTx.jml_bayar}"></td>`;
@@ -496,9 +633,9 @@
                     $("#tabel_form_edit_trx").html(htmlz);
 
                     let data = 0;
-                    $.each(response.data_transaksi, function (i, val) {
-                        $.each(val.detail_transaksi, function (k, detailTx) {
-                            $('#input_' + detailTx.id_detail_transaksi).on('input', function () {
+                    $.each(response.data_transaksi, function(i, val) {
+                        $.each(val.detail_transaksi, function(k, detailTx) {
+                            $('#input_' + detailTx.id_detail_transaksi).on('input', function() {
                                 data += $('#input_' + detailTx.id_detail_transaksi).val();
                                 $('#total_' + detailTx.id_detail_transaksi).val(data);
                             });
@@ -523,7 +660,7 @@
                 cancelButtonText: "Batal",
                 closeOnConfirm: false,
                 closeOnCancel: false,
-            }).then(function (isConfirm) {
+            }).then(function(isConfirm) {
                 if (isConfirm) {
                     // cetak
                     window.location.replace(`transaksi/hapus_transaksi/${id_transaksi}`);
