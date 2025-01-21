@@ -20,6 +20,7 @@ class M_pmb extends CI_Model
         M_pmb::$db_pmb->join('pmb_pendaftaran', 'pmb_pendaftaran.id_register=pmb_register.id', 'left');
         if ($condition != null) {
             M_pmb::$db_pmb->where($condition);
+            M_pmb::$db_pmb->where('substr(pmb_register.created_at, 1, 4) ='. date('Y'));
         }
         M_pmb::$db_pmb->order_by('id', 'DESC');
         return  M_pmb::$db_pmb->get();

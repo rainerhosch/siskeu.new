@@ -176,7 +176,7 @@
                         })
                     }
                     $('#data_pembayaran_pmb_tbody').html(html);
-                    // $('#modal_datatable').dataTable();
+                    // $('#data_pembayaran_pmb_tbody').dataTable();
                     $(function() {
                         TablesDatatables.init();
                     });
