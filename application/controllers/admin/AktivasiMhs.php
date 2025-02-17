@@ -183,7 +183,6 @@ class AktivasiMhs extends CI_Controller
                         'jml_now' => $jml_update
                     ]
                 ];
-            }
         } else {
             $response = [
                 'status' => false,
@@ -691,7 +690,8 @@ class AktivasiMhs extends CI_Controller
 
             $jenis_dispen = $this->input->post('jenis_dispen');
             $data_mhs_kip = $this->masterdata->getDataMhs(['id_beasiswa'=>1])->result_array();
-            foreach($data_mhs_kip as $mhs_kip){
+            $data_aktivasi = [];
+            foreach($data_mhs_kip as $i => $mhs_kip){
                 $dataPengajuanDispen = [
                     'tanggal_input' => $tgl,
                     'id_reg_pd' => $mhs_kip['id_pd'],
@@ -716,22 +716,17 @@ class AktivasiMhs extends CI_Controller
                             'NIM' => $mhs_kip['nipd'],
                             'tgl_reg' => $tgl,
                             'aktif' => $jenis_dispen,
-                            'keterangan' => 'from siskeu_new',
+                            'keterangan' => 'from siskeu_new bulk',
                             'aktif_by' => $id_user
                         ];
                         $active = $this->aktivasi->aktivasi_perwalian($dataAktifDispenKrs);
                         if ($active === true) {
                             // success
-                            $reponse = [
-                                'status' => true,
-                                'msg' => 'success'
-                            ];
+                            $data_aktivasi[$i] = [$mhs_kip['nipd'] => 'success'];
+                        }
                         } else {
                             // error
-                            $reponse = [
-                                'status' => false,
-                                'msg' => $active
-                            ];
+                            $data_aktivasi[$i]= [$mhs_kip['nipd'] => 'error'];
                         }
                     } else {
                         // dispen UTS or UAS
@@ -740,7 +735,7 @@ class AktivasiMhs extends CI_Controller
                             'nim' => $mhs_kip['nipd'],
                             'tgl_reg' => $tgl,
                             'aktif' => $jenis_dispen,
-                            'keterangan' => 'from siskeu_new',
+                            'keterangan' => 'from siskeu_new bulk',
                             'aktif_by' => $id_user
                         ];
                         // var_dump($dataAktifDispenUjian);
@@ -748,29 +743,20 @@ class AktivasiMhs extends CI_Controller
                         $active = $this->aktivasi->aktivasi_ujian($dataAktifDispenUjian);
                         if ($active === true) {
                             // success
-                            $reponse = [
-                                'status' => true,
-                                'msg' => 'success'
-                            ];
+                            $data_aktivasi[$i] = [$mhs_kip['nipd'] => 'success'];
                         } else {
                             // error
-                            $reponse = [
-                                'status' => false,
-                                'msg' => $active
-                            ];
+                            $data_aktivasi[$i]= [$mhs_kip['nipd'] => 'error'];
                         }
                     }
                 } else {
-                    $reponse = [
-                        'status' => false,
-                        'msg' => 'Gagal insert data'
-                    ];
+                    $data_aktivasi[$i]= [$mhs_kip['nipd'] => 'Gagal insert.'];
                 }
             }
 
             $reponse = [
                 'status'    => true,
-                'data'      => $data_mhs_kip,
+                'data'      => $data_aktivasi,
                 'msg'       => 'Data ditemukan!'
             ];
         }else {
