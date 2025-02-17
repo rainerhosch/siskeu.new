@@ -302,6 +302,15 @@
                                 }
                             }).then((result) => {
                                 if (result.isConfirmed) {
+                                    Swal.fire({
+                                        title: 'Loading...',
+                                        text: 'Please wait while we activate KIP.',
+                                        allowOutsideClick: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+
                                     $.ajax({
                                         type: "POST",
                                         url: "aktivasi_dispen_kip",
