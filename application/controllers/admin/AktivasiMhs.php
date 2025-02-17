@@ -183,6 +183,7 @@ class AktivasiMhs extends CI_Controller
                         'jml_now' => $jml_update
                     ]
                 ];
+            }
         } else {
             $response = [
                 'status' => false,
