@@ -87,6 +87,11 @@
                             <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#FormAktivasiDispen">Buat Data Dispen Baru</button>
                             <button class="btn btn-sm btn-success">Buat Laporan (Exel)</button>
                         </div> -->
+                        <div class="row">
+                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#FormAktivasiDispen">Buat Data Dispen Baru</button>
+                            <button class="btn btn-sm btn-success">Buat Laporan (Exel)</button>
+                            <button class="btn btn-sm btn-info" id="btn_aktivasi_kip">Aktivasi KIP</button>
+                        </div>
 
                         <div class="row">
                             <div class="table-responsive">
