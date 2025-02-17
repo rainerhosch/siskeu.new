@@ -88,8 +88,8 @@
                             <button class="btn btn-sm btn-success">Buat Laporan (Exel)</button>
                         </div> -->
                         <div class="row" style="margin-bottom: 5px;">
-                            <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#FormAktivasiDispen">Buat Data Dispen Baru</button>
-                            <button class="btn btn-sm btn-success">Buat Laporan (Exel)</button>
+                            <!-- <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#FormAktivasiDispen">Buat Data Dispen Baru</button>
+                            <button class="btn btn-sm btn-success">Buat Laporan (Exel)</button> -->
                             <button class="btn btn-sm btn-info" id="btn_aktivasi_kip">Aktivasi KIP</button>
                         </div>
 
@@ -269,6 +269,15 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#btn_aktivasi_kip').on('click', function() {
+                // alert("Modul Belum Dapat Digunakan!");
+                Swal.fire({
+                    title: 'Modul Belum Dapat Digunakan!',
+                    text: 'Modul Aktivasi KIP Belum Dapat Digunakan.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+            });
             $.ajax({
                 type: "GET",
                 url: "get_data_dispen_mhs",
