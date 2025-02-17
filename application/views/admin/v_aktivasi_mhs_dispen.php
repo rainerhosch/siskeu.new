@@ -315,14 +315,16 @@
                                                     'KIP telah diaktifkan.',
                                                     'success'
                                                 ).then(() => {
-                                                    // location.reload();
+                                                    location.reload();
                                                 });
                                             } else {
                                                 Swal.fire(
                                                     'Gagal!',
                                                     'Aktivasi KIP gagal.',
                                                     'error'
-                                                );
+                                                ).then(() => {
+                                                    location.reload();
+                                                });
                                             }
                                         }
                                     });
