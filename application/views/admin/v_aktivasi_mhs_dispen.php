@@ -319,6 +319,7 @@
                                         success: function(response) {
                                             console.log(response)
                                             if (response.status === true) {
+                                                Swal.close();
                                                 Swal.fire(
                                                     'Aktif!',
                                                     'KIP telah diaktifkan.',
@@ -327,6 +328,7 @@
                                                     location.reload();
                                                 });
                                             } else {
+                                                Swal.close();
                                                 Swal.fire(
                                                     'Gagal!',
                                                     'Aktivasi KIP gagal.',
