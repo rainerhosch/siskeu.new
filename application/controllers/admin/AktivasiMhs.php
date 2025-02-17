@@ -676,4 +676,23 @@ class AktivasiMhs extends CI_Controller
         }
         echo json_encode($reponse);
     }
+
+    public function aktivasi_dispen_kip()
+    {
+        if ($this->input->is_ajax_request()) {
+            $data_mhs_kip = $this->masterdata->getDataMhs(['id_beasiswa'=>1])->result_array();
+            $reponse = [
+                'status'    => true,
+                'data'      => $data_mhs_kip,
+                'msg'       => 'Data ditemukan!'
+            ];
+        }else {
+            $reponse = [
+                'status'    => false,
+                'data'      => null,
+                'msg'       => 'invalid request'
+            ];
+        }
+        echo json_encode($reponse);
+    }
 }

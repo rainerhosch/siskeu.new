@@ -272,12 +272,66 @@
             $('#btn_aktivasi_kip').on('click', function() {
                 // alert("Modul Belum Dapat Digunakan!");
                 Swal.fire({
-                    title: 'Modul Belum Dapat Digunakan!',
-                    text: 'Modul Aktivasi KIP Belum Dapat Digunakan.',
-                    icon: 'info',
-                    confirmButtonText: 'OK'
+                    title: 'Aktivasi KIP',
+                    text: 'Apakah Anda yakin ingin mengaktifkan KIP?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Aktifkan!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Pilih Jenis KIP',
+                                input: 'select',
+                                inputOptions: {
+                                    '1': 'KIP Kuliah',
+                                    '2': 'KIP Sekolah'
+                                },
+                                inputPlaceholder: 'Pilih jenis KIP',
+                                showCancelButton: true,
+                                inputValidator: (value) => {
+                                    return new Promise((resolve) => {
+                                        if (value) {
+                                            resolve();
+                                        } else {
+                                            resolve('Anda harus memilih jenis KIP!');
+                                        }
+                                    });
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "aktivasi_dispen_kip",
+                                        data: { jenis_kip: result.value },
+                                        dataType: "json",
+                                        success: function(response) {
+                                            console.log(response)
+                                            if (response.status === true) {
+                                                Swal.fire(
+                                                    'Aktif!',
+                                                    'KIP telah diaktifkan.',
+                                                    'success'
+                                                ).then(() => {
+                                                    // location.reload();
+                                                });
+                                            } else {
+                                                Swal.fire(
+                                                    'Gagal!',
+                                                    'Aktivasi KIP gagal.',
+                                                    'error'
+                                                );
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
                 });
             });
+
+
             $.ajax({
                 type: "GET",
                 url: "get_data_dispen_mhs",
