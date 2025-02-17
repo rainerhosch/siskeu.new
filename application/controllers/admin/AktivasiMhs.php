@@ -693,13 +693,14 @@ class AktivasiMhs extends CI_Controller
             $data_mhs_kip = $this->masterdata->getDataMhs(['id_beasiswa'=>1])->result_array();
             $data_aktivasi = [];
             foreach($data_mhs_kip as $i => $mhs_kip){
+                $biaya = $this->masterdata->getBiayaAngkatan(['angkatan' => $mhs_kip['tahun_masuk']], $mhs_kip['nm_jnj_didik'])->row_array();
                 $dataPengajuanDispen = [
                     'tanggal_input' => $tgl,
                     'id_reg_pd' => $mhs_kip['id_pd'],
                     'id_jur' => $mhs_kip['id_jur'],
                     'no_tlp' => '62',
                     'jenis_dispen' => $jenis_dispen,
-                    'tg_dispen' => $tgl,
+                    'tg_dispen' => $biaya['cicilan_semester'] / 3,
                     'tgl_janji_lunas' => '0000-00-00',
                     'tahun_akademik' => $tahun_akademik,
                     'tgl_pelunasan' => NULL,
