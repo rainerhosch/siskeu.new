@@ -724,7 +724,6 @@ class AktivasiMhs extends CI_Controller
                         if ($active === true) {
                             // success
                             $data_aktivasi[$i] = [$mhs_kip['nipd'] => 'success'];
-                        }
                         } else {
                             // error
                             $data_aktivasi[$i]= [$mhs_kip['nipd'] => 'error'];
