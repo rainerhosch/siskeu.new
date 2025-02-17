@@ -147,9 +147,9 @@ class SyncSimak extends CI_Controller
             if ($mhs['no_transkip_nilai'] == '') {
                 $mhs['no_transkip_nilai'] = null;
             }
-            // if ($mhs['no_transkip_nilai'] != null || $mhs['no_transkip_nilai'] != '') {
+            if ($mhs['no_transkip_nilai'] != null || $mhs['no_transkip_nilai'] != '') {
                 $data_update[$index_update] = $this->masterdata->updateDataMhs($mhs['id_pd'], $mhs);
-            // }
+            }
             $index_update++;
         }
         // $dataMhs = $responseApiDataMhs['mhsdata'];
