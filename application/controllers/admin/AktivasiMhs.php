@@ -680,7 +680,94 @@ class AktivasiMhs extends CI_Controller
     public function aktivasi_dispen_kip()
     {
         if ($this->input->is_ajax_request()) {
+            $id_user = $this->session->userdata('id_user');
+
+            $dateNow = date('Y-m-d H:i:s');
+            $pecah_tgl_waktu = explode(' ', $dateNow);
+            $tgl = $pecah_tgl_waktu[0];
+
+            $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
+            $tahun_akademik = $smtAktifRes['id_smt'];
+
+            $jenis_dispen = $this->input->post('jenis_dispen');
             $data_mhs_kip = $this->masterdata->getDataMhs(['id_beasiswa'=>1])->result_array();
+            foreach($data_mhs_kip as $mhs_kip){
+                $dataPengajuanDispen = [
+                    'tanggal_input' => $tgl,
+                    'id_reg_pd' => $mhs_kip['id_pd'],
+                    'id_jur' => $mhs_kip['id_jur'],
+                    'no_tlp' => '62',
+                    'jenis_dispen' => $jenis_dispen,
+                    'tg_dispen' => $tgl,
+                    'tgl_janji_lunas' => '0000-00-00',
+                    'tahun_akademik' => $tahun_akademik,
+                    'tgl_pelunasan' => NULL,
+                    'status' => 0,
+                    'jml_kirim_pesan' => 0
+                ];
+                $inputPengajuanDispen = $this->aktivasi->input_data_dispen_mhs($dataPengajuanDispen);
+                if ($inputPengajuanDispen === true) {
+                    if ($jenis_dispen == '1') {
+                        // disepen perwalian
+                        $dataAktifDispenKrs = [
+                            'Tahun' => $tahun_akademik,
+                            'Identitas_ID' => '',
+                            'Jurusan_ID' => '',
+                            'NIM' => $mhs_kip['nipd'],
+                            'tgl_reg' => $tgl,
+                            'aktif' => $jenis_dispen,
+                            'keterangan' => 'from siskeu_new',
+                            'aktif_by' => $id_user
+                        ];
+                        $active = $this->aktivasi->aktivasi_perwalian($dataAktifDispenKrs);
+                        if ($active === true) {
+                            // success
+                            $reponse = [
+                                'status' => true,
+                                'msg' => 'success'
+                            ];
+                        } else {
+                            // error
+                            $reponse = [
+                                'status' => false,
+                                'msg' => $active
+                            ];
+                        }
+                    } else {
+                        // dispen UTS or UAS
+                        $dataAktifDispenUjian = [
+                            'tahun' => $tahun_akademik,
+                            'nim' => $mhs_kip['nipd'],
+                            'tgl_reg' => $tgl,
+                            'aktif' => $jenis_dispen,
+                            'keterangan' => 'from siskeu_new',
+                            'aktif_by' => $id_user
+                        ];
+                        // var_dump($dataAktifDispenUjian);
+                        // die;
+                        $active = $this->aktivasi->aktivasi_ujian($dataAktifDispenUjian);
+                        if ($active === true) {
+                            // success
+                            $reponse = [
+                                'status' => true,
+                                'msg' => 'success'
+                            ];
+                        } else {
+                            // error
+                            $reponse = [
+                                'status' => false,
+                                'msg' => $active
+                            ];
+                        }
+                    }
+                } else {
+                    $reponse = [
+                        'status' => false,
+                        'msg' => 'Gagal insert data'
+                    ];
+                }
+            }
+
             $reponse = [
                 'status'    => true,
                 'data'      => $data_mhs_kip,

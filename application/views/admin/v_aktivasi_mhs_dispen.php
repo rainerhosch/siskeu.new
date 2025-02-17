@@ -272,7 +272,7 @@
             $('#btn_aktivasi_kip').on('click', function() {
                 // alert("Modul Belum Dapat Digunakan!");
                 Swal.fire({
-                    title: 'Aktivasi KIP',
+                    title: 'Aktivasi Dispen KIP',
                     text: 'Apakah Anda yakin ingin mengaktifkan KIP?',
                     icon: 'warning',
                     showCancelButton: true,
@@ -282,20 +282,21 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             Swal.fire({
-                                title: 'Pilih Jenis KIP',
+                                title: '-- Pilih Jenis Dispen --',
                                 input: 'select',
                                 inputOptions: {
-                                    '1': 'KIP Kuliah',
-                                    '2': 'KIP Sekolah'
+                                    '1': 'Cicilan 1 | Perwalian',
+                                    '3': 'Cicilan 2 | UTS',
+                                    '4': 'Cicilan 3 | UAS'
                                 },
-                                inputPlaceholder: 'Pilih jenis KIP',
+                                inputPlaceholder: 'Pilih jenis Dispen',
                                 showCancelButton: true,
                                 inputValidator: (value) => {
                                     return new Promise((resolve) => {
                                         if (value) {
                                             resolve();
                                         } else {
-                                            resolve('Anda harus memilih jenis KIP!');
+                                            resolve('Anda harus memilih jenis Dispen!');
                                         }
                                     });
                                 }
@@ -304,7 +305,7 @@
                                     $.ajax({
                                         type: "POST",
                                         url: "aktivasi_dispen_kip",
-                                        data: { jenis_kip: result.value },
+                                        data: { jenis_dispen: result.value },
                                         dataType: "json",
                                         success: function(response) {
                                             console.log(response)
