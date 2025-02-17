@@ -95,7 +95,8 @@
 
                         <div class="row">
                             <div class="table-responsive">
-                                <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                                <table id="example-datatable"
+                                    class="table table-vcenter table-condensed table-bordered">
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
@@ -124,7 +125,8 @@
     </div>
 
     <!-- modal -->
-    <div class="modal fade" id="FormAktivasiDispen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="FormAktivasiDispen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -138,12 +140,14 @@
                         <!-- <form action="<?php echo base_url(); ?>aktivasi-mahasiswa/aktif_manual" method="POST"> -->
                         <div class="form-group input-group-sm">
                             <label for="tahun_akademik">Tahun Akademik</label>
-                            <input type="text" class="form-control" id="tahun_akademik" name="tahun_akademik" value="<?= $tahun_akademik; ?>" readonly>
+                            <input type="text" class="form-control" id="tahun_akademik" name="tahun_akademik"
+                                value="<?= $tahun_akademik; ?>" readonly>
                         </div>
 
                         <div class="form-group input-group-sm">
                             <label for="tgl_pelunasan">Tanggal Pelunasan</label>
-                            <input type="date" class="form-control" id="tgl_pelunasan" name="tgl_pelunasan" aria-describedby="tgl_pelunasanHelp" placeholder="">
+                            <input type="date" class="form-control" id="tgl_pelunasan" name="tgl_pelunasan"
+                                aria-describedby="tgl_pelunasanHelp" placeholder="">
                         </div>
                         <div class="form-group input-group-sm" id="jenis_dispen_form" hidden>
                             <label for="jenis_dispen">Jenis Tunggakan</label>
@@ -156,40 +160,50 @@
                         </div>
                         <div class="form-group input-group-sm" id="form_cari" hidden>
                             <label for="search-box">Cari Nim</label>
-                            <input type="text" class="form-control form_input_data" id="search-box" name="nipd_mhs" placeholder="Cari NIM.">
+                            <input type="text" class="form-control form_input_data" id="search-box" name="nipd_mhs"
+                                placeholder="Cari NIM.">
                             <div id="suggesstion-box">
                             </div>
                         </div>
                         <div id="form_data_mhs" hidden>
                             <div class="form-group input-group-sm">
                                 <label for="nipd">NIM</label>
-                                <input type="text" class="form-control form_input_data" id="nipd" name="nipd" aria-describedby="emailHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="nipd" name="nipd"
+                                    aria-describedby="emailHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="nama">Nama</label>
-                                <input type="text" class="form-control form_input_data" id="nama" name="nama" aria-describedby="namaHelp" placeholder="" readonly>
-                                <input type="hidden" class="form-control form_input_data" id="id_reg_pd" name="id_reg_pd" aria-describedby="namaHelp" placeholder="" readonly>
-                                <input type="hidden" class="form-control form_input_data" id="id_jur" name="id_jur" aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="nama" name="nama"
+                                    aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="hidden" class="form-control form_input_data" id="id_reg_pd"
+                                    name="id_reg_pd" aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="hidden" class="form-control form_input_data" id="id_jur" name="id_jur"
+                                    aria-describedby="namaHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="jurusan">Jurusan</label>
-                                <input type="text" class="form-control form_input_data" id="jurusan" name="jurusan" aria-describedby="jurusanHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="jurusan" name="jurusan"
+                                    aria-describedby="jurusanHelp" placeholder="" readonly>
                             </div>
 
                             <div class="form-group input-group-sm">
                                 <label for="tg_smt_lalu">Tunggakan Semester Lalu</label>
-                                <input type="text" class="form-control form_input_data" id="tg_smt_lalu" name="tg_smt_lalu" aria-describedby="tg_smt_laluHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="tg_smt_lalu"
+                                    name="tg_smt_lalu" aria-describedby="tg_smt_laluHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="tg_dispen" id="lbl_tg_dispen">Jumlah Dispen</label>
-                                <input type="text" class="form-control form_input_data" id="tg_dispen" name="tg_dispen" aria-describedby="tg_dispenHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="tg_dispen" name="tg_dispen"
+                                    aria-describedby="tg_dispenHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="no_tlp">No Tlp Mahasiswa</label>
-                                <input type="text" class="form-control form_input_data" id="no_tlp" name="no_tlp" aria-describedby="tg_dispenHelp" placeholder="">
+                                <input type="text" class="form-control form_input_data" id="no_tlp" name="no_tlp"
+                                    aria-describedby="tg_dispenHelp" placeholder="">
                             </div>
                             <div class="text-right" id="btn_save_data" style="margin-bottom: 5px;">
-                                <button type="button" class="btn btn-primary" id="btn_aktivasi" disabled>Tombol Aktivasi</button>
+                                <button type="button" class="btn btn-primary" id="btn_aktivasi" disabled>Tombol
+                                    Aktivasi</button>
                             </div>
                         </div>
                     </form>
@@ -201,7 +215,8 @@
 
 
     <!-- modal Edit-->
-    <div class="modal fade" id="FormEditDispen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="FormEditDispen" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -214,12 +229,14 @@
                     <form action="#" id="form_edit_dispen">
                         <div class="form-group input-group-sm">
                             <label for="tahun_akademik_edit">Tahun Akademik</label>
-                            <input type="text" class="form-control" id="tahun_akademik_edit" name="tahun_akademik_edit" value="<?= $tahun_akademik; ?>" readonly>
+                            <input type="text" class="form-control" id="tahun_akademik_edit" name="tahun_akademik_edit"
+                                value="<?= $tahun_akademik; ?>" readonly>
                         </div>
 
                         <div class="form-group input-group-sm">
                             <label for="tgl_pelunasan_edit">Tanggal Pelunasan</label>
-                            <input type="date" class="form-control" id="tgl_pelunasan_edit" name="tgl_pelunasan_edit" aria-describedby="tgl_pelunasanHelp" placeholder="">
+                            <input type="date" class="form-control" id="tgl_pelunasan_edit" name="tgl_pelunasan_edit"
+                                aria-describedby="tgl_pelunasanHelp" placeholder="">
                         </div>
                         <div class="form-group input-group-sm" id="jenis_dispen_form">
                             <label for="jenis_dispen_edit">Jenis Tunggakan</label>
@@ -233,26 +250,34 @@
                         <div id="form_data_mhs">
                             <div class="form-group input-group-sm">
                                 <label for="nipd_edit">NIM</label>
-                                <input type="text" class="form-control form_input_data" id="nipd_edit" name="nipd_edit" aria-describedby="emailHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="nipd_edit" name="nipd_edit"
+                                    aria-describedby="emailHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="nama_edit">Nama</label>
-                                <input type="hidden" class="form-control form_input_data" id="id_dispen_edit" name="id_dispen_edit" aria-describedby="namaHelp" placeholder="" readonly>
-                                <input type="text" class="form-control form_input_data" id="nama_edit" name="nama_edit" aria-describedby="namaHelp" placeholder="" readonly>
-                                <input type="hidden" class="form-control form_input_data" id="id_reg_pd_edit" name="id_reg_pd_edit" aria-describedby="namaHelp" placeholder="" readonly>
-                                <input type="hidden" class="form-control form_input_data" id="id_jur_edit" name="id_jur_edit" aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="hidden" class="form-control form_input_data" id="id_dispen_edit"
+                                    name="id_dispen_edit" aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="nama_edit" name="nama_edit"
+                                    aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="hidden" class="form-control form_input_data" id="id_reg_pd_edit"
+                                    name="id_reg_pd_edit" aria-describedby="namaHelp" placeholder="" readonly>
+                                <input type="hidden" class="form-control form_input_data" id="id_jur_edit"
+                                    name="id_jur_edit" aria-describedby="namaHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="jurusan_edit">Jurusan</label>
-                                <input type="text" class="form-control form_input_data" id="jurusan_edit" name="jurusan_edit" aria-describedby="jurusanHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="jurusan_edit"
+                                    name="jurusan_edit" aria-describedby="jurusanHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="tg_dispen_edit" id="lbl_tg_dispen">Total Dispen (Rp)</label>
-                                <input type="text" class="form-control form_input_data" id="tg_dispen_edit" name="tg_dispen_edit" aria-describedby="tg_dispenHelp" placeholder="" readonly>
+                                <input type="text" class="form-control form_input_data" id="tg_dispen_edit"
+                                    name="tg_dispen_edit" aria-describedby="tg_dispenHelp" placeholder="" readonly>
                             </div>
                             <div class="form-group input-group-sm">
                                 <label for="no_tlp_edit">No Tlp Mahasiswa</label>
-                                <input type="text" class="form-control form_input_data" id="no_tlp_edit" name="no_tlp_edit" aria-describedby="tg_dispenHelp" placeholder="">
+                                <input type="text" class="form-control form_input_data" id="no_tlp_edit"
+                                    name="no_tlp_edit" aria-describedby="tg_dispenHelp" placeholder="">
                             </div>
                             <div class="text-right" id="btn_save_data" style="margin-bottom: 5px;">
                                 <button type="button" class="btn btn-primary" id="btn_save_edit">Simpan</button>
@@ -268,8 +293,8 @@
 
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#btn_aktivasi_kip').on('click', function() {
+        $(document).ready(function () {
+            $('#btn_aktivasi_kip').on('click', function () {
                 // alert("Modul Belum Dapat Digunakan!");
                 Swal.fire({
                     title: 'Aktivasi Dispen KIP',
@@ -279,69 +304,85 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ya, Aktifkan!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire({
-                                title: '-- Pilih Jenis Dispen --',
-                                input: 'select',
-                                inputOptions: {
-                                    '1': 'Cicilan 1 | Perwalian',
-                                    '3': 'Cicilan 2 | UTS',
-                                    '4': 'Cicilan 3 | UAS'
-                                },
-                                inputPlaceholder: 'Pilih jenis Dispen',
-                                showCancelButton: true,
-                                inputValidator: (value) => {
-                                    return new Promise((resolve) => {
-                                        if (value) {
-                                            resolve();
-                                        } else {
-                                            resolve('Anda harus memilih jenis Dispen!');
-                                        }
-                                    });
-                                }
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    Swal.fire({
-                                        title: 'Loading...',
-                                        text: 'Please wait while we activate KIP.',
-                                        allowOutsideClick: false,
-                                        didOpen: () => {
-                                            Swal.showLoading();
-                                        }
-                                    });
-
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "aktivasi_dispen_kip",
-                                        data: { jenis_dispen: result.value },
-                                        dataType: "json",
-                                        success: function(response) {
-                                            console.log(response)
-                                            if (response.status === true) {
-                                                Swal.close();
-                                                Swal.fire(
-                                                    'Aktif!',
-                                                    'KIP telah diaktifkan.',
-                                                    'success'
-                                                ).then(() => {
-                                                    location.reload();
-                                                });
-                                            } else {
-                                                Swal.close();
-                                                Swal.fire(
-                                                    'Gagal!',
-                                                    'Aktivasi KIP gagal.',
-                                                    'error'
-                                                ).then(() => {
-                                                    location.reload();
-                                                });
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '-- Pilih Jenis Dispen --',
+                            input: 'select',
+                            inputOptions: {
+                                '1': 'Cicilan 1 | Perwalian',
+                                '3': 'Cicilan 2 | UTS',
+                                '4': 'Cicilan 3 | UAS'
+                            },
+                            inputPlaceholder: 'Pilih jenis Dispen',
+                            showCancelButton: true,
+                            inputValidator: (value) => {
+                                return new Promise((resolve) => {
+                                    if (value) {
+                                        resolve();
+                                    } else {
+                                        resolve('Anda harus memilih jenis Dispen!');
+                                    }
+                                });
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Swal.fire({
+                                //     title: 'Loading...',
+                                //     text: 'Sedang memproses aktivasi KIP...',
+                                //     allowOutsideClick: false,
+                                //     didOpen: () => {
+                                //         Swal.showLoading();
+                                //     }
+                                // });
+                                $.ajax({
+                                    type: "POST",
+                                    url: "aktivasi_dispen_kip",
+                                    data: { jenis_dispen: result.value },
+                                    dataType: "json",
+                                    beforeSend: function () {
+                                        Swal.fire({
+                                            title: 'Memproses...',
+                                            text: 'Mohon tunggu sebentar.',
+                                            allowOutsideClick: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
                                             }
+                                        });
+                                    },
+                                    success: function (response) {
+                                        Swal.close(); // Menutup loading
+                                        console.log(response)
+                                        if (response.status === true) {
+                                            Swal.fire(
+                                                'Aktif!',
+                                                'KIP telah diaktifkan.',
+                                                'success'
+                                            ).then(() => {
+                                                location.reload();
+                                            });
+                                        } else {
+                                            Swal.fire(
+                                                'Gagal!',
+                                                'Aktivasi KIP gagal.',
+                                                'error'
+                                            ).then(() => {
+                                                location.reload();
+                                            });
                                         }
-                                    });
-                                }
-                            });
-                        }
+                                    },
+                                    error: function () {
+                                        Swal.close(); // Menutup loading jika terjadi error
+                                        Swal.fire(
+                                            'Error!',
+                                            'Terjadi kesalahan dalam proses aktivasi.',
+                                            'error'
+                                        );
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
             });
 
@@ -350,13 +391,13 @@
                 type: "GET",
                 url: "get_data_dispen_mhs",
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     $('.mhs_lunas_label span').text(response.mhs_lunas);
                     $('.mhs_belum_lunas_label span').text(response.mhs_belum_lunas);
                     console.log(response)
                     html = ``;
                     if (response.data != 0) {
-                        $.each(response.data, function(i, value) {
+                        $.each(response.data, function (i, value) {
                             i++;
                             var total_Tagihan = 0;
                             let no_tlp = value.no_tlp;
@@ -367,7 +408,7 @@
                             html += `<td class = "text-center" >${value.nipd}</td>`;
                             html += `<td class = "text-center" >${value.nm_pd}</td>`;
                             html += `<td class = "text-center" >`;
-                            $.each(value.rincian, function(j, val) {
+                            $.each(value.rincian, function (j, val) {
                                 html += `<i style="font-size:1rem; font-weight: bold;">${val.label}</i> : <i style="font-size:1rem;">Rp.${parseInt(val.jumlah).toLocaleString()}</i><br>`;
                                 total_Tagihan += parseInt(val.jumlah);
                             });
@@ -418,7 +459,7 @@
                     }
                     $("#data_dispen_tbody").html(html);
 
-                    $('.btn_edit').on('click', function() {
+                    $('.btn_edit').on('click', function () {
                         let id_dispen_edit = $(this).attr("id-Edit")
                         console.log(id_dispen_edit);
                         $.ajax({
@@ -428,7 +469,7 @@
                             data: {
                                 id_dispen: id_dispen_edit
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.status === true) {
                                     $('#FormEditDispen').modal('show');
                                     $('#tgl_pelunasan_edit').val(response.data.tgl_janji_lunas);
@@ -449,17 +490,17 @@
                             }
                         });
                     });
-                    $('.btn_delete').on('click', function() {
+                    $('.btn_delete').on('click', function () {
                         let id_dispen_delete = $(this).attr("id-Delete")
                         let nm_pd = $(this).data("nama")
                         // console.log(id_dispen_delete);
                         Swal.fire({
                             title: 'Hapus data dispen?',
-                            text:`data dispen ${nm_pd} akan dihapus.`,
+                            text: `data dispen ${nm_pd} akan dihapus.`,
                             showCancelButton: true,
                             confirmButtonText: 'Delete',
                             confirmButtonColor: '#d30000',
-                            }).then((result) => {
+                        }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
                                 // Swal.fire('Saved!', '', 'success')
@@ -470,17 +511,17 @@
                                     data: {
                                         id_dispen: id_dispen_delete
                                     },
-                                    success: function(response) {
-                                        if (response.status===true){
+                                    success: function (response) {
+                                        if (response.status === true) {
                                             Swal.fire({
                                                 icon: 'success',
-                                                title:  response.msg,
+                                                title: response.msg,
                                                 showConfirmButton: false,
                                                 timer: 1500
                                             }).then(
                                                 location.reload()
                                             );
-                                        }else{
+                                        } else {
                                             Swal.fire({
                                                 icon: 'warning',
                                                 title: response.msg,
@@ -498,7 +539,7 @@
                             }
                         })
                     });
-                    $('.btn_WA').on('click', function() {
+                    $('.btn_WA').on('click', function () {
                         let id_dispen = $(this).attr("id-dispen")
                         // console.log(id_dispen);
                         $.ajax({
@@ -507,7 +548,7 @@
                             data: {
                                 id_dispen: id_dispen
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 if (response.status === true) {
                                     location.reload();
                                 } else {
@@ -516,26 +557,26 @@
                             }
                         });
                     });
-                    
-                    $(function() {
+
+                    $(function () {
                         TablesDatatables.init();
                     });
                 }
             });
-            $('.btn_cetak_laporan').on('click', function(e) {
+            $('.btn_cetak_laporan').on('click', function (e) {
                 e.preventDefault();
                 let hrf = `<?= base_url('laporan/CetakLaporanDataDispenV2') ?>`; //requset pak jae
                 window.open(hrf, '_blank');
             });
 
 
-            $('.button_not_active').on('click', function() {
+            $('.button_not_active').on('click', function () {
                 alert("Modul Belum Dapat Digunakan!");
             });
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#alert_alert").html("");
             }, 2000);
-            $('#tgl_pelunasan').on('change', function() {
+            $('#tgl_pelunasan').on('change', function () {
                 let tgl_pelunasan = $("#tgl_pelunasan").val();
                 if (tgl_pelunasan != '') {
                     $("#jenis_dispen_form").attr('hidden', false);
@@ -548,7 +589,7 @@
                     $('#btn_aktivasi').html('Tombol Aktivasi');
                 }
             });
-            $("#jenis_dispen").on('change', function() {
+            $("#jenis_dispen").on('change', function () {
                 $(".form_input_data").val('');
                 $('#btn_aktivasi').attr('disabled', true);
                 $('#btn_aktivasi').html('Tombol Aktivasi');
@@ -564,7 +605,7 @@
                     $('#btn_aktivasi').html('Tombol Aktivasi');
                 }
             });
-            $("#search-box").on("keypress", function(e) {
+            $("#search-box").on("keypress", function (e) {
                 if (e.which == 13) {
                     let nipd = $("#search-box").val();
                     let jenis_dispen = $("#jenis_dispen").val();
@@ -586,7 +627,7 @@
                             jenis_dispen: jenis_dispen
                         },
                         dataType: "json",
-                        success: function(response) {
+                        success: function (response) {
                             console.log(response)
                             if (response.status === 200) {
                                 $('#form_data_mhs').attr('hidden', false);
@@ -608,12 +649,12 @@
                                 $('#btn_aktivasi').html('Tombol Aktivasi');
                                 if (response.data === null) {
                                     swal.fire("Error!", response.msg, "error");
-                                    $('.swal2-confirm').click(function() {
+                                    $('.swal2-confirm').click(function () {
                                         location.reload();
                                     });
                                 } else {
                                     swal.fire("Info!", response.msg, "info");
-                                    $('.swal2-confirm').click(function() {
+                                    $('.swal2-confirm').click(function () {
                                         location.reload();
                                     });
                                 }
@@ -623,12 +664,12 @@
                 }
             });
 
-            $('#btn_save_edit').on('click', function() {
+            $('#btn_save_edit').on('click', function () {
                 // get all the inputs into an array.
                 let inputs = $('#form_edit_dispen :input');
                 // console.log(inputs);
                 let values = {};
-                inputs.each(function() {
+                inputs.each(function () {
                     values[this.name] = $(this).val();
                 });
                 $.ajax({
@@ -636,16 +677,16 @@
                     url: "edit_dispen",
                     data: values,
                     dataType: "json",
-                    success: function(response) {
+                    success: function (response) {
                         // console.log(response)
                         if (response.status === true) {
                             swal.fire("Sukses!", `Data Dispen Berhasil Di Edit.`, "success");
-                            $('.swal2-confirm').click(function() {
+                            $('.swal2-confirm').click(function () {
                                 location.reload();
                             });
                         } else {
                             swal.fire("Gagal!", `EEdit Dispen Gagal.`, "error");
-                            $('.swal2-confirm').click(function() {
+                            $('.swal2-confirm').click(function () {
                                 location.reload();
                             });
                         }
@@ -653,11 +694,11 @@
                 })
 
             });
-            $('#btn_aktivasi').on('click', function() {
+            $('#btn_aktivasi').on('click', function () {
                 // get all the inputs into an array.
                 let $inputs = $('#form_dispen :input');
                 let values = {};
-                $inputs.each(function() {
+                $inputs.each(function () {
                     values[this.name] = $(this).val();
                 });
                 $.ajax({
@@ -665,20 +706,20 @@
                     url: "aktif_dispen",
                     data: values,
                     dataType: "json",
-                    success: function(response) {
+                    success: function (response) {
                         if (response.status === true) {
                             swal.fire("Sukses!", `Aktivasi Dispen Berhasil.`, "success");
-                            $('.swal2-confirm').click(function() {
+                            $('.swal2-confirm').click(function () {
                                 location.reload();
                             });
                         } else if (response.status === false && response.msg === 'exist') {
                             swal.fire("Sukses!", `Aktivasi Dispen Mahasiswa Tersebut Sudah Ada.`, "success");
-                            $('.swal2-confirm').click(function() {
+                            $('.swal2-confirm').click(function () {
                                 location.reload();
                             });
                         } else {
                             swal.fire("Gagal!", `Aktivasi Dispen Gagal.`, "error");
-                            $('.swal2-confirm').click(function() {
+                            $('.swal2-confirm').click(function () {
                                 location.reload();
                             });
                         }
