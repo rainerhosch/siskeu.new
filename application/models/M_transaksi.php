@@ -14,11 +14,11 @@ class M_transaksi extends CI_Model
     var $column_search = array('t.id_transaksi', 't.tanggal', 't.jam', 't.semester', 't.nim',); //set column field database for datatable searchable 
     var $order = array('t.id_transaksi' => 'desc'); // default order 
 
-    // public function __construct()
-    // {
-    //     parent::__construct();
-    //     $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
-    // }
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
+    }
 
 
     private function _get_datatables_query()
@@ -428,61 +428,57 @@ class M_transaksi extends CI_Model
     private function _data_tables_query()
     {
         $i = 0;
-        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
-        $dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
-        $dbwastudig_simak->from('adm_bukti_pembayaran bp');
-        $dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+
+        $this->_dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
+        $this->_dbwastudig_simak->from('adm_bukti_pembayaran bp');
+        $this->_dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
         // for search
         foreach ($this->_column_search as $item) {
             if ($_POST['search']['value']) {
                 if ($i === 0) {
-                    $dbwastudig_simak->group_start();
-                    $dbwastudig_simak->like($item, $_POST['search']['value']);
+                    $this->_dbwastudig_simak->group_start();
+                    $this->_dbwastudig_simak->like($item, $_POST['search']['value']);
                 } else {
-                    $dbwastudig_simak->or_like($item, $_POST['search']['value']);
+                    $this->_dbwastudig_simak->or_like($item, $_POST['search']['value']);
                 }
 
                 if (count($this->_column_search) - 1 == $i)
-                    $dbwastudig_simak->group_end();
+                    $this->_dbwastudig_simak->group_end();
             }
             $i++;
         }
 
         // config order
-        $dbwastudig_simak->order_by('id_bukti_trf', 'DESC');
+        $this->_dbwastudig_simak->order_by('id_bukti_trf', 'DESC');
         // if (isset($_POST['order'])) {
-        //     $dbwastudig_simak->order_by($this->_column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        //     $this->_dbwastudig_simak->order_by($this->_column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         // } else if (isset($this->order)) {
         //     $order = $this->order;
-        //     $dbwastudig_simak->order_by(key($order), $order[key($order)]);
+        //     $this->_dbwastudig_simak->order_by(key($order), $order[key($order)]);
         // }
-        // return $dbwastudig_simak->get();
+        // return $this->_dbwastudig_simak->get();
     }
 
     public function getDataBuktiPembayaranDataTables()
     {
-        
         $this->_data_tables_query();
-        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
         if ($_POST['length'] != -1)
-            $dbwastudig_simak->limit($_POST['length'], $_POST['start']);
-        return $dbwastudig_simak->get();
+            $this->_dbwastudig_simak->limit($_POST['length'], $_POST['start']);
+        return $this->_dbwastudig_simak->get();
     }
 
     public function count_filtered_databuktipembayaran()
     {
         $this->_data_tables_query();
-        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
-        return $dbwastudig_simak->get();
+        return $this->_dbwastudig_simak->get();
     }
 
     public function count_all_databuktipembayaran()
     {
-        $dbwastudig_simak = $this->load->database('wastudig_simak', TRUE);
-        $dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
-        $dbwastudig_simak->from('adm_bukti_pembayaran bp');
-        $dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
-        return $dbwastudig_simak->count_all_results();
+        $this->_dbwastudig_simak->select('bp.*, mjp.nm_jenis_pembayaran');
+        $this->_dbwastudig_simak->from('adm_bukti_pembayaran bp');
+        $this->_dbwastudig_simak->join('adm_master_jenis_pembayaran mjp', 'bp.id_jenis_bayar=mjp.id_jenis_pembayaran');
+        return $this->_dbwastudig_simak->count_all_results();
     }
 
 
