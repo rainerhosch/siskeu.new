@@ -361,12 +361,15 @@ class M_masterdata extends CI_Model
         return $this->db->get();
     }
     // get Master Jenis Transaksi
-    public function GetAllJenisTrx($data = null)
+    public function GetAllJenisTrx($data = null, $where_in = null)
     {
         $this->db->select('*');
         $this->db->from('master_jenis_pembayaran');
         if ($data != null) {
             $this->db->where($data);
+        }
+        if ($where_in != null) {
+            $this->db->where_in('id_jenis_pembayaran', $where_in);
         }
         return $this->db->get();
     }
