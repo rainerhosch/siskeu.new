@@ -557,14 +557,16 @@
                         htmlx += `</td>`;
                         htmlx += `<td class = "text-center"><i>Rp.${parseInt(total_bayarTrx).toLocaleString()}</i></td>`;
                         htmlx += `<td class = "text-center" >${value.semester}</td>`;
-                        if (value.bayar_via != 2) {
-                            htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar Tunai</i></td>`;
-                        } else {
+                        if (value.bayar_via == "2") {
                             htmlx += `<td class = "text-center" >`;
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">Rek tujuan</i> : <i style="font-size:1rem; font-weight: bold;">${value.bank} - ${value.nama_rekening}</i><br>`;
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">Tgl Trf</i> :<i style="font-size:1rem;">${value.tgl_trf}</i><br>`;
                             htmlx += `<i style="font-size:1rem; font-weight: bold;">Jam Trf</i> :<i style="font-size:1rem;">${value.jam_trf}</i><br>`;
                             htmlx += `</td>`;
+                        } else if(value.bayar_via == "3") {
+                            htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar via WastuPay</i></td>`;
+                        } else {
+                            htmlx += `<td class = "text-center"><i style="font-size:1rem; font-weight: bold;">Bayar Tunai</i></td>`;
                         }
 
                         if (value.total_bayar < value.kewajiban_bayar) {
