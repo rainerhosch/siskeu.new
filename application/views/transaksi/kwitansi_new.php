@@ -170,7 +170,19 @@ if (($data_transaksi['bayar_tg_cs'] != 0 && $data_transaksi['bayar_cs'] != 0) ||
     // echo 1;
     foreach ($detailTX as $j => $dtx) {
         // if ($dtx['id_jenis_pembayaran'] == 5 || $dtx['id_jenis_pembayaran'] == 7 || $dtx['id_jenis_pembayaran'] == 6) {
-        if ($dtx['id_jenis_pembayaran'] == 6 || $dtx['id_jenis_pembayaran'] == 9) {
+        if ($dtx['id_jenis_pembayaran'] == 6) {
+            $pdf->SetFont('Courier', 'IB', 10);
+            $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
+            $pdf->SetFont('Courier', 'IB', 10);
+            $pdf->Cell(40, 5, number_format($dtx['kewajiban_Bayar'], 0, '', '.'), 1, 0, 'R');
+            $pdf->Cell(40, 5, number_format($dtx['jml_bayar'], 0, '', '.'), 1, 0, 'R');
+            $pdf->Cell(40, 5, number_format($dtx['kewajiban_Bayar'] - $dtx['jml_bayar'], 0, '', '.'), 1, 1, 'R');
+            $total_bayar_trx = $total_bayar_trx + $dtx['jml_bayar'];
+            $total_kewajiban = $total_kewajiban + $dtx['kewajiban_Bayar'];
+        }
+    }
+    foreach ($detailTX as $j => $dtx) {
+        if ($dtx['id_jenis_pembayaran'] == 9 && $data_transaksi['data_kewajiban_lain'] !== null) {
             $pdf->SetFont('Courier', 'IB', 10);
             $pdf->Cell(81, 5, $dtx['nm_jenis_pembayaran'], 1, 0, 'L');
             $pdf->SetFont('Courier', 'IB', 10);
