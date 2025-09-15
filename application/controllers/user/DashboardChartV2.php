@@ -118,7 +118,7 @@ class DashboardChartV2 extends CI_Controller
                 // ])->row_array();
                 $data_get = $this->masterdata->getMahasiswaByNim([
                     'nipd' => $val['nim'],
-                    'tahun_masuk >' => '2016',
+                    'tahun_masuk >' => '2018',
                 ])->row_array();
                 if ($data_get != null) {
                     $data_krs[$no] = $data_get;
@@ -130,7 +130,7 @@ class DashboardChartV2 extends CI_Controller
                 'kn.id_tahun_ajaran' => $filter_smt,
                 'm.no_transkip_nilai' => null,
                 'm.tgl_sk_yudisium' => null,
-                'm.tahun_masuk >' => '2016'
+                'm.tahun_masuk >' => '2018'
             ])->result_array();
         }
         // echo '<pre>';
