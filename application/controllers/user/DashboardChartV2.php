@@ -192,12 +192,24 @@ class DashboardChartV2 extends CI_Controller
 
         // Hitung data transaksi per tahun masuk
         foreach ($grouped_by as $tahun_masuk => &$data) {
+            $data_filter = [];
+            if($data_post['filter'] = '2'){
+                $data_filter = [2, 6, 8, 9];
+            }
+
+            if ($data_post['filter'] == '3') {
+                $data_filter = [3, 6];
+            }
+
+            if ($data_post['filter'] == '4') {
+                $data_filter = [4,6];
+            }
             $data['trx'] = $this->masterdata->getDataPembayaranChart([
                 'm.tahun_masuk' => $tahun_masuk,
                 't.semester' => $smtAktifRes['id_smt'],
                 't.uang_masuk' => 1,
-                'td.id_jenis_pembayaran' => $data_post['filter']
-            ])->num_rows();
+                // 'td.id_jenis_pembayaran' => $data_post['filter']
+            ], ['td.id_jenis_pembayaran' => $data_filter])->num_rows();
             $data['trx_perpanjangan'] = $this->masterdata->getDataPembayaranChart([
                 'm.tahun_masuk' => $tahun_masuk,
                 't.semester' => $smtAktifRes['id_smt'],
@@ -345,21 +357,26 @@ class DashboardChartV2 extends CI_Controller
 
             $dataChart = [];
             foreach ($dataSmt as $i => $val) {
+                // Contoh penggunaan where_in:
+                // Misal kita ingin mengambil data pembayaran untuk beberapa prodi tertentu:
+                // $where_in = ['m.nm_jur' => ['Teknik Informatika', 'Sistem Informasi']];
+                // $result = $this->masterdata->getDataPembayaranChart([
+                //     't.semester' => $val['id_smt'],
+                //     't.uang_masuk' => 1,
+                // ], $where_in)->result_array();
                 $res['trx']['C1'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
-                    'td.id_jenis_pembayaran' => 2,
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ])->num_rows();
+                ], ['td.id_jenis_pembayaran' => [2,6,8,9]])->num_rows();
                 $res['trx']['C2'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
-                    'td.id_jenis_pembayaran' => 3,
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ])->num_rows();
+                ],['td.id_jenis_pembayaran' => [3,6,8]] )->num_rows();
                 $res['trx']['C3'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
-                    'td.id_jenis_pembayaran' => 4,
+                    // 'td.id_jenis_pembayaran' => 4,
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ])->num_rows();
+                ], ['td.id_jenis_pembayaran' => [4,6,8]])->num_rows();
 
 
 

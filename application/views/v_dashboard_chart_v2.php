@@ -114,7 +114,7 @@
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">No</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">TAHUN</br>ANGKATAN</th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;">JUMLAH</br><small
-                                style="font-size:1rem; font-weight: 700;">MHS AKTIF BY KRS</br>
+                                style="font-size:1rem; font-weight: 700;">MHS AKTIF</br>
                                 <!-- <span class="smt_befor"></span> -->
                             </small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
@@ -125,6 +125,8 @@
                         </th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">MHS DISPEN</small></th>
+                        <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
+                                style="font-size:1rem; font-weight: 700;">MHS BEASISWA</small></th>
                         <th class="text-center" style="font-size:1.2rem; font-weight: 700;"></br><small
                                 style="font-size:1rem; font-weight: 700;">BELUM MELAKUKAN</br>PEMBAYARAN SPP</small>
                         </th>
@@ -323,6 +325,7 @@
                 let total_lunas_spp = 0;
                 let total_dispen = 0;
                 let total_belum_bayar = 0;
+                let total_mhs_beasiswa = 0;
 
                 $.each(response.data, function (i, val) {
                     if (val.trx > val.jml_mhs) {
@@ -334,6 +337,14 @@
                     total_dispen += val.data_dispen;
                     total_belum_bayar = (total_mhs - total_all_trx)
                     total_lunas_spp = (total_all_trx - total_dispen)
+
+                    let mhs_beasiswa = 0;
+                    $.each(val.list_mhs, function (ii, list) {
+                        if(list.id_beasiswa != '0'){
+                            mhs_beasiswa ++;
+                        }
+                    })
+                    total_mhs_beasiswa += mhs_beasiswa;
                     html += `<tr>`;
                     html += `<td class="text-center">${no}</td>`;
                     html += `<td class="text-center"><strong>${val.tahun_masuk}</strong><br><small style="font-size:0.85rem;;">${status}</small></td>`;
@@ -341,6 +352,7 @@
                     html += `<td class="text-center">${val.trx}</td>`;
                     html += `<td class="text-center">${val.trx_perpanjangan}</td>`;
                     html += `<td class="text-center">${val.data_dispen}</td>`; //betul
+                    html += `<td class="text-center">${mhs_beasiswa}</td>`;
                     html += `<td class="text-center">${val.jml_mhs - val.trx}</td>`;
                     html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
                     html += `<td class="text-center">`;
@@ -361,6 +373,7 @@
                 html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_perpanjang_smt}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;//betul
+                html += `<td class="text-center" style="font-weight: 700;">${total_mhs_beasiswa}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
                 html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
                 html += `<td class="text-center">`;
@@ -403,6 +416,7 @@
                     let total_lunas_spp = 0;
                     let total_dispen = 0;
                     let total_belum_bayar = 0;
+                    let total_mhs_beasiswa = 0;
 
                     $.each(response.data, function (i, val) {
                         total_mhs += val.jml_mhs;
@@ -411,6 +425,13 @@
                         total_dispen += val.data_dispen;
                         total_belum_bayar = (total_mhs - total_all_trx)
                         total_lunas_spp = (total_all_trx - total_dispen)
+                        let mhs_beasiswa = 0;
+                        $.each(val.list_mhs, function (ii, list) {
+                            if(list.id_beasiswa != '0'){
+                                mhs_beasiswa ++;
+                            }
+                        })
+                        total_mhs_beasiswa += mhs_beasiswa;
                         html += `<tr>`;
                         html += `<td class="text-center">${no}</td>`;
                         html += `<td class="text-center"><strong>${val.tahun_masuk}</strong><br><small style="font-size:0.85rem;;">${status}</small></td>`;
@@ -418,6 +439,7 @@
                         html += `<td class="text-center">${val.trx}</td>`;
                         html += `<td class="text-center">${val.trx_perpanjangan}</td>`; // Tambahkan trx_perpanjangan
                         html += `<td class="text-center">${val.data_dispen}</td>`;
+                        html += `<td class="text-center">${mhs_beasiswa}</td>`;
                         html += `<td class="text-center">${val.jml_mhs - val.trx}</td>`;
                         html += `<td class="text-center">${val.trx - val.data_dispen}</td>`;
                         html += `<td class="text-center">`;
@@ -438,6 +460,7 @@
                     html += `<td class="text-center" style="font-weight: 700;">${total_all_trx}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_perpanjang_smt}</td>`; // Tambahkan total_perpanjang_smt
                     html += `<td class="text-center" style="font-weight: 700;">${total_dispen}</td>`;
+                    html += `<td class="text-center" style="font-weight: 700;">${total_mhs_beasiswa}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_belum_bayar}</td>`;
                     html += `<td class="text-center" style="font-weight: 700;">${total_lunas_spp}</td>`;
                     html += `<td class="text-center">`;
