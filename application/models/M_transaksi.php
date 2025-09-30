@@ -493,6 +493,16 @@ class M_transaksi extends CI_Model
             return FALSE;
         }
     }
+    public function hapusBuktiPembayaran($data)
+    {
+        $this->db->where($data);
+        $this->db->delete('adm_bukti_pembayaran');
+        if ($this->db->affected_rows() > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
     public function getCountTrxAdmin($where = null)
     {

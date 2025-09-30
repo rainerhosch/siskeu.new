@@ -302,6 +302,7 @@ class Transaksi extends CI_Controller
     {
         if ($this->input->is_ajax_request()) {
             $data = $this->input->post();
+            $deleteBuktiTrfLokal = $this->transaksi->hapusBuktiPembayaran(['id_bukti_trf' => $data['data_id']]);
             $update = $this->transaksi->updateBuktiPembayaran(['id_bukti_trf' => $data['data_id']], ['status' => $data['data_update']]);
             $data = [
                 'status' => 'success',
