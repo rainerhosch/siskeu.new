@@ -30,6 +30,7 @@ class Transaksi extends CI_Controller
         $this->load->model('M_tunggakan', 'tunggakan');
         $this->load->model('M_aktivasi_mhs', 'aktivasi');
         $this->load->model('M_user', 'user');
+        $this->load->model('krs/M_krs', 'krs');
     }
 
     public function index()
@@ -502,9 +503,31 @@ class Transaksi extends CI_Controller
 
             $smtAktifRes = $this->masterdata->getSemesterAktif()->row_array();
             $smtAktif = $smtAktifRes['id_smt'];
+            // $smtAktif = '20252';
             $cekTahunSmt = substr($smtAktif, 0, 4);
             $smt_jns = substr($smtAktif, 4, 1);
 
+
+            $cek_ganjil_genap = substr($smtAktif, 4, 1);
+            if($cek_ganjil_genap == '1'){
+                // $tahunCek = $cekTahunSmt-1;
+                $dataMhs['smtbefor'] = $cekTahunSmt-1 . $cek_ganjil_genap+1;
+            }else{
+                $dataMhs['smtbefor'] = $cekTahunSmt . $cek_ganjil_genap-1;
+            }
+            // cek KRS
+            $data_krs = $this->krs->getData(['nipd' => $nim, 'id_tahun_ajaran'=> $dataMhs['smtbefor']])->result_array();
+
+            // Group data_krs by id_tahun_ajaran
+            $grouped_krs = [];
+            foreach ($data_krs as $krs) {
+                $id_tahun_ajaran = $krs['id_tahun_ajaran'];
+                if (!isset($grouped_krs[$id_tahun_ajaran])) {
+                    $grouped_krs[$id_tahun_ajaran] = [];
+                }
+                $grouped_krs[$id_tahun_ajaran][] = $krs;
+            }
+            $dataMhs['krs_mhs'] = $grouped_krs;
 
             // cek tunggakan
             $dataCekTG = [
@@ -1866,7 +1889,8 @@ class Transaksi extends CI_Controller
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
-        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
+        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;
+        ;
         $dataTx['smt'] = $smt_bayar;
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
@@ -2413,7 +2437,8 @@ class Transaksi extends CI_Controller
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
-        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
+        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;
+        ;
         $dataTx['smt'] = $smt_bayar;
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();
@@ -2979,7 +3004,8 @@ class Transaksi extends CI_Controller
         $dataTx = $this->transaksi->getDataTransaksi($where)->row_array();
         $tahun_bayar = substr($dataTx['semester'], 0, 4);
         $smt_bayar = substr($dataTx['semester'], 4);
-        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;;
+        $dataTx['nm_smt'] = $tahun_bayar . '/' . ($tahun_bayar + 1) . ' S' . $smt_bayar;
+        ;
         $dataTx['smt'] = $smt_bayar;
 
         $resDetailTx = $this->transaksi->getDataTxDetail(['t.id_transaksi' => $dataTx['id_transaksi']])->result_array();

@@ -13,7 +13,7 @@
         font-weight: 400;
     }
 </style>
-<div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle" >
+<div class="modal fade" id="formPembayaran" tabindex="-1" role="dialog" aria-labelledby="formPembayaranTitle">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -41,6 +41,9 @@
                             <div class="col-sm-12">
                                 <input type="text" id="jurusan" name="jurusan" class="form-control validate" readonly>
                             </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <span id="notif_krs"></span>
                         </div>
                         <div class="col-sm-12">
                             <span id="notif_tg_mhs"></span>
@@ -94,6 +97,22 @@
         </div>
     </div>
 </div>
+<style>
+    code {
+        padding: 2px 4px;
+        font-size: 90%;
+        color: #002975;
+        background-color: #f9f2f4;
+        border-radius: 4px;
+    }
+    /* Kode tambahan untuk class danger merah */
+    .danger {
+        color: #fff;
+        background-color: #dc3545 !important;
+        border-radius: 4px;
+        padding: 2px 4px;
+    }
+</style>
 <script>
     $(document).ready(function () {
         $("#nipd").on("keypress", function (e) {
@@ -121,23 +140,25 @@
                                 $(".btn#btn_proses").prop("disabled", true);
                             }
 
-                            // if(response.jns_smt != "1"){
-                            //   stts_radio=`disabled`;
-                            // }
+                            if (response.krs_mhs.length == 0) {
+                                $("#notif_krs").html(
+                                    '<code class="danger">Mahasiswa ini tidak melakukan perkuliahan di semester lalu, harap hubungi prodi. (Tidak mengisi KRS)</code>'
+                                );
+                            }
                             let html = ``;
                             let html_3 = ``;
                             $("#nama_mhs").val(response.nm_pd);
                             $("#jurusan").val(response.nm_jur);
                             if (response.tg_CS != 0) {
                                 $("#notif_tg_mhs").html(
-                                    "<code>Ada tunggakan CS Rp." + response.tg_CS + "</code>"
+                                    '<code style="background-color: yellow; color: #856404; border-radius: 3px;">Ada tunggakan CS Rp.' + response.tg_CS + '</code>'
                                 );
                             }
                             if (response.data_tg.length > 0) {
                                 $("#notif_tg_mhs").html(
-                                    "<code>Ada tunggakan Kemahasiswaan Rp." +
+                                    '<code>Ada tunggakan Kemahasiswaan Rp.' +
                                     response.tg_Kmhs +
-                                    "</code>"
+                                    '</code>'
                                 );
                             }
 
