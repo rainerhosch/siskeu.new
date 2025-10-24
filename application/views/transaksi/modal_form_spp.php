@@ -140,7 +140,7 @@
                                 $(".btn#btn_proses").prop("disabled", true);
                             }
 
-                            if (response.krs_mhs.length == 0) {
+                            if (response.krs_mhs.length == 0 && response.tahun_masuk != response.thn_smt) {
                                 $("#notif_krs").html(
                                     '<code class="danger">Mahasiswa ini tidak melakukan perkuliahan di semester lalu, harap hubungi prodi. (Tidak mengisi KRS)</code>'
                                 );
