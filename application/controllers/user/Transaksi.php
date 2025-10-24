@@ -1919,12 +1919,16 @@ class Transaksi extends CI_Controller
 
             if ($Dtx['id_jenis_pembayaran'] == 9) {
                 $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-                foreach ($dataTxSebelumnya as $ii => $dtxs){
-                    if($dtxs['id_jenis_pembayaran'] == 9){
-                        $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
-                    }
-                }
             }
+            // if ($Dtx['id_jenis_pembayaran'] == 9) {
+            //     $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
+            //     foreach ($dataTxSebelumnya as $ii => $dtxs){
+            //         if($dtxs['id_jenis_pembayaran'] == 9){
+            //             $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
+            //         }
+            //     }
+            // }
+
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
                 $bayarCS = true;
             }
@@ -2478,12 +2482,15 @@ class Transaksi extends CI_Controller
 
             if ($Dtx['id_jenis_pembayaran'] == 9) {
                 $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-                foreach ($dataTxSebelumnya as $ii => $dtxs){
-                    if($dtxs['id_jenis_pembayaran'] == 9){
-                        $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
-                    }
-                }
             }
+            // if ($Dtx['id_jenis_pembayaran'] == 9) {
+            //     $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
+            //     foreach ($dataTxSebelumnya as $ii => $dtxs){
+            //         if($dtxs['id_jenis_pembayaran'] == 9){
+            //             $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
+            //         }
+            //     }
+            // }
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
                 $bayarCS = true;
             }
