@@ -2941,6 +2941,8 @@ class Transaksi extends CI_Controller
                         if (count($dataTxSebelumnya) > 0) {
                             // for($jj = 0; $jj < count($dataTxSebelumnya); $jj++)
                             foreach ($dataTxSebelumnya as $jj => $dtxs) {
+                                var_dump($resDetailTx[$x]['id_jenis_pembayaran'] == $dtxs['id_jenis_pembayaran']);
+                                die;
                                 $resDetailTx[$x]['id_jenis_pembayaran'] == $dtxs['id_jenis_pembayaran'] ? $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dtxs['jml_bayar'] : $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
                             }
                             // if ($resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
