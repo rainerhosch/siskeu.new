@@ -313,4 +313,12 @@ switch (ENVIRONMENT)
  *
  * And away we go...
  */
+// Cek header dari Cloudflare
+if (isset($_SERVER['HTTP_CF_VISITOR']) && strpos($_SERVER['HTTP_CF_VISITOR'], 'https') !== FALSE)
+{
+    // Paksa variabel $_SERVER untuk mengindikasikan HTTPS
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = 443;
+}
+
 require_once BASEPATH.'core/CodeIgniter.php';
