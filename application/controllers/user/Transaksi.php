@@ -2397,8 +2397,8 @@ class Transaksi extends CI_Controller
                             if ($dtxs['id_jenis_pembayaran'] == 9) {
                                 $totalBayarSebelumnya += $dtxs['jml_bayar'];
                             }
-                            $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         }
+                        $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
 
 
                         // if (count($dataTxSebelumnya) > 0) {
@@ -2980,8 +2980,8 @@ class Transaksi extends CI_Controller
                             if ($dtxs['id_jenis_pembayaran'] == 9) {
                                 $totalBayarSebelumnya += $dtxs['jml_bayar'];
                             }
-                            $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         }
+                        $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         // if (count($dataTxSebelumnya) > 0) {
                         //     foreach ($dataTxSebelumnya as $jj => $dtxs) {
                         //         $resDetailTx[$x]['id_jenis_pembayaran'] == $dtxs['id_jenis_pembayaran'] ? $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dtxs['jml_bayar'] : $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
@@ -3562,8 +3562,8 @@ class Transaksi extends CI_Controller
                             if ($dtxs['id_jenis_pembayaran'] == 9) {
                                 $totalBayarSebelumnya += $dtxs['jml_bayar'];
                             }
-                            $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         }
+                        $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
 
                         // if (count($dataTxSebelumnya) > 0) {
                         //     if ($resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
