@@ -1917,17 +1917,24 @@ class Transaksi extends CI_Controller
         foreach ($resDetailTx as $i => $Dtx) {
             $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
 
-            if ($Dtx['id_jenis_pembayaran'] == 9) {
-                $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-            }
             // if ($Dtx['id_jenis_pembayaran'] == 9) {
             //     $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-            //     foreach ($dataTxSebelumnya as $ii => $dtxs){
-            //         if($dtxs['id_jenis_pembayaran'] == 9){
-            //             $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
-            //         }
-            //     }
             // }
+            // Logika pengurangan saat ini hanya akan mengurangkan jml_bayar jika ada transaksi sebelumnya dengan id_jenis_pembayaran 9.
+            // Artinya, nilai awal biaya adalah uang_bangunan, lalu dikurangi semua jml_bayar pada transaksi sebelumnya yang id_jenis_pembayaran-nya 9.
+            // Logika ini secara umum sudah benar jika tujuan kamu adalah mengetahui sisa uang_bangunan yang menjadi kewajiban.
+            // Namun, jika ingin lebih jelas dan menghindari kemungkinan duplikasi, lebih baik lakukan penjumlahan total dulu sebelum dikurangi satu kali di akhir.
+
+            if ($Dtx['id_jenis_pembayaran'] == 9) {
+                $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
+                $totalBayarSebelumnya = 0;
+                foreach ($dataTxSebelumnya as $dtxs) {
+                    if ($dtxs['id_jenis_pembayaran'] == 9) {
+                        $totalBayarSebelumnya += $dtxs['jml_bayar'];
+                    }
+                }
+                $resBiayaLain[$i]['biaya'] -= $totalBayarSebelumnya;
+            }
 
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
                 $bayarCS = true;
@@ -2384,12 +2391,16 @@ class Transaksi extends CI_Controller
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
-                        // $resDetailTx[$x]['id_jenis_pembayaran'] == $dataBiayaAngkatan['uang_bangunan'];
-                        foreach ($dataTxSebelumnya as $jj => $dtxs){
-                            if($dtxs['id_jenis_pembayaran'] == 9){
-                                $resDetailTx[$x]['kewajiban_Bayar'] = $resDetailTx[$x]['kewajiban_Bayar'] - $dtxs['jml_bayar'];
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                        $totalBayarSebelumnya = 0;
+                        foreach ($dataTxSebelumnya as $jj => $dtxs) {
+                            if ($dtxs['id_jenis_pembayaran'] == 9) {
+                                $totalBayarSebelumnya += $dtxs['jml_bayar'];
                             }
+                            $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         }
+
+
                         // if (count($dataTxSebelumnya) > 0) {
                         //     if ($resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
                         //         $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
@@ -2480,17 +2491,19 @@ class Transaksi extends CI_Controller
         foreach ($resDetailTx as $i => $Dtx) {
             $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
 
-            if ($Dtx['id_jenis_pembayaran'] == 9) {
-                $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-            }
             // if ($Dtx['id_jenis_pembayaran'] == 9) {
             //     $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-            //     foreach ($dataTxSebelumnya as $ii => $dtxs){
-            //         if($dtxs['id_jenis_pembayaran'] == 9){
-            //             $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
-            //         }
-            //     }
             // }
+            if ($Dtx['id_jenis_pembayaran'] == 9) {
+                $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
+                $totalBayarSebelumnya = 0;
+                foreach ($dataTxSebelumnya as $dtxs) {
+                    if ($dtxs['id_jenis_pembayaran'] == 9) {
+                        $totalBayarSebelumnya += $dtxs['jml_bayar'];
+                    }
+                }
+                $resBiayaLain[$i]['biaya'] -= $totalBayarSebelumnya;
+            }
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
                 $bayarCS = true;
             }
@@ -2961,11 +2974,13 @@ class Transaksi extends CI_Controller
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
-                        $resDetailTx[$x]['id_jenis_pembayaran'] == $dataBiayaAngkatan['uang_bangunan'];
-                        foreach ($dataTxSebelumnya as $jj => $dtxs){
-                            if($dtxs['id_jenis_pembayaran'] == 9){
-                                $resDetailTx[$x]['kewajiban_Bayar'] = $resDetailTx[$x]['kewajiban_Bayar'] - $dtxs['jml_bayar'];
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                        $totalBayarSebelumnya = 0;
+                        foreach ($dataTxSebelumnya as $jj => $dtxs) {
+                            if ($dtxs['id_jenis_pembayaran'] == 9) {
+                                $totalBayarSebelumnya += $dtxs['jml_bayar'];
                             }
+                            $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         }
                         // if (count($dataTxSebelumnya) > 0) {
                         //     foreach ($dataTxSebelumnya as $jj => $dtxs) {
@@ -3064,11 +3079,13 @@ class Transaksi extends CI_Controller
             $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
             if ($Dtx['id_jenis_pembayaran'] == 9) {
                 $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
-                foreach ($dataTxSebelumnya as $ii => $dtxs){
-                    if($dtxs['id_jenis_pembayaran'] == 9){
-                        $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
+                $totalBayarSebelumnya = 0;
+                foreach ($dataTxSebelumnya as $dtxs) {
+                    if ($dtxs['id_jenis_pembayaran'] == 9) {
+                        $totalBayarSebelumnya += $dtxs['jml_bayar'];
                     }
                 }
+                $resBiayaLain[$i]['biaya'] -= $totalBayarSebelumnya;
             }
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
                 $bayarCS = true;
@@ -3540,10 +3557,12 @@ class Transaksi extends CI_Controller
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
-                        foreach ($dataTxSebelumnya as $jj => $dtxs){
-                            if($dtxs['id_jenis_pembayaran'] == 9){
-                                $resDetailTx[$x]['kewajiban_Bayar'] = $resDetailTx[$x]['kewajiban_Bayar'] - $dtxs['jml_bayar'];
+                        $totalBayarSebelumnya = 0;
+                        foreach ($dataTxSebelumnya as $jj => $dtxs) {
+                            if ($dtxs['id_jenis_pembayaran'] == 9) {
+                                $totalBayarSebelumnya += $dtxs['jml_bayar'];
                             }
+                            $resDetailTx[$x]['kewajiban_Bayar'] -= $totalBayarSebelumnya;
                         }
 
                         // if (count($dataTxSebelumnya) > 0) {
