@@ -1928,11 +1928,11 @@ class Transaksi extends CI_Controller
             if ($Dtx['id_jenis_pembayaran'] == 9) {
                 $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
                 $totalBayarSebelumnya = 0;
-                foreach ($dataTxSebelumnya as $dtxs) {
-                    if ($dtxs['id_jenis_pembayaran'] == 9) {
-                        $totalBayarSebelumnya += $dtxs['jml_bayar'];
-                    }
-                }
+                // foreach ($dataTxSebelumnya as $dtxs) {
+                //     if ($dtxs['id_jenis_pembayaran'] == 9) {
+                //         $totalBayarSebelumnya += $dtxs['jml_bayar'];
+                //     }
+                // }
                 $resBiayaLain[$i]['biaya'] -= $totalBayarSebelumnya;
             }
 
@@ -2497,11 +2497,11 @@ class Transaksi extends CI_Controller
             if ($Dtx['id_jenis_pembayaran'] == 9) {
                 $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
                 $totalBayarSebelumnya = 0;
-                foreach ($dataTxSebelumnya as $dtxs) {
-                    if ($dtxs['id_jenis_pembayaran'] == 9) {
-                        $totalBayarSebelumnya += $dtxs['jml_bayar'];
-                    }
-                }
+                // foreach ($dataTxSebelumnya as $dtxs) {
+                //     if ($dtxs['id_jenis_pembayaran'] == 9) {
+                //         $totalBayarSebelumnya += $dtxs['jml_bayar'];
+                //     }
+                // }
                 $resBiayaLain[$i]['biaya'] -= $totalBayarSebelumnya;
             }
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
@@ -3080,11 +3080,11 @@ class Transaksi extends CI_Controller
             if ($Dtx['id_jenis_pembayaran'] == 9) {
                 $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
                 $totalBayarSebelumnya = 0;
-                foreach ($dataTxSebelumnya as $dtxs) {
-                    if ($dtxs['id_jenis_pembayaran'] == 9) {
-                        $totalBayarSebelumnya += $dtxs['jml_bayar'];
-                    }
-                }
+                // foreach ($dataTxSebelumnya as $dtxs) {
+                //     if ($dtxs['id_jenis_pembayaran'] == 9) {
+                //         $totalBayarSebelumnya += $dtxs['jml_bayar'];
+                //     }
+                // }
                 $resBiayaLain[$i]['biaya'] -= $totalBayarSebelumnya;
             }
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
