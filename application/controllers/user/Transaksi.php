@@ -3033,9 +3033,10 @@ class Transaksi extends CI_Controller
         $dataTxSebelumnya = $this->transaksi->getDataTransaksiSebelumnya($where)->result_array();
         foreach ($resDetailTx as $i => $Dtx) {
             $resBiayaLain[] = $this->masterdata->getBiayaPembayaranLain(['mjp.id_jenis_pembayaran' => $Dtx['id_jenis_pembayaran']])->row_array();
-            foreach ($dataTxSebelumnya as $ii => $dtxs){
-                if ($Dtx['id_jenis_pembayaran'] == $dtxs['id_jenis_pembayaran']) {
-                    $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'] - $dtxs['jml_bayar'];
+            if ($Dtx['id_jenis_pembayaran'] == 9) {
+                $resBiayaLain[$i]['biaya'] = $dataBiayaAngkatan['uang_bangunan'];
+                foreach ($dataTxSebelumnya as $ii => $dtxs){
+                    $resBiayaLain[$i]['biaya'] = $resBiayaLain[$i]['biaya'] - $dtxs['jml_bayar'];
                 }
             }
             if ($Dtx['id_jenis_pembayaran'] == 2 || $Dtx['id_jenis_pembayaran'] == 3 || $Dtx['id_jenis_pembayaran'] == 4) {
