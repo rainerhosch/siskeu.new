@@ -1,15 +1,11 @@
 RewriteEngine On
 
-# # Jika ada proxy (Cloudflare, Nginx, dll.)
-# RewriteCond %{HTTP:X-Forwarded-Proto} !https [OR]
-# # Atau jika koneksi HTTPS tidak terdeteksi oleh server
-RewriteCond %{HTTPS} !=on
-#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Redirect all HTTP traffic to HTTPS
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-
-# RewriteCond %{HTTPS} on
-# RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-
+# Main rewrite rules for CodeIgniter
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
