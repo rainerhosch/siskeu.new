@@ -509,14 +509,14 @@ class Transaksi extends CI_Controller
 
 
             $cek_ganjil_genap = substr($smtAktif, 4, 1);
-            if($cek_ganjil_genap == '1'){
+            if ($cek_ganjil_genap == '1') {
                 // $tahunCek = $cekTahunSmt-1;
-                $dataMhs['smtbefor'] = $cekTahunSmt-1 . $cek_ganjil_genap+1;
-            }else{
-                $dataMhs['smtbefor'] = $cekTahunSmt . $cek_ganjil_genap-1;
+                $dataMhs['smtbefor'] = $cekTahunSmt - 1 . $cek_ganjil_genap + 1;
+            } else {
+                $dataMhs['smtbefor'] = $cekTahunSmt . $cek_ganjil_genap - 1;
             }
             // cek KRS
-            $data_krs = $this->krs->getData(['nipd' => $nim, 'id_tahun_ajaran'=> $dataMhs['smtbefor']])->result_array();
+            $data_krs = $this->krs->getData(['nipd' => $nim, 'id_tahun_ajaran' => $dataMhs['smtbefor']])->result_array();
 
             // Group data_krs by id_tahun_ajaran
             $grouped_krs = [];
@@ -2817,6 +2817,8 @@ class Transaksi extends CI_Controller
                             if ($dTxS['jml_bayar'] != $resBiayaLain[$key]['biaya']) {
                                 $resBiayaLain[$key]['biaya'] = $resBiayaLain[$key]['biaya'] - $dTxS['jml_bayar'];
                             }
+                        } else if ($rbl['id_jp'] == 8) {
+                            $resBiayaLain[$key]['biaya'] = $resBiayaLain[$key]['biaya'] - $dTxS['jml_bayar'];
                         } else {
                             if (!isset($dataTest['total_bayar'])) {
                                 $dataTest['total_bayar'] = 0;
