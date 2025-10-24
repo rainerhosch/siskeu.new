@@ -3508,15 +3508,20 @@ class Transaksi extends CI_Controller
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 8) {
                         $resDetailTx[$x]['kewajiban_Bayar'] = $kewajibanPerpanjangSemester;
                     } else if ($resDetailTx[$x]['id_jenis_pembayaran'] == 9) {
-                        if (count($dataTxSebelumnya) > 0) {
-                            if ($resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
-                                $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
-                            } else {
-                                $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
-                            }
-                        } else {
-                            $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                        $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                        foreach ($dataTxSebelumnya as $jj => $dtxs){
+                            $resDetailTx[$x]['kewajiban_Bayar'] = $resDetailTx[$x]['kewajiban_Bayar'] - $dtxs['jml_bayar'];
                         }
+
+                        // if (count($dataTxSebelumnya) > 0) {
+                        //     if ($resDetailTx[$x]['id_jenis_pembayaran'] == $dataTxSebelumnya[$x]['id_jenis_pembayaran']) {
+                        //         $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'] - $dataTxSebelumnya[$x]['jml_bayar'];
+                        //     } else {
+                        //         $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                        //     }
+                        // } else {
+                        //     $resDetailTx[$x]['kewajiban_Bayar'] = $dataBiayaAngkatan['uang_bangunan'];
+                        // }
                         // if (isset($dataTxSebelumnya[$x]['id_jenis_pembayaran']) != null) {
 
                         // } else {
