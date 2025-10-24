@@ -2817,8 +2817,6 @@ class Transaksi extends CI_Controller
                             if ($dTxS['jml_bayar'] != $resBiayaLain[$key]['biaya']) {
                                 $resBiayaLain[$key]['biaya'] = $resBiayaLain[$key]['biaya'] - $dTxS['jml_bayar'];
                             }
-                        } else if ($rbl['id_jp'] == 9) {
-                            $resBiayaLain[$key]['biaya'] = $resBiayaLain[$key]['biaya'] - $dTxS['jml_bayar'];
                         } else {
                             if (!isset($dataTest['total_bayar'])) {
                                 $dataTest['total_bayar'] = 0;
