@@ -77,6 +77,7 @@ class DashboardChartV2 extends CI_Controller
         $tahun_smt_befor = substr($smtAktifRes['id_smt'], 0, 4);
         $cek_ganjil_genap = substr($smtAktifRes['id_smt'], 4);
         $smt_befor = ($cek_ganjil_genap == '1') ? ($tahun_smt_befor - 1) . '2' : $tahun_smt_befor . '1';
+        $filter_smt = $smtAktifRes['id_smt'];
 
         // var_dump($tahun_smt_befor);
         // var_dump($data_post['filter']);
@@ -85,21 +86,16 @@ class DashboardChartV2 extends CI_Controller
         // die;
 
         // Ambil data KRS mahasiswa
-
-        $filter_smt = $data_post['filter'] == '2' ? $filter_smt = $smt_befor : $filter_smt = $smtAktifRes['id_smt'];
-        // if ($data_post['filter'] == '2') {
-        //     $filter_smt = $smt_befor;
-        // } else {
-        //     $filter_smt = $smtAktifRes['id_smt'];
-        // }
-
+        if ($data_post['filter'] == '2') {
+            $filter_smt = $smt_befor;
+        }
         // Ambil data base KRS sebelumnya jika pembayaran Cicilan 1 -> done 
         // Ambil data base KRS aktif jika pembayaran Cicilan 2 -> done
         // Ambil data base UTS jika pembayarn cicilan 3 -> belum
         if ($data_post['filter'] == '4') {
             $data_reg_ujian = $this->aktivasi->getRegUjian([
                 'tahun' => $filter_smt,
-                'aktif' => '1'
+                // 'aktif' => '1'
             ])->result_array();
             $data_krs = [];
             $no = 0;
@@ -199,11 +195,11 @@ class DashboardChartV2 extends CI_Controller
             }
 
             if ($data_post['filter'] == '3') {
-                $data_filter = [3, 6, 8]; // 8 perpanjang sepester, 6 Tunggakan CS
+                $data_filter = [3]; // 8 perpanjang sepester, 6 Tunggakan CS
             }
 
             if ($data_post['filter'] == '4') {
-                $data_filter = [4, 6, 8]; // 8 perpanjang sepester, 6 Tunggakan CS
+                $data_filter = [4]; // 8 perpanjang sepester, 6 Tunggakan CS
             }
             $data['trx'] = $this->masterdata->getDataPembayaranChart([
                 'm.tahun_masuk' => $tahun_masuk,
@@ -372,12 +368,12 @@ class DashboardChartV2 extends CI_Controller
                 $res['trx']['C2'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ], ['td.id_jenis_pembayaran' => [3, 6, 8]])->num_rows(); // 8 perpanjang sepester, 6 Tunggakan CS
+                ], ['td.id_jenis_pembayaran' => [3]])->num_rows(); // 8 perpanjang sepester, 6 Tunggakan CS
                 $res['trx']['C3'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
                     // 'td.id_jenis_pembayaran' => 4,
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ], ['td.id_jenis_pembayaran' => [4, 6, 8]])->num_rows(); // 8 perpanjang sepester, 6 Tunggakan CS
+                ], ['td.id_jenis_pembayaran' => [4]])->num_rows(); // 8 perpanjang sepester, 6 Tunggakan CS
 
 
 
