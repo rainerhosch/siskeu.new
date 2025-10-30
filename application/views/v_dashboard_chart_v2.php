@@ -150,7 +150,7 @@
                 <option value="bar">Bar</option>
                 <option value="line">Line</option>
                 <option value="area">Area</option>
-                <option value="column">Column</option>
+                <option value="column" selected>Column</option>
             </select>
         </div>
         <div>
@@ -273,7 +273,8 @@
         }
 
         // Initial chart load
-        createChart('bar');
+        // createChart('bar');
+        createChart('column');
 
         // Update chart on select box change
         $('#chartTypeSelect').on('change', function () {

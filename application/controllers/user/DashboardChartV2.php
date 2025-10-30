@@ -85,12 +85,13 @@ class DashboardChartV2 extends CI_Controller
         // die;
 
         // Ambil data KRS mahasiswa
-        if ($data_post['filter'] == '2') {
-            $filter_smt = $smt_befor;
-        } else {
-            $filter_smt = $smtAktifRes['id_smt'];
-        }
 
+        $filter_smt = $data_post['filter'] == '2' ? $filter_smt = $smt_befor : $filter_smt = $smtAktifRes['id_smt'];
+        // if ($data_post['filter'] == '2') {
+        //     $filter_smt = $smt_befor;
+        // } else {
+        //     $filter_smt = $smtAktifRes['id_smt'];
+        // }
 
         // Ambil data base KRS sebelumnya jika pembayaran Cicilan 1 -> done 
         // Ambil data base KRS aktif jika pembayaran Cicilan 2 -> done
@@ -193,16 +194,16 @@ class DashboardChartV2 extends CI_Controller
         // Hitung data transaksi per tahun masuk
         foreach ($grouped_by as $tahun_masuk => &$data) {
             $data_filter = [];
-            if($data_post['filter'] = '2'){
+            if ($data_post['filter'] == '2') {
                 $data_filter = [2, 6, 8, 9];
             }
 
             if ($data_post['filter'] == '3') {
-                $data_filter = [3, 6];
+                $data_filter = [3, 6, 8]; // 8 perpanjang sepester, 6 Tunggakan CS
             }
 
             if ($data_post['filter'] == '4') {
-                $data_filter = [4,6];
+                $data_filter = [4, 6, 8]; // 8 perpanjang sepester, 6 Tunggakan CS
             }
             $data['trx'] = $this->masterdata->getDataPembayaranChart([
                 'm.tahun_masuk' => $tahun_masuk,
@@ -210,13 +211,13 @@ class DashboardChartV2 extends CI_Controller
                 't.uang_masuk' => 1,
                 // 'td.id_jenis_pembayaran' => $data_post['filter']
             ], ['td.id_jenis_pembayaran' => $data_filter])->num_rows();
+            $data['query'] =  $this->db->last_query();
             $data['trx_perpanjangan'] = $this->masterdata->getDataPembayaranChart([
                 'm.tahun_masuk' => $tahun_masuk,
                 't.semester' => $smtAktifRes['id_smt'],
                 't.uang_masuk' => 1,
                 'td.id_jenis_pembayaran' => '8'
             ])->num_rows();
-            $data['query'] = $this->db->last_query();
             // foreach ($data['list_mhs'] as &$mhs) {
             //     $data_transaksi = $this->transaksi->getDataTransaksiOnly([
             //         'nim' => $mhs['nipd'],
@@ -347,7 +348,7 @@ class DashboardChartV2 extends CI_Controller
             $smt_befor = ($cek_ganjil_genap == '1') ? ($tahun_smt - 1) . '2' : $tahun_smt . '1';
 
             $end_smt = [];
-            for ($i = 0; $i < 3; $i++) {
+            for ($i = 0; $i < 5; $i++) {
                 $end_smt = ($tahun_smt * 1) . 1;
                 $tahun_smt--;
             }
@@ -367,16 +368,16 @@ class DashboardChartV2 extends CI_Controller
                 $res['trx']['C1'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ], ['td.id_jenis_pembayaran' => [2,6,8,9]])->num_rows();
+                ], ['td.id_jenis_pembayaran' => [2, 6, 8, 9]])->num_rows();
                 $res['trx']['C2'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ],['td.id_jenis_pembayaran' => [3,6,8]] )->num_rows();
+                ], ['td.id_jenis_pembayaran' => [3, 6, 8]])->num_rows(); // 8 perpanjang sepester, 6 Tunggakan CS
                 $res['trx']['C3'][$val['id_smt']] = $this->masterdata->getDataPembayaranChart([
                     // 'td.id_jenis_pembayaran' => 4,
                     't.semester' => $val['id_smt'],
                     't.uang_masuk' => 1,
-                ], ['td.id_jenis_pembayaran' => [4,6,8]])->num_rows();
+                ], ['td.id_jenis_pembayaran' => [4, 6, 8]])->num_rows(); // 8 perpanjang sepester, 6 Tunggakan CS
 
 
 

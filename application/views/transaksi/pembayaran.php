@@ -279,7 +279,7 @@
                                                 <!-- <th class="text-center">Sisa Bayar</th> -->
                                                 <th class="text-center">Semester</th>
                                                 <th class="text-center">Jenis Pembayaran</th>
-                                                <th class="text-center">Status</th>
+                                                <th class="text-center">Status SPP Semester</th>
                                                 <th class="text-center">Admin</th>
                                                 <th class="text-center">Tools</th>
                                             </tr>
